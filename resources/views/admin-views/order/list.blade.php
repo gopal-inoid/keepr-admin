@@ -1,428 +1,232 @@
 @extends('layouts.back-end.app')
 
-@section('title', \App\CPU\translate('Order List'))
+@section('title', \App\CPU\translate('Orders List'))
 
 @push('css_or_js')
 
 @endpush
 
 @section('content')
-    <div class="content container-fluid">
-        <!-- Page Header -->
-        <div>
-            <!-- Page Title -->
-            <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
-                <h2 class="h1 mb-0">
-                    <img src="{{asset('/public/assets/back-end/img/all-orders.png')}}" class="mb-1 mr-1" alt="">
-                    <span class="page-header-title">
-                        @if($status =='processing')
-                            {{ ucwords(str_replace('_',' ','Packaging' )) }}
-                        @elseif($status =='failed')
-                            {{ ucwords(str_replace('_',' ','Failed to Deliver' )) }}
-                        @else
-                            {{ ucwords(str_replace('_',' ',$status )) }}
-                        @endif
-                    </span>
-                    {{\App\CPU\translate('Orders')}}
-                </h2>
-                <span class="badge badge-soft-dark radius-50 fz-14">{{$orders->total()}}</span>
-            </div>
-            <!-- End Page Title -->
+<div class="content container-fluid">
+    <!-- Page Title -->
+    <div class="mb-3">
+        <h2 class="h1 mb-0 text-capitalize d-flex gap-2">
+            <img src="{{asset('/public/assets/back-end/img/all-orders.png')}}" alt="">
+             Orders List
+            <span class="badge badge-soft-dark radius-50 fz-14 ml-1">{{ $pro->total() }}</span>
+        </h2>
+    </div>
+    <!-- End Page Title -->
 
-            <!-- Order States -->
+    <div class="row mt-20">
+        <div class="col-md-12">
             <div class="card">
-                <div class="card">
-                    <div class="card-body">
-                        <form action="{{ url()->current() }}" id="form-data" method="GET">
-                            <div class="row gy-3 gx-2">
-                                <div class="col-12 pb-0">
-                                    <h4>{{\App\CPU\translate('select')}} {{\App\CPU\translate('date')}} {{\App\CPU\translate('range')}}</h4>
-                                </div>
-                                <div class="col-sm-6 col-md-3">
-                                    <select name="filter" class="form-control">
-                                        <option value="all" {{ $filter == 'all' ? 'selected' : '' }}>All</option>
-                                        <option value="admin" {{ $filter == 'admin' ? 'selected' : '' }}>In House</option>
-                                        <option value="seller" {{ $filter == 'seller' ? 'selected' : '' }}>Seller</option>
-                                        @if($status == 'all' || $status == 'delivered')
-                                        <option value="POS" {{ $filter == 'POS' ? 'selected' : '' }}>POS</option>
-                                        @endif
-                                    </select>
-                                </div>
-                                <div class="col-sm-6 col-md-3">
-                                    <div class="form-floating">
-                                        <input type="date" name="from" value="{{$from}}" id="from_date"
-                                            class="form-control">
-                                        <label>Start Date</label>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 col-md-3 mt-2 mt-sm-0">
-                                    <div class="form-floating">
-                                        <input type="date" value="{{$to}}" name="to" id="to_date"
-                                            class="form-control">
-                                        <label>End Date</label>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 col-md-3 mt-2 mt-sm-0  ">
-                                    <button type="submit" class="btn btn--primary btn-block" onclick="formUrlChange(this)" data-action="{{ url()->current() }}">
-                                        {{\App\CPU\translate('show')}} {{\App\CPU\translate('data')}}
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <div class="card-body">
-                    <!-- Order stats -->
-                    @if($status == 'all' && $filter != 'POS')
-                    <div class="row g-2 mb-20">
-                        <div class="col-sm-6 col-lg-3">
-                            <!-- Card -->
-                            <a class="order-stats order-stats_pending" href="{{route('admin.orders.list',['pending'])}}">
-                                <div class="order-stats__content">
-                                    <img width="20" src="{{asset('/public/assets/back-end/img/pending.png')}}" class="svg" alt="">
-                                    <h6 class="order-stats__subtitle">{{\App\CPU\translate('pending')}}</h6>
-                                </div>
-                                <span class="order-stats__title">
-                                    {{ $pending_count }}
-                                </span>
-                            </a>
-                            <!-- End Card -->
-                        </div>
-
-                        <div class="col-sm-6 col-lg-3">
-                            <!-- Card -->
-                            <a class="order-stats order-stats_confirmed" href="{{route('admin.orders.list',['confirmed'])}}">
-                                <div class="order-stats__content" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
-                                    <img width="20" src="{{asset('/public/assets/back-end/img/confirmed.png')}}" alt="">
-                                    <h6 class="order-stats__subtitle">{{\App\CPU\translate('confirmed')}}</h6>
-                                </div>
-                                <span class="order-stats__title">
-                                    {{ $confirmed_count }}
-                                </span>
-                            </a>
-                            <!-- End Card -->
-                        </div>
-
-                        <div class="col-sm-6 col-lg-3">
-                            <!-- Card -->
-                            <a class="order-stats order-stats_packaging" href="{{route('admin.orders.list',['processing'])}}">
-                                <div class="order-stats__content" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
-                                    <img width="20" src="{{asset('/public/assets/back-end/img/packaging.png')}}" alt="">
-                                    <h6 class="order-stats__subtitle">{{\App\CPU\translate('Packaging')}}</h6>
-                                </div>
-                                <span class="order-stats__title">
-                                    {{ $processing_count }}
-                                </span>
-                            </a>
-                            <!-- End Card -->
-                        </div>
-
-                        <div class="col-sm-6 col-lg-3">
-                            <!-- Card -->
-                            <a class="order-stats order-stats_out-for-delivery" href="{{route('admin.orders.list',['out_for_delivery'])}}">
-                                <div class="order-stats__content" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
-                                    <img width="20" src="{{asset('/public/assets/back-end/img/out-of-delivery.png')}}" alt="">
-                                    <h6 class="order-stats__subtitle">{{\App\CPU\translate('out_for_delivery')}}</h6>
-                                </div>
-                                <span class="order-stats__title">
-                                    {{ $out_for_delivery_count }}
-                                </span>
-                            </a>
-                            <!-- End Card -->
-                        </div>
-
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="order-stats order-stats_delivered cursor-pointer"
-                                onclick="location.href='{{route('admin.orders.list',['delivered'])}}'">
-                                <div class="order-stats__content" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
-                                    <img width="20" src="{{asset('/public/assets/back-end/img/delivered.png')}}" alt="">
-                                    <h6 class="order-stats__subtitle">{{\App\CPU\translate('delivered')}}</h6>
-                                </div>
-                                <span class="order-stats__title">
-                                    {{ $delivered_count }}
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="order-stats order-stats_canceled cursor-pointer"
-                                onclick="location.href='{{route('admin.orders.list',['canceled'])}}'">
-                                <div class="order-stats__content" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
-                                    <img width="20" src="{{asset('/public/assets/back-end/img/canceled.png')}}" alt="">
-                                    <h6 class="order-stats__subtitle">{{\App\CPU\translate('canceled')}}</h6>
-                                </div>
-                                <span class="order-stats__title">
-                                    {{ $canceled_count }}
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="order-stats order-stats_returned cursor-pointer"
-                                onclick="location.href='{{route('admin.orders.list',['returned'])}}'">
-                                <div class="order-stats__content" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
-                                    <img width="20" src="{{asset('/public/assets/back-end/img/returned.png')}}" alt="">
-                                    <h6 class="order-stats__subtitle">{{\App\CPU\translate('returned')}}</h6>
-                                </div>
-                                <span class="order-stats__title">
-                                    {{ $returned_count }}
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="order-stats order-stats_failed cursor-pointer"
-                                onclick="location.href='{{route('admin.orders.list',['failed'])}}'">
-                                <div class="order-stats__content" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
-                                    <img width="20" src="{{asset('/public/assets/back-end/img/failed-to-deliver.png')}}" alt="">
-                                    <h6 class="order-stats__subtitle">{{\App\CPU\translate('Failed_To_Delivery')}}</h6>
-                                </div>
-                                <span class="order-stats__title">
-                                    {{ $failed_count }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    @endif
-                    <!-- End Order stats -->
-
-                    <!-- Data Table Top -->
-                    <div class="px-3 py-4 light-bg">
-                        <div class="row g-2 flex-grow-1">
-                            <div class="col-sm-8 col-md-6 col-lg-4">
-                                <form action="" method="GET">
-                                    <!-- Search -->
-                                    <div class="input-group input-group-custom input-group-merge">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <i class="tio-search"></i>
-                                            </div>
+                <div class="px-3 py-4">
+                    <div class="row align-items-center">
+                        <div class="col-lg-4">
+                            <!-- Search -->
+                            <form action="{{ url()->current() }}" method="GET">
+                                <div class="input-group input-group-custom input-group-merge">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <i class="tio-search"></i>
                                         </div>
-                                        <input id="datatableSearch_" type="search" name="search" class="form-control"
-                                            placeholder="{{\App\CPU\translate('Search by Order ID')}}" aria-label="Search by Order ID" value="{{ $search }}"
-                                            required>
-                                        <button type="submit" class="btn btn--primary input-group-text">{{\App\CPU\translate('search')}}</button>
                                     </div>
-                                    <!-- End Search -->
-                                </form>
-                            </div>
-                            <div class="col-sm-4 col-md-6 col-lg-8 d-flex justify-content-sm-end">
+                                    <input id="datatableSearch_" type="search" name="search" class="form-control"
+                                           placeholder="{{\App\CPU\translate('Search Product Name')}}" aria-label="Search orders"
+                                           value="{{ $search }}" required>
+                                    <input type="hidden" value="{{ $request_status }}" name="status">
+                                    <button type="submit" class="btn btn--primary">{{\App\CPU\translate('search')}}</button>
+                                </div>
+                            </form>
+                            <!-- End Search -->
+                        </div>
+                        <div class="col-lg-8 mt-3 mt-lg-0 d-flex flex-wrap gap-3 justify-content-lg-end">
+                            {{-- <div>
                                 <button type="button" class="btn btn-outline--primary" data-toggle="dropdown">
                                     <i class="tio-download-to"></i>
-                                    {{\App\CPU\translate('export')}}
+                                    Export
                                     <i class="tio-chevron-down"></i>
                                 </button>
-
                                 <ul class="dropdown-menu dropdown-menu-right">
-                                    <li>
-                                        <a type="submit" class="dropdown-item d-flex align-items-center gap-2" href="{{ route('admin.orders.order-bulk-export', ['status' => $status, 'from' => $from, 'to' => $to, 'filter' => $filter, 'search' => $search]) }}">
-                                            <img width="14" src="{{asset('/public/assets/back-end/img/excel.png')}}" alt="">
-                                            {{\App\CPU\translate('Excel')}}
-                                        </a>
-                                    </li>
+                                    <li><a class="dropdown-item" href="{{route('admin.product.export-excel',['in_house', ''])}}">Excel</a></li>
+                                    <div class="dropdown-divider"></div>
                                 </ul>
                             </div>
-                        </div>
-                        <!-- End Row -->
-                    </div>
-                    <!-- End Data Table Top -->
-
-                    <!-- Table -->
-                    <div class="table-responsive datatable-custom">
-                        <table class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100"
-                            style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}}">
-                            <thead class="thead-light thead-50 text-capitalize">
-                                <tr>
-                                    <th class="">{{\App\CPU\translate('SL')}}</th>
-                                    <th>{{\App\CPU\translate('Order')}} {{\App\CPU\translate('ID')}}</th>
-                                    <th>{{\App\CPU\translate('Order')}} {{\App\CPU\translate('Date')}}</th>
-                                    <th>{{\App\CPU\translate('customer')}} {{\App\CPU\translate('info')}}</th>
-                                    <th>{{\App\CPU\translate('Store')}}</th>
-                                    <th class="text-right">{{\App\CPU\translate('Total')}} {{\App\CPU\translate('Amount')}}</th>
-                                    <th class="text-center">{{\App\CPU\translate('Order')}} {{\App\CPU\translate('Status')}} </th>
-                                    <th class="text-center">{{\App\CPU\translate('Action')}}</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                            @foreach($orders as $key=>$order)
-
-                                <tr class="status-{{$order['order_status']}} class-all">
-                                    <td class="">
-                                        {{$orders->firstItem()+$key}}
-                                    </td>
-                                    <td >
-                                        <a class="title-color" href="{{route('admin.orders.details',['id'=>$order['id']])}}">{{$order['id']}}</a>
-                                    </td>
-                                    <td>
-                                        <div>{{date('d M Y',strtotime($order['created_at']))}},</div>
-                                        <div>{{ date("h:i A",strtotime($order['created_at'])) }}</div>
-                                    </td>
-                                    <td>
-                                        @if($order->customer_id == 0)
-                                            <strong class="title-name">Walking customer</strong>
-                                        @else
-                                            @if($order->customer)
-                                                <a class="text-body text-capitalize" href="{{route('admin.orders.details',['id'=>$order['id']])}}">
-                                                    <strong class="title-name">{{$order->customer['f_name'].' '.$order->customer['l_name']}}</strong>
-                                                </a>
-                                                <a class="d-block title-color" href="tel:{{ $order->customer['phone'] }}">{{ $order->customer['phone'] }}</a>
-                                            @else
-                                                <label class="badge badge-danger fz-12">{{\App\CPU\translate('invalid_customer_data')}}</label>
-                                            @endif
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <span class="store-name font-weight-medium">
-                                            @if($order->seller_is == 'seller')
-                                                {{ isset($order->seller->shop) ? $order->seller->shop->name : 'Store not found' }}
-                                            @elseif($order->seller_is == 'admin')
-                                                {{\App\CPU\translate('In-House')}}
-                                            @endif
-                                        </span>
-                                    </td>
-                                    <td class="text-right">
-                                        <div>{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order->order_amount))}}</div>
-
-                                        @if($order->payment_status=='paid')
-                                            <span class="badge text-success fz-12 px-0">
-                                                {{\App\CPU\translate('paid')}}
-                                            </span>
-                                        @else
-                                            <span class="badge text-danger fz-12 px-0">
-                                                {{\App\CPU\translate('unpaid')}}
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td class="text-center text-capitalize">
-                                        @if($order['order_status']=='pending')
-                                            <span class="badge badge-soft-info fz-12">
-                                                    {{$order['order_status']}}
-                                            </span>
-
-                                        @elseif($order['order_status']=='processing' || $order['order_status']=='out_for_delivery')
-                                            <span class="badge badge-soft-warning fz-12">
-                                                {{str_replace('_',' ',$order['order_status'] == 'processing' ? 'packaging':$order['order_status'])}}
-                                            </span>
-                                        @elseif($order['order_status']=='confirmed')
-                                            <span class="badge badge-soft-success fz-12">
-                                                {{$order['order_status']}}
-                                            </span>
-                                        @elseif($order['order_status']=='failed')
-                                            <span class="badge badge-danger fz-12">
-                                                {{$order['order_status'] == 'failed' ? 'Failed To Deliver' : ''}}
-                                            </span>
-                                        @elseif($order['order_status']=='delivered')
-                                            <span class="badge badge-soft-success fz-12">
-                                                {{$order['order_status']}}
-                                            </span>
-                                        @else
-                                            <span class="badge badge-soft-danger fz-12">
-                                                {{$order['order_status']}}
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <div class="d-flex justify-content-center gap-2">
-                                            <a class="btn btn-outline--primary square-btn btn-sm mr-1" title="{{\App\CPU\translate('view')}}"
-                                                href="{{route('admin.orders.details',['id'=>$order['id']])}}">
-                                                <img src="{{asset('/public/assets/back-end/img/eye.svg')}}" class="svg" alt="">
-                                            </a>
-                                            <a class="btn btn-outline-success square-btn btn-sm mr-1" target="_blank" title="{{\App\CPU\translate('invoice')}}"
-                                                href="{{route('admin.orders.generate-invoice',[$order['id']])}}">
-                                                <i class="tio-download-to"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- End Table -->
-
-                    <!-- Pagination -->
-                    <div class="table-responsive mt-4">
-                        <div class="d-flex justify-content-lg-end">
-                            <!-- Pagination -->
-                            {!! $orders->links() !!}
+                            <a href="{{route('admin.product.stock-limit-list',['in_house'])}}" class="btn btn-info">
+                                <span class="text">{{\App\CPU\translate('Limited Sotcks')}}</span>
+                            </a> --}}
+                            @if (!isset($request_status))
+                                <a href="{{route('admin.product.add-new')}}" class="btn btn--primary">
+                                    <i class="tio-add"></i>
+                                    <span class="text">{{\App\CPU\translate('Add_New_Product')}}</span>
+                                </a>
+                            @endif
                         </div>
                     </div>
-                    <!-- End Pagination -->
                 </div>
+
+                <div class="table-responsive">
+                    <table id="datatable" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
+                        <thead class="thead-light thead-50 text-capitalize">
+                            <tr>
+                                <th>{{\App\CPU\translate('SL')}}</th>
+                                <th>{{\App\CPU\translate('Product Name')}}</th>
+                                <th class="text-right">{{\App\CPU\translate('Product Type')}}</th>
+                                <th class="text-right">{{\App\CPU\translate('purchase_price')}}</th>
+                                <th class="text-right">{{\App\CPU\translate('selling_price')}}</th>
+                                <th class="text-center">{{\App\CPU\translate('Show_as_featured')}}</th>
+                                <th class="text-center">{{\App\CPU\translate('Active')}} {{\App\CPU\translate('status')}}</th>
+                                <th class="text-center">{{\App\CPU\translate('Action')}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($pro as $k=>$p)
+                            <tr>
+                                <th scope="row">{{$pro->firstItem()+$k}}</th>
+                                <td>
+                                    <a href="{{route('admin.product.view',[$p['id']])}}" class="media align-items-center gap-2">
+                                        <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$p['thumbnail']}}"
+                                             onerror="this.src='{{asset('/public/assets/back-end/img/brand-logo.png')}}'"class="avatar border" alt="">
+                                        <span class="media-body title-color hover-c1">
+                                            {{\Illuminate\Support\Str::limit($p['name'],20)}}
+                                        </span>
+                                    </a>
+                                </td>
+                                <td class="text-right">
+                                    {{ ucfirst($p['product_type']) }}
+                                </td>
+                                <td class="text-right">
+                                    {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($p['purchase_price']))}}
+                                </td>
+                                <td class="text-right">
+                                    {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($p['unit_price']))}}
+                                </td>
+                                <td class="text-center">
+                                    <label class="mx-auto switcher">
+                                        <input class="switcher_input" type="checkbox"
+                                                onclick="featured_status('{{$p['id']}}')" {{$p->featured == 1?'checked':''}}>
+                                        <span class="switcher_control"></span>
+                                    </label>
+                                </td>
+                                <td class="text-center">
+                                    <label class="mx-auto switcher">
+                                        <input type="checkbox" class="status switcher_input"
+                                                id="{{$p['id']}}" {{$p->status == 1?'checked':''}}>
+                                        <span class="switcher_control"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a class="btn btn-outline-info btn-sm square-btn" title="{{ \App\CPU\translate('barcode') }}"
+                                            href="{{ route('admin.product.barcode', [$p['id']]) }}">
+                                            <i class="tio-barcode"></i>
+                                        </a>
+                                        <a class="btn btn-outline-info btn-sm square-btn" title="View" href="{{route('admin.product.view',[$p['id']])}}">
+                                            <i class="tio-invisible"></i>
+                                        </a>
+                                        <a class="btn btn-outline--primary btn-sm square-btn"
+                                            title="{{\App\CPU\translate('Edit')}}"
+                                            href="{{route('admin.product.edit',[$p['id']])}}">
+                                            <i class="tio-edit"></i>
+                                        </a>
+                                        <a class="btn btn-outline-danger btn-sm square-btn" href="javascript:"
+                                            title="{{\App\CPU\translate('Delete')}}"
+                                            onclick="form_alert('product-{{$p['id']}}','Want to delete this item ?')">
+                                            <i class="tio-delete"></i>
+                                        </a>
+                                    </div>
+                                    <form action="{{route('admin.product.delete',[$p['id']])}}"
+                                            method="post" id="product-{{$p['id']}}">
+                                        @csrf @method('delete')
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-responsive mt-4">
+                    <div class="px-4 d-flex justify-content-lg-end">
+                        <!-- Pagination -->
+                        {{$pro->links()}}
+                    </div>
+                </div>
+
+                @if(count($pro)==0)
+                    <div class="text-center p-4">
+                        <img class="mb-3 w-160" src="{{asset('public/assets/back-end')}}/svg/illustrations/sorry.svg" alt="Image Description">
+                        <p class="mb-0">{{\App\CPU\translate('No data to show')}}</p>
+                    </div>
+                @endif
             </div>
-            <!-- End Order States -->
-
-            <!-- Nav Scroller -->
-            <div class="js-nav-scroller hs-nav-scroller-horizontal d-none">
-                <span class="hs-nav-scroller-arrow-prev d-none">
-                    <a class="hs-nav-scroller-arrow-link" href="javascript:;">
-                        <i class="tio-chevron-left"></i>
-                    </a>
-                </span>
-
-                <span class="hs-nav-scroller-arrow-next d-none">
-                    <a class="hs-nav-scroller-arrow-link" href="javascript:;">
-                        <i class="tio-chevron-right"></i>
-                    </a>
-                </span>
-
-                <!-- Nav -->
-                <ul class="nav nav-tabs page-header-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">{{\App\CPU\translate('order_list')}}</a>
-                    </li>
-                </ul>
-                <!-- End Nav -->
-            </div>
-            <!-- End Nav Scroller -->
         </div>
-        <!-- End Page Header -->
     </div>
+</div>
 @endsection
 
-@push('script_2')
+@push('script')
+    <!-- Page level plugins -->
+    <script src="{{asset('public/assets/back-end')}}/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="{{asset('public/assets/back-end')}}/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <!-- Page level custom scripts -->
     <script>
-        function filter_order() {
-            $.get({
-                url: '{{route('admin.orders.inhouse-order-filter')}}',
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $('#loading').show();
+        // Call the dataTables jQuery plugin
+        $(document).ready(function () {
+            $('#dataTable').DataTable();
+        });
+
+        $(document).on('change', '.status', function () {
+            var id = $(this).attr("id");
+            if ($(this).prop("checked") == true) {
+                var status = 1;
+            } else if ($(this).prop("checked") == false) {
+                var status = 0;
+            }
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: "{{route('admin.product.status-update')}}",
+                method: 'POST',
+                data: {
+                    id: id,
+                    status: status
                 },
                 success: function (data) {
-                    toastr.success('{{\App\CPU\translate('order_filter_success')}}');
-                    location.reload();
-                },
-                complete: function () {
-                    $('#loading').hide();
-                },
-            });
-        };
-    </script>
-    <script>
-        $('#from_date,#to_date').change(function () {
-            let fr = $('#from_date').val();
-            let to = $('#to_date').val();
-            if(fr != ''){
-                $('#to_date').attr('required','required');
-            }
-            if(to != ''){
-                $('#from_date').attr('required','required');
-            }
-            if (fr != '' && to != '') {
-                if (fr > to) {
-                    $('#from_date').val('');
-                    $('#to_date').val('');
-                    toastr.error('{{\App\CPU\translate('Invalid date range')}}!', Error, {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
+                    if(data.success == true) {
+                        toastr.success('{{\App\CPU\translate('Status updated successfully')}}');
+                    }
+                    else if(data.success == false) {
+                        toastr.error('{{\App\CPU\translate('Status updated failed. Product must be approved')}}');
+                        setTimeout(function(){
+                            location.reload();
+                        }, 2000);
+                    }
                 }
-            }
+            });
+        });
 
-        })
+        function featured_status(id) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: "{{route('admin.product.featured-status')}}",
+                method: 'POST',
+                data: {
+                    id: id
+                },
+                success: function () {
+                    toastr.success('{{\App\CPU\translate('Featured status updated successfully')}}');
+                }
+            });
+        }
+
     </script>
 @endpush

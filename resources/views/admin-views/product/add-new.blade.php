@@ -27,44 +27,19 @@
                     enctype="multipart/form-data" id="product_form">
                     @csrf
                     <div class="card">
-                        <div class="px-4 pt-3">
-                            @php($language = \App\Model\BusinessSetting::where('type', 'pnc_language')->first())
-                            @php($language = $language->value ?? null)
-                            @php($default_lang = 'en')
-
-                            @php($default_lang = json_decode($language)[0])
-                            <ul class="nav nav-tabs w-fit-content mb-4">
-                                @foreach (json_decode($language) as $lang)
-                                    <li class="nav-item">
-                                        <a class="nav-link text-capitalize lang_link {{ $lang == $default_lang ? 'active' : '' }}"
-                                            href="#"
-                                            id="{{ $lang }}-link">{{ \App\CPU\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-
                         <div class="card-body">
-                            @foreach (json_decode($language) as $lang)
-                                <div class="{{ $lang != $default_lang ? 'd-none' : '' }} lang_form"
-                                    id="{{ $lang }}-form">
-                                    <div class="form-group">
-                                        <label class="title-color"
-                                            for="{{ $lang }}_name">{{ \App\CPU\translate('name') }}
-                                            ({{ strtoupper($lang) }})
-                                        </label>
-                                        <input type="text" {{ $lang == $default_lang ? 'required' : '' }} name="name[]"
-                                            id="{{ $lang }}_name" class="form-control" placeholder="New Product">
-                                    </div>
-                                    <input type="hidden" name="lang[]" value="{{ $lang }}">
-                                    <div class="form-group pt-4">
-                                        <label class="title-color"
-                                            for="{{ $lang }}_description">{{ \App\CPU\translate('description') }}
-                                            ({{ strtoupper($lang) }})</label>
-                                        <textarea name="description[]" class="textarea editor-textarea">{{ old('details') }}</textarea>
-                                    </div>
+                            <div class="lang_form" id="english-form">
+                                <div class="form-group">
+                                    <label class="title-color" for="english_name">{{ \App\CPU\translate('Device Name') }}
+                                    </label>
+                                    <input type="text" required name="name[]" id="english_name" class="form-control" placeholder="New Product">
                                 </div>
-                            @endforeach
+                                <input type="hidden" name="lang[]" value="english">
+                                {{-- <div class="form-group pt-4">
+                                    <label class="title-color" for="english_description">{{ \App\CPU\translate('description') }} ({{ strtoupper($lang) }})</label>
+                                    <textarea name="description[]" class="textarea editor-textarea">{{ old('details') }}</textarea>
+                                </div> --}}
+                            </div>
                         </div>
                     </div>
 
@@ -73,154 +48,44 @@
                             <h4 class="mb-0">{{ \App\CPU\translate('General Info') }}</h4>
                         </div>
                         <div class="card-body">
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-4">
-
-                                <label for="name" class="title-color">{{ \App\CPU\translate('product_type') }}</label>
-                                <select name="product_type" id="product_type" class="form-control" required>
-                                    <option value="physical" selected>{{ \App\CPU\translate('physical') }}</option>
-                                    @if($digital_product_setting)
-                                        <option value="digital">{{ \App\CPU\translate('digital') }}</option>
-                                    @endif
-                                </select>
-                            </div>
-                            <div class="col-md-4" id="digital_product_type_show">
-                                <label for="digital_product_type" class="title-color">{{ \App\CPU\translate("digital_product_type") }}</label>
-                                <select name="digital_product_type" id="digital_product_type" class="form-control" required>
-                                    <option value="{{ old('category_id') }}" selected disabled>---Select---</option>
-                                    <option value="ready_after_sell">{{ \App\CPU\translate("Ready After Sell") }}</option>
-                                    <option value="ready_product">{{ \App\CPU\translate("Ready Product") }}</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4" id="digital_file_ready_show">
-                                <label for="digital_file_ready" class="title-color">{{ \App\CPU\translate("ready_product_upload") }}</label>
-                                <input type="file" name="digital_file_ready" id="digital_file_ready" class="form-control">
-                                <div class="mt-1 text-info">File type: jpg, jpeg, png, gif, zip, pdf</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="name" class="title-color">{{ \App\CPU\translate('Category') }}</label>
-                                <select class="js-example-basic-multiple form-control" name="category_id"
-                                    onchange="getRequest('{{ url('/') }}/admin/product/get-categories?parent_id='+this.value,'sub-category-select','select')"
-                                    required>
-                                    <option value="{{ old('category_id') }}" selected disabled>---Select---
-                                    </option>
-                                    @foreach ($cat as $c)
-                                        <option value="{{ $c['id'] }}"
-                                            {{ old('name') == $c['id'] ? 'selected' : '' }}>
-                                            {{ $c['name'] }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="name" class="title-color">{{ \App\CPU\translate('Sub Category') }}</label>
-                                <select class="js-example-basic-multiple form-control" name="sub_category_id"
-                                    id="sub-category-select"
-                                    onchange="getRequest('{{ url('/') }}/admin/product/get-categories?parent_id='+this.value,'sub-sub-category-select','select')">
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                    <label for="name" class="title-color">{{ \App\CPU\translate('Sub Sub Category') }}</label>
-                                    <select class="js-example-basic-multiple form-control" name="sub_sub_category_id"
-                                        id="sub-sub-category-select">
-
-                                    </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="title-color"
-                                        for="exampleFormControlInput1">{{ \App\CPU\translate('product_code_sku') }}
-                                        <span class="text-danger">*</span>
-                                        <a class="style-one-pro" style="cursor: pointer;"
-                                            onclick="document.getElementById('generate_number').value = getRndInteger()">{{ \App\CPU\translate('generate') }}
-                                            {{ \App\CPU\translate('code') }}</a></label>
-                                    <input type="text" minlength="6" id="generate_number" name="code"
-                                        class="form-control" value="{{ old('code') }}"
-                                        placeholder="{{ \App\CPU\translate('code') }}" required>
-                                </div>
-                            </div>
-                            @if($brand_setting)
-                            <div class="col-md-4">
-                                <label for="name" class="title-color">{{ \App\CPU\translate('Brand') }}</label>
-                                <select
-                                    class="js-example-basic-multiple js-states js-example-responsive form-control"
-                                    name="brand_id" required>
-                                    <option value="{{ null }}" selected disabled>
-                                        ---{{ \App\CPU\translate('Select') }}---</option>
-                                    @foreach ($br as $b)
-                                        <option value="{{ $b['id'] }}">{{ $b['name'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            @endif
-
-                            <div class="col-md-4 physical_product_show">
-                                <label for="name" class="title-color">{{ \App\CPU\translate('Unit') }}</label>
-                                <select class="js-example-basic-multiple form-control" name="unit">
-                                    @foreach (\App\CPU\Helpers::units() as $x)
-                                        <option value="{{ $x }}" {{ old('unit') == $x ? 'selected' : '' }}>
-                                            {{ $x }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card mt-2 rest-part physical_product_show">
-                        <div class="card-header">
-                            <h4 class="mb-0">{{ \App\CPU\translate('Variations') }}</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="row align-items-end">
-                                <div class="col-md-6">
-                                    <div class="mb-3 d-flex align-items-center gap-2">
-                                        <label for="colors" class="title-color mb-0">
-                                            {{ \App\CPU\translate('Colors') }} :
-                                        </label>
-                                        <label class="switcher">
-                                            <input type="checkbox" class="switcher_input" value="{{ old('colors_active') }}"
-                                                name="colors_active">
-                                            <span class="switcher_control"></span>
-                                        </label>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="name" class="title-color">{{ \App\CPU\translate('product_type') }}</label>
+                                        <select name="product_type" id="product_type" class="form-control" required>
+                                            <option value="physical" selected>{{ \App\CPU\translate('physical') }}</option>
+                                            @if($digital_product_setting)
+                                                <option value="digital">{{ \App\CPU\translate('digital') }}</option>
+                                            @endif
+                                        </select>
                                     </div>
-                                    <select
-                                        class="js-example-basic-multiple js-states js-example-responsive form-control color-var-select"
-                                        name="colors[]" multiple="multiple" id="colors-selector" disabled>
-                                        @foreach (\App\Model\Color::orderBy('name', 'asc')->get() as $key => $color)
-                                            <option value="{{ $color->code }}">
-                                                {{ $color['name'] }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="attributes" class="title-color">
-                                        {{ \App\CPU\translate('Attributes') }} :
-                                    </label>
-                                    <select
-                                        class="js-example-basic-multiple js-states js-example-responsive form-control"
-                                        name="choice_attributes[]" id="choice_attributes" multiple="multiple">
-                                        @foreach (\App\Model\Attribute::orderBy('name', 'asc')->get() as $key => $a)
-                                            <option value="{{ $a['id'] }}">
-                                                {{ $a['name'] }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-12 mt-2 mb-2">
-                                    <div class="customer_choice_options" id="customer_choice_options"></div>
+                                    @if($brand_setting)
+                                    {{-- <div class="col-md-4">
+                                        <label for="name" class="title-color">{{ \App\CPU\translate('Brand') }}</label>
+                                        <select
+                                            class="js-example-basic-multiple js-states js-example-responsive form-control"
+                                            name="brand_id" required>
+                                            <option value="{{ null }}" selected disabled>
+                                                ---{{ \App\CPU\translate('Select') }}---</option>
+                                            @foreach ($br as $b)
+                                                <option value="{{ $b['id'] }}">{{ $b['name'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div> --}}
+                                    @endif
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="title-color"
+                                                for="exampleFormControlInput1">{{ \App\CPU\translate('product_code_sku') }}
+                                                <span class="text-danger">*</span>
+                                                <a class="style-one-pro" style="cursor: pointer;"
+                                                    onclick="document.getElementById('generate_number').value = getRndInteger()">{{ \App\CPU\translate('generate') }}
+                                                    {{ \App\CPU\translate('code') }}</a></label>
+                                            <input type="text" minlength="6" id="generate_number" name="code"
+                                                class="form-control" value="{{ old('code') }}"
+                                                placeholder="{{ \App\CPU\translate('code') }}" required>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -268,9 +133,6 @@
                                         <option value="percent">{{ \App\CPU\translate('Percent') }}</option>
                                     </select>
                                 </div>
-
-                                <div class="col-12 form-group sku_combination" id="sku_combination"></div>
-
                                 <div class="col-md-3 form-group physical_product_show" id="quantity">
                                     <label class="title-color">{{ \App\CPU\translate('total') }}
                                         {{ \App\CPU\translate('Quantity') }}</label>
@@ -308,49 +170,9 @@
                         </div>
                     </div>
 
-                    <div class="card mt-2 mb-2 rest-part">
-                        <div class="card-header">
-                            <h4 class="mb-0">{{ \App\CPU\translate('seo_section') }}</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-12 form-group">
-                                    <label class="title-color">{{ \App\CPU\translate('Meta Title') }}</label>
-                                    <input type="text" name="meta_title" placeholder="" class="form-control">
-                                </div>
-
-                                <div class="col-md-8 form-group">
-                                    <label class="title-color">{{ \App\CPU\translate('Meta Description') }}</label>
-                                    <textarea rows="10" type="text" name="meta_description" class="form-control"></textarea>
-                                </div>
-
-                                <div class="col-md-4 form-group">
-                                    <div class="">
-                                        <label class="title-color">{{ \App\CPU\translate('Meta Image') }}</label>
-                                    </div>
-                                    <div class="border border-dashed">
-                                        <div class="row" id="meta_img"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="card mt-2 rest-part">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-12 mb-4">
-                                    <div class="mb-2">
-                                        <label class="title-color">{{ \App\CPU\translate('Youtube video link') }}</label>
-                                        <span class="text-info"> (
-                                            {{ \App\CPU\translate('optional, please provide embed link not direct link') }}.
-                                            )</span>
-                                    </div>
-                                    <input type="text" name="video_link"
-                                        placeholder="{{ \App\CPU\translate('EX') }} : https://www.youtube.com/embed/5R06LRdUCSE"
-                                        class="form-control" required>
-                                </div>
-
                                 <div class="col-md-8 form-group">
                                     <div class="mb-2">
                                         <label class="title-color">{{ \App\CPU\translate('Upload product images') }}</label>
@@ -377,7 +199,7 @@
 
                     <div class="row justify-content-end gap-3 mt-3">
                         <button type="reset" class="btn btn-secondary">{{ \App\CPU\translate('reset') }}</button>
-                        <button type="button" onclick="check()" class="btn btn--primary">{{ \App\CPU\translate('Submit') }}</button>
+                        <button type="submit" class="btn btn--primary">{{ \App\CPU\translate('Submit') }}</button>
                     </div>
                 </form>
             </div>
@@ -640,29 +462,32 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
+
+                alert('a');
+
                 $.post({
                     url: '{{ route('admin.product.store') }}',
                     data: formData,
                     contentType: false,
                     processData: false,
                     success: function(data) {
-                        // console.log(data.errors);
+                        //console.log(data.errors);
                         // return false;
-                        if (data.errors) {
-                            for (var i = 0; i < data.errors.length; i++) {
-                                toastr.error(data.errors[i].message, {
-                                    CloseButton: true,
-                                    ProgressBar: true
-                                });
-                            }
-                        } else {
+                        // if (data.errors) {
+                        //     for (var i = 0; i < data.errors.length; i++) {
+                        //         toastr.error(data.errors[i].message, {
+                        //             CloseButton: true,
+                        //             ProgressBar: true
+                        //         });
+                        //     }
+                        // } else {
                             toastr.success(
                             '{{ \App\CPU\translate('product added successfully') }}!', {
                                 CloseButton: true,
                                 ProgressBar: true
                             });
                             $('#product_form').submit();
-                        }
+                        //}
                     }
                 });
             })
@@ -670,22 +495,6 @@
     </script>
 
     <script>
-        $(".lang_link").click(function(e) {
-            e.preventDefault();
-            $(".lang_link").removeClass('active');
-            $(".lang_form").addClass('d-none');
-            $(this).addClass('active');
-
-            let form_id = this.id;
-            let lang = form_id.split("-")[0];
-            console.log(lang);
-            $("#" + lang + "-form").removeClass('d-none');
-            if (lang == '{{ $default_lang }}') {
-                $(".rest-part").removeClass('d-none');
-            } else {
-                $(".rest-part").addClass('d-none');
-            }
-        })
 
         $(document).ready(function(){
             product_type();

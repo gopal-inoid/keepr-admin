@@ -1,4 +1,4 @@
-<div class="col-sm-6 col-lg-3">
+{{-- <div class="col-sm-6 col-lg-3">
     <!-- Business Analytics Card -->
     <div class="business-analytics">
         <h5 class="business-analytics__subtitle">{{\App\CPU\translate('Total Sale')}}</h5>
@@ -7,7 +7,7 @@
     </div>
     <!-- End Business Analytics Card -->
 </div>
-{{-- <div class="col-sm-6 col-lg-3">
+<div class="col-sm-6 col-lg-3">
     <!-- Business Analytics Card -->
     <div class="business-analytics">
         <h5 class="business-analytics__subtitle">{{\App\CPU\translate('Total Stores')}}</h5>
@@ -19,7 +19,16 @@
 <div class="col-sm-6 col-lg-3">
     <!-- Business Analytics Card -->
     <div class="business-analytics">
-        <h5 class="business-analytics__subtitle">{{\App\CPU\translate('Total Products')}}</h5>
+        <h5 class="business-analytics__subtitle">{{ \App\CPU\translate('Total Users') }}</h5>
+        <h2 class="business-analytics__title">{{ $data['customer'] }}</h2>
+        <img src="{{asset('/public/assets/back-end/img/total-customer.png')}}" class="business-analytics__img" alt="">
+    </div>
+    <!-- End Business Analytics Card -->
+</div>
+<div class="col-sm-6 col-lg-3">
+    <!-- Business Analytics Card -->
+    <div class="business-analytics">
+        <h5 class="business-analytics__subtitle">{{\App\CPU\translate('Total Devices')}}</h5>
         <h2 class="business-analytics__title">{{ $data['product'] }}</h2>
         <img src="{{asset('/public/assets/back-end/img/total-product.png')}}" class="business-analytics__img" alt="">
     </div>
@@ -28,9 +37,18 @@
 <div class="col-sm-6 col-lg-3">
     <!-- Business Analytics Card -->
     <div class="business-analytics">
-        <h5 class="business-analytics__subtitle">Total Users {{-- \App\CPU\translate('Total Customers') --}}</h5>
-        <h2 class="business-analytics__title">{{ $data['customer'] }}</h2>
-        <img src="{{asset('/public/assets/back-end/img/total-customer.png')}}" class="business-analytics__img" alt="">
+        <h5 class="business-analytics__subtitle">{{\App\CPU\translate('Paired devices')}}</h5>
+        <h2 class="business-analytics__title">{{ $data['product'] }}</h2>
+        <img src="{{asset('/public/assets/back-end/img/total-product.png')}}" class="business-analytics__img" alt="">
+    </div>
+    <!-- End Business Analytics Card -->
+</div>
+<div class="col-sm-6 col-lg-3">
+    <!-- Business Analytics Card -->
+    <div class="business-analytics">
+        <h5 class="business-analytics__subtitle">{{\App\CPU\translate('Connected devices')}}</h5>
+        <h2 class="business-analytics__title">{{ $data['product'] }}</h2>
+        <img src="{{asset('/public/assets/back-end/img/total-product.png')}}" class="business-analytics__img" alt="">
     </div>
     <!-- End Business Analytics Card -->
 </div>

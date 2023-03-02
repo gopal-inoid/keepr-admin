@@ -28,7 +28,7 @@
                             <h4 class="d-flex align-items-center text-capitalize gap-10 mb-0">
                                 <img src="{{asset('/public/assets/back-end/img/business_analytics.png')}}" alt="">{{\App\CPU\translate('business_analytics')}}</h4>
                         </div>
-                        <div class="col-sm-6 d-flex justify-content-sm-end">
+                        {{-- <div class="col-sm-6 d-flex justify-content-sm-end">
                             <select class="custom-select w-auto" name="statistics_type"
                                     onchange="order_stats_update(this.value)">
                                 <option
@@ -44,7 +44,7 @@
                                     {{ \App\CPU\translate("This Months Statistics")}}
                                 </option>
                             </select>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="row g-2" id="order_stats">
                         @include('admin-views.partials._dashboard-order-stats',['data'=>$data])
@@ -55,7 +55,7 @@
 
 
             <!-- Admin Wallet -->
-            <div class="card mb-3">
+            {{-- <div class="card mb-3">
                 <div class="card-body">
                     <h4 class="d-flex align-items-center text-capitalize gap-10 mb-3">
                         <img width="20" class="mb-1" src="{{asset('/public/assets/back-end/img/admin-wallet.png')}}" alt="">
@@ -204,7 +204,7 @@
                 </div>
                 <!-- End Total Business Overview -->
 
-                {{-- <div class="col-md-6 col-xl-4">
+                <div class="col-md-6 col-xl-4">
                     <!-- Card -->
                     <div class="card h-100">
                         @include('admin-views.partials._top-customer',['top_customer'=>$data['top_customer']])
@@ -250,9 +250,9 @@
                         @include('admin-views.partials._top-delivery-man',['top_deliveryman'=>$data['top_deliveryman']])
                     </div>
                     <!-- End Card -->
-                </div> --}}
+                </div>
 
-            </div>
+            </div> --}}
         </div>
     @else
         <div class="content container-fluid">

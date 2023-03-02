@@ -208,7 +208,7 @@
                                     <td>
                                         <img class="ratio-4:1" width="80"
                                              onerror="this.src='{{asset('public/assets/front-end/img/placeholder.png')}}'"
-                                             src="{{asset('storage/app/public/banner')}}/{{$banner['photo']}}">
+                                             src="{{asset('banner')}}/{{$banner['photo']}}">
                                     </td>
                                     <td>{{$banner->banner_type}}</td>
                                     <td>

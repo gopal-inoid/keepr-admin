@@ -12,6 +12,7 @@ use App\Model\DeliveryMan;
 use App\Model\DeliveryManTransaction;
 use App\Model\DeliverymanWallet;
 use App\Model\Order;
+use App\Model\Product;
 use App\Model\OrderDetail;
 use App\Model\OrderTransaction;
 use App\Model\Seller;
@@ -105,23 +106,40 @@ class OrderController extends Controller
             $failed_query = Order::where(['order_status' => 'failed']);
             $failed_count = $this->common_query_status_count($failed_query, $status, $request);
 
-        return view(
-                'admin-views.order.list',
-                compact(
-                    'orders',
-                    'search',
-                    'from', 'to', 'status',
-                    'filter',
-                    'pending_count',
-                    'confirmed_count',
-                    'processing_count',
-                    'out_for_delivery_count',
-                    'delivered_count',
-                    'returned_count',
-                    'failed_count',
-                    'canceled_count'
-                )
-            );
+            // return view(
+            //         'admin-views.order.list',
+            //         compact(
+            //             'orders',
+            //             'search',
+            //             'from', 'to', 'status',
+            //             'filter',
+            //             'pending_count',
+            //             'confirmed_count',
+            //             'processing_count',
+            //             'out_for_delivery_count',
+            //             'delivered_count',
+            //             'returned_count',
+            //             'failed_count',
+            //             'canceled_count'
+            //         )
+            //     );
+
+        $query_param = [];
+        $search = $request['search'];
+        $pro = Product::where(['added_by' => 'admin']);
+        if ($request->has('search')) {
+            $key = explode(' ', $request['search']);
+            $pro = $pro->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->Where('name', 'like', "%{$value}%");
+                }
+            });
+            $query_param = ['search' => $request['search']];
+        }
+        $request_status = $request['status'];
+        $pro = $pro->orderBy('id', 'DESC')->paginate(Helpers::pagination_limit())->appends(['status' => $request['status']])->appends($query_param);
+        return view('admin-views.order.list', compact('pro', 'search', 'request_status'));
+
     }
 
     public function common_query_status_count($query, $status, $request){

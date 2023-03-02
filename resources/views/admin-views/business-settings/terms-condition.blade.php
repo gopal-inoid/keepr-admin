@@ -32,7 +32,7 @@
                         @csrf
                         <div class="card-body">
                             <div class="form-group">
-                                <textarea class="form-control" id="editor"
+                                <textarea class="form-control" cols="30" rows="20" id="editor"
                                     name="value">{{$terms_condition->value}}</textarea>
                             </div>
                             <div class="form-group">

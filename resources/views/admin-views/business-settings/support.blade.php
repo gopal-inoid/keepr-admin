@@ -1,6 +1,6 @@
 @extends('layouts.back-end.app')
 
-@section('title', \App\CPU\translate('Current Active Devices'))
+@section('title', \App\CPU\translate('Support'))
 
 @push('css_or_js')
 
@@ -11,24 +11,28 @@
         <!-- Page Title -->
         <div class="mb-3">
             <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
-                <img width="20" src="{{asset('/public/assets/back-end/img/Pages.png')}}" alt="">
-                {{\App\CPU\translate('Current Active Devices')}}
+                <img src="{{asset('/public/assets/back-end/img/Pages.png')}}" width="20" alt="">
+                {{\App\CPU\translate('pages')}}
             </h2>
         </div>
         <!-- End Page Title -->
+
+        <!-- Inlile Menu -->
+        @include('admin-views.business-settings.pages-inline-menu')
+        <!-- End Inlile Menu -->
 
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="mb-0">{{\App\CPU\translate('Current Active Devices')}}</h5>
+                        <h5 class="mb-0">{{\App\CPU\translate('Support')}}</h5>
                     </div>
-                    <form action="{{route('admin.business-settings.update-terms')}}" method="post">
+
+                    <form action="{{route('admin.business-settings.support')}}" method="post">
                         @csrf
                         <div class="card-body">
                             <div class="form-group">
-                                <textarea class="form-control" id="editor"
-                                    name="value">{{$current_active_device->value}}</textarea>
+                                <textarea class="form-control" cols="30" rows="20" id="editor" name="value">{{$support->value ?? ''}}</textarea>
                             </div>
                             <div class="form-group">
                                 <input class="form-control btn--primary" type="submit" name="btn">

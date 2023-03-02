@@ -6,6 +6,8 @@ use App\CPU\ImageManager;
 use App\Http\Controllers\Controller;
 use App\Model\BusinessSetting;
 use App\Model\SocialMedia;
+use App\Model\Product;
+use App\CPU\Helpers;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -164,16 +166,259 @@ class BusinessSettingsController extends Controller
         return view('admin-views.business-settings.terms-condition', compact('terms_condition'));
     }
 
-    public function shipping_method()
+    public function shipping_method(Request $request)
     {
-        $shipping_method = BusinessSetting::where('type', 'terms_condition')->first();
-        return view('admin-views.business-settings.shipping-method', compact('shipping_method'));
+        // $shipping_method = BusinessSetting::where('type', 'terms_condition')->first();
+        // return view('admin-views.business-settings.shipping-method', compact('shipping_method'));
+
+        $query_param = [];
+        $search = $request['search'];
+        $pro = Product::where(['added_by' => 'admin']);
+        if ($request->has('search')) {
+            $key = explode(' ', $request['search']);
+            $pro = $pro->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->Where('name', 'like', "%{$value}%");
+                }
+            });
+            $query_param = ['search' => $request['search']];
+        }
+        $request_status = $request['status'];
+        $pro = $pro->orderBy('id', 'DESC')->paginate(Helpers::pagination_limit())->appends(['status' => $request['status']])->appends($query_param);
+        return view('admin-views.business-settings.shipping-method', compact('pro', 'search', 'request_status'));
+
     }
 
-    public function current_active_device()
+    public function save_shipping_method(Request $request)
     {
-        $current_active_device = BusinessSetting::where('type', 'terms_condition')->first();
-        return view('admin-views.business-settings.current-active-device', compact('current_active_device'));
+        $validator = Validator::make($request->all(), [
+            'name'                 => 'required',
+            'category_id'          => 'required',
+            'product_type'         => 'required',
+            'digital_product_type' => 'required_if:product_type,==,digital',
+            'digital_file_ready'   => 'required_if:digital_product_type,==,ready_product|mimes:jpg,jpeg,png,gif,zip,pdf',
+            'unit'                 => 'required_if:product_type,==,physical',
+            'images'               => 'required',
+            'image'                => 'required',
+            'tax'                  => 'required|min:0',
+            'unit_price'           => 'required|numeric|min:1',
+            'purchase_price'       => 'required|numeric|min:1',
+            'discount'             => 'required|gt:-1',
+            'shipping_cost'        => 'required_if:product_type,==,physical|gt:-1',
+            'code'                 => 'required|numeric|min:1|digits_between:6,20|unique:products',
+            'minimum_order_qty'    => 'required|numeric|min:1',
+        ], [
+            'images.required'                  => 'Product images is required!',
+            'image.required'                   => 'Product thumbnail is required!',
+            'category_id.required'             => 'Category is required!',
+            'unit.required_if'                 => 'Unit is required!',
+            'code.min'                         => 'Code must be positive!',
+            'code.digits_between'              => 'Code must be minimum 6 digits!',
+            'minimum_order_qty.required'       => 'Minimum order quantity is required!',
+            'minimum_order_qty.min'            => 'Minimum order quantity must be positive!',
+            'digital_file_ready.required_if'   => 'Ready product upload is required!',
+            'digital_file_ready.mimes'         => 'Ready product upload must be a file of type: pdf, zip, jpg, jpeg, png, gif.',
+            'digital_product_type.required_if' => 'Digital product type is required!',
+            'shipping_cost.required_if'        => 'Shipping Cost is required!',
+        ]);
+
+        $brand_setting = BusinessSetting::where('type', 'product_brand')->first()->value;
+        if ($brand_setting && empty($request->brand_id)) {
+            $validator->after(function ($validator) {
+                $validator->errors()->add(
+                    'brand_id', 'Brand is required!'
+                );
+            });
+        }
+
+        if ($request['discount_type'] == 'percent') {
+            $dis = ($request['unit_price'] / 100) * $request['discount'];
+        } else {
+            $dis = $request['discount'];
+        }
+
+        if ($request['unit_price'] <= $dis) {
+            $validator->after(function ($validator) {
+                $validator->errors()->add(
+                    'unit_price', 'Discount can not be more or equal to the price!'
+                );
+            });
+        }
+
+        if (is_null($request->name[array_search('en', $request->lang)])) {
+            $validator->after(function ($validator) {
+                $validator->errors()->add(
+                    'name', 'Name field is required!'
+                );
+            });
+        }
+
+        $p = new Product();
+        $p->user_id  = auth('admin')->id();
+        $p->added_by = "admin";
+        $p->name     = $request->name[array_search('en', $request->lang)];
+        $p->code     = $request->code;
+        $p->slug     = Str::slug($request->name[array_search('en', $request->lang)], '-') . '-' . Str::random(6);
+
+        $category = [];
+
+        if ($request->category_id != null) {
+            array_push($category, [
+                'id' => $request->category_id,
+                'position' => 1,
+            ]);
+        }
+        if ($request->sub_category_id != null) {
+            array_push($category, [
+                'id' => $request->sub_category_id,
+                'position' => 2,
+            ]);
+        }
+        if ($request->sub_sub_category_id != null) {
+            array_push($category, [
+                'id' => $request->sub_sub_category_id,
+                'position' => 3,
+            ]);
+        }
+
+        $p->category_ids         = json_encode($category);
+        $p->brand_id             = $request->brand_id;
+        $p->unit                 = $request->product_type == 'physical' ? $request->unit : null;
+        $p->digital_product_type = $request->product_type == 'digital' ? $request->digital_product_type : null;
+        $p->product_type         = $request->product_type;
+        $p->details              = $request->description[array_search('en', $request->lang)];
+
+        if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
+            $p->colors = $request->product_type == 'physical' ? json_encode($request->colors) : json_encode([]);
+        } else {
+            $colors = [];
+            $p->colors = $request->product_type == 'physical' ? json_encode($colors) : json_encode([]);
+        }
+        $choice_options = [];
+        if ($request->has('choice')) {
+            foreach ($request->choice_no as $key => $no) {
+                $str = 'choice_options_' . $no;
+                $item['name'] = 'choice_' . $no;
+                $item['title'] = $request->choice[$key];
+                $item['options'] = explode(',', implode('|', $request[$str]));
+                array_push($choice_options, $item);
+            }
+        }
+        $p->choice_options = $request->product_type == 'physical' ? json_encode($choice_options) : json_encode([]);
+        //combinations start
+        $options = [];
+        if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
+            $colors_active = 1;
+            array_push($options, $request->colors);
+        }
+        if ($request->has('choice_no')) {
+            foreach ($request->choice_no as $key => $no) {
+                $name = 'choice_options_' . $no;
+                $my_str = implode('|', $request[$name]);
+                array_push($options, explode(',', $my_str));
+            }
+        }
+        //Generates the combinations of customer choice options
+
+        $combinations = Helpers::combinations($options);
+
+        $variations = [];
+        $stock_count = 0;
+        if (count($combinations[0]) > 0) {
+            foreach ($combinations as $key => $combination) {
+                $str = '';
+                foreach ($combination as $k => $item) {
+                    if ($k > 0) {
+                        $str .= '-' . str_replace(' ', '', $item);
+                    } else {
+                        if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
+                            $color_name = Color::where('code', $item)->first()->name;
+                            $str .= $color_name;
+                        } else {
+                            $str .= str_replace(' ', '', $item);
+                        }
+                    }
+                }
+                $item = [];
+                $item['type'] = $str;
+                $item['price'] = BackEndHelper::currency_to_usd(abs($request['price_' . str_replace('.', '_', $str)]));
+                $item['sku'] = $request['sku_' . str_replace('.', '_', $str)];
+                $item['qty'] = abs($request['qty_' . str_replace('.', '_', $str)]);
+                array_push($variations, $item);
+                $stock_count += $item['qty'];
+            }
+        } else {
+            $stock_count = (integer)$request['current_stock'];
+        }
+
+        if ($validator->errors()->count() > 0) {
+            return response()->json(['errors' => Helpers::error_processor($validator)]);
+        }
+
+        //combinations end
+        $p->variation         = $request->product_type == 'physical' ? json_encode($variations) : json_encode([]);
+        $p->unit_price        = BackEndHelper::currency_to_usd($request->unit_price);
+        $p->purchase_price    = BackEndHelper::currency_to_usd($request->purchase_price);
+        $p->tax               = $request->tax_type == 'flat' ? BackEndHelper::currency_to_usd($request->tax) : $request->tax;
+        $p->tax_type          = $request->tax_type;
+        $p->discount          = $request->discount_type == 'flat' ? BackEndHelper::currency_to_usd($request->discount) : $request->discount;
+        $p->discount_type     = $request->discount_type;
+        $p->attributes        = $request->product_type == 'physical' ? json_encode($request->choice_attributes) : json_encode([]);
+        $p->current_stock     = $request->product_type == 'physical' ? abs($stock_count) : 0;
+        $p->minimum_order_qty = $request->minimum_order_qty;
+        $p->video_provider    = 'youtube';
+        $p->video_url         = $request->video_link;
+        $p->request_status    = 1;
+        $p->shipping_cost     = $request->product_type == 'physical' ? BackEndHelper::currency_to_usd($request->shipping_cost): 0;
+        $p->multiply_qty      = ($request->product_type == 'physical') ? ($request->multiplyQTY=='on'?1:0) : 0;
+
+        if ($request->ajax()) {
+            return response()->json([], 200);
+        } else {
+            if ($request->file('images')) {
+                foreach ($request->file('images') as $img) {
+                    $product_images[] = ImageManager::upload('product/', 'png', $img);
+                }
+                $p->images = json_encode($product_images);
+            }
+            $p->thumbnail = ImageManager::upload('product/thumbnail/', 'png', $request->image);
+
+            if($request->product_type == 'digital' && $request->digital_product_type == 'ready_product') {
+                $p->digital_file_ready = ImageManager::upload('product/digital-product/', $request->digital_file_ready->getClientOriginalExtension(), $request->digital_file_ready);
+            }
+
+            $p->meta_title       = $request->meta_title;
+            $p->meta_description = $request->meta_description;
+            $p->meta_image       = ImageManager::upload('product/meta/', 'png', $request->meta_image);
+
+            $p->save();
+
+            $data = [];
+            foreach ($request->lang as $index => $key) {
+                if ($request->name[$index] && $key != 'en') {
+                    array_push($data, array(
+                        'translationable_type' => 'App\Model\Product',
+                        'translationable_id' => $p->id,
+                        'locale' => $key,
+                        'key' => 'name',
+                        'value' => $request->name[$index],
+                    ));
+                }
+                if ($request->description[$index] && $key != 'en') {
+                    array_push($data, array(
+                        'translationable_type' => 'App\Model\Product',
+                        'translationable_id' => $p->id,
+                        'locale' => $key,
+                        'key' => 'description',
+                        'value' => $request->description[$index],
+                    ));
+                }
+            }
+            Translation::insert($data);
+
+            Toastr::success(translate('Product added successfully!'));
+            return redirect()->route('admin.product.list', ['in_house']);
+        }
     }
 
     public function updateTermsCondition(Request $data)
@@ -199,6 +444,22 @@ class BusinessSettingsController extends Controller
         ]);
         BusinessSetting::where('type', 'privacy_policy')->update(['value' => $data->value]);
         Toastr::success('Privacy policy Updated successfully!');
+        return redirect()->back();
+    }
+
+    public function support()
+    {
+        $support = BusinessSetting::where('type', 'support')->first();
+        return view('admin-views.business-settings.support', compact('support'));
+    }
+
+    public function support_update(Request $data)
+    {
+        $validatedData = $data->validate([
+            'value' => 'required',
+        ]);
+        BusinessSetting::where('type', 'support')->update(['value' => $data->value]);
+        Toastr::success('Support Updated successfully!');
         return redirect()->back();
     }
 

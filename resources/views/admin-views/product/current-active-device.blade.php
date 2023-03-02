@@ -1,6 +1,6 @@
 @extends('layouts.back-end.app')
 
-@section('title', \App\CPU\translate('Product List'))
+@section('title', \App\CPU\translate('Current Active Devices'))
 
 @push('css_or_js')
 
@@ -12,7 +12,7 @@
     <div class="mb-3">
         <h2 class="h1 mb-0 text-capitalize d-flex gap-2">
             <img src="{{asset('/public/assets/back-end/img/inhouse-product-list.png')}}" alt="">
-             Product List
+            Current Active Devices
             <span class="badge badge-soft-dark radius-50 fz-14 ml-1">{{ $pro->total() }}</span>
         </h2>
     </div>
@@ -41,28 +41,6 @@
                             </form>
                             <!-- End Search -->
                         </div>
-                        <div class="col-lg-8 mt-3 mt-lg-0 d-flex flex-wrap gap-3 justify-content-lg-end">
-                            {{-- <div>
-                                <button type="button" class="btn btn-outline--primary" data-toggle="dropdown">
-                                    <i class="tio-download-to"></i>
-                                    Export
-                                    <i class="tio-chevron-down"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a class="dropdown-item" href="{{route('admin.product.export-excel',['in_house', ''])}}">Excel</a></li>
-                                    <div class="dropdown-divider"></div>
-                                </ul>
-                            </div>
-                            <a href="{{route('admin.product.stock-limit-list',['in_house'])}}" class="btn btn-info">
-                                <span class="text">{{\App\CPU\translate('Limited Sotcks')}}</span>
-                            </a> --}}
-                            @if (!isset($request_status))
-                                <a href="{{route('admin.product.add-new')}}" class="btn btn--primary">
-                                    <i class="tio-add"></i>
-                                    <span class="text">{{\App\CPU\translate('Add_New_Product')}}</span>
-                                </a>
-                            @endif
-                        </div>
                     </div>
                 </div>
 
@@ -75,6 +53,7 @@
                                 <th class="text-right">{{\App\CPU\translate('Product Type')}}</th>
                                 <th class="text-right">{{\App\CPU\translate('purchase_price')}}</th>
                                 <th class="text-right">{{\App\CPU\translate('selling_price')}}</th>
+                                <th class="text-center">{{\App\CPU\translate('Show_as_featured')}}</th>
                                 <th class="text-center">{{\App\CPU\translate('Active')}} {{\App\CPU\translate('status')}}</th>
                                 <th class="text-center">{{\App\CPU\translate('Action')}}</th>
                             </tr>
@@ -100,6 +79,13 @@
                                 </td>
                                 <td class="text-right">
                                     {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($p['unit_price']))}}
+                                </td>
+                                <td class="text-center">
+                                    <label class="mx-auto switcher">
+                                        <input class="switcher_input" type="checkbox"
+                                                onclick="featured_status('{{$p['id']}}')" {{$p->featured == 1?'checked':''}}>
+                                        <span class="switcher_control"></span>
+                                    </label>
                                 </td>
                                 <td class="text-center">
                                     <label class="mx-auto switcher">

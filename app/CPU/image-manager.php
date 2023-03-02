@@ -12,6 +12,7 @@ class ImageManager
     {
         if ($image != null) {
             $imageName = Carbon::now()->toDateString() . "-" . uniqid() . "." . $format;
+            //$image->store($dir,'public');
             if (!Storage::disk('public')->exists($dir)) {
                 Storage::disk('public')->makeDirectory($dir);
             }

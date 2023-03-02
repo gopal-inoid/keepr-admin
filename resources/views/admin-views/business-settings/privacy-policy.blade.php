@@ -32,7 +32,7 @@
                         @csrf
                         <div class="card-body">
                             <div class="form-group">
-                                <textarea class="form-control" id="editor" name="value">{{$privacy_policy->value}}</textarea>
+                                <textarea class="form-control" cols="30" rows="20" id="editor" name="value">{{$privacy_policy->value}}</textarea>
                             </div>
                             <div class="form-group">
                                 <input class="form-control btn--primary" type="submit" name="btn">

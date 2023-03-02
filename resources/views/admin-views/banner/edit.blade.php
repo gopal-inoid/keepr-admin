@@ -113,7 +113,7 @@
                                         <img
                                             class="upload-img-view"
                                             id="mbImageviewer"
-                                            src="{{asset('storage/app/public/banner')}}/{{$banner['photo']}}"
+                                            src="{{asset('/banner')}}/{{$banner['photo']}}"
                                             alt=""/>
                                     </center>
                                 </div>

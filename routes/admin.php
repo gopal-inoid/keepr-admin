@@ -276,6 +276,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
             Route::get('remove-image', 'ProductController@remove_image')->name('remove-image');
             Route::post('status-update', 'ProductController@status_update')->name('status-update');
             Route::get('list', 'ProductController@list')->name('list');
+            Route::get('current-active-device', 'ProductController@current_active_device')->name('current-active-device');
             Route::get('export-excel/{type}', 'ProductController@export_excel')->name('export-excel');
             Route::get('stock-limit-list/{type}', 'ProductController@stock_limit_list')->name('stock-limit-list');
             Route::get('get-variations', 'ProductController@get_variations')->name('get-variations');
@@ -438,9 +439,12 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
                 Route::get('privacy-policy', 'BusinessSettingsController@privacy_policy')->name('privacy-policy');
                 Route::post('privacy-policy', 'BusinessSettingsController@privacy_policy_update')->name('privacy-policy');
 
-                Route::get('shipping-method', 'BusinessSettingsController@shipping_method')->name('shipping-method');
-                Route::get('current-active-device', 'BusinessSettingsController@current_active_device')->name('current-active-device');
+                Route::get('support', 'BusinessSettingsController@support')->name('support');
+                Route::post('support', 'BusinessSettingsController@support_update')->name('support');
 
+                Route::get('shipping-method', 'BusinessSettingsController@shipping_method')->name('shipping-method');
+                Route::post('save-shipping-method', 'BusinessSettingsController@save_shipping_method')->name('save-shipping-method');
+                
                 Route::get('fcm-index', 'BusinessSettingsController@fcm_index')->name('fcm-index');
                 Route::post('update-fcm', 'BusinessSettingsController@update_fcm')->name('update-fcm');
 
