@@ -70,7 +70,6 @@
                         <th>{{\App\CPU\translate('customer_name')}}</th>
                         <th>{{\App\CPU\translate('contact_info')}}</th>
                         <th>{{\App\CPU\translate('Total')}} {{\App\CPU\translate('Order')}} </th>
-                        <th>{{\App\CPU\translate('block')}} / {{\App\CPU\translate('unblock')}}</th>
                         <th class="text-center">{{\App\CPU\translate('Action')}}</th>
                     </tr>
                     </thead>
@@ -103,15 +102,6 @@
                                     {{$customer->orders->count()}}
                                 </label>
                             </td>
-
-                            <td>
-                                <label class="switcher">
-                                    <input type="checkbox" class="switcher_input"
-                                           id="{{$customer['id']}}" {{$customer->is_active == 1?'checked':''}}>
-                                    <span class="switcher_control"></span>
-                                </label>
-                            </td>
-
                             <td>
                                 <div class="d-flex justify-content-center gap-2">
                                     <a title="{{\App\CPU\translate('View')}}"

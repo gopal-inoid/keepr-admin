@@ -110,6 +110,13 @@
                                    title="">{{ \App\CPU\translate('Settings') }}</small>
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/web-config') ?'active':''}}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link"
+                               href="{{route('admin.business-settings.web-config.index')}}" title="Business Setup">
+                                <i class="tio-settings nav-icon"></i>
+                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Business Setup</span>
+                            </a>
+                        </li>
                         <li class="navbar-vertical-aside-has-menu {{Request::is('admin/banner*')?'active':''}}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                href="{{route('admin.banner.list')}}" title="{{\App\CPU\translate('banners')}}">
@@ -125,9 +132,9 @@
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{\App\CPU\translate('pages')}}</span>
                             </a>
                         </li>
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/shipping-method') || Request::is('admin/business-settings/add-new-shipping-method') ?'active':''}}">
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/shipping-method/setting') ?'active':''}}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
-                               href="{{route('admin.business-settings.shipping-method')}}" title="Shipping Methods">
+                               href="{{route('admin.business-settings.shipping-method.setting')}}" title="Shipping Methods">
                                 <i class="tio-shopping nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Shipping Methods</span>
                             </a>

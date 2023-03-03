@@ -52,10 +52,6 @@
                                 <th>{{\App\CPU\translate('Product Name')}}</th>
                                 <th class="text-right">{{\App\CPU\translate('Product Type')}}</th>
                                 <th class="text-right">{{\App\CPU\translate('purchase_price')}}</th>
-                                <th class="text-right">{{\App\CPU\translate('selling_price')}}</th>
-                                <th class="text-center">{{\App\CPU\translate('Show_as_featured')}}</th>
-                                <th class="text-center">{{\App\CPU\translate('Active')}} {{\App\CPU\translate('status')}}</th>
-                                <th class="text-center">{{\App\CPU\translate('Action')}}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -74,35 +70,8 @@
                                 <td class="text-right">
                                     {{ ucfirst($p['product_type']) }}
                                 </td>
-                                <td class="text-right">
-                                    {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($p['purchase_price']))}}
-                                </td>
-                                <td class="text-right">
-                                    {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($p['unit_price']))}}
-                                </td>
-                                <td class="text-center">
-                                    <label class="mx-auto switcher">
-                                        <input class="switcher_input" type="checkbox"
-                                                onclick="featured_status('{{$p['id']}}')" {{$p->featured == 1?'checked':''}}>
-                                        <span class="switcher_control"></span>
-                                    </label>
-                                </td>
-                                <td class="text-center">
-                                    <label class="mx-auto switcher">
-                                        <input type="checkbox" class="status switcher_input"
-                                                id="{{$p['id']}}" {{$p->status == 1?'checked':''}}>
-                                        <span class="switcher_control"></span>
-                                    </label>
-                                </td>
                                 <td>
                                     <div class="d-flex justify-content-center gap-2">
-                                        <a class="btn btn-outline-info btn-sm square-btn" title="{{ \App\CPU\translate('barcode') }}"
-                                            href="{{ route('admin.product.barcode', [$p['id']]) }}">
-                                            <i class="tio-barcode"></i>
-                                        </a>
-                                        <a class="btn btn-outline-info btn-sm square-btn" title="View" href="{{route('admin.product.view',[$p['id']])}}">
-                                            <i class="tio-invisible"></i>
-                                        </a>
                                         <a class="btn btn-outline--primary btn-sm square-btn"
                                             title="{{\App\CPU\translate('Edit')}}"
                                             href="{{route('admin.product.edit',[$p['id']])}}">
@@ -114,8 +83,7 @@
                                             <i class="tio-delete"></i>
                                         </a>
                                     </div>
-                                    <form action="{{route('admin.product.delete',[$p['id']])}}"
-                                            method="post" id="product-{{$p['id']}}">
+                                    <form action="{{route('admin.product.delete',[$p['id']])}}" method="post" id="product-{{$p['id']}}">
                                         @csrf @method('delete')
                                     </form>
                                 </td>

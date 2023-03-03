@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
-Route::group(['namespace' => 'api\v1', 'prefix' => 'v1', 'middleware' => ['api_lang']], function () {
+Route::group(['namespace' => 'api'], function () {
 
     Route::group(['prefix' => 'auth', 'namespace' => 'auth'], function () {
         Route::post('register', 'PassportAuthController@register');
@@ -56,6 +56,7 @@ Route::group(['namespace' => 'api\v1', 'prefix' => 'v1', 'middleware' => ['api_l
     });
 
     Route::get('faq', 'GeneralController@faq');
+    Route::get('get-pages/{page?}', 'GeneralController@get_pages');
 
     Route::group(['prefix' => 'products'], function () {
         Route::get('latest', 'ProductController@get_latest_products');
@@ -184,8 +185,6 @@ Route::group(['namespace' => 'api\v1', 'prefix' => 'v1', 'middleware' => ['api_l
         Route::get('apply', 'CouponController@apply');
     });
 
-
-
     //map api
     Route::group(['prefix' => 'mapapi'], function () {
         Route::get('place-api-autocomplete', 'MapApiController@place_api_autocomplete');
@@ -193,4 +192,5 @@ Route::group(['namespace' => 'api\v1', 'prefix' => 'v1', 'middleware' => ['api_l
         Route::get('place-api-details', 'MapApiController@place_api_details');
         Route::get('geocode-api', 'MapApiController@geocode_api');
     });
+
 });
