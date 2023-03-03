@@ -25,4 +25,30 @@ class GeneralController extends Controller
         }
     }
 
+    public function device_type_list(){
+        return response()->json(HelpTopic::orderBy('ranking')->get(),200);
+    }
+
+    public function active_device_list(){
+        return response()->json(HelpTopic::orderBy('ranking')->get(),200);
+    }
+
+    public function previous_added_device_list(){
+        return response()->json(HelpTopic::orderBy('ranking')->get(),200);
+    }
+
+    public function add_device(){
+        return response()->json(HelpTopic::orderBy('ranking')->get(),200);
+    }
+
+    public function edit_device(){
+        return response()->json(HelpTopic::orderBy('ranking')->get(),200);
+    }
+
+    public function delete_device(){
+        return response()->json(HelpTopic::orderBy('ranking')->get(),200);
+    }
+
+    
+
 }
