@@ -4,8 +4,9 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Model\HelpTopic;
+use App\User;
 use App\Model\BusinessSetting;
-
+use Illuminate\Http\Request;
 class GeneralController extends Controller
 {
     public function faq(){
@@ -23,6 +24,13 @@ class GeneralController extends Controller
         }else{
             return response()->json(['status'=>400,'message'=>'Page not found'],400);
         }
+    }
+
+    public function get_otp(Request $request){
+        $mobile = $request->mobile;
+        $user = User::select('id','phone')->where('phone',$mobile)->first();
+        echo "<pre>"; print_r($user); die;
+        return response()->json(['status'=>200,'message'=>'success'],200);
     }
 
     public function device_type_list(){

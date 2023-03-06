@@ -57,6 +57,13 @@ Route::group(['namespace' => 'api'], function () {
 
     Route::get('faq', 'GeneralController@faq');
     Route::get('get-pages/{page?}', 'GeneralController@get_pages');
+    Route::get('active-device-list', 'GeneralController@active_device_list');
+    Route::post('get-otp', 'GeneralController@get_otp');
+    Route::get('device-type-list', 'GeneralController@device_type_list');
+    Route::get('previous-added-device-list', 'GeneralController@previous_added_device_list');
+    Route::get('add-device', 'GeneralController@add_device');
+    Route::get('edit-device', 'GeneralController@edit_device');
+    Route::get('delete-device', 'GeneralController@delete_device');
 
     Route::group(['prefix' => 'products'], function () {
         Route::get('latest', 'ProductController@get_latest_products');

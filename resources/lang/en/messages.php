@@ -2365,4 +2365,5 @@
   'Add Shipping Methods' => 'Add Shipping Methods',
   'Device Name' => 'Device Name',
   'customer_wallet_settings' => 'Customer wallet settings',
+  'reschedule' => 'Reschedule',
 );
