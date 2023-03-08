@@ -26,11 +26,72 @@ class GeneralController extends Controller
         }
     }
 
-    public function get_otp(Request $request){
+    // //GET MOBILE NO. INSERT INTO DB AND SEND OTP IN RESPONSE
+    // public function get_otp(Request $request){
+    //     $mobile = $request->mobile;
+    //     $key = random_int(0, 999999);
+    //     $rand_otp = str_pad($key, 6, 0, STR_PAD_LEFT);
+    //     $user = User::select('id','phone','otp_code')->where('phone',$mobile)->first();
+    //     if(!empty($user)){
+    //         $user->otp_code = $rand_otp;
+    //         $user->save();
+    //         return response()->json(
+    //             [
+    //                 'status'=>200,
+    //                 'code'=>$rand_otp,
+    //                 'phone'=>$mobile,
+    //                 'message'=>'success'
+    //             ]
+    //         ,200);
+    //     }else{
+    //         $user = User::insert(['phone'=>$mobile,'otp_code'=>$rand_otp]);
+    //         if($user){
+    //             return response()->json(
+    //                 [
+    //                     'status'=>200,
+    //                     'code'=>$rand_otp,
+    //                     'phone'=>$mobile,
+    //                     'message'=>'success'
+    //                 ]
+    //             ,200);
+    //         }
+    //     }
+
+    //     return response()->json(
+    //         [
+    //             'status'=>400,
+    //             'message'=>'something went wrong!'
+    //         ]
+    //     ,400);
+
+    // }
+
+    //GET MOBILE NO. CHECK AND VERIFY INTO DB AND SEND IN RESPONSE
+    public function verify_user(Request $request){
         $mobile = $request->mobile;
-        $user = User::select('id','phone')->where('phone',$mobile)->first();
-        echo "<pre>"; print_r($user); die;
-        return response()->json(['status'=>200,'message'=>'success'],200);
+        $user = User::select('id','phone')->where(['phone'=>$mobile,'is_active'=>0])->first();
+        if(!empty($user)){
+            return response()->json(
+                [
+                    'status'=>400,
+                    'message'=>'Not Activated'
+                ]
+            ,200);
+        }else{
+            return response()->json(
+                [
+                    'status'=>200,
+                    'message'=>'Success'
+                ]
+            ,200);
+        }
+
+    }
+
+    //GET FIREBASE AUTH TOKEN. CHECK AND VERIFY THEN ADD INTO DB AND SEND USER INFO IN RESPONSE
+    public function user_authentication(Request $request){
+        $token = $request->token;
+        
     }
 
     public function device_type_list(){
