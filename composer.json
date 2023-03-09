@@ -20,6 +20,7 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "intervention/image": "^2.7",
         "kingflamez/laravelrave": "^4.2",
+        "kreait/laravel-firebase": "4.0",
         "laravel/framework": "^8.65",
         "laravel/passport": "^10.2",
         "laravel/sanctum": "^2.11",

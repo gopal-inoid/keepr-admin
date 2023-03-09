@@ -181,6 +181,7 @@ return [
         \App\Providers\PaymentConfigProvider::class,
         \App\Providers\ConfigServiceProvider::class,
         Laravelpkg\Laravelchk\LaravelchkServiceProvider::class,
+        Kreait\Laravel\Firebase\ServiceProvider::class,
        /* Amirami\Localizator\ServiceProvider::class*/
     ],
 

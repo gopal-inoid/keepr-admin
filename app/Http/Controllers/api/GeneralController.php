@@ -7,6 +7,8 @@ use App\Model\HelpTopic;
 use App\User;
 use App\Model\BusinessSetting;
 use Illuminate\Http\Request;
+use Kreait\Laravel\Firebase\Facades\Firebase;
+use Kreait\Firebase\Exception\Auth\FailedToVerifyToken;
 class GeneralController extends Controller
 {
     public function faq(){
@@ -25,46 +27,6 @@ class GeneralController extends Controller
             return response()->json(['status'=>400,'message'=>'Page not found'],400);
         }
     }
-
-    // //GET MOBILE NO. INSERT INTO DB AND SEND OTP IN RESPONSE
-    // public function get_otp(Request $request){
-    //     $mobile = $request->mobile;
-    //     $key = random_int(0, 999999);
-    //     $rand_otp = str_pad($key, 6, 0, STR_PAD_LEFT);
-    //     $user = User::select('id','phone','otp_code')->where('phone',$mobile)->first();
-    //     if(!empty($user)){
-    //         $user->otp_code = $rand_otp;
-    //         $user->save();
-    //         return response()->json(
-    //             [
-    //                 'status'=>200,
-    //                 'code'=>$rand_otp,
-    //                 'phone'=>$mobile,
-    //                 'message'=>'success'
-    //             ]
-    //         ,200);
-    //     }else{
-    //         $user = User::insert(['phone'=>$mobile,'otp_code'=>$rand_otp]);
-    //         if($user){
-    //             return response()->json(
-    //                 [
-    //                     'status'=>200,
-    //                     'code'=>$rand_otp,
-    //                     'phone'=>$mobile,
-    //                     'message'=>'success'
-    //                 ]
-    //             ,200);
-    //         }
-    //     }
-
-    //     return response()->json(
-    //         [
-    //             'status'=>400,
-    //             'message'=>'something went wrong!'
-    //         ]
-    //     ,400);
-
-    // }
 
     //GET MOBILE NO. CHECK AND VERIFY INTO DB AND SEND IN RESPONSE
     public function verify_user(Request $request){
@@ -91,7 +53,25 @@ class GeneralController extends Controller
     //GET FIREBASE AUTH TOKEN. CHECK AND VERIFY THEN ADD INTO DB AND SEND USER INFO IN RESPONSE
     public function user_authentication(Request $request){
         $token = $request->token;
+        $auth = app('firebase.auth');
+        try {
+            $verifiedIdToken = $auth->verifyIdToken($token);
+        } catch (FailedToVerifyToken $e) {
+            return response()->json(['status'=>400,'message'=>$e->getMessage()],400);
+        }
         
+        $uid = $verifiedIdToken->claims()->get('sub');
+        $user = $auth->getUser($uid);
+        if(!empty($user->phoneNumber)){
+            $user_check = User::select('id','phone')->where(['phone'=>$user->phoneNumber,'is_active'=>1])->first();
+            if(empty($user_check->id)){
+                User::insert(['phone'=>$user->phoneNumber]);
+            }
+            return response()->json(['status'=>200,'phone'=>$user->phoneNumber,'message'=>'Success'],200);
+        }else{
+            return response()->json(['status'=>400,'message'=>'Something went wrong'],400);
+        }
+
     }
 
     public function device_type_list(){
