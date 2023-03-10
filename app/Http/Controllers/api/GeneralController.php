@@ -65,13 +65,14 @@ class GeneralController extends Controller
         if(!empty($user->phoneNumber)){
             $user_check = User::select('id','phone')->where(['phone'=>$user->phoneNumber,'is_active'=>1])->first();
             if(empty($user_check->id)){
-                User::insert(['phone'=>$user->phoneNumber]);
+                User::insert(['phone'=>$user->phoneNumber,'firebase_auth_id'=>$uid,'auth_access_token'=>$token]);
+            }else{
+                User::where(['phone'=>$user->phoneNumber,'firebase_auth_id'=>$uid])->update(['firebase_auth_id'=>$uid,'auth_access_token'=>$token]);
             }
             return response()->json(['status'=>200,'phone'=>$user->phoneNumber,'message'=>'Success'],200);
         }else{
             return response()->json(['status'=>400,'message'=>'Something went wrong'],400);
         }
-
     }
 
     public function device_type_list(){
@@ -79,6 +80,10 @@ class GeneralController extends Controller
     }
 
     public function active_device_list(){
+        return response()->json(HelpTopic::orderBy('ranking')->get(),200);
+    }
+
+    public function get_specific_device($device_id){
         return response()->json(HelpTopic::orderBy('ranking')->get(),200);
     }
 

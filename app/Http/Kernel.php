@@ -81,7 +81,8 @@ class Kernel extends HttpKernel
         'actch' => ActivationCheckMiddleware::class,
         'api_lang' => APILocalizationMiddleware::class,
         'maintenance_mode' => MaintenanceModeMiddleware::class,
-        'delivery_man_auth' => DeliveryManAuth::class
+        'delivery_man_auth' => DeliveryManAuth::class,
+        'api_auth' => \App\Http\Middleware\APIMiddleware::class,
     ];
 
     /**
