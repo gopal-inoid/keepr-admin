@@ -60,6 +60,7 @@ Route::group(['namespace' => 'api'], function () {
     //VERIFY USER
     Route::post('verify-user', 'GeneralController@verify_user');
     Route::post('user-authentication', 'GeneralController@user_authentication');
+    Route::post('logout', 'GeneralController@logout');
     //
 
     Route::group(['middleware' => ['api_auth']], function () {

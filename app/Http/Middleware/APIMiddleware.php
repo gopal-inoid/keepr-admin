@@ -5,8 +5,6 @@ namespace App\Http\Middleware;
 use App\User;
 use Closure;
 use Illuminate\Http\Request;
-use Kreait\Firebase\Exception\Auth\FailedToVerifyToken;
-
 class APIMiddleware
 {
     /**
@@ -39,13 +37,11 @@ class APIMiddleware
     }
 
     public function check_token($token){
-        $auth = app('firebase.auth');
-        try {
-            $verifiedIdToken = $auth->verifyIdToken($token);
-        } catch (FailedToVerifyToken $e) {
-            return ['status'=>401,'message'=>$e->getMessage()];
+        $user_check = User::select('firebase_auth_id')->where(['auth_access_token'=>$token])->first();
+        if(!empty($user_check->firebase_auth_id)){
+            return ['status'=>200,'message'=>$user_check->firebase_auth_id];
+        }else{
+            return ['status'=>401,'message'=>'Auth token has been expired.'];
         }
-
-        return ['status'=>200,'message'=>$verifiedIdToken->claims()->get('sub')];
     }
 }

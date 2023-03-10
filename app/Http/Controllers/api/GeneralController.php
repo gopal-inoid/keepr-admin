@@ -59,20 +59,58 @@ class GeneralController extends Controller
         } catch (FailedToVerifyToken $e) {
             return response()->json(['status'=>400,'message'=>$e->getMessage()],400);
         }
-        
+        $auth_token = '';
         $uid = $verifiedIdToken->claims()->get('sub');
         $user = $auth->getUser($uid);
         if(!empty($user->phoneNumber)){
-            $user_check = User::select('id','phone')->where(['phone'=>$user->phoneNumber,'is_active'=>1])->first();
+            $user_check = User::select('id','phone','firebase_auth_id','auth_access_token')->where(['phone'=>$user->phoneNumber])->first();
             if(empty($user_check->id)){
-                User::insert(['phone'=>$user->phoneNumber,'firebase_auth_id'=>$uid,'auth_access_token'=>$token]);
+                User::insert(['phone'=>$user->phoneNumber,'firebase_auth_id'=>$uid]);
+                $auth_token = $this->auth_token($uid,"");
             }else{
-                User::where(['phone'=>$user->phoneNumber,'firebase_auth_id'=>$uid])->update(['firebase_auth_id'=>$uid,'auth_access_token'=>$token]);
+                if(!empty($user_check->firebase_auth_id)){
+                    $auth_token = $this->auth_token($user_check->firebase_auth_id,$user_check->auth_access_token);
+                }
             }
-            return response()->json(['status'=>200,'phone'=>$user->phoneNumber,'message'=>'Success'],200);
+
+            if($auth_token != ''){
+                return response()->json(['status'=>200,'phone'=>$user->phoneNumber,'auth_token'=>$auth_token,'message'=>'Success'],200);
+            }else{
+                return response()->json(['status'=>401,'message'=>'Token not Authorized'],401);
+            }
+
         }else{
-            return response()->json(['status'=>400,'message'=>'Something went wrong'],400);
+            return response()->json(['status'=>401,'message'=>'Token not Authorized'],401);
         }
+
+    }
+
+    public function auth_token($firebase_auth_id, $old_token = "")
+    {
+        if ($old_token != "") {
+            $token = $old_token;
+        } else {
+            $token = bin2hex(openssl_random_pseudo_bytes(32));
+            $token = $firebase_auth_id . $token;
+        }
+
+        $user = User::where('firebase_auth_id', $firebase_auth_id)->update(
+            [
+                'auth_access_token' => $token,
+            ]
+        );
+
+        if ($user) {
+            return $token;
+        } else {
+            return false;
+        }
+    }
+
+    public function logout(Request $request){
+        $id = $request->id;
+        User::where(['id'=>$id])->update(['auth_access_token'=>'']);
+        return response()->json(['status'=>200,'message'=>'Successfully Logout'],200);
     }
 
     public function device_type_list(){
