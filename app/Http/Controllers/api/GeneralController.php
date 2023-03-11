@@ -65,11 +65,14 @@ class GeneralController extends Controller
         if(!empty($user->phoneNumber)){
             $user_check = User::select('id','phone','firebase_auth_id','auth_access_token')->where(['phone'=>$user->phoneNumber])->first();
             if(empty($user_check->id)){
-                User::insert(['phone'=>$user->phoneNumber,'firebase_auth_id'=>$uid]);
-                $auth_token = $this->auth_token($uid,"");
+                $get_user = User::create([
+                    'phone' => $user->phoneNumber,
+                    'firebase_auth_id' => $uid
+                ]);
+                $auth_token = $this->auth_token($get_user->id,"");
             }else{
-                if(!empty($user_check->firebase_auth_id)){
-                    $auth_token = $this->auth_token($user_check->firebase_auth_id,$user_check->auth_access_token);
+                if(!empty($user_check->id)){ //echo "<pre>"; print_r(); die;
+                    $auth_token = $this->auth_token($user_check->id,$user_check->auth_access_token);
                 }
             }
 
@@ -85,20 +88,16 @@ class GeneralController extends Controller
 
     }
 
-    public function auth_token($firebase_auth_id, $old_token = "")
+    public function auth_token($id, $old_token = "")
     {
         if ($old_token != "") {
             $token = $old_token;
         } else {
             $token = bin2hex(openssl_random_pseudo_bytes(32));
-            $token = $firebase_auth_id . $token;
+            $token = $id . $token . $id;
         }
 
-        $user = User::where('firebase_auth_id', $firebase_auth_id)->update(
-            [
-                'auth_access_token' => $token,
-            ]
-        );
+        $user = User::where('id', $id)->update(['auth_access_token' => $token]);
 
         if ($user) {
             return $token;

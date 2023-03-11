@@ -15,6 +15,34 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace' => 'api'], function () {
 
+    //#KEEPR START
+
+    //VERIFY USER
+    Route::post('verify-user', 'GeneralController@verify_user');
+    Route::post('user-authentication', 'GeneralController@user_authentication');
+    Route::post('logout', 'GeneralController@logout');
+    //
+
+    Route::group(['middleware' => ['api_auth']], function () {
+
+        //PAGES
+        Route::get('get-pages/{page?}', 'GeneralController@get_pages');
+        //
+
+        //DEVICE
+        Route::get('active-device-list', 'GeneralController@active_device_list');
+        Route::get('get-specific-device/{device_id}', 'GeneralController@get_specific_device');
+        Route::get('device-type-list', 'GeneralController@device_type_list');
+        Route::get('previous-added-device-list', 'GeneralController@previous_added_device_list');
+        Route::get('add-device', 'GeneralController@add_device');
+        Route::get('edit-device', 'GeneralController@edit_device');
+        Route::get('delete-device', 'GeneralController@delete_device');
+        //
+
+    });
+
+    //#KEEPR END
+
     Route::group(['prefix' => 'auth', 'namespace' => 'auth'], function () {
         Route::post('register', 'PassportAuthController@register');
         Route::post('login', 'PassportAuthController@login');
@@ -52,34 +80,6 @@ Route::group(['namespace' => 'api'], function () {
         Route::put('update', 'CartController@update_cart');
         Route::delete('remove', 'CartController@remove_from_cart');
         Route::delete('remove-all','CartController@remove_all_from_cart');
-
-    });
-
-    //#KEEPR START
-
-    //VERIFY USER
-    Route::post('verify-user', 'GeneralController@verify_user');
-    Route::post('user-authentication', 'GeneralController@user_authentication');
-    Route::post('logout', 'GeneralController@logout');
-    //
-
-    Route::group(['middleware' => ['api_auth']], function () {
-
-        //PAGES
-        Route::get('get-pages/{page?}', 'GeneralController@get_pages');
-        //
-
-        //DEVICE
-        Route::get('active-device-list', 'GeneralController@active_device_list');
-        Route::get('get-specific-device/{device_id}', 'GeneralController@get_specific_device');
-        Route::get('device-type-list', 'GeneralController@device_type_list');
-        Route::get('previous-added-device-list', 'GeneralController@previous_added_device_list');
-        Route::get('add-device', 'GeneralController@add_device');
-        Route::get('edit-device', 'GeneralController@edit_device');
-        Route::get('delete-device', 'GeneralController@delete_device');
-        //
-
-        //#KEEPR END
 
     });
 
