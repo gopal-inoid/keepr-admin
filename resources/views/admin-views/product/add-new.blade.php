@@ -6,6 +6,18 @@
     <link href="{{ asset('public/assets/back-end/css/tags-input.min.css') }}" rel="stylesheet">
     <link href="{{ asset('public/assets/select2/css/select2.min.css') }}" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <style>
+        .add-product-faq-btn,.remove-product-faq-btn{
+            font-size: 25px;
+            cursor: pointer;
+        }
+        .faq-add-main-btn{
+            align-items: center;
+            display: flex;
+            flex-direction: row;
+        }
+        
+    </style>
 @endpush
 
 @section('content')
@@ -28,65 +40,98 @@
                     @csrf
                     <div class="card">
                         <div class="card-body">
-                            <div class="lang_form" id="english-form">
-                                <div class="form-group">
-                                    <label class="title-color" for="english_name">{{ \App\CPU\translate('Device Name') }}
-                                    </label>
-                                    <input type="text" required name="name[]" id="english_name" class="form-control" placeholder="New Product">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="lang_form" id="english-form">
+                                        <div class="form-group">
+                                            <label class="title-color" for="english_name">{{ \App\CPU\translate('Device Name') }}
+                                            </label>
+                                            <input type="text" required name="name[]" id="english_name" class="form-control" placeholder="New Product">
+                                        </div>
+                                        <input type="hidden" name="lang[]" value="english">
+                                        {{-- <div class="form-group pt-4">
+                                            <label class="title-color" for="english_description">{{ \App\CPU\translate('description') }} ({{ strtoupper($lang) }})</label>
+                                            <textarea name="description[]" class="textarea editor-textarea">{{ old('details') }}</textarea>
+                                        </div> --}}
+                                    </div>
                                 </div>
-                                <input type="hidden" name="lang[]" value="english">
-                                {{-- <div class="form-group pt-4">
-                                    <label class="title-color" for="english_description">{{ \App\CPU\translate('description') }} ({{ strtoupper($lang) }})</label>
-                                    <textarea name="description[]" class="textarea editor-textarea">{{ old('details') }}</textarea>
-                                </div> --}}
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="title-color"
+                                            for="exampleFormControlInput1">{{ \App\CPU\translate('product_code_sku') }}
+                                            <span class="text-danger">*</span>
+                                            <a class="style-one-pro" style="cursor: pointer;"
+                                                onclick="document.getElementById('generate_number').value = getRndInteger()">{{ \App\CPU\translate('generate') }}
+                                                {{ \App\CPU\translate('code') }}</a></label>
+                                        <input type="text" minlength="6" id="generate_number" name="code"
+                                            class="form-control" value="{{ old('code') }}"
+                                            placeholder="{{ \App\CPU\translate('code') }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="title-color" for="product-desc">{{ \App\CPU\translate('description') }}</label>
+                                        <textarea name="description" id="product-desc" class="textarea editor-textarea">{{ old('description') }}</textarea>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card mt-2 rest-part">
+                    <div class="card mt-2 rest-part physical_product_show">
                         <div class="card-header">
-                            <h4 class="mb-0">{{ \App\CPU\translate('General Info') }}</h4>
+                            <h4 class="mb-0">{{ \App\CPU\translate('Specification') }}</h4>
                         </div>
                         <div class="card-body">
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <label for="name" class="title-color">{{ \App\CPU\translate('product_type') }}</label>
-                                        <select name="product_type" id="product_type" class="form-control" required>
-                                            <option value="physical" selected>{{ \App\CPU\translate('physical') }}</option>
-                                            @if($digital_product_setting)
-                                                <option value="digital">{{ \App\CPU\translate('digital') }}</option>
-                                            @endif
-                                        </select>
-                                    </div>
-                                    @if($brand_setting)
-                                    {{-- <div class="col-md-4">
-                                        <label for="name" class="title-color">{{ \App\CPU\translate('Brand') }}</label>
-                                        <select
-                                            class="js-example-basic-multiple js-states js-example-responsive form-control"
-                                            name="brand_id" required>
-                                            <option value="{{ null }}" selected disabled>
-                                                ---{{ \App\CPU\translate('Select') }}---</option>
-                                            @foreach ($br as $b)
-                                                <option value="{{ $b['id'] }}">{{ $b['name'] }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div> --}}
-                                    @endif
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label class="title-color"
-                                                for="exampleFormControlInput1">{{ \App\CPU\translate('product_code_sku') }}
-                                                <span class="text-danger">*</span>
-                                                <a class="style-one-pro" style="cursor: pointer;"
-                                                    onclick="document.getElementById('generate_number').value = getRndInteger()">{{ \App\CPU\translate('generate') }}
-                                                    {{ \App\CPU\translate('code') }}</a></label>
-                                            <input type="text" minlength="6" id="generate_number" name="code"
-                                                class="form-control" value="{{ old('code') }}"
-                                                placeholder="{{ \App\CPU\translate('code') }}" required>
+                            <div class="row align-items-end">
+                                
+                                <div class="col-md-4 form-group">
+                                    <label class="title-color">{{ \App\CPU\translate('Size') }}</label>
+                                    <input type="text" value="{{ old('size') }}" name="specification[size]" class="form-control" placeholder="31.1 * 30 * 5.5mm">
+                                </div>
+
+                                <div class="col-md-4 form-group">
+                                    <label class="title-color">{{ \App\CPU\translate('Weight') }}</label>
+                                    <input type="text" value="{{ old('weight') }}" name="specification[weight]" class="form-control" placeholder="4.8g (battery included)">
+                                </div>
+
+                                <div class="col-md-4 form-group">
+                                    <label class="title-color">{{ \App\CPU\translate('Bluetooth version') }}</label>
+                                    <input type="text" value="{{ old('bluetooth_version') }}" name="specification[bluetooth_version]" class="form-control" placeholder="LE 4.0 / 4.2">
+                                </div>
+
+                                <div class="col-md-12 form-group">
+                                    <label class="title-color">{{ \App\CPU\translate('Material') }}</label>
+                                    <textarea name="specification[material]" class="form-control" placeholder="{{ \App\CPU\translate('Material') }}">{{ old('material') }}</textarea>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-2 rest-part physical_product_show">
+                        <div class="card-header">
+                            <h4 class="mb-0">{{ \App\CPU\translate('Product FAQ') }}</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row align-items-end">
+                                <div class="col-md-12 form-group" id="parent-faq-div">
+                                    <div class="row">
+                                        <div class="col-md-4 form-group">
+                                            <label class="title-color">{{ \App\CPU\translate('Question') }}</label>
+                                            <input type="text" value="{{ old('question') }}" name="faq[question][]" class="form-control" placeholder="{{ \App\CPU\translate('Question') }}">
+                                        </div>
+                                        <div class="col-md-6 form-group">
+                                            <label class="title-color">{{ \App\CPU\translate('Answer') }}</label>
+                                            <input type="text" value="{{ old('answer') }}" name="faq[answer][]" class="form-control" placeholder="{{ \App\CPU\translate('Answer') }}">
+                                        </div>
+                                        <div class="col-md-2 form-group faq-add-main-btn">
+                                            <label class="title-color">&nbsp;</label>
+                                            <i class="tio-add-circle-outlined text-success add-product-faq-btn mt-3"></i>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -212,6 +257,27 @@
     <script src="{{ asset('public/assets/back-end/js/spartan-multi-image-picker.js') }}"></script>
     <script>
         $(function() {
+
+            $('.add-product-faq-btn').on('click',function(){
+                $('#parent-faq-div').append(
+                    `<div class="row faq-individual">
+                        <div class="col-md-4 form-group">
+                            <input type="text" value="" name="faq[question][]" class="form-control" placeholder="{{ \App\CPU\translate('Question') }}">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <input type="text" value="" name="faq[answer][]" class="form-control" placeholder="{{ \App\CPU\translate('Answer') }}">
+                        </div>
+                        <div class="col-md-2 form-group faq-add-main-btn">
+                            <i class="tio-delete-outlined text-danger remove-product-faq-btn mt-0"></i>
+                        </div>
+                    </div>`
+                );
+            });
+
+            $(document).on('click','.remove-product-faq-btn',function(){
+                $(this).closest('.faq-individual').remove();
+            });
+
             $("#coba").spartanMultiImagePicker({
                 fieldName: 'images[]',
                 maxCount: 10,

@@ -2366,4 +2366,10 @@
   'Device Name' => 'Device Name',
   'customer_wallet_settings' => 'Customer wallet settings',
   'reschedule' => 'Reschedule',
+  'Specification' => 'Specification',
+  'Size' => 'Size',
+  'Weight' => 'Weight',
+  'Bluetooth version' => 'Bluetooth version',
+  'Material' => 'Material',
+  'Product FAQ' => 'Product FAQ',
 );

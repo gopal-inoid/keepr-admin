@@ -407,7 +407,7 @@
 <!-- ck editor -->
 
 <script>
-    initSample();
+    //initSample();
 </script>
 
 <script>

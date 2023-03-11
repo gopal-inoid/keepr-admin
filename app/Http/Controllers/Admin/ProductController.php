@@ -75,7 +75,6 @@ class ProductController extends BaseController
     {
         $validator = Validator::make($request->all(), [
             'name'                 => 'required',
-            'product_type'         => 'required',
             'images'               => 'required',
             'image'                => 'required',
             'tax'                  => 'required|min:0',
@@ -94,15 +93,6 @@ class ProductController extends BaseController
             'minimum_order_qty.min'            => 'Minimum order quantity must be positive!',
             'shipping_cost.required_if'        => 'Shipping Cost is required!',
         ]);
-
-        // $brand_setting = BusinessSetting::where('type', 'product_brand')->first()->value;
-        // if ($brand_setting && empty($request->brand_id)) {
-        //     $validator->after(function ($validator) {
-        //         $validator->errors()->add(
-        //             'brand_id', 'Brand is required!'
-        //         );
-        //     });
-        // }
 
         if ($request['discount_type'] == 'percent') {
             $dis = ($request['unit_price'] / 100) * $request['discount'];
@@ -132,118 +122,26 @@ class ProductController extends BaseController
         $p->name     = $request->name[array_search('en', $request->lang)];
         $p->code     = $request->code;
         $p->slug     = Str::slug($request->name[array_search('en', $request->lang)], '-') . '-' . Str::random(6);
-
-        // $category = [];
-        // if ($request->category_id != null) {
-        //     array_push($category, [
-        //         'id' => $request->category_id,
-        //         'position' => 1,
-        //     ]);
-        // }
-        // if ($request->sub_category_id != null) {
-        //     array_push($category, [
-        //         'id' => $request->sub_category_id,
-        //         'position' => 2,
-        //     ]);
-        // }
-        // if ($request->sub_sub_category_id != null) {
-        //     array_push($category, [
-        //         'id' => $request->sub_sub_category_id,
-        //         'position' => 3,
-        //     ]);
-        // }
-
-        // $p->category_ids         = json_encode($category);
-        //$p->brand_id             = $request->brand_id;
-        //$p->unit                 = $request->product_type == 'physical' ? $request->unit : null;
-        //$p->digital_product_type = $request->product_type == 'digital' ? $request->digital_product_type : null;
-        $p->product_type         = $request->product_type;
-        //$p->details              = $request->description[array_search('en', $request->lang)];
-
-        // if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
-        //     $p->colors = $request->product_type == 'physical' ? json_encode($request->colors) : json_encode([]);
-        // } else {
-        //     $colors = [];
-        //     $p->colors = $request->product_type == 'physical' ? json_encode($colors) : json_encode([]);
-        // }
-
-        // $choice_options = [];
-        // if ($request->has('choice')) {
-        //     foreach ($request->choice_no as $key => $no) {
-        //         $str = 'choice_options_' . $no;
-        //         $item['name'] = 'choice_' . $no;
-        //         $item['title'] = $request->choice[$key];
-        //         $item['options'] = explode(',', implode('|', $request[$str]));
-        //         array_push($choice_options, $item);
-        //     }
-        // }
-        // $p->choice_options = $request->product_type == 'physical' ? json_encode($choice_options) : json_encode([]);
-
-        //combinations start
-        // $options = [];
-        // if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
-        //     $colors_active = 1;
-        //     array_push($options, $request->colors);
-        // }
-        // if ($request->has('choice_no')) {
-        //     foreach ($request->choice_no as $key => $no) {
-        //         $name = 'choice_options_' . $no;
-        //         $my_str = implode('|', $request[$name]);
-        //         array_push($options, explode(',', $my_str));
-        //     }
-        // }
-        //Generates the combinations of customer choice options
-
-        // $combinations = Helpers::combinations($options);
-
-        // $variations = [];
-        // $stock_count = 0;
-        // if (count($combinations[0]) > 0) {
-        //     foreach ($combinations as $key => $combination) {
-        //         $str = '';
-        //         foreach ($combination as $k => $item) {
-        //             if ($k > 0) {
-        //                 $str .= '-' . str_replace(' ', '', $item);
-        //             } else {
-        //                 if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
-        //                     $color_name = Color::where('code', $item)->first()->name;
-        //                     $str .= $color_name;
-        //                 } else {
-        //                     $str .= str_replace(' ', '', $item);
-        //                 }
-        //             }
-        //         }
-        //         $item = [];
-        //         $item['type'] = $str;
-        //         $item['price'] = BackEndHelper::currency_to_usd(abs($request['price_' . str_replace('.', '_', $str)]));
-        //         $item['sku'] = $request['sku_' . str_replace('.', '_', $str)];
-        //         $item['qty'] = abs($request['qty_' . str_replace('.', '_', $str)]);
-        //         array_push($variations, $item);
-        //         $stock_count += $item['qty'];
-        //     }
-        // } else {
-        //     $stock_count = (integer)$request['current_stock'];
-        // }
-
-        // if ($validator->errors()->count() > 0) {
-        //     return response()->json(['errors' => Helpers::error_processor($validator)]);
-        // }
+        $p->details              = $request['description'] ?? '';
+        $p->product_unique_code = uniqid().rand(99,10).time();
+        
+        if(count($request->specification) > 0){
+            $p->specification = json_encode($request->specification);
+        }
+        if(count($request->faq) > 0){
+            $p->faq = json_encode($request->faq);
+        }
 
         $stock_count = (integer)$request['current_stock'];
 
-        //combinations end
-        //$p->variation         = $request->product_type == 'physical' ? json_encode($variations) : json_encode([]);
         $p->unit_price        = BackEndHelper::currency_to_usd($request->unit_price);
         $p->purchase_price    = BackEndHelper::currency_to_usd($request->purchase_price);
         $p->tax               = $request->tax_type == 'flat' ? BackEndHelper::currency_to_usd($request->tax) : $request->tax;
         $p->tax_type          = $request->tax_type;
         $p->discount          = $request->discount_type == 'flat' ? BackEndHelper::currency_to_usd($request->discount) : $request->discount;
         $p->discount_type     = $request->discount_type;
-        //$p->attributes        = $request->product_type == 'physical' ? json_encode($request->choice_attributes) : json_encode([]);
         $p->current_stock     = $request->product_type == 'physical' ? abs($stock_count) : 0;
         $p->minimum_order_qty = $request->minimum_order_qty;
-        //$p->video_provider    = 'youtube';
-        //$p->video_url         = $request->video_link;
         $p->request_status    = 1;
         $p->shipping_cost     = $request->product_type == 'physical' ? BackEndHelper::currency_to_usd($request->shipping_cost): 0;
         $p->multiply_qty      = ($request->product_type == 'physical') ? ($request->multiplyQTY=='on'?1:0) : 0;
@@ -262,36 +160,10 @@ class ProductController extends BaseController
             if($request->product_type == 'digital' && $request->digital_product_type == 'ready_product') {
                 $p->digital_file_ready = ImageManager::upload('product/digital-product/', $request->digital_file_ready->getClientOriginalExtension(), $request->digital_file_ready);
             }
-
             // $p->meta_title       = $request->meta_title;
             // $p->meta_description = $request->meta_description;
             // $p->meta_image       = ImageManager::upload('product/meta/', 'png', $request->meta_image);
-
             $p->save();
-
-            // $data = [];
-            // foreach ($request->lang as $index => $key) {
-            //     if ($request->name[$index] && $key != 'en') {
-            //         array_push($data, array(
-            //             'translationable_type' => 'App\Model\Product',
-            //             'translationable_id' => $p->id,
-            //             'locale' => $key,
-            //             'key' => 'name',
-            //             'value' => $request->name[$index],
-            //         ));
-            //     }
-            //     if ($request->description[$index] && $key != 'en') {
-            //         array_push($data, array(
-            //             'translationable_type' => 'App\Model\Product',
-            //             'translationable_id' => $p->id,
-            //             'locale' => $key,
-            //             'key' => 'description',
-            //             'value' => $request->description[$index],
-            //         ));
-            //     }
-            // }
-            // Translation::insert($data);
-
             Toastr::success(translate('Product added successfully!'));
             return redirect()->route('admin.product.list');
         }
@@ -590,7 +462,6 @@ class ProductController extends BaseController
         $product = Product::find($id);
         $validator = Validator::make($request->all(), [
             'name'                 => 'required',
-            'product_type'         => 'required',
             'images'               => 'required',
             'image'                => 'required',
             'tax'                  => 'required|min:0',
@@ -609,15 +480,6 @@ class ProductController extends BaseController
             'minimum_order_qty.min'            => 'Minimum order quantity must be positive!',
             'shipping_cost.required_if'        => 'Shipping Cost is required!',
         ]);
-
-        // $brand_setting = BusinessSetting::where('type', 'product_brand')->first()->value;
-        // if ($brand_setting && empty($request->brand_id)) {
-        //     $validator->after(function ($validator) {
-        //         $validator->errors()->add(
-        //             'brand_id', 'Brand is required!'
-        //         );
-        //     });
-        // }
 
         if(
             ($request->product_type == 'digital') &&
@@ -652,126 +514,27 @@ class ProductController extends BaseController
 
         $product->name = $request->name[array_search('en', $request->lang)];
 
-        // $category = [];
-        // if ($request->category_id != null) {
-        //     array_push($category, [
-        //         'id' => $request->category_id,
-        //         'position' => 1,
-        //     ]);
-        // }
-        // if ($request->sub_category_id != null) {
-        //     array_push($category, [
-        //         'id' => $request->sub_category_id,
-        //         'position' => 2,
-        //     ]);
-        // }
-        // if ($request->sub_sub_category_id != null) {
-        //     array_push($category, [
-        //         'id' => $request->sub_sub_category_id,
-        //         'position' => 3,
-        //     ]);
-        // }
-
-        $product->product_type          = $request->product_type;
-        //$product->category_ids          = json_encode($category);
-        //$product->brand_id              = isset($request->brand_id) ? $request->brand_id : null;
-        //$product->unit                  = $request->product_type == 'physical' ? $request->unit : null;
-        //$product->digital_product_type  = $request->product_type == 'digital' ? $request->digital_product_type : null;
+       
         $product->code                  = $request->code;
         $product->minimum_order_qty     = $request->minimum_order_qty;
-        //$product->details               = $request->description[array_search('en', $request->lang)];
         $product_images                 = json_decode($product->images);
-
-        // if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
-        //     $product->colors = $request->product_type == 'physical' ? json_encode($request->colors) : json_encode([]);
-        // } else {
-        //     $colors = [];
-        //     $product->colors = json_encode($colors);
-        // }
-        // $choice_options = [];
-        // if ($request->has('choice')) {
-        //     foreach ($request->choice_no as $key => $no) {
-        //         $str = 'choice_options_' . $no;
-        //         $item['name'] = 'choice_' . $no;
-        //         $item['title'] = $request->choice[$key];
-        //         $item['options'] = explode(',', implode('|', $request[$str]));
-        //         array_push($choice_options, $item);
-        //     }
-        // }
-        // $product->choice_options = $request->product_type == 'physical' ? json_encode($choice_options) : json_encode([]);
-        // $variations = [];
-        // //combinations start
-        // $options = [];
-        // if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
-        //     $colors_active = 1;
-        //     array_push($options, $request->colors);
-        // }
-        // if ($request->has('choice_no')) {
-        //     foreach ($request->choice_no as $key => $no) {
-        //         $name = 'choice_options_' . $no;
-        //         $my_str = implode('|', $request[$name]);
-        //         array_push($options, explode(',', $my_str));
-        //     }
-        // }
-        // //Generates the combinations of customer choice options
-        // $combinations = Helpers::combinations($options);
-        // $variations = [];
-        // $stock_count = 0;
-        // if (count($combinations[0]) > 0) {
-        //     foreach ($combinations as $key => $combination) {
-        //         $str = '';
-        //         foreach ($combination as $k => $item) {
-        //             if ($k > 0) {
-        //                 $str .= '-' . str_replace(' ', '', $item);
-        //             } else {
-        //                 if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
-        //                     $color_name = Color::where('code', $item)->first()->name;
-        //                     $str .= $color_name;
-        //                 } else {
-        //                     $str .= str_replace(' ', '', $item);
-        //                 }
-        //             }
-        //         }
-        //         $item = [];
-        //         $item['type'] = $str;
-        //         $item['price'] = BackEndHelper::currency_to_usd(abs($request['price_' . str_replace('.', '_', $str)]));
-        //         $item['sku'] = $request['sku_' . str_replace('.', '_', $str)];
-        //         $item['qty'] = abs($request['qty_' . str_replace('.', '_', $str)]);
-        //         array_push($variations, $item);
-        //         $stock_count += $item['qty'];
-        //     }
-        // } else {
-        //     $stock_count = (integer)$request['current_stock'];
-        // }
-
-        // if ($validator->errors()->count() > 0) {
-        //     return response()->json(['errors' => Helpers::error_processor($validator)]);
-        // }
-
-        // if ($validator->fails()) {
-        //     return back()->withErrors($validator)
-        //         ->withInput();
-        // }
+        $product->details              = $request['description'] ?? '';
+        if(count($request->specification) > 0){
+            $product->specification = json_encode($request->specification);
+        }
+        if(count($request->faq) > 0){
+            $product->faq = json_encode($request->faq);
+        }
 
         $stock_count = (integer)$request['current_stock'];
 
-        //combinations end
-        //$product->variation      = $request->product_type == 'physical' ? json_encode($variations) : json_encode([]);
         $product->unit_price     = BackEndHelper::currency_to_usd($request->unit_price);
         $product->purchase_price = BackEndHelper::currency_to_usd($request->purchase_price);
         $product->tax            = $request->tax == 'flat' ? BackEndHelper::currency_to_usd($request->tax) : $request->tax;
         $product->tax_type       = $request->tax_type;
         $product->discount       = $request->discount_type == 'flat' ? BackEndHelper::currency_to_usd($request->discount) : $request->discount;
-        //$product->attributes     = $request->product_type == 'physical' ? json_encode($request->choice_attributes) : json_encode([]);
         $product->discount_type  = $request->discount_type;
         $product->current_stock  = $request->product_type == 'physical' ? abs($stock_count) : 0;
-
-        // $product->video_provider = 'youtube';
-        // $product->video_url = $request->video_link;
-        // if ($product->added_by == 'seller' && $product->request_status == 2) {
-        //     $product->request_status = 1;
-        // }
-
         $product->shipping_cost = $request->product_type == 'physical' ? BackEndHelper::currency_to_usd($request->shipping_cost): 0;
         $product->multiply_qty = ($request->product_type == 'physical') ? ($request->multiplyQTY=='on'?1:0) : 0;
         if ($request->ajax()) {
@@ -799,36 +562,7 @@ class ProductController extends BaseController
                 ImageManager::delete('product/digital-product/'.$product->digital_file_ready);
                 $product->digital_file_ready = null;
             }
-
-            // $product->meta_title = $request->meta_title;
-            // $product->meta_description = $request->meta_description;
-            // if ($request->file('meta_image')) {
-            //     $product->meta_image = ImageManager::update('product/meta/', $product->meta_image, 'png', $request->file('meta_image'));
-            // }
-
             $product->save();
-
-            // foreach ($request->lang as $index => $key) {
-            //     if ($request->name[$index] && $key != 'en') {
-            //         Translation::updateOrInsert(
-            //             ['translationable_type' => 'App\Model\Product',
-            //                 'translationable_id' => $product->id,
-            //                 'locale' => $key,
-            //                 'key' => 'name'],
-            //             ['value' => $request->name[$index]]
-            //         );
-            //     }
-            //     if ($request->description[$index] && $key != 'en') {
-            //         Translation::updateOrInsert(
-            //             ['translationable_type' => 'App\Model\Product',
-            //                 'translationable_id' => $product->id,
-            //                 'locale' => $key,
-            //                 'key' => 'description'],
-            //             ['value' => $request->description[$index]]
-            //         );
-            //     }
-            // }
-            
             Toastr::success('Product updated successfully.');
             return back();
         }
