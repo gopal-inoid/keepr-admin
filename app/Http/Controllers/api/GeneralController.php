@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Model\HelpTopic;
+use App\Model\ConnectedDevice;
 use App\User;
 use App\Model\BusinessSetting;
 use Illuminate\Http\Request;
@@ -112,6 +113,32 @@ class GeneralController extends Controller
         return response()->json(['status'=>200,'message'=>'Successfully Logout'],200);
     }
 
+    //START DEVICE API's
+
+    public function connect_device(Request $request){
+        $device_uuid = $request->uuid;
+        $device_id = $request->device_id;
+        $device_mac_id = $request->mac_id;
+		$auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_token'=>$auth_token])->first();
+        if(!empty($user_details->id)){
+            $check = ConnectedDevice::insert(['device_id'=>$device_id,'mac_id'=>$device_mac_id,'user_id'=>$user_details->id,'device_uuid'=>$device_uuid]);
+            if($check){
+                return response()->json(['status'=>200,'message'=>'Device connected successfully'],200);
+            }
+        }
+
+        return response()->json(['status'=>400,'message'=>'Something Went Wrong, Please try again latter'],400);
+    }
+
+    public function edit_device(){
+        return response()->json(HelpTopic::orderBy('ranking')->get(),200);
+    }
+
+    public function delete_device(){
+        return response()->json(HelpTopic::orderBy('ranking')->get(),200);
+    }
+
     public function device_type_list(){
         return response()->json(HelpTopic::orderBy('ranking')->get(),200);
     }
@@ -128,18 +155,6 @@ class GeneralController extends Controller
         return response()->json(HelpTopic::orderBy('ranking')->get(),200);
     }
 
-    public function add_device(){
-        return response()->json(HelpTopic::orderBy('ranking')->get(),200);
-    }
-
-    public function edit_device(){
-        return response()->json(HelpTopic::orderBy('ranking')->get(),200);
-    }
-
-    public function delete_device(){
-        return response()->json(HelpTopic::orderBy('ranking')->get(),200);
-    }
-
-    
+    //END DEVICE API's
 
 }
