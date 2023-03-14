@@ -12,8 +12,10 @@ use App\Model\Order;
 use App\Model\OrderDetail;
 use App\Model\Product;
 use App\Model\Review;
+use App\Model\ConnectedDevice;
 use App\Model\ShippingMethod;
 use App\Model\Wishlist;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -247,4 +249,105 @@ class ProductController extends Controller
         $products['products'] = Helpers::product_data_formatting($products['products'], true);
         return response()->json($products, 200);
     }
+
+    //START DEVICE API's
+    public function connect_device(Request $request){
+        $device_uuid = $request->uuid;
+        $device_id = $request->device_id;
+        $device_mac_id = $request->mac_id;
+        $auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_token'=>$auth_token])->first();
+        if(!empty($user_details->id)){
+            $check = ConnectedDevice::insert(['device_id'=>$device_id,'mac_id'=>$device_mac_id,'user_id'=>$user_details->id,'device_uuid'=>$device_uuid]);
+            if($check){
+                return response()->json(['status'=>200,'message'=>'Device connected successfully'],200);
+            }
+        }
+
+        return response()->json(['status'=>400,'message'=>'Something Went Wrong, Please try again latter'],400);
+    }
+
+    public function edit_device(Request $request){
+        $name = $request->name;
+        $device_id = $request->device_id;
+        $auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_token'=>$auth_token])->first();
+        if(!empty($user_details->id)){
+            $check = ConnectedDevice::where(['device_id'=>$device_id,'user_id'=>$user_details->id])->update(['device_name'=>$name]);
+            if($check){
+                return response()->json(['status'=>200,'message'=>'Device name updated successfully'],200);
+            }
+        }
+
+        return response()->json(['status'=>400,'message'=>'Something Went Wrong, Please try again latter'],400);
+    }
+
+    public function delete_device(Request $request){
+        $device_id = $request->device_id;
+        $auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_token'=>$auth_token])->first();
+        if(!empty($user_details->id)){
+            $check = ConnectedDevice::where(['device_id'=>$device_id,'user_id'=>$user_details->id])->delete();
+            if($check){
+                return response()->json(['status'=>200,'message'=>'Device deleted successfully'],200);
+            }
+        }
+
+        return response()->json(['status'=>400,'message'=>'Something Went Wrong, Please try again latter'],400);
+    }
+
+    public function get_connected_device(Request $request){
+        $auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_token'=>$auth_token])->first();
+        if(!empty($user_details->id)){
+            $get_all_devices = ConnectedDevice::where(['user_id'=>$user_details->id,'status'=>1])->get();
+            if(!empty($get_all_devices)){
+                return response()->json(['status'=>200,'message'=>'Success','data'=>$get_all_devices],200);
+            }else{
+                return response()->json(['status'=>400,'message'=>'Devices not found'],400);
+            }
+        }else{
+            return response()->json(['status'=>400,'message'=>'User not found'],400);
+        }
+    }
+
+    public function all_available_devices(){
+        $devices_list = Product::where(['status'=>1])->get();
+        if(!empty($devices_list)){
+            return response()->json(['status'=>200,'message'=>'Success','data'=>$devices_list],200);
+        }else{
+            return response()->json(['status'=>400,'message'=>'Devices not found'],400);
+        }
+    }
+
+    public function devices_type_list(){
+        $devices_list = Product::select('id','name','images','thumbnail')->where(['status'=>1])->get();
+        if(!empty($devices_list)){
+            return response()->json(['status'=>200,'message'=>'Success','data'=>$devices_list],200);
+        }else{
+            return response()->json(['status'=>400,'message'=>'Devices not found'],400);
+        }
+    }
+
+    public function search_device(Request $request){
+        $keyword = $request->keyword;
+        $devices_list = Product::where(['status'=>1])->where('name', 'like', '%' . $keyword . '%')->get();
+        if(!empty($devices_list)){
+            return response()->json(['status'=>200,'message'=>'Success','data'=>$devices_list],200);
+        }else{
+            return response()->json(['status'=>400,'message'=>'Devices not found'],400);
+        }
+    }
+
+    public function get_device_detail(Request $request){
+        $device_id = $request->device_id;
+        $devices_details = Product::where(['status'=>1,'id'=>$device_id])->first();
+        if(!empty($devices_details->id)){
+            return response()->json(['status'=>200,'message'=>'Success','data'=>$devices_details],200);
+        }else{
+            return response()->json(['status'=>400,'message'=>'Devices not found'],400);
+        }
+    }
+    //END DEVICE API's
+
 }

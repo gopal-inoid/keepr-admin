@@ -13,13 +13,15 @@ class BannerController extends Controller
 {
     public function get_banners(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'banner_type' => 'required'
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'banner_type' => 'required'
+        // ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        // }
+
+        $request['banner_type'] = 'all';
 
         if ($request['banner_type'] == 'all') {
             $banners = Banner::where(['published' => 1])->get();

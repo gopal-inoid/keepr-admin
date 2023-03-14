@@ -28,115 +28,89 @@ Route::group(['namespace' => 'api'], function () {
 
     Route::group(['middleware' => ['api_auth']], function () {
 
-        //GENERAL
-        Route::get('get-banners', 'GeneralController@get_banners');
+        //BANNERS
+        Route::get('get-banners', 'BannerController@get_banners');
         //
 
         //DEVICE
-        Route::post('connect-device', 'GeneralController@connect_device');
-        Route::post('edit-device', 'GeneralController@edit_device');
-        Route::post('delete-device', 'GeneralController@delete_device');
-        Route::post('get-connected-device', 'GeneralController@get_connected_device');
-        Route::get('all-available-devices', 'GeneralController@all_available_devices');
-        Route::get('devices-type-list', 'GeneralController@devices_type_list');
+        Route::post('connect-device', 'ProductController@connect_device');
+        Route::post('edit-device', 'ProductController@edit_device');
+        Route::post('delete-device', 'ProductController@delete_device');
+        Route::post('get-connected-device', 'ProductController@get_connected_device');
+        Route::get('all-available-devices', 'ProductController@all_available_devices');
+        Route::get('devices-type-list', 'ProductController@devices_type_list');
+        Route::post('search-device', 'ProductController@search_device');
+        Route::post('get-device-detail', 'ProductController@get_device_detail');
         //
 
         //USER
         Route::post('delete-user-account', 'GeneralController@delete_user_account');
+        Route::post('user-profile', 'GeneralController@user_profile');
+        //
+
+        //CART
+        Route::post('add-cart', 'CartController@add_to_cart');
+        Route::put('update-cart', 'CartController@update_cart');
+        Route::delete('remove-cart', 'CartController@remove_from_cart');
+        Route::delete('remove-all-cart','CartController@remove_all_from_cart');
         //
 
     });
 
     //#KEEPR END
 
-    Route::group(['prefix' => 'auth', 'namespace' => 'auth'], function () {
-        Route::post('register', 'PassportAuthController@register');
-        Route::post('login', 'PassportAuthController@login');
-
-        Route::post('check-phone', 'PhoneVerificationController@check_phone');
-        Route::post('verify-phone', 'PhoneVerificationController@verify_phone');
-
-        Route::post('check-email', 'EmailVerificationController@check_email');
-        Route::post('verify-email', 'EmailVerificationController@verify_email');
-
-        Route::post('forgot-password', 'ForgotPassword@reset_password_request');
-        Route::post('verify-otp', 'ForgotPassword@otp_verification_submit');
-        Route::put('reset-password', 'ForgotPassword@reset_password_submit');
-
-        Route::any('social-login', 'SocialAuthController@social_login');
-        Route::post('update-phone', 'SocialAuthController@update_phone');
-    });
-
     Route::group(['prefix' => 'config'], function () {
         Route::get('/', 'ConfigController@configuration');
     });
 
-    Route::group(['prefix' => 'shipping-method','middleware'=>'auth:api'], function () {
-        Route::get('detail/{id}', 'ShippingMethodController@get_shipping_method_info');
-        Route::get('by-seller/{id}/{seller_is}', 'ShippingMethodController@shipping_methods_by_seller');
-        Route::post('choose-for-order', 'ShippingMethodController@choose_for_order');
-        Route::get('chosen', 'ShippingMethodController@chosen_shipping_methods');
+    // Route::group(['prefix' => 'products'], function () {
+    //     Route::get('latest', 'ProductController@get_latest_products');
+    //     Route::get('featured', 'ProductController@get_featured_products');
+    //     Route::get('top-rated', 'ProductController@get_top_rated_products');
+    //     Route::any('search', 'ProductController@get_searched_products');
+    //     Route::get('details/{slug}', 'ProductController@get_product');
+    //     Route::get('related-products/{product_id}', 'ProductController@get_related_products');
+    //     Route::get('reviews/{product_id}', 'ProductController@get_product_reviews');
+    //     Route::get('rating/{product_id}', 'ProductController@get_product_rating');
+    //     Route::get('counter/{product_id}', 'ProductController@counter');
+    //     Route::get('shipping-methods', 'ProductController@get_shipping_methods');
+    //     Route::get('social-share-link/{product_id}', 'ProductController@social_share_link');
+    //     Route::post('reviews/submit', 'ProductController@submit_product_review')->middleware('auth:api');
+    //     Route::get('best-sellings', 'ProductController@get_best_sellings');
+    //     Route::get('home-categories', 'ProductController@get_home_categories');
+    //     ROute::get('discounted-product', 'ProductController@get_discounted_product');
+    // });
 
-        Route::get('check-shipping-type','ShippingMethodController@check_shipping_type');
-    });
+    // Route::group(['prefix' => 'notifications'], function () {
+    //     Route::get('/', 'NotificationController@get_notifications');
+    // });
 
-    Route::group(['prefix' => 'cart','middleware'=>'auth:api'], function () {
-        Route::get('/', 'CartController@cart');
-        Route::post('add', 'CartController@add_to_cart');
-        Route::put('update', 'CartController@update_cart');
-        Route::delete('remove', 'CartController@remove_from_cart');
-        Route::delete('remove-all','CartController@remove_all_from_cart');
+    // Route::group(['prefix' => 'brands'], function () {
+    //     Route::get('/', 'BrandController@get_brands');
+    //     Route::get('products/{brand_id}', 'BrandController@get_products');
+    // });
 
-    });
+    // Route::group(['prefix' => 'attributes'], function () {
+    //     Route::get('/', 'AttributeController@get_attributes');
+    // });
 
-    Route::group(['prefix' => 'products'], function () {
-        Route::get('latest', 'ProductController@get_latest_products');
-        Route::get('featured', 'ProductController@get_featured_products');
-        Route::get('top-rated', 'ProductController@get_top_rated_products');
-        Route::any('search', 'ProductController@get_searched_products');
-        Route::get('details/{slug}', 'ProductController@get_product');
-        Route::get('related-products/{product_id}', 'ProductController@get_related_products');
-        Route::get('reviews/{product_id}', 'ProductController@get_product_reviews');
-        Route::get('rating/{product_id}', 'ProductController@get_product_rating');
-        Route::get('counter/{product_id}', 'ProductController@counter');
-        Route::get('shipping-methods', 'ProductController@get_shipping_methods');
-        Route::get('social-share-link/{product_id}', 'ProductController@social_share_link');
-        Route::post('reviews/submit', 'ProductController@submit_product_review')->middleware('auth:api');
-        Route::get('best-sellings', 'ProductController@get_best_sellings');
-        Route::get('home-categories', 'ProductController@get_home_categories');
-        ROute::get('discounted-product', 'ProductController@get_discounted_product');
-    });
+    // Route::group(['prefix' => 'flash-deals'], function () {
+    //     Route::get('/', 'FlashDealController@get_flash_deal');
+    //     Route::get('products/{deal_id}', 'FlashDealController@get_products');
+    // });
 
-    Route::group(['prefix' => 'notifications'], function () {
-        Route::get('/', 'NotificationController@get_notifications');
-    });
+    // Route::group(['prefix' => 'deals'], function () {
+    //     Route::get('featured', 'DealController@get_featured_deal');
+    // });
 
-    Route::group(['prefix' => 'brands'], function () {
-        Route::get('/', 'BrandController@get_brands');
-        Route::get('products/{brand_id}', 'BrandController@get_products');
-    });
+    // Route::group(['prefix' => 'dealsoftheday'], function () {
+    //     Route::get('deal-of-the-day', 'DealOfTheDayController@get_deal_of_the_day_product');
+    // });
 
-    Route::group(['prefix' => 'attributes'], function () {
-        Route::get('/', 'AttributeController@get_attributes');
-    });
-
-    Route::group(['prefix' => 'flash-deals'], function () {
-        Route::get('/', 'FlashDealController@get_flash_deal');
-        Route::get('products/{deal_id}', 'FlashDealController@get_products');
-    });
-
-    Route::group(['prefix' => 'deals'], function () {
-        Route::get('featured', 'DealController@get_featured_deal');
-    });
-
-    Route::group(['prefix' => 'dealsoftheday'], function () {
-        Route::get('deal-of-the-day', 'DealOfTheDayController@get_deal_of_the_day_product');
-    });
-
-    Route::group(['prefix' => 'categories'], function () {
-        Route::get('/', 'CategoryController@get_categories');
-        Route::get('products/{category_id}', 'CategoryController@get_products');
-    });
+    // Route::group(['prefix' => 'categories'], function () {
+    //     Route::get('/', 'CategoryController@get_categories');
+    //     Route::get('products/{category_id}', 'CategoryController@get_products');
+    // });
 
     Route::group(['prefix' => 'customer', 'middleware' => 'auth:api'], function () {
         Route::get('info', 'CustomerController@info');
@@ -198,10 +172,6 @@ Route::group(['namespace' => 'api'], function () {
     Route::group(['prefix' => 'order'], function () {
         Route::get('track', 'OrderController@track_order');
         Route::get('cancel-order','OrderController@order_cancel');
-    });
-
-    Route::group(['prefix' => 'banners'], function () {
-        Route::get('/', 'BannerController@get_banners');
     });
 
     Route::group(['prefix' => 'seller'], function () {

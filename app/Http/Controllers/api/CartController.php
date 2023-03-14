@@ -6,6 +6,14 @@ use App\CPU\CartManager;
 use App\CPU\Helpers;
 use App\Http\Controllers\Controller;
 use App\Model\Cart;
+use App\Model\CartShipping;
+use App\Model\Color;
+use App\Model\Product;
+use App\Model\Shop;
+use App\User;
+use Illuminate\Support\Str;
+use App\Model\ShippingType;
+use App\Model\CategoryShippingCost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use function App\CPU\translate;
@@ -65,8 +73,41 @@ class CartController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
 
-        $cart = CartManager::add_to_cart($request);
-        return response()->json($cart, 200);
+        $auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_token'=>$auth_token])->first();
+        $product = Product::find($request->id);
+        $cart = Cart::where(['product_id' => $request->id, 'customer_id' => $user_details->id])->first();
+        if (isset($cart) == false) {
+            $cart = new Cart();
+        } else {
+            return response()->json([
+                'status' => 0,
+                'message' => translate('already_added!')
+            ], 200);
+        }
+
+        if ($product['current_stock'] < $request['quantity']) {
+            return response()->json([
+                'status' => 0,
+                'message' => translate('out_of_stock!')
+            ], 200);
+        }
+
+        $price = $product->unit_price;
+        $tax = Helpers::tax_calculation($price, $product['tax'], 'percent');
+        $cart['customer_id'] = $user_details->id ?? 0;
+        $cart['quantity'] = $request['quantity'];
+        $cart['price'] = $price;
+        $cart['tax'] = $tax;
+        $cart['name'] = $product->name;
+        $cart['discount'] = Helpers::get_product_discount($product, $price);
+        $cart['thumbnail'] = $product->thumbnail;
+        $cart->save();
+        //$cart = CartManager::add_to_cart($request);
+        return response()->json([
+            'status' => 1,
+            'message' => translate('successfully_added!')
+        ], 200);
     }
 
     public function update_cart(Request $request)

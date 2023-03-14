@@ -7,6 +7,7 @@ use App\Model\HelpTopic;
 use App\Model\ConnectedDevice;
 use App\Model\Banner;
 use App\Model\Product;
+use App\Model\Order;
 use App\User;
 use App\Model\BusinessSetting;
 use Illuminate\Http\Request;
@@ -30,7 +31,7 @@ class GeneralController extends Controller
     public function get_banners(){
         $banners_list = Banner::where(['published'=>1])->get();
         if(!empty($banners_list)){
-            return response()->json(['status'=>200,'data'=>$banners_list,'message'=>'Success'],200);
+            return response()->json(['status'=>200,'message'=>'Success','data'=>$banners_list],200);
         }else{
             return response()->json(['status'=>400,'message'=>'Banners not found'],400);
         }
@@ -124,88 +125,6 @@ class GeneralController extends Controller
 
     //END USER AUTH API's
 
-    //START DEVICE API's
-
-    public function connect_device(Request $request){
-        $device_uuid = $request->uuid;
-        $device_id = $request->device_id;
-        $device_mac_id = $request->mac_id;
-		$auth_token   = $request->headers->get('X-Access-Token');
-        $user_details = User::where(['auth_token'=>$auth_token])->first();
-        if(!empty($user_details->id)){
-            $check = ConnectedDevice::insert(['device_id'=>$device_id,'mac_id'=>$device_mac_id,'user_id'=>$user_details->id,'device_uuid'=>$device_uuid]);
-            if($check){
-                return response()->json(['status'=>200,'message'=>'Device connected successfully'],200);
-            }
-        }
-
-        return response()->json(['status'=>400,'message'=>'Something Went Wrong, Please try again latter'],400);
-    }
-
-    public function edit_device(Request $request){
-        $name = $request->name;
-        $device_id = $request->device_id;
-		$auth_token   = $request->headers->get('X-Access-Token');
-        $user_details = User::where(['auth_token'=>$auth_token])->first();
-        if(!empty($user_details->id)){
-            $check = ConnectedDevice::where(['device_id'=>$device_id,'user_id'=>$user_details->id])->update(['device_name'=>$name]);
-            if($check){
-                return response()->json(['status'=>200,'message'=>'Device name updated successfully'],200);
-            }
-        }
-
-        return response()->json(['status'=>400,'message'=>'Something Went Wrong, Please try again latter'],400);
-    }
-
-    public function delete_device(Request $request){
-        $device_id = $request->device_id;
-		$auth_token   = $request->headers->get('X-Access-Token');
-        $user_details = User::where(['auth_token'=>$auth_token])->first();
-        if(!empty($user_details->id)){
-            $check = ConnectedDevice::where(['device_id'=>$device_id,'user_id'=>$user_details->id])->delete();
-            if($check){
-                return response()->json(['status'=>200,'message'=>'Device deleted successfully'],200);
-            }
-        }
-
-        return response()->json(['status'=>400,'message'=>'Something Went Wrong, Please try again latter'],400);
-    }
-
-    public function get_connected_device(Request $request){
-		$auth_token   = $request->headers->get('X-Access-Token');
-        $user_details = User::where(['auth_token'=>$auth_token])->first();
-        if(!empty($user_details->id)){
-            $get_all_devices = ConnectedDevice::where(['user_id'=>$user_details->id,'status'=>1])->get();
-            if(!empty($get_all_devices)){
-                return response()->json(['status'=>200,'data'=>$get_all_devices,'message'=>'Success'],200);
-            }else{
-                return response()->json(['status'=>400,'message'=>'Devices not found'],400);
-            }
-        }else{
-            return response()->json(['status'=>400,'message'=>'User not found'],400);
-        }
-    }
-
-    public function all_available_devices(){
-        $devices_list = Product::where(['status'=>1])->get();
-        if(!empty($devices_list)){
-            return response()->json(['status'=>200,'data'=>$devices_list,'message'=>'Success'],200);
-        }else{
-            return response()->json(['status'=>400,'message'=>'Devices not found'],400);
-        }
-    }
-
-    public function devices_type_list(){
-        $devices_list = Product::select('id','name','images','thumbnail')->where(['status'=>1])->get();
-        if(!empty($devices_list)){
-            return response()->json(['status'=>200,'data'=>$devices_list,'message'=>'Success'],200);
-        }else{
-            return response()->json(['status'=>400,'message'=>'Devices not found'],400);
-        }
-    }
-
-    //END DEVICE API's
-
     //START USER API's
     public function delete_user_account(Request $request){
 		$auth_token   = $request->headers->get('X-Access-Token');
@@ -218,6 +137,21 @@ class GeneralController extends Controller
             }else{
                 return response()->json(['status'=>400,'message'=>'User not deleted'],400);
             }
+        }else{
+            return response()->json(['status'=>400,'message'=>'User not found'],400);
+        }
+    }
+
+    public function user_profile(Request $request){
+        $auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_token'=>$auth_token])->first();
+        if(!empty($user_details->id)){
+            $all_data['phone'] = $user_details->phone;
+            $get_orders = Order::where(['customer_id'=>$user_details->id])->get();
+            if(!empty($get_orders)){
+                $all_data['order_list'] = $get_orders;
+            }
+            return response()->json(['status'=>200,'message'=>'Success','data'=>$all_data],200);
         }else{
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
