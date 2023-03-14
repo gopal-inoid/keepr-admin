@@ -46,6 +46,7 @@ Route::group(['namespace' => 'api'], function () {
         //USER
         Route::post('delete-user-account', 'GeneralController@delete_user_account');
         Route::post('user-profile', 'GeneralController@user_profile');
+        Route::post('order-detail', 'GeneralController@order_detail');
         //
 
         //CART
