@@ -28,14 +28,21 @@ Route::group(['namespace' => 'api'], function () {
 
     Route::group(['middleware' => ['api_auth']], function () {
 
+        //GENERAL
+        Route::get('get-banners', 'GeneralController@get_banners');
+        //
+
         //DEVICE
-        Route::get('active-device-list', 'GeneralController@active_device_list');
-        Route::get('get-specific-device/{device_id}', 'GeneralController@get_specific_device');
-        Route::get('device-type-list', 'GeneralController@device_type_list');
-        Route::get('previous-added-device-list', 'GeneralController@previous_added_device_list');
-        Route::get('connect-device', 'GeneralController@connect_device');
-        Route::get('edit-device', 'GeneralController@edit_device');
-        Route::get('delete-device', 'GeneralController@delete_device');
+        Route::post('connect-device', 'GeneralController@connect_device');
+        Route::post('edit-device', 'GeneralController@edit_device');
+        Route::post('delete-device', 'GeneralController@delete_device');
+        Route::post('get-connected-device', 'GeneralController@get_connected_device');
+        Route::get('all-available-devices', 'GeneralController@all_available_devices');
+        Route::get('devices-type-list', 'GeneralController@devices_type_list');
+        //
+
+        //USER
+        Route::post('delete-user-account', 'GeneralController@delete_user_account');
         //
 
     });
@@ -81,8 +88,6 @@ Route::group(['namespace' => 'api'], function () {
         Route::delete('remove-all','CartController@remove_all_from_cart');
 
     });
-
-    Route::get('faq', 'GeneralController@faq');
 
     Route::group(['prefix' => 'products'], function () {
         Route::get('latest', 'ProductController@get_latest_products');

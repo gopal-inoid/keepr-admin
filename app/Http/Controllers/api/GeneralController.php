@@ -5,6 +5,8 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Model\HelpTopic;
 use App\Model\ConnectedDevice;
+use App\Model\Banner;
+use App\Model\Product;
 use App\User;
 use App\Model\BusinessSetting;
 use Illuminate\Http\Request;
@@ -12,10 +14,6 @@ use Kreait\Laravel\Firebase\Facades\Firebase;
 use Kreait\Firebase\Exception\Auth\FailedToVerifyToken;
 class GeneralController extends Controller
 {
-    public function faq(){
-        return response()->json(HelpTopic::orderBy('ranking')->get(),200);
-    }
-
     public function get_pages($page_name = null){ // page type = terms_condition, privacy_policy, support, about_us
         if($page_name != null){
             $data = BusinessSetting::where('type', $page_name)->first();
@@ -28,6 +26,17 @@ class GeneralController extends Controller
             return response()->json(['status'=>400,'message'=>'Page not found'],400);
         }
     }
+
+    public function get_banners(){
+        $banners_list = Banner::where(['published'=>1])->get();
+        if(!empty($banners_list)){
+            return response()->json(['status'=>200,'data'=>$banners_list,'message'=>'Success'],200);
+        }else{
+            return response()->json(['status'=>400,'message'=>'Banners not found'],400);
+        }
+    }
+
+    //START USER AUTH API's
 
     //GET MOBILE NO. CHECK AND VERIFY INTO DB AND SEND IN RESPONSE
     public function verify_user(Request $request){
@@ -113,6 +122,8 @@ class GeneralController extends Controller
         return response()->json(['status'=>200,'message'=>'Successfully Logout'],200);
     }
 
+    //END USER AUTH API's
+
     //START DEVICE API's
 
     public function connect_device(Request $request){
@@ -131,30 +142,87 @@ class GeneralController extends Controller
         return response()->json(['status'=>400,'message'=>'Something Went Wrong, Please try again latter'],400);
     }
 
-    public function edit_device(){
-        return response()->json(HelpTopic::orderBy('ranking')->get(),200);
+    public function edit_device(Request $request){
+        $name = $request->name;
+        $device_id = $request->device_id;
+		$auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_token'=>$auth_token])->first();
+        if(!empty($user_details->id)){
+            $check = ConnectedDevice::where(['device_id'=>$device_id,'user_id'=>$user_details->id])->update(['device_name'=>$name]);
+            if($check){
+                return response()->json(['status'=>200,'message'=>'Device name updated successfully'],200);
+            }
+        }
+
+        return response()->json(['status'=>400,'message'=>'Something Went Wrong, Please try again latter'],400);
     }
 
-    public function delete_device(){
-        return response()->json(HelpTopic::orderBy('ranking')->get(),200);
+    public function delete_device(Request $request){
+        $device_id = $request->device_id;
+		$auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_token'=>$auth_token])->first();
+        if(!empty($user_details->id)){
+            $check = ConnectedDevice::where(['device_id'=>$device_id,'user_id'=>$user_details->id])->delete();
+            if($check){
+                return response()->json(['status'=>200,'message'=>'Device deleted successfully'],200);
+            }
+        }
+
+        return response()->json(['status'=>400,'message'=>'Something Went Wrong, Please try again latter'],400);
     }
 
-    public function device_type_list(){
-        return response()->json(HelpTopic::orderBy('ranking')->get(),200);
+    public function get_connected_device(Request $request){
+		$auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_token'=>$auth_token])->first();
+        if(!empty($user_details->id)){
+            $get_all_devices = ConnectedDevice::where(['user_id'=>$user_details->id,'status'=>1])->get();
+            if(!empty($get_all_devices)){
+                return response()->json(['status'=>200,'data'=>$get_all_devices,'message'=>'Success'],200);
+            }else{
+                return response()->json(['status'=>400,'message'=>'Devices not found'],400);
+            }
+        }else{
+            return response()->json(['status'=>400,'message'=>'User not found'],400);
+        }
     }
 
-    public function active_device_list(){
-        return response()->json(HelpTopic::orderBy('ranking')->get(),200);
+    public function all_available_devices(){
+        $devices_list = Product::where(['status'=>1])->get();
+        if(!empty($devices_list)){
+            return response()->json(['status'=>200,'data'=>$devices_list,'message'=>'Success'],200);
+        }else{
+            return response()->json(['status'=>400,'message'=>'Devices not found'],400);
+        }
     }
 
-    public function get_specific_device($device_id){
-        return response()->json(HelpTopic::orderBy('ranking')->get(),200);
-    }
-
-    public function previous_added_device_list(){
-        return response()->json(HelpTopic::orderBy('ranking')->get(),200);
+    public function devices_type_list(){
+        $devices_list = Product::select('id','name','images','thumbnail')->where(['status'=>1])->get();
+        if(!empty($devices_list)){
+            return response()->json(['status'=>200,'data'=>$devices_list,'message'=>'Success'],200);
+        }else{
+            return response()->json(['status'=>400,'message'=>'Devices not found'],400);
+        }
     }
 
     //END DEVICE API's
+
+    //START USER API's
+    public function delete_user_account(Request $request){
+		$auth_token   = $request->headers->get('X-Access-Token');
+        $user = User::where(['auth_token'=>$auth_token])->first();
+        if(!empty($user->id)){
+            ConnectedDevice::where(['user_id'=>$user->id])->delete();
+            $deleted = $user->delete();
+            if(!empty($deleted)){
+                return response()->json(['status'=>200,'message'=>'User successfully deleted'],200);
+            }else{
+                return response()->json(['status'=>400,'message'=>'User not deleted'],400);
+            }
+        }else{
+            return response()->json(['status'=>400,'message'=>'User not found'],400);
+        }
+    }
+
+    //END USER API's
 
 }
