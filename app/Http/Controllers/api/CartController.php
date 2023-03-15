@@ -113,50 +113,69 @@ class CartController extends Controller
     public function update_cart(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'key' => 'required',
+            'id' => 'required',
             'quantity' => 'required',
         ], [
-            'key.required' => translate('Cart key or ID is required!')
+            'id.required' => translate('Cart ID is required!')
         ]);
 
         if ($validator->errors()->count() > 0) {
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
 
-        $response = CartManager::update_cart_qty($request);
-        return response()->json($response);
+        $status = 1;
+        $qty = 0;
+        $auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_token'=>$auth_token])->first();
+        $cart = Cart::where(['id' => $request->id, 'customer_id' => $user_details->id])->first();
+        $product = Product::find($cart['product_id']);
+        if ($product['current_stock'] < $request->quantity) {
+            $status = 0;
+            $qty = $cart['quantity'];
+        }
+
+        if ($status) {
+            $qty = $request->quantity;
+            $cart['quantity'] = $request->quantity;
+        }
+        $cart->save();
+        return response()->json([
+            'status' => $status,
+            'qty' => $qty,
+            'message' => $status == 1 ? translate('successfully_updated!') : translate('sorry_stock_is_limited')
+        ],200);
     }
 
     public function remove_from_cart(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'key' => 'required'
+            'id' => 'required'
         ], [
-            'key.required' => translate('Cart key or ID is required!')
+            'id.required' => translate('Cart ID is required!')
         ]);
 
         if ($validator->errors()->count() > 0) {
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
 
-        $user = Helpers::get_customer($request);
-        Cart::where(['id' => $request->key, 'customer_id' => $user->id])->delete();
+        $auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_token'=>$auth_token])->first();
+        Cart::where(['id' => $request->id, 'customer_id' => $user_details->id])->delete();
         return response()->json(translate('successfully_removed'));
     }
     public function remove_all_from_cart(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'key' => 'required'
+            'id' => 'required'
         ], [
-            'key.required' => translate('Cart key or ID is required!')
+            'id.required' => translate('Cart ID is required!')
         ]);
-
         if ($validator->errors()->count() > 0) {
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
-
-        $user = Helpers::get_customer($request);
-        Cart::where(['customer_id' => $user->id])->delete();
+        $auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_token'=>$auth_token])->first();
+        Cart::where(['customer_id' => $user_details->id])->delete();
         return response()->json(translate('successfully_removed'));
     }
 }
