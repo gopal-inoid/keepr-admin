@@ -24,7 +24,7 @@ Route::group(['namespace' => 'api'], function () {
     //
 
     //PAGES
-    Route::get('get-pages/{page?}', 'GeneralController@get_pages');
+    Route::get('get-pages', 'GeneralController@get_pages');
 
     Route::group(['middleware' => ['api_auth']], function () {
 

@@ -5,6 +5,9 @@
 /public/product
 /storage/*.key
 /vendor
+
+/config/app.php
+
 .idea
 .env
 .env.backup
