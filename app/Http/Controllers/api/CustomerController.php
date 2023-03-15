@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api\v1;
+namespace App\Http\Controllers\api;
 
 use App\CPU\CustomerManager;
 use App\CPU\Helpers;
