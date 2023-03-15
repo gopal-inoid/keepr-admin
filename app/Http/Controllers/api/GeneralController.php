@@ -17,7 +17,7 @@ use Kreait\Firebase\Exception\Auth\FailedToVerifyToken;
 class GeneralController extends Controller
 {
     public function get_pages(Request $request){ // page type = terms_condition, privacy_policy, support, about_us
-        echo ' <pre> ' . print_r($_GET); die;
+        echo ' <pre> ' . print_r($request->all()); die;
         // $response = Http::get(env('APP_URL'));
         // echo "<pre>"; print_r($response->body()); die;
         if($request->page_name){
