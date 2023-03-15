@@ -65,8 +65,9 @@ class GeneralController extends Controller
     //GET FIREBASE AUTH TOKEN. CHECK AND VERIFY THEN ADD INTO DB AND SEND USER INFO IN RESPONSE
     public function user_authentication(Request $request){
         $token = $request->token;
-        $auth = app('firebase.auth');
         try {
+            $auth = app('firebase.auth');
+            //echo "<pre>"; print_r($auth); die;
             $verifiedIdToken = $auth->verifyIdToken($token);
         } catch (FailedToVerifyToken $e) {
             return response()->json(['status'=>400,'message'=>$e->getMessage()],400);
