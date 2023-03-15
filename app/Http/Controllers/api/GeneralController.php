@@ -17,7 +17,7 @@ class GeneralController extends Controller
 {
     public function get_pages(Request $request){ // page type = terms_condition, privacy_policy, support, about_us
         //echo ' - ' . $request->page_name; die;
-        echo "<pre>"; print_r($request->query('page_name')); die;
+        echo "<pre>"; print_r($_GET); die;
         if($request->page_name){
             $data = BusinessSetting::where('type', $request->page_name)->first();
             if(!empty($data)){
