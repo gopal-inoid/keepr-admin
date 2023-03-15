@@ -98,10 +98,15 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
+        "platform-check": false,
         "sort-packages": true,
         "allow-plugins": {
             "composer/package-versions-deprecated": true
+        },
+        "platform": {
+            "php": "^7.4"
         }
+
     },
     "minimum-stability": "dev",
     "prefer-stable": true
