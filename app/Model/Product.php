@@ -40,27 +40,27 @@ class Product extends Model
         return $this->morphMany('App\Model\Translation', 'translationable');
     }
 
-    public function scopeActive($query)
-    {
-        $brand_setting = BusinessSetting::where('type', 'product_brand')->first()->value;
-        $digital_product_setting = BusinessSetting::where('type', 'digital_product')->first()->value;
+    // public function scopeActive($query)
+    // {
+    //     $brand_setting = BusinessSetting::where('type', 'product_brand')->first()->value;
+    //     $digital_product_setting = BusinessSetting::where('type', 'digital_product')->first()->value;
 
-        if (!$digital_product_setting) {
-            $product_type = ['physical'];
-        } else {
-            $product_type = ['digital', 'physical'];
-        }
+    //     if (!$digital_product_setting) {
+    //         $product_type = ['physical'];
+    //     } else {
+    //         $product_type = ['digital', 'physical'];
+    //     }
 
-        return $query->when($brand_setting, function ($q) {
-            $q->whereHas('brand', function ($query) {
-                $query->where(['status' => 1]);
-            });
-        })->when(!$brand_setting, function ($q) {
-            $q->whereNull('brand_id');
-        })->where(['status' => 1])->orWhere(function ($query) {
-            $query->whereNull('brand_id')->where('status', 1);
-        })->SellerApproved()->whereIn('product_type', $product_type);
-    }
+    //     return $query->when($brand_setting, function ($q) {
+    //         $q->whereHas('brand', function ($query) {
+    //             $query->where(['status' => 1]);
+    //         });
+    //     })->when(!$brand_setting, function ($q) {
+    //         $q->whereNull('brand_id');
+    //     })->where(['status' => 1])->orWhere(function ($query) {
+    //         $query->whereNull('brand_id')->where('status', 1);
+    //     })->SellerApproved()->whereIn('product_type', $product_type);
+    // }
 
     public function scopeSellerApproved($query)
     {
@@ -77,20 +77,20 @@ class Product extends Model
         return $this->hasMany(ProductStock::class);
     }
 
-    public function reviews()
-    {
-        return $this->hasMany(Review::class, 'product_id');
-    }
+    // public function reviews()
+    // {
+    //     return $this->hasMany(Review::class, 'product_id');
+    // }
 
     public function brand()
     {
         return $this->belongsTo(Brand::class);
     }
 
-    public function scopeStatus($query)
-    {
-        return $query->where('featured_status', 1);
-    }
+    // public function scopeStatus($query)
+    // {
+    //     return $query->where('featured_status', 1);
+    // }
 
     public function shop()
     {
@@ -144,21 +144,21 @@ class Product extends Model
         return $this->translations[1]->value ?? $detail;
     }
 
-    protected static function boot()
-    {
-        parent::boot();
-        static::addGlobalScope('translate', function (Builder $builder) {
-            $builder->with(['translations' => function ($query) {
-                if (strpos(url()->current(), '/api')) {
-                    return $query->where('locale', App::getLocale());
-                } else {
-                    return $query->where('locale', Helpers::default_lang());
-                }
-            }, 'reviews'=>function($query){
-                $query->whereNull('delivery_man_id');
-            }])->withCount(['reviews'=>function($query){
-                $query->whereNull('delivery_man_id');
-            }]);
-        });
-    }
+    // protected static function boot()
+    // {
+    //     parent::boot();
+    //     static::addGlobalScope('translate', function (Builder $builder) {
+    //         $builder->with(['translations' => function ($query) {
+    //             if (strpos(url()->current(), '/api')) {
+    //                 return $query->where('locale', App::getLocale());
+    //             } else {
+    //                 return $query->where('locale', Helpers::default_lang());
+    //             }
+    //         }, 'reviews'=>function($query){
+    //             $query->whereNull('delivery_man_id');
+    //         }])->withCount(['reviews'=>function($query){
+    //             $query->whereNull('delivery_man_id');
+    //         }]);
+    //     });
+    // }
 }
