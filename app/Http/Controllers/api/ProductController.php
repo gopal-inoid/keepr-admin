@@ -279,11 +279,11 @@ class ProductController extends Controller
 
     public function edit_device(Request $request){
         $name = $request->name;
-        $device_id = $request->device_id;
+        $mac_id = $request->mac_id;
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
-            $check = ConnectedDevice::where(['device_id'=>$device_id,'user_id'=>$user_details->id])->update(['device_name'=>$name]);
+            $check = ConnectedDevice::where(['mac_id'=>$mac_id,'user_id'=>$user_details->id])->update(['device_name'=>$name]);
             if($check){
                 return response()->json(['status'=>200,'message'=>'Device name updated successfully'],200);
             }
@@ -293,11 +293,11 @@ class ProductController extends Controller
     }
 
     public function delete_device(Request $request){
-        $device_id = $request->device_id;
+        $mac_id = $request->mac_id;
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
-            $check = ConnectedDevice::where(['device_id'=>$device_id,'user_id'=>$user_details->id])->delete();
+            $check = ConnectedDevice::where(['mac_id'=>$mac_id,'user_id'=>$user_details->id])->delete();
             if($check){
                 return response()->json(['status'=>200,'message'=>'Device deleted successfully'],200);
             }
@@ -364,12 +364,16 @@ class ProductController extends Controller
     }
 
     public function get_device_detail(Request $request){
-        $device_id = $request->device_id;
-        $devices_details = Product::where(['status'=>1,'id'=>$device_id])->first();
-        if(!empty($devices_details->id)){
-            return response()->json(['status'=>200,'message'=>'Success','data'=>$devices_details],200);
-        }else{
-            return response()->json(['status'=>400,'message'=>'Devices not found'],400);
+        $mac_id = $request->mac_id;
+        $device_info = ProductStock::select('product_id')->where('mac_id',$mac_id)->first();
+        $devices_details = [];
+        if(!empty($device_info->product_id)){
+            $devices_details = Product::where(['status'=>1,'id'=>$device_info->product_id])->first();
+            if(!empty($devices_details->id)){
+                return response()->json(['status'=>200,'message'=>'Success','data'=>$devices_details],200);
+            }else{
+                return response()->json(['status'=>400,'message'=>'Devices not found'],400);
+            }
         }
     }
     //END DEVICE API's
