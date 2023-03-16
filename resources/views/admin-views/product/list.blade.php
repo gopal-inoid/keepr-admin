@@ -72,7 +72,6 @@
                             <tr>
                                 <th>{{\App\CPU\translate('SL')}}</th>
                                 <th>{{\App\CPU\translate('Product Name')}}</th>
-                                <th class="text-right">{{\App\CPU\translate('Product Type')}}</th>
                                 <th class="text-right">{{\App\CPU\translate('purchase_price')}}</th>
                                 <th class="text-right">{{\App\CPU\translate('selling_price')}}</th>
                                 <th class="text-center">{{\App\CPU\translate('Active')}} {{\App\CPU\translate('status')}}</th>
@@ -91,9 +90,6 @@
                                             {{\Illuminate\Support\Str::limit($p['name'],20)}}
                                         </span>
                                     </a>
-                                </td>
-                                <td class="text-right">
-                                    {{ ucfirst($p['product_type']) }}
                                 </td>
                                 <td class="text-right">
                                     {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($p['purchase_price']))}}

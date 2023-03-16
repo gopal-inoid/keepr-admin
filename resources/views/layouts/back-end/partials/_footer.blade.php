@@ -4,10 +4,9 @@
     <div class="row justify-content-between align-items-center">
         <div class="col-lg-4 mb-3 mb-lg-0">
             <p class="font-size-sm mb-0 title-color text-center text-lg-left">
-                &copy; iNoid Solutions All Right Reserve <?php echo date('Y'); ?>
-               {{-- &copy; 
+                &copy; 
                 {{\App\Model\BusinessSetting::where(['type'=>'company_name'])->first()->value}}. 
-                <span class="d-none d-sm-inline-block">{{\App\Model\BusinessSetting::where(['type'=>'company_copyright_text'])->first()->value}}</span> --}}
+                <span class="d-none d-sm-inline-block">{{\App\Model\BusinessSetting::where(['type'=>'company_copyright_text'])->first()->value}}</span>
             </p>
         </div>
         <div class="col-lg-8">
