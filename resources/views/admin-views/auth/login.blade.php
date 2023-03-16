@@ -41,10 +41,9 @@
 
     <!-- Content -->
     <div class="container py-5 py-sm-7">
-        <label class="badge badge-soft-success float-right" style="z-index: 9;position: absolute;right: 0.5rem;top: 0.5rem;">{{\App\CPU\translate('Software version')}} : {{ env('SOFTWARE_VERSION') }}</label>
         @php($e_commerce_logo=\App\Model\BusinessSetting::where(['type'=>'company_web_logo'])->first()->value)
         <a class="d-flex justify-content-center mb-5" href="javascript:">
-            <img class="z-index-2" height="40" src="{{asset("storage/app/public/company/".$e_commerce_logo)}}" alt="Logo"
+            <img class="z-index-2" height="100" src="{{asset("public/company/Keepr-logo-black.png")}}" alt="Keepr"
                  onerror="this.src='{{asset('public/assets/back-end/img/400x400/img2.jpg')}}'">
         </a>
 
