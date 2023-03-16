@@ -298,6 +298,15 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
             Route::get('bulk-export', 'ProductController@bulk_export_data')->name('bulk-export');
             Route::get('barcode/{id}', 'ProductController@barcode')->name('barcode');
             Route::get('barcode/generate', 'ProductController@barcode_generate')->name('barcode.generate');
+
+            Route::get('stocks/list', 'ProductController@stocks_list')->name('stocks.list');
+            Route::get('stocks/add-new', 'ProductController@add_new_stock')->name('stocks.add-new');
+            Route::post('stocks/store_stock', 'ProductController@store_stock')->name('stocks.store');
+            Route::post('stocks/update_stock/{id}', 'ProductController@update_stock')->name('stocks.update');
+            Route::get('stocks/edit/{id}', 'ProductController@edit_stock')->name('stocks.edit');
+            Route::delete('stocks/delete/{id}', 'ProductController@delete_stock')->name('stocks.delete');
+            Route::post('stocks/status-update', 'ProductController@status_update_stock')->name('stocks.status-update');
+
         });
 
         Route::group(['prefix' => 'transaction', 'as' => 'transaction.' ,'middleware'=>['module:report']], function () {

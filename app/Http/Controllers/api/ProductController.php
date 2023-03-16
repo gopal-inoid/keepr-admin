@@ -322,8 +322,15 @@ class ProductController extends Controller
     }
 
     public function all_available_devices(){
-        $devices_list = Product::where(['status'=>1])->get();
+        $devices_list = Product::select('id','device_id','name','details','purchase_price','thumbnail')->where(['status'=>1])->get();
         if(!empty($devices_list)){
+            foreach($devices_list as $k => $devices){
+                if(!empty($devices->thumbnail)){
+                    $devices->thumbnail = asset("/product/thumbnail/$devices->thumbnail");
+                }else{
+                    $devices->thumbnail = asset('public/assets/front-end/img/image-place-holder.png');
+                }
+            }
             return response()->json(['status'=>200,'message'=>'Success','data'=>$devices_list],200);
         }else{
             return response()->json(['status'=>400,'message'=>'Devices not found'],400);

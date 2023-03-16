@@ -1,6 +1,6 @@
 @extends('layouts.back-end.app')
 
-@section('title', \App\CPU\translate('Product List'))
+@section('title', \App\CPU\translate('Product Stock List'))
 
 @push('css_or_js')
 
@@ -12,8 +12,7 @@
     <div class="mb-3">
         <h2 class="h1 mb-0 text-capitalize d-flex gap-2">
             <img src="{{asset('/public/assets/back-end/img/inhouse-product-list.png')}}" alt="">
-             Product List
-            <span class="badge badge-soft-dark radius-50 fz-14 ml-1">{{ $pro->total() }}</span>
+             Product Stock List
         </h2>
     </div>
     <!-- End Page Title -->
@@ -35,33 +34,16 @@
                                     <input id="datatableSearch_" type="search" name="search" class="form-control"
                                            placeholder="{{\App\CPU\translate('Search Product Name')}}" aria-label="Search orders"
                                            value="{{ $search }}" required>
-                                    <input type="hidden" value="{{ $request_status }}" name="status">
                                     <button type="submit" class="btn btn--primary">{{\App\CPU\translate('search')}}</button>
                                 </div>
                             </form>
                             <!-- End Search -->
                         </div>
                         <div class="col-lg-8 mt-3 mt-lg-0 d-flex flex-wrap gap-3 justify-content-lg-end">
-                            {{-- <div>
-                                <button type="button" class="btn btn-outline--primary" data-toggle="dropdown">
-                                    <i class="tio-download-to"></i>
-                                    Export
-                                    <i class="tio-chevron-down"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a class="dropdown-item" href="{{route('admin.product.export-excel',['in_house', ''])}}">Excel</a></li>
-                                    <div class="dropdown-divider"></div>
-                                </ul>
-                            </div>
-                            <a href="{{route('admin.product.stock-limit-list',['in_house'])}}" class="btn btn-info">
-                                <span class="text">{{\App\CPU\translate('Limited Sotcks')}}</span>
-                            </a> --}}
-                            @if (!isset($request_status))
-                                <a href="{{route('admin.product.add-new')}}" class="btn btn--primary">
-                                    <i class="tio-add"></i>
-                                    <span class="text">{{\App\CPU\translate('Add_New_Product')}}</span>
-                                </a>
-                            @endif
+                            <a href="{{route('admin.product.stocks.add-new')}}" class="btn btn--primary">
+                                <i class="tio-add"></i>
+                                <span class="text">{{\App\CPU\translate('Add Stock')}}</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -72,22 +54,27 @@
                             <tr>
                                 <th>{{\App\CPU\translate('SL')}}</th>
                                 <th>{{\App\CPU\translate('Product Name')}}</th>
+                                <th class="text-right">{{\App\CPU\translate('MAC ID')}}</th>
                                 <th class="text-center">{{\App\CPU\translate('Active')}} {{\App\CPU\translate('status')}}</th>
                                 <th class="text-center">{{\App\CPU\translate('Action')}}</th>
                             </tr>
                         </thead>
                         <tbody>
                         @foreach($pro as $k=>$p)
+                             <?php 
+                                //echo "<pre>"; print_r($p->stocks); die;
+                             ?>
                             <tr>
                                 <th scope="row">{{$pro->firstItem()+$k}}</th>
                                 <td>
-                                    <a href="{{route('admin.product.view',[$p['id']])}}" class="media align-items-center gap-2">
-                                        <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$p['thumbnail']}}"
-                                             onerror="this.src='{{asset('/public/assets/back-end/img/brand-logo.png')}}'"class="avatar border" alt="">
+                                    <a href="{{route('admin.product.view',[$p['product_id']])}}" class="media align-items-center gap-2">
                                         <span class="media-body title-color hover-c1">
-                                            {{\Illuminate\Support\Str::limit($p['name'],20)}}
+                                            {{\Illuminate\Support\Str::limit($p['product_name'],20)}}
                                         </span>
                                     </a>
+                                </td>
+                                <td class="text-right">
+                                    {{$p['mac_id']}}
                                 </td>
                                 <td class="text-center">
                                     <label class="mx-auto switcher">
@@ -98,26 +85,19 @@
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center gap-2">
-                                        {{-- <a class="btn btn-outline-info btn-sm square-btn" title="{{ \App\CPU\translate('barcode') }}"
-                                            href="{{ route('admin.product.barcode', [$p['id']]) }}">
-                                            <i class="tio-barcode"></i>
-                                        </a>
-                                        <a class="btn btn-outline-info btn-sm square-btn" title="View" href="{{route('admin.product.view',[$p['id']])}}">
-                                            <i class="tio-invisible"></i>
-                                        </a> --}}
                                         <a class="btn btn-outline--primary btn-sm square-btn"
                                             title="{{\App\CPU\translate('Edit')}}"
-                                            href="{{route('admin.product.edit',[$p['id']])}}">
+                                            href="{{route('admin.product.stocks.edit',[$p['id']])}}">
                                             <i class="tio-edit"></i>
                                         </a>
                                         <a class="btn btn-outline-danger btn-sm square-btn" href="javascript:"
                                             title="{{\App\CPU\translate('Delete')}}"
-                                            onclick="form_alert('product-{{$p['id']}}','Want to delete this item ?')">
+                                            onclick="form_alert('product-stock-{{$p['id']}}','Want to delete this item ?')">
                                             <i class="tio-delete"></i>
                                         </a>
                                     </div>
-                                    <form action="{{route('admin.product.delete',[$p['id']])}}"
-                                            method="post" id="product-{{$p['id']}}">
+                                    <form action="{{route('admin.product.stocks.delete',[$p['id']])}}"
+                                            method="post" id="product-stock-{{$p['id']}}">
                                         @csrf @method('delete')
                                     </form>
                                 </td>
@@ -170,7 +150,7 @@
                 }
             });
             $.ajax({
-                url: "{{route('admin.product.status-update')}}",
+                url: "{{route('admin.product.stocks.status-update')}}",
                 method: 'POST',
                 data: {
                     id: id,
@@ -189,24 +169,6 @@
                 }
             });
         });
-
-        function featured_status(id) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                }
-            });
-            $.ajax({
-                url: "{{route('admin.product.featured-status')}}",
-                method: 'POST',
-                data: {
-                    id: id
-                },
-                success: function () {
-                    toastr.success('{{\App\CPU\translate('Featured status updated successfully')}}');
-                }
-            });
-        }
 
     </script>
 @endpush
