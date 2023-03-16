@@ -55,7 +55,7 @@
                                         </div> --}}
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="title-color"
                                             for="exampleFormControlInput1">{{ \App\CPU\translate('product_code_sku') }}
@@ -66,6 +66,16 @@
                                         <input type="text" minlength="6" id="generate_number" name="code"
                                             class="form-control" value="{{ old('code') }}"
                                             placeholder="{{ \App\CPU\translate('code') }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="title-color"
+                                            for="exampleFormControlInput1">{{ \App\CPU\translate('Device UUID') }}
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text" id="device_id" name="device_id" class="form-control" value="{{ old('device_id') }}"
+                                            placeholder="{{ \App\CPU\translate('Device UUID') }}" required>
                                     </div>
                                 </div>
                                 <div class="col-md-12">

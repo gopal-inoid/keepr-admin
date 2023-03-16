@@ -75,6 +75,7 @@ class ProductController extends BaseController
     {
         $validator = Validator::make($request->all(), [
             'name'                 => 'required',
+            'device_id'            => 'required',
             'images'               => 'required',
             'image'                => 'required',
             'tax'                  => 'required|min:0',
@@ -121,6 +122,7 @@ class ProductController extends BaseController
         $p->added_by = "admin";
         $p->name     = $request->name[array_search('en', $request->lang)];
         $p->code     = $request->code;
+        $p->device_id = $request->device_id;
         $p->slug     = Str::slug($request->name[array_search('en', $request->lang)], '-') . '-' . Str::random(6);
         $p->details              = $request['description'] ?? '';
         $p->product_unique_code = uniqid().rand(99,10).time();
@@ -462,6 +464,7 @@ class ProductController extends BaseController
         $product = Product::find($id);
         $validator = Validator::make($request->all(), [
             'name'                 => 'required',
+            'device_id'            => 'required',
             'images'               => 'required',
             'image'                => 'required',
             'tax'                  => 'required|min:0',
@@ -516,6 +519,7 @@ class ProductController extends BaseController
 
        
         $product->code                  = $request->code;
+        $product->device_id             = $request->device_id;
         $product->minimum_order_qty     = $request->minimum_order_qty;
         $product_images                 = json_decode($product->images);
         $product->details              = $request['description'] ?? '';

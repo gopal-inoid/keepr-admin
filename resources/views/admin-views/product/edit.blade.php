@@ -54,7 +54,7 @@
                                         <input type="hidden" name="lang[]" value="english">
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="title-color"
                                                for="exampleFormControlInput1">{{ \App\CPU\translate('product_code_sku') }}
@@ -64,6 +64,16 @@
                                                 {{ \App\CPU\translate('code') }}</a></label>
                                         <input type="text" id="generate_number" name="code"
                                                class="form-control"  value="{{ $product->code  }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="title-color"
+                                            for="exampleFormControlInput1">{{ \App\CPU\translate('Device UUID') }}
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text" id="device_id" name="device_id" class="form-control" value="{{ $product->device_id  }}"
+                                            placeholder="{{ \App\CPU\translate('Device UUID') }}" required>
                                     </div>
                                 </div>
                                 <div class="col-md-12">

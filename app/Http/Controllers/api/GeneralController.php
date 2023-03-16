@@ -130,7 +130,7 @@ class GeneralController extends Controller
     //START USER API's
     public function delete_user_account(Request $request){
 		$auth_token   = $request->headers->get('X-Access-Token');
-        $user = User::where(['auth_token'=>$auth_token])->first();
+        $user = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user->id)){
             ConnectedDevice::where(['user_id'=>$user->id])->delete();
             $deleted = $user->delete();
@@ -146,7 +146,7 @@ class GeneralController extends Controller
 
     public function user_profile(Request $request){
         $auth_token   = $request->headers->get('X-Access-Token');
-        $user_details = User::where(['auth_token'=>$auth_token])->first();
+        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
             $all_data['phone'] = $user_details->phone;
             $get_orders = Order::where(['customer_id'=>$user_details->id])->get();

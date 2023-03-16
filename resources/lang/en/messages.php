@@ -2372,4 +2372,5 @@
   'Bluetooth version' => 'Bluetooth version',
   'Material' => 'Material',
   'Product FAQ' => 'Product FAQ',
+  'Device UUID' => 'Device UUID',
 );

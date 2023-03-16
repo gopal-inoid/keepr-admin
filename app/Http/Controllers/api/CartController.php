@@ -74,7 +74,7 @@ class CartController extends Controller
         }
 
         $auth_token   = $request->headers->get('X-Access-Token');
-        $user_details = User::where(['auth_token'=>$auth_token])->first();
+        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         $product = Product::find($request->id);
         $cart = Cart::where(['product_id' => $request->id, 'customer_id' => $user_details->id])->first();
         if (isset($cart) == false) {
@@ -126,7 +126,7 @@ class CartController extends Controller
         $status = 1;
         $qty = 0;
         $auth_token   = $request->headers->get('X-Access-Token');
-        $user_details = User::where(['auth_token'=>$auth_token])->first();
+        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         $cart = Cart::where(['id' => $request->id, 'customer_id' => $user_details->id])->first();
         $product = Product::find($cart['product_id']);
         if ($product['current_stock'] < $request->quantity) {
@@ -159,22 +159,14 @@ class CartController extends Controller
         }
 
         $auth_token   = $request->headers->get('X-Access-Token');
-        $user_details = User::where(['auth_token'=>$auth_token])->first();
+        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         Cart::where(['id' => $request->id, 'customer_id' => $user_details->id])->delete();
         return response()->json(translate('successfully_removed'));
     }
     public function remove_all_from_cart(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'id' => 'required'
-        ], [
-            'id.required' => translate('Cart ID is required!')
-        ]);
-        if ($validator->errors()->count() > 0) {
-            return response()->json(['errors' => Helpers::error_processor($validator)]);
-        }
         $auth_token   = $request->headers->get('X-Access-Token');
-        $user_details = User::where(['auth_token'=>$auth_token])->first();
+        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         Cart::where(['customer_id' => $user_details->id])->delete();
         return response()->json(translate('successfully_removed'));
     }

@@ -256,11 +256,21 @@ class ProductController extends Controller
         $device_id = $request->device_id;
         $device_mac_id = $request->mac_id;
         $auth_token   = $request->headers->get('X-Access-Token');
-        $user_details = User::where(['auth_token'=>$auth_token])->first();
+        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
-            $check = ConnectedDevice::insert(['device_id'=>$device_id,'mac_id'=>$device_mac_id,'user_id'=>$user_details->id,'device_uuid'=>$device_uuid]);
-            if($check){
-                return response()->json(['status'=>200,'message'=>'Device connected successfully'],200);
+            $check_connected = ConnectedDevice::select('id')->where(['device_id'=>$device_id,'user_id'=>$user_details->id])->first();
+            if(!empty($check_connected->id)){
+                return response()->json(['status'=>400,'message'=>'Device already connected'],400);
+            }
+
+            $device_info = Product::select('name')->where('device_id',$device_id)->first();
+            if(!empty($device_info->name)){
+                $check = ConnectedDevice::insert(['device_name'=>$device_info->name,'device_id'=>$device_id,'mac_id'=>$device_mac_id,'user_id'=>$user_details->id,'device_uuid'=>$device_uuid]);
+                if($check){
+                    return response()->json(['status'=>200,'message'=>'Device connected successfully'],200);
+                }
+            }else{
+                return response()->json(['status'=>400,'message'=>'Device not found'],400);
             }
         }
 
@@ -271,7 +281,7 @@ class ProductController extends Controller
         $name = $request->name;
         $device_id = $request->device_id;
         $auth_token   = $request->headers->get('X-Access-Token');
-        $user_details = User::where(['auth_token'=>$auth_token])->first();
+        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
             $check = ConnectedDevice::where(['device_id'=>$device_id,'user_id'=>$user_details->id])->update(['device_name'=>$name]);
             if($check){
@@ -285,7 +295,7 @@ class ProductController extends Controller
     public function delete_device(Request $request){
         $device_id = $request->device_id;
         $auth_token   = $request->headers->get('X-Access-Token');
-        $user_details = User::where(['auth_token'=>$auth_token])->first();
+        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
             $check = ConnectedDevice::where(['device_id'=>$device_id,'user_id'=>$user_details->id])->delete();
             if($check){
@@ -298,7 +308,7 @@ class ProductController extends Controller
 
     public function get_connected_device(Request $request){
         $auth_token   = $request->headers->get('X-Access-Token');
-        $user_details = User::where(['auth_token'=>$auth_token])->first();
+        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
             $get_all_devices = ConnectedDevice::where(['user_id'=>$user_details->id,'status'=>1])->get();
             if(!empty($get_all_devices)){
@@ -321,8 +331,15 @@ class ProductController extends Controller
     }
 
     public function devices_type_list(){
-        $devices_list = Product::select('id','name','images','thumbnail')->where(['status'=>1])->get();
+        $devices_list = Product::select('device_id','name','thumbnail')->where(['status'=>1])->get();
         if(!empty($devices_list)){
+            foreach($devices_list as $k => $devices){
+                if(!empty($devices->thumbnail)){
+                    $devices->thumbnail = asset("/product/thumbnail/$devices->thumbnail");
+                }else{
+                    $devices->thumbnail = asset('public/assets/front-end/img/image-place-holder.png');
+                }
+            }
             return response()->json(['status'=>200,'message'=>'Success','data'=>$devices_list],200);
         }else{
             return response()->json(['status'=>400,'message'=>'Devices not found'],400);
