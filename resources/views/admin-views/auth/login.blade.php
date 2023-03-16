@@ -59,7 +59,6 @@
                             <div class="text-center">
                                 <div class="mb-5">
                                     <h1 class="display-4">{{\App\CPU\translate('sign_in')}}</h1><br>
-                                    <span>({{\App\CPU\translate('Admin or Employee Login')}})</span>
                                 </div>
                             </div>
 
