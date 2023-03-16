@@ -1,5 +1,5 @@
 :root {
-  --c1: #0177CD;
+  --c1: #31A4B7;
   --c2: #FF6767;
   --title-color: #334257;
   --text-color: #5B6777;
@@ -83,7 +83,7 @@ a:hover {
   display: none;
 }
 .navbar-vertical-content {
-  background: #073B74;
+  background: #31A4B7;
   padding: 10px 15px;
 }
 .navbar-vertical-content .nav-link {

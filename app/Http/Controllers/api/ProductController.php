@@ -355,7 +355,8 @@ class ProductController extends Controller
 
     public function search_device(Request $request){
         $keyword = $request->keyword;
-        $devices_list = Product::where(['status'=>1])->where('name', 'like', '%' . $keyword . '%')->get();
+        $devices_list = Product::where(['status'=>1])->where('name', 'like', '%' . $keyword . '%')->toSql();
+        echo "<pre>"; print_r($devices_list); die;
         if(!empty($devices_list)){
             return response()->json(['status'=>200,'message'=>'Success','data'=>$devices_list],200);
         }else{
