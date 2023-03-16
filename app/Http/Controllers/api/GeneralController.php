@@ -65,6 +65,7 @@ class GeneralController extends Controller
     //GET FIREBASE AUTH TOKEN. CHECK AND VERIFY THEN ADD INTO DB AND SEND USER INFO IN RESPONSE
     public function user_authentication(Request $request){
         $token = $request->token;
+        $fcm_token = $request->fcm_token;
         try {
             $auth = app('firebase.auth');
             //echo "<pre>"; print_r($auth); die;
@@ -80,12 +81,13 @@ class GeneralController extends Controller
             if(empty($user_check->id)){
                 $get_user = User::create([
                     'phone' => $user->phoneNumber,
-                    'firebase_auth_id' => $uid
+                    'firebase_auth_id' => $uid,
+                    'fcm_token' => $fcm_token
                 ]);
                 $auth_token = $this->auth_token($get_user->id,"");
             }else{
                 if(!empty($user_check->id)){ //echo "<pre>"; print_r(); die;
-                    $auth_token = $this->auth_token($user_check->id,$user_check->auth_access_token);
+                    $auth_token = $this->auth_token($user_check->id,$user_check->auth_access_token,$fcm_token);
                 }
             }
 
@@ -101,7 +103,7 @@ class GeneralController extends Controller
 
     }
 
-    public function auth_token($id, $old_token = "")
+    public function auth_token($id, $old_token = "",$fcm_token = "")
     {
         if ($old_token != "") {
             $token = $old_token;
@@ -110,7 +112,7 @@ class GeneralController extends Controller
             $token = $id . $token . $id;
         }
 
-        $user = User::where('id', $id)->update(['auth_access_token' => $token]);
+        $user = User::where('id', $id)->update(['auth_access_token' => $token,'fcm_token'=>$fcm_token]);
 
         if ($user) {
             return $token;
@@ -120,9 +122,14 @@ class GeneralController extends Controller
     }
 
     public function logout(Request $request){
-        $id = $request->id;
-        User::where(['id'=>$id])->update(['auth_access_token'=>'']);
-        return response()->json(['status'=>200,'message'=>'Successfully Logout'],200);
+        $auth_token   = $request->headers->get('X-Access-Token');
+        $user = User::where(['auth_access_token'=>$auth_token])->first();
+        if(!empty($user->id)){
+            User::where(['id'=>$user->id])->update(['auth_access_token'=>'']);
+            return response()->json(['status'=>200,'message'=>'Successfully Logout'],200);
+        }else{
+            return response()->json(['status'=>200,'message'=>'User not found'],200);
+        }
     }
 
     //END USER AUTH API's
@@ -149,11 +156,27 @@ class GeneralController extends Controller
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
             $all_data['phone'] = $user_details->phone;
-            $get_orders = Order::where(['customer_id'=>$user_details->id])->get();
+            $get_orders = Order::select('payment_status','order_status','order_amount','shipping_address','billing_address')->where(['customer_id'=>$user_details->id])->get();
             if(!empty($get_orders)){
                 $all_data['order_list'] = $get_orders;
             }
             return response()->json(['status'=>200,'message'=>'Success','data'=>$all_data],200);
+        }else{
+            return response()->json(['status'=>400,'message'=>'User not found'],400);
+        }
+    }
+
+    public function order_detail(Request $request){
+        $order_id = $request->order_id;
+        $auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
+        if(!empty($user_details->id)){
+            $get_orders = Order::where(['id'=>$order_id])->first();
+            if(!empty($get_orders->id)){
+                return response()->json(['status'=>200,'message'=>'Success','data'=>$get_orders],200);
+            }else{
+                return response()->json(['status'=>400,'message'=>'Order not found'],400);
+            }
         }else{
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }

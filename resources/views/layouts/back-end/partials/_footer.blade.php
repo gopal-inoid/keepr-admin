@@ -12,7 +12,7 @@
         <div class="col-lg-8">
             <div class="d-flex justify-content-center justify-content-lg-end">
                 <!-- List Dot -->
-                <ul class="list-inline list-footer-icon justify-content-center justify-content-lg-start mb-0">
+                {{-- <ul class="list-inline list-footer-icon justify-content-center justify-content-lg-start mb-0">
                     <li class="list-inline-item">
                         <a class="list-separator-link" href="{{route('admin.business-settings.web-config.index')}}">
                             <i class="tio-settings"></i>
@@ -33,7 +33,7 @@
                             {{\App\CPU\translate('Home')}}
                         </a>
                     </li>
-                </ul>
+                </ul> --}}
                 <!-- End List Dot -->
             </div>
         </div>

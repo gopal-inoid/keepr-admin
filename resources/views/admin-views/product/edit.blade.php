@@ -54,7 +54,7 @@
                                         <input type="hidden" name="lang[]" value="english">
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="title-color"
                                                for="exampleFormControlInput1">{{ \App\CPU\translate('product_code_sku') }}
@@ -64,16 +64,6 @@
                                                 {{ \App\CPU\translate('code') }}</a></label>
                                         <input type="text" id="generate_number" name="code"
                                                class="form-control"  value="{{ $product->code  }}" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="title-color"
-                                            for="exampleFormControlInput1">{{ \App\CPU\translate('Device UUID') }}
-                                            <span class="text-danger">*</span>
-                                        </label>
-                                        <input type="text" id="device_id" name="device_id" class="form-control" value="{{ $product->device_id  }}"
-                                            placeholder="{{ \App\CPU\translate('Device UUID') }}" required>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -157,85 +147,6 @@
                                                     <?php } ?>
                                                 </div>
                                     <?php  } } ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card mt-2 rest-part">
-                        <div class="card-header">
-                            <h4 class="mb-0">{{\App\CPU\translate('Product price & stock')}}</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="row align-items-end">
-                                <div class="col-md-6 form-group">
-                                    <label class="title-color">{{\App\CPU\translate('Unit price')}}</label>
-                                    <input type="number" min="0" step="0.01"
-                                            placeholder="{{\App\CPU\translate('Unit price') }}"
-                                            name="unit_price" class="form-control"
-                                            value={{\App\CPU\Convert::default($product->unit_price)}} required>
-                                </div>
-                                <div class="col-md-6 form-group">
-                                    <label class="title-color">{{\App\CPU\translate('Purchese price')}}</label>
-                                    <input type="number" min="0" step="0.01"
-                                            placeholder="{{\App\CPU\translate('Purchase price') }}"
-                                            name="purchase_price" class="form-control"
-                                            value={{ \App\CPU\Convert::default($product->purchase_price) }} required>
-                                </div>
-                                <div class="col-md-4 form-group">
-                                    <label class="title-color">{{\App\CPU\translate('Tax')}}</label>
-                                    <label class="text-info title-color">{{\App\CPU\translate('Percent')}} ( % )</label>
-                                    <input type="number" min="0" value={{ $product->tax }} step="0.01"
-                                            placeholder="{{\App\CPU\translate('Tax') }}" name="tax"
-                                            class="form-control" required>
-                                    <input name="tax_type" value="percent" class="d-none">
-                                </div>
-
-                                <div class="col-md-4 form-group">
-                                    <label class="title-color">{{\App\CPU\translate('Discount')}}</label>
-                                    <input type="number" min="0"
-                                            value={{ $product->discount_type=='flat'?\App\CPU\Convert::default($product->discount): $product->discount}} step="0.01"
-                                            placeholder="{{\App\CPU\translate('Discount') }}" name="discount"
-                                            class="form-control" required>
-                                </div>
-                                <div class="col-md-4 form-group">
-                                    <label class="title-color">{{\App\CPU\translate('discount_type')}} </label>
-                                    <select
-                                        class="js-example-basic-multiple js-states js-example-responsive demo-select2 w-100"
-                                        name="discount_type">
-                                        <option
-                                            value="percent" {{$product['discount_type']=='percent'?'selected':''}}>{{\App\CPU\translate('Percent')}}</option>
-                                        <option
-                                            value="flat" {{$product['discount_type']=='flat'?'selected':''}}>{{\App\CPU\translate('Flat')}}</option>
-
-                                    </select>
-                                </div>
-                                
-                                <div class="col-md-3 form-group physical_product_show" id="quantity">
-                                    <label class="title-color">{{\App\CPU\translate('total')}} {{\App\CPU\translate('Quantity')}}</label>
-                                    <input type="number" min="0" value={{ $product->current_stock }} step="1"
-                                            placeholder="{{\App\CPU\translate('Quantity') }}"
-                                            name="current_stock" class="form-control" required>
-                                </div>
-                                <div class="col-md-3 form-group" id="minimum_order_qty">
-                                    <label class="title-color">{{\App\CPU\translate('minimum_order_quantity')}}</label>
-                                    <input type="number" min="1" value={{ $product->minimum_order_qty }} step="1"
-                                            placeholder="{{\App\CPU\translate('minimum_order_quantity') }}"
-                                            name="minimum_order_qty" class="form-control" required>
-                                </div>
-                                <div class="col-md-3 form-group physical_product_show" id="shipping_cost">
-                                    <label class="title-color">{{\App\CPU\translate('shipping_cost')}} </label>
-                                    <input type="number" min="0" value="{{\App\CPU\Convert::default($product->shipping_cost)}}" step="1"
-                                            placeholder="{{\App\CPU\translate('shipping_cost')}}"
-                                            name="shipping_cost" class="form-control" required>
-                                </div>
-                                <div class="col-md-3 form-group physical_product_show" id="shipping_cost">
-                                    <label class="title-color">{{\App\CPU\translate('shipping_cost_multiply_with_quantity')}} </label>
-                                    <label class="switcher title-color">
-                                        <input class="switcher_input" type="checkbox" name="multiplyQTY"
-                                               id="" {{$product->multiply_qty == 1?'checked':''}}>
-                                        <span class="switcher_control"></span>
-                                    </label>
                                 </div>
                             </div>
                         </div>
