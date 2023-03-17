@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class DeviceRequest extends Model
 {
     protected $table = 'device_requests';
-   
+    public $timestamps = false;
 }

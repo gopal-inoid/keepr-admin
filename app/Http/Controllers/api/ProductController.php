@@ -441,15 +441,15 @@ class ProductController extends Controller
                     }else{
                         $check_connected->status = 1;
                     }
-                    //$check_connected->last_updated = date('Y-m-d h:i:s');
+                    $check_connected->last_updated = date('Y-m-d h:i:s');
                     $check_connected->save();
 
-                    return response()->json(['status'=>200,'status'=>$check_connected->status,'message'=>'Device request updated successfully'],200);
+                    return response()->json(['status'=>200,'request_status'=>$check_connected->status,'message'=>'Device request updated successfully'],200);
 
                 }else{
                     $check = DeviceRequest::insert(['mac_id'=>$device_mac_id,'user_id'=>$user_details->id]);
                     if($check){
-                        return response()->json(['status'=>200,'message'=>'Device lost request added successfully'],200);
+                        return response()->json(['status'=>200,'request_status'=>0,'message'=>'Device request added successfully'],200);
                     }
                 }
             }else{
