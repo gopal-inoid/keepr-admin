@@ -63,10 +63,10 @@ class CartController extends Controller
     public function add_to_cart(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'id' => 'required',
+            'mac_id' => 'required',
             'quantity' => 'required',
         ], [
-            'id.required' => translate('Product ID is required!')
+            'mac_id.required' => translate('MAC ID is required!')
         ]);
 
         if ($validator->errors()->count() > 0) {

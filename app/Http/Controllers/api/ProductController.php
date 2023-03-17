@@ -14,6 +14,7 @@ use App\Model\Product;
 use App\Model\ProductStock;
 use App\Model\Review;
 use App\Model\ConnectedDevice;
+use App\Model\DeviceTracking;
 use App\Model\ShippingMethod;
 use App\Model\Wishlist;
 use App\User;
@@ -355,9 +356,12 @@ class ProductController extends Controller
 
     public function search_device(Request $request){
         $keyword = $request->keyword;
-        $devices_list = Product::where(['status'=>1])->where('name', 'like', '%' . $keyword . '%')->toSql();
-        echo "<pre>"; print_r($devices_list); die;
-        if(!empty($devices_list)){
+        $devices_list = Product::select('id','name','images','thumbnail','details','specification','faq')->where('status',1);
+        if(!empty($keyword)){
+            $devices_list = $devices_list->whereRaw('name like "%'.$keyword.'%"');
+        }
+        $devices_list = $devices_list->get();
+        if(!empty($devices_list[0])){
             return response()->json(['status'=>200,'message'=>'Success','data'=>$devices_list],200);
         }else{
             return response()->json(['status'=>400,'message'=>'Devices not found'],400);
@@ -377,6 +381,47 @@ class ProductController extends Controller
             }
         }
     }
+
+    public function device_tracking(Request $request){
+        $device_mac_id = $request->mac_id;
+        $distance = $request->distance;
+
+        $validator = Validator::make($request->all(), [
+            'mac_id' => 'required',
+            'distance' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        if(!is_numeric($distance)){
+            return response()->json(['status'=>400,'message'=>'Distance should be numeric'],403);
+        }
+
+        $auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
+        if(!empty($user_details->id)){
+            $check_connected = DeviceTracking::select('id')->where(['mac_id'=>$device_mac_id,'user_id'=>$user_details->id])->first();
+            if(!empty($check_connected->id)){
+                return response()->json(['status'=>400,'message'=>'Device already added in tracking'],400);
+            }
+            $device_info = ProductStock::where('mac_id',$device_mac_id)->first();
+            if(!empty($device_info->mac_id)){
+                $check = DeviceTracking::insert(['mac_id'=>$device_mac_id,'user_id'=>$user_details->id,'distance'=>$distance]);
+                if($check){
+                    return response()->json(['status'=>200,'message'=>'Device successfully added in tracking'],200);
+                }
+            }else{
+                return response()->json(['status'=>400,'message'=>'Device not found'],400);
+            }
+        }else{
+            return response()->json(['status'=>400,'message'=>'User not found'],400);
+        }
+
+        return response()->json(['status'=>400,'message'=>'Something Went Wrong, Please try again latter'],400);
+    }
+
     //END DEVICE API's
 
 }

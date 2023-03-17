@@ -41,6 +41,7 @@ Route::group(['namespace' => 'api'], function () {
         Route::get('devices-type-list', 'ProductController@devices_type_list');
         Route::post('search-device', 'ProductController@search_device');
         Route::post('get-device-detail', 'ProductController@get_device_detail');
+        Route::post('device-tracking', 'ProductController@device_tracking');
         //
 
         //USER
