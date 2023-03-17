@@ -35,32 +35,32 @@ class Product extends Model
         'is_shipping_cost_updated' => 'integer'
     ];
 
-    public function translations()
-    {
-        return $this->morphMany('App\Model\Translation', 'translationable');
-    }
-
-    // public function scopeActive($query)
+    // public function translations()
     // {
-    //     $brand_setting = BusinessSetting::where('type', 'product_brand')->first()->value;
-    //     $digital_product_setting = BusinessSetting::where('type', 'digital_product')->first()->value;
-
-    //     if (!$digital_product_setting) {
-    //         $product_type = ['physical'];
-    //     } else {
-    //         $product_type = ['digital', 'physical'];
-    //     }
-
-    //     return $query->when($brand_setting, function ($q) {
-    //         $q->whereHas('brand', function ($query) {
-    //             $query->where(['status' => 1]);
-    //         });
-    //     })->when(!$brand_setting, function ($q) {
-    //         $q->whereNull('brand_id');
-    //     })->where(['status' => 1])->orWhere(function ($query) {
-    //         $query->whereNull('brand_id')->where('status', 1);
-    //     })->SellerApproved()->whereIn('product_type', $product_type);
+    //     return $this->morphMany('App\Model\Translation', 'translationable');
     // }
+
+    public function scopeActive($query)
+    {
+        $brand_setting = BusinessSetting::where('type', 'product_brand')->first()->value;
+        $digital_product_setting = BusinessSetting::where('type', 'digital_product')->first()->value;
+
+        if (!$digital_product_setting) {
+            $product_type = ['physical'];
+        } else {
+            $product_type = ['digital', 'physical'];
+        }
+
+        return $query->when($brand_setting, function ($q) {
+            $q->whereHas('brand', function ($query) {
+                $query->where(['status' => 1]);
+            });
+        })->when(!$brand_setting, function ($q) {
+            $q->whereNull('brand_id');
+        })->where(['status' => 1])->orWhere(function ($query) {
+            $query->whereNull('brand_id')->where('status', 1);
+        })->SellerApproved()->whereIn('product_type', $product_type);
+    }
 
     public function scopeSellerApproved($query)
     {

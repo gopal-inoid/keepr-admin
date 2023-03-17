@@ -64,13 +64,6 @@
                                             placeholder="{{ \App\CPU\translate('Device MAC ID') }}" required>
                                     </div>
                                 </div>
-                                <div class="col-md-6 form-group">
-                                    <label class="title-color">{{ \App\CPU\translate('Price') }}</label>
-                                    <input type="number" min="0" step="0.01"
-                                        placeholder="{{ \App\CPU\translate('Purchase price') }}"
-                                        value="{{ old('purchase_price') }}" name="purchase_price"
-                                        class="form-control" required>
-                                </div>
                             </div>
                         </div>
                     </div>
