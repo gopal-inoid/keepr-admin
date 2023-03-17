@@ -44,8 +44,6 @@ class BannerController extends Controller
 
         $banner = new Banner;
         $banner->banner_type = $request->banner_type;
-        $banner->resource_type = $request->resource_type;
-        $banner->resource_id = $request[$request->resource_type . '_id'];
         $banner->url = $request->url;
         $banner->photo = ImageManager::upload('banner/', 'png', $request->file('image'));
         $banner->save();

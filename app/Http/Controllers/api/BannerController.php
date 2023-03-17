@@ -21,24 +21,35 @@ class BannerController extends Controller
         //     return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         // }
 
-        $request['banner_type'] = 'all';
+        // $request['banner_type'] = 'all';
 
-        if ($request['banner_type'] == 'all') {
-            $banners = Banner::where(['published' => 1])->get();
-        } elseif ($request['banner_type'] == 'main_banner') {
-            $banners = Banner::where(['published' => 1, 'banner_type' => 'Main Banner'])->get();
-        } elseif ($request['banner_type'] == 'main_section_banner') {
-            $banners = Banner::where(['published' => 1, 'banner_type' => 'Main Section Banner'])->get();
-        }else {
-            $banners = Banner::where(['published' => 1, 'banner_type' => 'Footer Banner'])->get();
-        }
-        $pro_ids = [];
+        // if ($request['banner_type'] == 'all') {
+        //     $banners = Banner::where(['published' => 1])->get();
+        // } elseif ($request['banner_type'] == 'main_banner') {
+        //     $banners = Banner::where(['published' => 1, 'banner_type' => 'Main Banner'])->get();
+        // } elseif ($request['banner_type'] == 'main_section_banner') {
+        //     $banners = Banner::where(['published' => 1, 'banner_type' => 'Main Section Banner'])->get();
+        // }else {
+        //     $banners = Banner::where(['published' => 1, 'banner_type' => 'Footer Banner'])->get();
+        // }
+
+        $banners = Banner::select('id','photo','url')->where(['published' => 1])->get();
+
+        // $pro_ids = [];
+        // $data = [];
+        // foreach ($banners as $banner) {
+        //     if ($banner['resource_type'] == 'product' && !in_array($banner['resource_id'], $pro_ids)) {
+        //         array_push($pro_ids,$banner['resource_id']);
+        //         $product = Product::find($banner['resource_id']);
+        //         $banner['product'] = Helpers::product_data_formatting($product);
+        //     }
+        //     $data[] = $banner;
+        // }
+        
         $data = [];
         foreach ($banners as $banner) {
-            if ($banner['resource_type'] == 'product' && !in_array($banner['resource_id'], $pro_ids)) {
-                array_push($pro_ids,$banner['resource_id']);
-                $product = Product::find($banner['resource_id']);
-                $banner['product'] = Helpers::product_data_formatting($product);
+            if(!empty($banner->photo)){
+                $banner->photo = asset("/banner/$banner->photo");
             }
             $data[] = $banner;
         }

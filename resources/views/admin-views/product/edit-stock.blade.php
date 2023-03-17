@@ -7,11 +7,11 @@
     <link href="{{ asset('public/assets/select2/css/select2.min.css')}}" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
-        .add-product-faq-btn,.remove-product-faq-btn{
+        .add-mac_id-btn,.remove-mac_id-btn{
             font-size: 25px;
             cursor: pointer;
         }
-        .faq-add-main-btn{
+        .mac_id-add-main-btn{
             align-items: center;
             display: flex;
             flex-direction: row;
@@ -35,21 +35,21 @@
         <!-- Content Row -->
         <div class="row">
             <div class="col-md-12">
-                <form class="product-form" action="{{route('admin.product.stocks.update',$product_stock->id)}}" method="post" id="product_form">
+                <form class="product-form" action="{{route('admin.product.stocks.update',$id)}}" method="post" id="product_form">
                     @csrf
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="title-color"
                                             for="exampleFormControlInput1">{{ \App\CPU\translate('Products') }}
                                             <span class="text-danger">*</span>
                                         </label>
-                                        <select name="product_id" class="form-control">
+                                        <select name="product_id" class="form-control" disabled>
                                             @if(!empty($products))
                                                 @foreach($products as $pro)
-                                                    <option {{ ($product_stock->product_id == $pro->id) ? 'selected' : '' }} value="{{$pro->id}}">{{$pro->name}}</option>
+                                                    <option {{ ($id == $pro->id) ? 'selected' : '' }} value="{{$pro->id}}">{{$pro->name}}</option>
                                                 @endforeach
                                             @endif
                                         </select>
@@ -57,15 +57,35 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="title-color"
-                                            for="exampleFormControlInput1">{{ \App\CPU\translate('Device MAC ID') }}
-                                            <span class="text-danger">*</span>
-                                        </label>
-                                        <input type="text" id="device_id" name="device_id" class="form-control" value="{{ $product_stock->mac_id }}"
-                                            placeholder="{{ \App\CPU\translate('Device UUID') }}" required>
+                                        <label class="title-color">&nbsp;</label>
+                                        <button type="button" class="tio-add-circle-outlined btn text-success add-mac_id-btn mt-4"></button>
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                    <div class="col-md-12" id="mac_id_device_field">
+                                    <?php
+                                        $product_stock_cnt = !empty($product_stock) ? count($product_stock) : 0;
+                                        if(!empty($product_stock)){
+                                            foreach($product_stock as $k => $mac_ids){ ?>
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    <div class="form-group">
+                                                        @if($k == 0)
+                                                        <label class="title-color">{{ \App\CPU\translate('Device MAC ID') }}</label>
+                                                        @endif
+                                                        <input type="text" name="device_id[{{$k}}]" class="form-control" value="{{ $mac_ids->mac_id }}" placeholder="{{ \App\CPU\translate('Device MAC ID') }}">
+                                                    </div>
+                                                </div>
+                                                @if($k != 0)
+                                                    <div class="col-md-2 form-group mac_id-add-main-btn">
+                                                        <i class="tio-delete-outlined text-danger remove-mac_id-btn mt-0"></i>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                    <?php  } } ?>
+                                    </div>
+                                </div>
                         </div>
                     </div>
                     <div class="row float-right mt-3">
@@ -83,6 +103,30 @@
     <script src="{{asset('public/assets/back-end')}}/js/tags-input.min.js"></script>
     <script src="{{asset('public/assets/back-end/js/spartan-multi-image-picker.js')}}"></script>
     <script>
+
+        var cnt = (parseInt("{{$product_stock_cnt}}") - 1);
+
+        $('.add-mac_id-btn').on('click',function(){
+            $('#mac_id_device_field').append(
+                `<div class="row mac_id-individual">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <input type="text" name="device_id[`+(cnt+1)+`]" class="form-control" value="" placeholder="{{ \App\CPU\translate('Device MAC ID') }}">
+                        </div>
+                    </div>
+                    <div class="col-md-2 form-group mac_id-add-main-btn">
+                        <i class="tio-delete-outlined text-danger remove-mac_id-btn mt-0"></i>
+                    </div>
+                </div>
+                `
+            );
+            cnt++;
+        });
+
+        $(document).on('click','.remove-mac_id-btn',function(){
+            $(this).closest('.mac_id-individual').remove();
+        });
+
         function getRequest(route, id, type) {
             $.get({
                 url: route,

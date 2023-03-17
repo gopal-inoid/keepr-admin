@@ -17,9 +17,13 @@ use Kreait\Laravel\Firebase\Facades\Firebase;
 use Kreait\Firebase\Exception\Auth\FailedToVerifyToken;
 class GeneralController extends Controller
 {
-    public function get_pages(Request $request){ // page type = terms_condition, privacy_policy, support, about_us
+    public function get_pages(Request $request){ // page type = terms_condition, privacy_policy, support, about_us,faq
         if($request->page_name){
-            $data = BusinessSetting::where('type', $request->page_name)->first();
+            if($request->page_name == 'faq'){
+                $data = HelpTopic::select('question','answer')->where('status',1)->get();
+            }else{
+                $data = BusinessSetting::where('type', $request->page_name)->first();
+            }
             if(!empty($data)){
                 return response()->json(['status'=>200,'message'=>'Success','data'=>$data],200);
             }else{

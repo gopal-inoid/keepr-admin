@@ -18,8 +18,7 @@
         <!-- End Page Title -->
 
         <!-- Content Row -->
-        <div class="row pb-4 d--none" id="main-banner"
-             style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
+        <div class="row pb-4 d--none" id="main-banner">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
@@ -37,7 +36,8 @@
                                                class="title-color text-capitalize">{{ \App\CPU\translate('banner_URL')}}</label>
                                         <input type="text" name="url" class="form-control" id="url" required>
                                     </div>
-
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="name"
                                                class="title-color text-capitalize">{{\App\CPU\translate('banner_type')}}</label>
@@ -52,63 +52,8 @@
                                                 value="Main Section Banner">{{ \App\CPU\translate('Main Section Banner')}}</option>
                                         </select>
                                     </div>
-
-                                    <div class="form-group">
-                                        <label for="resource_id"
-                                               class="title-color text-capitalize">{{\App\CPU\translate('resource_type')}}</label>
-                                        <select onchange="display_data(this.value)"
-                                                class="js-example-responsive form-control w-100"
-                                                name="resource_type" required>
-                                            <option value="product">{{ \App\CPU\translate('Product')}}</option>
-                                            <option value="category">{{ \App\CPU\translate('Category')}}</option>
-                                            <option value="shop">{{ \App\CPU\translate('Shop')}}</option>
-                                            <option value="brand">{{ \App\CPU\translate('Brand')}}</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group" id="resource-product">
-                                        <label for="product_id"
-                                               class="title-color text-capitalize">{{\App\CPU\translate('product')}}</label>
-                                        <select class="js-example-responsive form-control w-100"
-                                                name="product_id">
-                                            @foreach(\App\Model\Product::active()->get() as $product)
-                                                <option value="{{$product['id']}}">{{$product['name']}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group d--none" id="resource-category">
-                                        <label for="name"
-                                               class="title-color text-capitalize">{{\App\CPU\translate('category')}}</label>
-                                        <select class="js-example-responsive form-control w-100"
-                                                name="category_id">
-                                            @foreach(\App\CPU\CategoryManager::parents() as $category)
-                                                <option value="{{$category['id']}}">{{$category['name']}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group d--none" id="resource-shop">
-                                        <label for="shop_id" class="title-color">{{\App\CPU\translate('shop')}}</label>
-                                        <select class="w-100 js-example-responsive form-control" name="shop_id">
-                                            @foreach(\App\Model\Shop::active()->get() as $shop)
-                                                <option value="{{$shop['id']}}">{{$shop['name']}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group d--none" id="resource-brand">
-                                        <label for="brand_id"
-                                               class="title-color text-capitalize">{{\App\CPU\translate('brand')}}</label>
-                                        <select class="js-example-responsive form-control w-100"
-                                                name="brand_id">
-                                            @foreach(\App\Model\Brand::all() as $brand)
-                                                <option value="{{$brand['id']}}">{{$brand['name']}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
                                 </div>
-                                <div class="col-md-6 mt-5 mt-lg-0">
+                                <div class="col-md-12 mt-5 mt-lg-0">
                                     <center class="mb-30 max-w-500 mx-auto">
                                         <img
                                             class="ratio-4:1"
@@ -116,7 +61,6 @@
                                             src="{{asset('public/assets/front-end/img/placeholder.png')}}"
                                             alt="banner image"/>
                                     </center>
-
                                     <label for="name"
                                            class="title-color text-capitalize">{{ \App\CPU\translate('Image')}}</label>
                                     <span class="text-info">( {{\App\CPU\translate('ratio')}} 4:1 )</span>
@@ -129,7 +73,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="mt-3 d-flex justify-content-end flex-wrap gap-10">
                                 <button class="btn btn-secondary cancel px-4" type="reset">{{ \App\CPU\translate('reset')}}</button>
                                 <button id="add" type="submit"
