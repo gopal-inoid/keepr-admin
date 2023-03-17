@@ -371,15 +371,46 @@ class ProductController extends Controller
 
     public function get_device_detail(Request $request){
         $mac_id = $request->mac_id;
-        $device_info = ProductStock::select('product_id')->where('mac_id',$mac_id)->first();
-        $devices_details = [];
-        if(!empty($device_info->product_id)){
-            $devices_details = Product::where(['status'=>1,'id'=>$device_info->product_id])->first();
-            if(!empty($devices_details->id)){
-                return response()->json(['status'=>200,'message'=>'Success','data'=>$devices_details],200);
-            }else{
-                return response()->json(['status'=>400,'message'=>'Devices not found'],400);
+        $auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
+        if(!empty($user_details->id)){
+            $device_info = ProductStock::select('product_id')->where('mac_id',$mac_id)->first();
+            $devices_details_array = [];
+            if(!empty($device_info->product_id)){
+                $devices_details = Product::select('id','name','images','thumbnail','details','specification','faq')->where(['status'=>1,'id'=>$device_info->product_id])->first();
+                if(!empty($devices_details->id)){
+                    $device_request = DeviceRequest::select('status')->where(['mac_id'=>$mac_id,'user_id'=>$user_details->id])->first();
+                    $devices_details_array['id'] = $devices_details->id;
+                    $devices_details_array['name'] = $devices_details->name;
+                    $devices_details_array['details'] = $devices_details->details;
+                    $devices_details_array['thumbnail'] = $devices_details->thumbnail;
+                    if(!empty($devices_details->images)){
+                        $device_images = json_decode($devices_details->images);
+                        if(!empty($device_images)){
+                            foreach($device_images as $k => $val){
+                                $devices_details_array['images'][$k] = asset("/product/$val");
+                            }
+                        }
+                    }
+                    $devices_details_array['device_request_status'] = $device_request->status ?? '';
+                    if(!empty($devices_details->specification)){
+                        $devices_details_array['specification'] = json_decode($devices_details->specification,true);
+                    }
+                    if(!empty($devices_details->faq)){
+                        $faq = json_decode($devices_details->faq,true);
+                        if(!empty($faq['question'])){
+                            foreach($faq['question'] as $k => $question){
+                                $devices_details_array['faq'][$question] = $faq['answer'][$k];
+                            }
+                        }
+                    }
+                    return response()->json(['status'=>200,'message'=>'Success','data'=>$devices_details_array],200);
+                }else{
+                    return response()->json(['status'=>400,'message'=>'Devices not found'],400);
+                }
             }
+        }else{
+            return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
     }
 

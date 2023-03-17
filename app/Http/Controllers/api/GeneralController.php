@@ -8,6 +8,7 @@ use App\Model\ConnectedDevice;
 use App\Model\Banner;
 use App\Model\Product;
 use App\Model\Order;
+use App\Model\DeviceRequest;
 use App\User;
 use Illuminate\Support\Facades\Http;
 use App\Model\BusinessSetting;

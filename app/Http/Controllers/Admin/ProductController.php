@@ -82,6 +82,7 @@ class ProductController extends BaseController
     {
         $validator = Validator::make($request->all(), [
             'name'                 => 'required',
+            'purchase_price'       => 'required|numeric|min:1',
             'images'               => 'required',
             'image'                => 'required',
             'code'                 => 'required|numeric|min:1|digits_between:6,20|unique:products',
@@ -107,6 +108,7 @@ class ProductController extends BaseController
         $p->code     = $request->code;
         $p->slug     = Str::slug($request->name[array_search('en', $request->lang)], '-') . '-' . Str::random(6);
         $p->details              = $request['description'] ?? '';
+        $p->purchase_price     = BackEndHelper::currency_to_usd($request->purchase_price);
         
         if(count($request->specification) > 0){
             $p->specification = json_encode($request->specification);
@@ -114,7 +116,6 @@ class ProductController extends BaseController
         if(count($request->faq) > 0){
             $p->faq = json_encode($request->faq);
         }
-        $p->request_status    = 1;
         if ($request->ajax()) {
             return response()->json([], 200);
         } else {
@@ -146,7 +147,6 @@ class ProductController extends BaseController
         $validator = Validator::make($request->all(), [
             'product_id'                 => 'required',
             'device_id'                 => 'required',
-            'purchase_price'       => 'required|numeric|min:1',
         ]);
 
         if (is_null($request->product_id)) {
@@ -161,10 +161,6 @@ class ProductController extends BaseController
         $p = new ProductStock();
         $p->product_id  = $request->product_id;
         $p->mac_id  = $request->device_id;
-        $p->price    = BackEndHelper::currency_to_usd($request->purchase_price);
-        // $p->current_stock     = abs($stock_count) ?? 0;
-        // $p->minimum_order_qty = $request->minimum_order_qty;
-        // $p->multiply_qty      = ($request->multiplyQTY =='on') ? 1 : 0;
     
         if ($request->ajax()) {
             return response()->json([], 200);
@@ -179,7 +175,6 @@ class ProductController extends BaseController
         $p = ProductStock::find($id);
         $validator = Validator::make($request->all(), [
             'product_id'                 => 'required',
-            'purchase_price'       => 'required|numeric|min:1',
             'minimum_order_qty'    => 'required|numeric|min:1',
             'code'                 => 'required|numeric|min:1|digits_between:6,20|unique:products',
         ], [
@@ -198,11 +193,6 @@ class ProductController extends BaseController
         //$stock_count = (integer)$request['current_stock'];
         $p->product_id  = $request->product_id;
         $p->mac_id  = $request->device_id;
-        $p->price    = BackEndHelper::currency_to_usd($request->purchase_price);
-        // $p->current_stock     = abs($stock_count) ?? 0;
-        // $p->minimum_order_qty = $request->minimum_order_qty;
-        // $p->multiply_qty      = ($request->multiplyQTY =='on') ? 1 : 0;
-    
         if ($request->ajax()) {
             return response()->json([], 200);
         } else {
@@ -548,6 +538,7 @@ class ProductController extends BaseController
         $product = Product::find($id);
         $validator = Validator::make($request->all(), [
             'name'                 => 'required',
+            'purchase_price'       => 'required|numeric|min:1',
             'images'               => 'required',
             'image'                => 'required',
             'code'                 => 'required|numeric|min:1|digits_between:6,20|unique:products',
@@ -570,6 +561,7 @@ class ProductController extends BaseController
         $product->code                  = $request->code;
         $product_images                 = json_decode($product->images);
         $product->details              = $request['description'] ?? '';
+        $product->purchase_price     = BackEndHelper::currency_to_usd($request->purchase_price);
         if(count($request->specification) > 0){
             $product->specification = json_encode($request->specification);
         }

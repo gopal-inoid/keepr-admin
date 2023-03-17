@@ -9,6 +9,7 @@ use App\Model\Cart;
 use App\Model\CartShipping;
 use App\Model\Color;
 use App\Model\Product;
+use App\Model\ProductStock;
 use App\Model\Shop;
 use App\User;
 use Illuminate\Support\Str;
@@ -63,10 +64,10 @@ class CartController extends Controller
     public function add_to_cart(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'mac_id' => 'required',
+            'product_id' => 'required',
             'quantity' => 'required',
         ], [
-            'mac_id.required' => translate('MAC ID is required!')
+            'product_id.required' => translate('Product ID is required!')
         ]);
 
         if ($validator->errors()->count() > 0) {
@@ -75,8 +76,8 @@ class CartController extends Controller
 
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
-        $product = Product::find($request->id);
-        $cart = Cart::where(['product_id' => $request->id, 'customer_id' => $user_details->id])->first();
+        $product = Product::find($request->product_id);
+        $cart = Cart::where(['product_id' => $request->product_id, 'customer_id' => $user_details->id])->first();
         if (isset($cart) == false) {
             $cart = new Cart();
         } else {
@@ -85,15 +86,15 @@ class CartController extends Controller
                 'message' => translate('already_added!')
             ], 200);
         }
-
-        if ($product['current_stock'] < $request['quantity']) {
+        $current_stock = ProductStock::where('product_id',$request->product_id)->count();
+        if ($current_stock < $request['quantity']) {
             return response()->json([
                 'status' => 0,
                 'message' => translate('out_of_stock!')
             ], 200);
         }
 
-        $price = $product->unit_price;
+        $price = $product['purchase_price'];
         $tax = Helpers::tax_calculation($price, $product['tax'], 'percent');
         $cart['customer_id'] = $user_details->id ?? 0;
         $cart['quantity'] = $request['quantity'];
@@ -101,7 +102,7 @@ class CartController extends Controller
         $cart['tax'] = $tax;
         $cart['name'] = $product->name;
         $cart['discount'] = Helpers::get_product_discount($product, $price);
-        $cart['thumbnail'] = $product->thumbnail;
+        $cart['thumbnail'] = asset("/product/thumbnail/$product->thumbnail");
         $cart->save();
         //$cart = CartManager::add_to_cart($request);
         return response()->json([
@@ -129,7 +130,8 @@ class CartController extends Controller
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         $cart = Cart::where(['id' => $request->id, 'customer_id' => $user_details->id])->first();
         $product = Product::find($cart['product_id']);
-        if ($product['current_stock'] < $request->quantity) {
+        $current_stock = ProductStock::where('product_id',$cart['product_id'])->count();
+        if ($current_stock < $request['quantity']) {
             $status = 0;
             $qty = $cart['quantity'];
         }
