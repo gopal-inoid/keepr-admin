@@ -15,6 +15,7 @@ use App\Model\ProductStock;
 use App\Model\Review;
 use App\Model\ConnectedDevice;
 use App\Model\DeviceTracking;
+use App\Model\DeviceRequest;
 use App\Model\ShippingMethod;
 use App\Model\Wishlist;
 use App\User;
@@ -384,19 +385,17 @@ class ProductController extends Controller
 
     public function device_tracking(Request $request){
         $device_mac_id = $request->mac_id;
-        $distance = $request->distance;
+        $lat = $request->lat;
+        $lan = $request->lan;
 
         $validator = Validator::make($request->all(), [
             'mac_id' => 'required',
-            'distance' => 'required',
+            'lat' => 'required',
+            'lan' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
-        }
-
-        if(!is_numeric($distance)){
-            return response()->json(['status'=>400,'message'=>'Distance should be numeric'],403);
         }
 
         $auth_token   = $request->headers->get('X-Access-Token');
@@ -408,7 +407,7 @@ class ProductController extends Controller
             }
             $device_info = ProductStock::where('mac_id',$device_mac_id)->first();
             if(!empty($device_info->mac_id)){
-                $check = DeviceTracking::insert(['mac_id'=>$device_mac_id,'user_id'=>$user_details->id,'distance'=>$distance]);
+                $check = DeviceTracking::insert(['mac_id'=>$device_mac_id,'user_id'=>$user_details->id,'lat'=>$lat,'lan'=>$lan]);
                 if($check){
                     return response()->json(['status'=>200,'message'=>'Device successfully added in tracking'],200);
                 }
@@ -418,8 +417,44 @@ class ProductController extends Controller
         }else{
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
+    }
 
-        return response()->json(['status'=>400,'message'=>'Something Went Wrong, Please try again latter'],400);
+    public function request_device(Request $request){
+        $device_mac_id = $request->mac_id;
+        $validator = Validator::make($request->all(), [
+            'mac_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
+        if(!empty($user_details->id)){
+            $device_info = ProductStock::where('mac_id',$device_mac_id)->first();
+            if(!empty($device_info->mac_id)){
+                $check_connected = DeviceRequest::select('id','status','last_updated')->where(['mac_id'=>$device_mac_id,'user_id'=>$user_details->id])->first();
+                if(!empty($check_connected->id)){
+                    if($check_connected->status == 1){
+                        $check_connected->status = 0;
+                    }else{
+                        $check_connected->status = 1;
+                    }
+                    //$check_connected->last_updated = date('Y-m-d h:i:s');
+                    $check_connected->save();
+                }else{
+                    $check = DeviceRequest::insert(['mac_id'=>$device_mac_id,'user_id'=>$user_details->id]);
+                    if($check){
+                        return response()->json(['status'=>200,'message'=>'Device request added successfully'],200);
+                    }
+                }
+            }else{
+                return response()->json(['status'=>400,'message'=>'Device not found'],400);
+            }
+        }else{
+            return response()->json(['status'=>400,'message'=>'User not found'],400);
+        }
     }
 
     //END DEVICE API's

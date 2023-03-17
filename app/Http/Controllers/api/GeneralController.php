@@ -181,7 +181,7 @@ class GeneralController extends Controller
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
     }
-
+    
     //END USER API's
 
 }

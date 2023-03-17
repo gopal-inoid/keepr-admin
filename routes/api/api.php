@@ -42,6 +42,7 @@ Route::group(['namespace' => 'api'], function () {
         Route::post('search-device', 'ProductController@search_device');
         Route::post('get-device-detail', 'ProductController@get_device_detail');
         Route::post('device-tracking', 'ProductController@device_tracking');
+        Route::post('request-device', 'ProductController@request_device');
         //
 
         //USER
