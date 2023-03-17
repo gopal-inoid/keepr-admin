@@ -20,7 +20,6 @@ class HelpTopicController extends Controller
         $request->validate([
             'question' => 'required',
             'answer'   => 'required',
-            'ranking'   => 'required',
         ], [
             'question.required' => 'Question name is required!',
             'answer.required'   => 'Question answer is required!',
@@ -30,7 +29,6 @@ class HelpTopicController extends Controller
         $helps->question = $request->question;
         $helps->answer = $request->answer;
         $request->has('status')? $helps->status = 1 : $helps->status = 0;
-        $helps->ranking = $request->ranking;
         $helps->save();
 
         Toastr::success('FAQ added successfully!');
@@ -69,7 +67,6 @@ class HelpTopicController extends Controller
         $helps = HelpTopic::find($id);
         $helps->question = $request->question;
         $helps->answer = $request->answer;
-        $helps->ranking = $request->ranking;
         $helps->update();
         Toastr::success('FAQ Update successfully!');
         return back();

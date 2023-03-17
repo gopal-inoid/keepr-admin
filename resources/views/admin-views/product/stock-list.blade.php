@@ -54,8 +54,7 @@
                             <tr>
                                 <th>{{\App\CPU\translate('SL')}}</th>
                                 <th>{{\App\CPU\translate('Product Name')}}</th>
-                                <th class="text-right">{{\App\CPU\translate('MAC ID')}}</th>
-                                <th class="text-center">{{\App\CPU\translate('Active')}} {{\App\CPU\translate('status')}}</th>
+                                <th class="text-right">{{\App\CPU\translate('Total stocks')}}</th>
                                 <th class="text-center">{{\App\CPU\translate('Action')}}</th>
                             </tr>
                         </thead>
@@ -63,6 +62,7 @@
                         @foreach($pro as $k=>$p)
                              <?php 
                                 //echo "<pre>"; print_r($p->stocks); die;
+                                $total_stocks = \App\Model\ProductStock::where('product_id',$p['product_id'])->count();
                              ?>
                             <tr>
                                 <th scope="row">{{$pro->firstItem()+$k}}</th>
@@ -74,30 +74,23 @@
                                     </a>
                                 </td>
                                 <td class="text-right">
-                                    {{$p['mac_id']}}
-                                </td>
-                                <td class="text-center">
-                                    <label class="mx-auto switcher">
-                                        <input type="checkbox" class="status switcher_input"
-                                                id="{{$p['id']}}" {{$p->status == 1?'checked':''}}>
-                                        <span class="switcher_control"></span>
-                                    </label>
+                                    {{$total_stocks}}
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center gap-2">
                                         <a class="btn btn-outline--primary btn-sm square-btn"
                                             title="{{\App\CPU\translate('Edit')}}"
-                                            href="{{route('admin.product.stocks.edit',[$p['id']])}}">
+                                            href="{{route('admin.product.stocks.edit',[$p['product_id']])}}">
                                             <i class="tio-edit"></i>
                                         </a>
                                         <a class="btn btn-outline-danger btn-sm square-btn" href="javascript:"
                                             title="{{\App\CPU\translate('Delete')}}"
-                                            onclick="form_alert('product-stock-{{$p['id']}}','Want to delete this item ?')">
+                                            onclick="form_alert('product-stock-{{$p['product_id']}}','Want to delete this item ?')">
                                             <i class="tio-delete"></i>
                                         </a>
                                     </div>
-                                    <form action="{{route('admin.product.stocks.delete',[$p['id']])}}"
-                                            method="post" id="product-stock-{{$p['id']}}">
+                                    <form action="{{route('admin.product.stocks.delete',[$p['product_id']])}}"
+                                            method="post" id="product-stock-{{$p['product_id']}}">
                                         @csrf @method('delete')
                                     </form>
                                 </td>

@@ -7,11 +7,11 @@
     <link href="{{ asset('public/assets/select2/css/select2.min.css') }}" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
-        .add-product-faq-btn,.remove-product-faq-btn{
+        .add-mac_id-btn,.remove-mac_id-btn{
             font-size: 25px;
             cursor: pointer;
         }
-        .faq-add-main-btn{
+        .mac_id-add-main-btn{
             align-items: center;
             display: flex;
             flex-direction: row;
@@ -39,7 +39,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="title-color"
                                             for="exampleFormControlInput1">{{ \App\CPU\translate('Products') }}
@@ -56,12 +56,20 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="title-color"
-                                            for="exampleFormControlInput1">{{ \App\CPU\translate('Device MAC ID') }}
-                                            <span class="text-danger">*</span>
-                                        </label>
-                                        <input type="text" id="device_id" name="device_id" class="form-control" value="{{ old('device_id') }}"
-                                            placeholder="{{ \App\CPU\translate('Device MAC ID') }}" required>
+                                        <label class="title-color">&nbsp;</label>
+                                        <button type="button" class="tio-add-circle-outlined btn text-success add-mac_id-btn mt-4"></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12" id="mac_id_device_field">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <label class="title-color">{{ \App\CPU\translate('Device MAC ID') }}</label>
+                                                <input type="text" name="device_id[]" class="form-control" value="{{ old('device_id') }}" placeholder="{{ \App\CPU\translate('Device MAC ID') }}" required>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -82,6 +90,26 @@
     <script src="{{ asset('public/assets/back-end/js/spartan-multi-image-picker.js') }}"></script>
     <script>
         $(function() {
+
+            $('.add-mac_id-btn').on('click',function(){
+                $('#mac_id_device_field').append(
+                    `<div class="row mac_id-individual">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <input type="text" name="device_id[]" class="form-control" value="" placeholder="{{ \App\CPU\translate('Device MAC ID') }}">
+                            </div>
+                        </div>
+                        <div class="col-md-2 form-group mac_id-add-main-btn">
+                            <i class="tio-delete-outlined text-danger remove-mac_id-btn mt-0"></i>
+                        </div>
+                    </div>
+                    `
+                );
+            });
+
+            $(document).on('click','.remove-mac_id-btn',function(){
+                $(this).closest('.mac_id-individual').remove();
+            });
 
             $("#coba").spartanMultiImagePicker({
                 fieldName: 'images[]',

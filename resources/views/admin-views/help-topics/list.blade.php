@@ -42,7 +42,6 @@
                                     <th>{{\App\CPU\translate('SL')}}</th>
                                     <th>{{\App\CPU\translate('Question')}}</th>
                                     <th class="min-w-200">{{\App\CPU\translate('Answer')}}</th>
-                                    <th>{{\App\CPU\translate('Ranking')}}</th>
                                     <th class="text-center">{{\App\CPU\translate('Status')}} </th>
                                     <th class="text-center">{{\App\CPU\translate('Action')}}</th>
                                 </tr>
@@ -53,8 +52,6 @@
                                         <td>{{$k+1}}</td>
                                         <td>{{$help['question']}}</td>
                                         <td>{{$help['answer']}}</td>
-                                        <td>{{$help['ranking']}}</td>
-
                                         <td>
                                             <label class="switcher mx-auto">
                                                 <input type="checkbox" class="switcher_input status_id"
@@ -99,8 +96,7 @@
                     </div>
                     <form action="{{ route('admin.helpTopic.add-new') }}" method="post" id="addForm">
                         @csrf
-                        <div class="modal-body"
-                             style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
+                        <div class="modal-body">
 
                             <div class="form-group">
                                 <label>{{\App\CPU\translate('Question')}}</label>
@@ -127,11 +123,6 @@
                                         </label>
                                     </div>
                                 </div>
-
-                                <div class="col-md-6">
-                                    <label for="ranking">{{\App\CPU\translate('Ranking')}}</label>
-                                    <input type="number" name="ranking" class="form-control">
-                                </div>
                             </div>
 
                         </div>
@@ -157,8 +148,7 @@
                             aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="" method="post" id="editForm"
-                      style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
+                <form action="" method="post" id="editForm">
                     @csrf
                     {{-- @method('put') --}}
                     <div class="modal-body">
@@ -169,21 +159,12 @@
                                    placeholder="{{\App\CPU\translate('Type Question')}}"
                                    id="e_question" class="e_name">
                         </div>
-
-
                         <div class="form-group">
                             <label>{{\App\CPU\translate('Answer')}}</label>
                             <textarea class="form-control" name="answer" cols="5"
                                       rows="5" placeholder="{{\App\CPU\translate('Type Answer')}}"
                                       id="e_answer"></textarea>
                         </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="ranking">{{\App\CPU\translate('Ranking')}}</label>
-                                <input type="number" name="ranking" class="form-control" id="e_ranking" required>
-                            </div>
-                        </div>
-
                     </div>
                     <div class="modal-footer bg-whitesmoke br">
                         <button type="button" class="btn btn-secondary"

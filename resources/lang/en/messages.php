@@ -2384,4 +2384,5 @@
   'MAC ID' => 'MAC ID',
   'Product Stocks Edit' => 'Product Stocks Edit',
   'Stocks' => 'Stocks',
+  'Total stocks' => 'Total stocks',
 );

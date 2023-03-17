@@ -527,7 +527,6 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
             Route::get('search-products','POSController@search_product')->name('search-products');
             Route::get('order-bulk-export','POSController@bulk_export_data')->name('order-bulk-export');
 
-
             Route::post('coupon-discount', 'POSController@coupon_discount')->name('coupon-discount');
             Route::get('change-cart','POSController@change_cart')->name('change-cart');
             Route::get('new-cart-id','POSController@new_cart_id')->name('new-cart-id');

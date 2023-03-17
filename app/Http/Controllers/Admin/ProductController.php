@@ -141,9 +141,6 @@ class ProductController extends BaseController
 
     function store_stock(Request $request){
         
-        //product_id
-        //echo "<pre>"; print_r($request->all()); die;
-
         $validator = Validator::make($request->all(), [
             'product_id'                 => 'required',
             'device_id'                 => 'required',
@@ -152,54 +149,53 @@ class ProductController extends BaseController
         if (is_null($request->product_id)) {
             $validator->after(function ($validator) {
                 $validator->errors()->add(
-                    'name', 'Product field is required!'
+                    'product_id', 'Product field is required!'
                 );
             });
         }
-
-        //$stock_count = (integer)$request['current_stock'];
-        $p = new ProductStock();
-        $p->product_id  = $request->product_id;
-        $p->mac_id  = $request->device_id;
-    
-        if ($request->ajax()) {
-            return response()->json([], 200);
-        } else {
-            $p->save();
-            Toastr::success(translate('Product Stocks added successfully!'));
-            return redirect()->route('admin.product.stocks.list');
+        //echo "<pre>"; print_r($request->all()); die;
+        if(!empty($request->device_id)){
+            foreach($request->device_id as $mac_id){
+                $check = ProductStock::where(['product_id'=>$request->product_id,'mac_id'=>$mac_id])->count();
+                if($check == 0){
+                    ProductStock::insert(['product_id'=>$request->product_id,'mac_id'=>$mac_id]);
+                }
+            }
         }
+
+        Toastr::success(translate('Product Stocks added successfully!'));
+        return redirect()->route('admin.product.stocks.list');
+        
     }
 
     function update_stock(Request $request,$id){
-        $p = ProductStock::find($id);
         $validator = Validator::make($request->all(), [
             'product_id'                 => 'required',
-            'minimum_order_qty'    => 'required|numeric|min:1',
-            'code'                 => 'required|numeric|min:1|digits_between:6,20|unique:products',
-        ], [
-            'minimum_order_qty.required'       => 'Minimum order quantity is required!',
-            'minimum_order_qty.min'            => 'Minimum order quantity must be positive!',
+            'device_id'                 => 'required',
         ]);
 
         if (is_null($request->product_id)) {
             $validator->after(function ($validator) {
                 $validator->errors()->add(
-                    'name', 'Product field is required!'
+                    'product_id', 'Product field is required!'
                 );
             });
         }
 
-        //$stock_count = (integer)$request['current_stock'];
-        $p->product_id  = $request->product_id;
-        $p->mac_id  = $request->device_id;
-        if ($request->ajax()) {
-            return response()->json([], 200);
-        } else {
-            $p->save();
-            Toastr::success(translate('Product Stocks added successfully!'));
-            return redirect()->route('admin.product.stocks.list');
+        $product_stock = $request->device_id;
+        ProductStock::where(['product_id'=>$id])->delete();
+        if(!empty($product_stock)){
+            foreach($product_stock as $mac_id){
+                $check = ProductStock::where(['product_id'=>$id,'mac_id'=>$mac_id])->count();
+                if($check == 0){
+                    ProductStock::insert(['product_id'=>$id,'mac_id'=>$mac_id]);
+                }
+            }
         }
+        
+        Toastr::success(translate('Product Stocks added successfully!'));
+        return redirect()->route('admin.product.stocks.list');
+        
     }
 
     function list(Request $request)
@@ -225,8 +221,9 @@ class ProductController extends BaseController
     {
         $query_param = [];
         $search = $request['search'];
-        $pro = ProductStock::select('product_stocks.*','products.name as product_name')->join('products','products.id','product_stocks.product_id')->where('product_stocks.mac_id','<>','');
+        $pro = Product::select('products.name as product_name','products.id as product_id')->join('product_stocks','product_stocks.product_id','products.id');
         
+        //ProductStock::select('product_stocks.*','products.name as product_name')
         // if ($request->has('search')) {
         //     $key = explode(' ', $request['search']);
         //     $pro = $pro->where(function ($q) use ($key) {
@@ -237,7 +234,7 @@ class ProductController extends BaseController
         //     $query_param = ['search' => $request['search']];
         // }
         
-        $pro = $pro->orderBy('product_stocks.id', 'DESC')->paginate(Helpers::pagination_limit())->appends($query_param);
+        $pro = $pro->groupBy('product_id')->orderBy('product_stocks.id', 'DESC')->paginate(Helpers::pagination_limit())->appends($query_param);
 
         //echo "<pre>"; print_r($pro); die;
 
@@ -527,9 +524,13 @@ class ProductController extends BaseController
 
     public function edit_stock($id)
     {
-        $product_stock = ProductStock::find($id);
         $products = Product::select('id','name')->where('status', 1)->get();
-        return view('admin-views.product.edit-stock', compact('products','product_stock'));
+        $product_stock = Product::select('product_stocks.mac_id')
+                        ->join('product_stocks','product_stocks.product_id','products.id')
+                        ->where('product_stocks.product_id',$id)
+                        ->get();
+        
+        return view('admin-views.product.edit-stock', compact('products','product_stock','id'));
     }
 
     public function update(Request $request, $id)
