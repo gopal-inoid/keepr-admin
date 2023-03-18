@@ -6,6 +6,7 @@
     <!-- Title -->
 
     <title>@yield('title')</title>
+    <link rel="icon" type="image/x-icon" href="{{asset("public/company/Keepr-logo-black.png")}}">
     <meta name="_token" content="{{csrf_token()}}">
     <!--to make http ajax request to https-->
     <!--    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">-->

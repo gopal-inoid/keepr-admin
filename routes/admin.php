@@ -21,6 +21,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
 
         //dashboard routes
         Route::get('/', 'DashboardController@dashboard')->name('dashboard');//previous dashboard route
+        Route::get('countries', 'DashboardController@store_countries')->name('store.countries');
         Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
             Route::get('/', 'DashboardController@dashboard')->name('index');
             Route::post('order-stats', 'DashboardController@order_stats')->name('order-stats');
@@ -306,6 +307,8 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
             Route::get('stocks/edit/{id}', 'ProductController@edit_stock')->name('stocks.edit');
             Route::delete('stocks/delete/{id}', 'ProductController@delete_stock')->name('stocks.delete');
             Route::post('stocks/status-update', 'ProductController@status_update_stock')->name('stocks.status-update');
+            Route::get('stocks/export-excel', 'ProductController@export_stocks_excel')->name('stocks.export-excel');
+            Route::post('stocks/bulk-import', 'ProductController@bulk_import_stocks_data')->name('stocks.bulk-import');
 
         });
 

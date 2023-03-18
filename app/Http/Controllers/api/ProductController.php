@@ -314,6 +314,20 @@ class ProductController extends Controller
         if(!empty($user_details->id)){
             $get_all_devices = ConnectedDevice::where(['user_id'=>$user_details->id,'status'=>1])->get();
             if(!empty($get_all_devices)){
+                if(!empty($get_all_devices)){
+                    foreach($get_all_devices as $k => $devices){
+                        $device_info = ProductStock::select('products.thumbnail')
+                                            ->join('products','products.id','product_stocks.product_id')
+                                            ->where('product_stocks.mac_id',$devices->mac_id)->first();
+                        
+                        if(!empty($device_info->thumbnail)){
+                            $get_all_devices[$k]['thumbnail'] = asset("/product/thumbnail/$device_info->thumbnail");
+                        }else{
+                            $get_all_devices[$k]['thumbnail'] = asset('public/assets/front-end/img/image-place-holder.png');
+                        }
+                    }
+                }
+                
                 return response()->json(['status'=>200,'message'=>'Success','data'=>$get_all_devices],200);
             }else{
                 return response()->json(['status'=>400,'message'=>'Devices not found'],400);

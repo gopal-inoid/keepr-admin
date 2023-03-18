@@ -590,6 +590,20 @@ class ProductController extends BaseController
         }
     }
 
+    public function export_stocks_excel(Request $request){
+        $products = ProductStock::latest()->get();
+        //export from product
+        $data = [];
+        foreach ($products as $item) {
+            $data[] = [
+                'product_id' => $item->product_id,
+                'mac_id'        => $item->mac_id,
+            ];
+        }
+
+        return (new FastExcel($data))->download('product_stocks_list.xlsx');
+    }
+
     public function remove_image(Request $request)
     {
         ImageManager::delete('/product/' . $request['image']);
@@ -721,6 +735,43 @@ class ProductController extends BaseController
         }
         DB::table('products')->insert($data);
         Toastr::success(count($data) . ' - Products imported successfully!');
+        return back();
+    }
+
+    public function bulk_import_stocks_data(Request $request)
+    {
+        try {
+            $collections = (new FastExcel)->import($request->file('products_file'));
+        } catch (\Exception $exception) {
+            Toastr::error('You have uploaded a wrong format file, please upload the right file.');
+            return back();
+        }
+
+        $cnt = 0;
+        $col_key = ['product_id', 'mac_id'];
+        foreach ($collections as $collection) {
+            foreach ($collection as $key => $value) {
+                if ($key!="" && !in_array($key, $col_key)) {
+                    Toastr::error('Please upload the correct format file.');
+                    return back();
+                }
+
+                if ($key!="" && $value === "") {
+                    Toastr::error('Please fill ' . $key . ' fields');
+                    return back();
+                }
+            }
+            
+            $check = ProductStock::where(['product_id'=>$collection['product_id'],'mac_id'=>$collection['mac_id']])->count();
+            if($check == 0){ $cnt++;
+                ProductStock::insert(['product_id'=>$collection['product_id'],'mac_id'=>$collection['mac_id']]);
+            }
+        }
+        
+        //echo "<pre>"; print_r($data); die;
+        //DB::table('product_stocks')->insert($data);
+        
+        Toastr::success($cnt . ' - Product Stocks imported successfully!');
         return back();
     }
 
