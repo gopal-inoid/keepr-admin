@@ -23,3 +23,11 @@ ALTER TABLE `device_trackings` ADD `lat` VARCHAR(200) NULL DEFAULT NULL AFTER `d
 CREATE TABLE `keepr`.`device_requests` ( `id` INT NOT NULL AUTO_INCREMENT , `user_id` INT NOT NULL , `mac_id` VARCHAR(200) NOT NULL , `status` TINYINT NOT NULL DEFAULT '0' COMMENT '0=lost,1=found' , `last_updated` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;
 
 ALTER TABLE `product_stocks` CHANGE `created_at` `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP, CHANGE `updated_at` `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP;
+
+UPDATE `shipping_methods` SET `title` = 'Shipping method 1' WHERE `shipping_methods`.`id` = 2;
+
+INSERT INTO `shipping_methods` (`id`, `creator_id`, `creator_type`, `title`, `cost`, `duration`, `status`, `created_at`, `updated_at`) VALUES (NULL, '1', 'admin', 'Shipping method 2', '10.00', '1 Month', '1', '2023-03-18 12:11:40', '2023-03-18 12:11:40');
+
+CREATE TABLE `keepr`.`countries` ( `id` INT NOT NULL AUTO_INCREMENT , `code` VARCHAR(10) NULL DEFAULT NULL , `name` VARCHAR(200) NULL DEFAULT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+CREATE TABLE `keepr`.`shipping_method_rates` ( `id` INT NOT NULL AUTO_INCREMENT , `shipping_id` INT NOT NULL , `country_code` VARCHAR(10) NOT NULL , `normal_rate` INT NOT NULL , `express_rate` INT NOT NULL , `status` TINYINT(1) NOT NULL DEFAULT '1' COMMENT '0=inactive,1=active' , `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;

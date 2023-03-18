@@ -57,30 +57,26 @@ class ShippingMethodController extends Controller
     public function edit($id)
     {
         if ($id != 1) {
+            //$countries_list = DB::table('countries')->get();
             $method = ShippingMethod::where(['id' => $id])->first();
-            return view('admin-views.shipping-method.edit', compact('method'));
+            $countries_list = DB::table('shipping_method_rates')->get();
+            //echo "<pre>"; print_r($countries_list); die;
+            return view('admin-views.shipping-method.edit', compact('method','countries_list'));
         }
         return back();
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'title'    => 'required|max:200',
-            'duration' => 'required',
-            'cost'     => 'numeric',
-        ]);
+        $countries = $request->input('country');
+        //echo "<pre>"; print_r($countries); die;
+        foreach($countries as $k => $val){
+            $status = !empty($val['status']) ? 1 : 0;
+            DB::table('shipping_method_rates')->where(['shipping_id'=>$id,'country_code'=>$val['name']])->update(['normal_rate'=>$val['normal_rate'],'express_rate'=>$val['express_rate'],'status'=>$status]);
+        }
 
-        DB::table('shipping_methods')->where(['id' => $id])->update([
-            'creator_id'   => auth('admin')->id(),
-            'creator_type' => 'admin',
-            'title'        => $request['title'],
-            'duration'     => $request['duration'],
-            'cost'         => BackEndHelper::currency_to_usd($request['cost']),
-            'status'       => 1,
-            'created_at'   => now(),
-            'updated_at'   => now(),
-        ]);
+        //echo "<pre>"; print_r(); die;
+        //DB::table('shipping_method_rates')->insert(['shipping_id'=>$id,'country_code'=>$val['name'],'normal_rate'=>$val['normal_rate'],'express_rate'=>$val['express_rate']]);
 
         Toastr::success('Successfully updated.');
         return redirect()->back();

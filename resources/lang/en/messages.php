@@ -2385,4 +2385,6 @@
   'Product Stocks Edit' => 'Product Stocks Edit',
   'Stocks' => 'Stocks',
   'Total stocks' => 'Total stocks',
+  'Import' => 'Import',
+  'Import Excel' => 'Import Excel',
 );

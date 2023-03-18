@@ -40,6 +40,21 @@
                             <!-- End Search -->
                         </div>
                         <div class="col-lg-8 mt-3 mt-lg-0 d-flex flex-wrap gap-3 justify-content-lg-end">
+                            <a href="javascript:void(0);" class="btn btn-outline--primary" data-toggle="modal" data-target="#importModal">
+                                <i class="tio-update"></i>
+                                <span class="text">{{\App\CPU\translate('Import')}}</span>
+                            </a>
+                            <div>
+                                <button type="button" class="btn btn-outline--primary" data-toggle="dropdown">
+                                    <i class="tio-download-to"></i>
+                                    Export
+                                    <i class="tio-chevron-down"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a class="dropdown-item" href="{{route('admin.product.stocks.export-excel')}}">Excel</a></li>
+                                    <div class="dropdown-divider"></div>
+                                </ul>
+                            </div>
                             <a href="{{route('admin.product.stocks.add-new')}}" class="btn btn--primary">
                                 <i class="tio-add"></i>
                                 <span class="text">{{\App\CPU\translate('Add Stock')}}</span>
@@ -117,6 +132,50 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="importModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{\App\CPU\translate('Import Excel')}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
+                        aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="col-md-12 mt-2">
+                <form class="product-form" action="{{route('admin.product.stocks.bulk-import')}}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="card rest-part">
+                        <div class="px-3 py-4 d-flex flex-wrap align-items-center gap-10 justify-content-center">
+                            <h4 class="mb-0">{{\App\CPU\translate("Don`t_have_the_template_?")}}</h4>
+                            <a href="{{asset('public/assets/product_stocks_bulk_format.xlsx')}}" download=""
+                            class="btn-link text-capitalize fz-16 font-weight-medium">{{\App\CPU\translate('download_here')}}</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <div class="row justify-content-center">
+                                    <div class="col-auto">
+                                        <div class="upload-file">
+                                            <input type="file" name="products_file" accept=".xlsx, .xls" class="upload-file__input">
+                                            <div class="upload-file__img_drag upload-file__img">
+                                                <img src="{{asset('/public/assets/back-end/img/drag-upload-file.png')}}" alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-wrap gap-10 align-items-center justify-content-end">
+                                <button type="reset" class="btn btn-secondary px-4" onclick="resetImg();">{{\App\CPU\translate('reset')}}</button>
+                                <button type="submit" class="btn btn--primary px-4">{{\App\CPU\translate('Submit')}}</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('script')
@@ -125,6 +184,22 @@
     <script src="{{asset('public/assets/back-end')}}/vendor/datatables/dataTables.bootstrap4.min.js"></script>
     <!-- Page level custom scripts -->
     <script>
+
+        $('.upload-file__input').on('change', function() {
+                $(this).siblings('.upload-file__img').find('img').attr({
+                    'src': '{{asset('/public/assets/back-end/img/excel.png')}}',
+                    'width': 80
+                });
+        });
+
+        function resetImg() {
+            // $('.upload-file__img img').attr({
+            //     'src': '{{asset('/public/assets/back-end/img/drag-upload-file.png')}}',
+            //     'width': 'auto'
+            // });
+            location.reload();
+        }
+
         // Call the dataTables jQuery plugin
         $(document).ready(function () {
             $('#dataTable').DataTable();

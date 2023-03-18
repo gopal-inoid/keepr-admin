@@ -18,7 +18,7 @@
     <div class="mb-3">
         <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
             <img src="{{asset('/public/assets/back-end/img/business-setup.png')}}" alt="">
-            {{\App\CPU\translate('Shipping_Method_Update')}}
+            {{\App\CPU\translate('Shipping_Method_Update')}} ( {{ $method['title'] ?? '' }} )
         </h2>
     </div>
     <!-- End Page Title -->
@@ -36,39 +36,44 @@
                     {{\App\CPU\translate('shipping_method')}} {{\App\CPU\translate('form')}}
                 </div> -->
                 <div class="card-body">
-                    <form action="{{route('admin.business-settings.shipping-method.update',[$method['id']])}}"
-                          style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};"
-                          method="post">
+                    <form action="{{route('admin.business-settings.shipping-method.update',[$method['id']])}}" method="post">
                         @csrf
                         @method('put')
-                        <div class="form-group">
-                            <div class="row ">
-                                <div class="col-md-12">
-                                    <label class="title-color" for="title">{{\App\CPU\translate('title')}}</label>
-                                    <input type="text" name="title" value="{{$method['title']}}" class="form-control" placeholder="">
-                                </div>
-                            </div>
+                        <div class="table-responsive pb-3">
+                            <table class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" cellspacing="0">
+                                <thead class="thead-light thead-50 text-capitalize">
+                                    <tr>
+                                        <th>Country</th>
+                                        <th>Normal Rate</th>
+                                        <th>Express Rate</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($countries_list as $k=>$name)
+                                    <tr>
+                                        <th>{{$name->country_code}}
+                                        <input type="hidden" value="{{$name->country_code}}" name="country[{{$k}}][name]">
+                                        </th>
+                                        <td><input type="number" min="0" max="1000000" value="{{$name->normal_rate}}" name="country[{{$k}}][normal_rate]" class="form-control"
+                                               placeholder="{{\App\CPU\translate('Ex')}} : {{\App\CPU\translate('10')}} "></td>
+                                        <td>
+                                            <input type="number" min="0" max="1000000" value="{{$name->express_rate}}" name="country[{{$k}}][express_rate]" class="form-control"
+                                               placeholder="{{\App\CPU\translate('Ex')}} : {{\App\CPU\translate('10')}} ">
+                                        </td>
+                                        <td>
+                                            <label class="switcher mx-auto">
+                                                <input type="checkbox" name="country[{{$k}}][status]" class="switcher_input" {{$name->status == 1?'checked':''}}>
+                                                <span class="switcher_control"></span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
                         </div>
-
-                        <div class="form-group">
-                            <div class="row ">
-                                <div class="col-md-12">
-                                    <label class="title-color" for="duration">{{\App\CPU\translate('duration')}}</label>
-                                    <input type="text" name="duration" value="{{$method['duration']}}" class="form-control" placeholder="{{\App\CPU\translate('Ex')}} : {{\App\CPU\translate('4 to 6 days')}}">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="row ">
-                                <div class="col-md-12">
-                                    <label class="title-color" for="cost">{{\App\CPU\translate('cost')}}</label>
-                                    <input type="number" min="0" max="1000000" name="cost" value="{{\App\CPU\BackEndHelper::usd_to_currency($method['cost'])}}" class="form-control" placeholder="{{\App\CPU\translate('Ex')}} : {{\App\CPU\translate('10 $')}}">
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="d-flex gap-10 flex-wrap justify-content-end">
+                            <a href="{{route('admin.business-settings.shipping-method.setting')}}" class="btn btn--primary px-4">Back</a>
                             <button type="submit" class="btn btn--primary px-4">{{\App\CPU\translate('Update')}}</button>
                         </div>
                     </form>

@@ -31,8 +31,7 @@
                             </div>
                         </div>
                         <div class="table-responsive pb-3">
-                            <table class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" cellspacing="0"
-                                style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
+                            <table class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" cellspacing="0">
                                 <thead class="thead-light thead-50 text-capitalize">
                                     <tr>
                                         <th>{{\App\CPU\translate('sl')}}</th>
@@ -40,36 +39,11 @@
                                         <th>{{\App\CPU\translate('duration')}}</th>
                                         <th>{{\App\CPU\translate('cost')}}</th>
                                         <th class="text-center">{{\App\CPU\translate('status')}}</th>
+                                        <th class="text-center">{{\App\CPU\translate('action')}}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <th>1</th>
-                                        <td>Shipping Method 1</td>
-                                        <td>2 Week</td>
-                                        <td>5.00$</td>
-                                        <td>
-                                            <label class="switcher mx-auto">
-                                                <input type="checkbox" class="switcher_input"
-                                                    id="1" checked>
-                                                <span class="switcher_control"></span>
-                                            </label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>2</th>
-                                        <td>Shipping Method 2</td>
-                                        <td>1 Month</td>
-                                        <td>5.00$</td>
-                                        <td>
-                                            <label class="switcher mx-auto">
-                                                <input type="checkbox" class="switcher_input"
-                                                    id="2" checked>
-                                                <span class="switcher_control"></span>
-                                            </label>
-                                        </td>
-                                    </tr>
-                                {{-- @foreach($shipping_methods as $k=>$method)
+                                @foreach($shipping_methods as $k=>$method)
                                     <tr>
                                         <th>{{$k+1}}</th>
                                         <td>{{$method['title']}}</td>
@@ -79,7 +53,6 @@
                                         <td>
                                             {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($method['cost']))}}
                                         </td>
-
                                         <td>
                                             <label class="switcher mx-auto">
                                                 <input type="checkbox" class="switcher_input"
@@ -87,7 +60,6 @@
                                                 <span class="switcher_control"></span>
                                             </label>
                                         </td>
-
                                         <td>
                                             <div class="d-flex flex-wrap justify-content-center gap-10">
                                                 <a  class="btn btn-outline--primary btn-sm edit"
@@ -95,14 +67,10 @@
                                                 href="{{route('admin.business-settings.shipping-method.edit',[$method['id']])}}">
                                                     <i class="tio-edit"></i>
                                                 </a>
-                                                <a  title="{{\App\CPU\translate('delete')}}"
-                                                    class="btn btn-outline-danger btn-sm delete" id="{{ $method['id'] }}">
-                                                    <i class="tio-delete"></i>
-                                                </a>
                                             </div>
                                         </td>
                                     </tr>
-                                @endforeach --}}
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>

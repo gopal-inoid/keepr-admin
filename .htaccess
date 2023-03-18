@@ -1,3 +1,8 @@
+php_value max_input_vars 3000
+php_value suhosin.get.max_vars 3000
+php_value suhosin.post.max_vars 3000
+php_value suhosin.request.max_vars 3000
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
