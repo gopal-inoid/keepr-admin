@@ -48,23 +48,16 @@ class GeneralController extends Controller
     //GET MOBILE NO. CHECK AND VERIFY INTO DB AND SEND IN RESPONSE
     public function verify_user(Request $request){
         $mobile = $request->mobile;
-        $user = User::select('id','phone')->where(['phone'=>$mobile,'is_active'=>0])->first();
+        $user = User::select('id','phone','is_active')->where(['phone'=>$mobile])->first();
         if(!empty($user)){
-            return response()->json(
-                [
-                    'status'=>400,
-                    'message'=>'Not Activated'
-                ]
-            ,200);
+            if($user->is_active != 1){
+                return response()->json(['status'=>400,'message'=>'Not Activated'],200);
+            }else{
+                return response()->json(['status'=>200,'message'=>'Success'],200);
+            }
         }else{
-            return response()->json(
-                [
-                    'status'=>200,
-                    'message'=>'Success'
-                ]
-            ,200);
+            return response()->json(['status'=>400,'message'=>'User not found'],200);
         }
-
     }
 
     //GET FIREBASE AUTH TOKEN. CHECK AND VERIFY THEN ADD INTO DB AND SEND USER INFO IN RESPONSE
