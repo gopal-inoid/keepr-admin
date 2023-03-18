@@ -14,6 +14,7 @@ use App\Model\DealOfTheDay;
 use App\Model\FlashDealProduct;
 use App\Model\Product;
 use App\Model\ProductStock;
+use App\Model\ConnectedDevice;
 use App\Model\Review;
 use App\Model\Translation;
 use App\Model\Wishlist;
@@ -245,18 +246,19 @@ class ProductController extends BaseController
     {
         $query_param = [];
         $search = $request['search'];
-        $pro = Product::where(['added_by' => 'admin']);
+        $pro = ConnectedDevice::where(['status'=>1]);
         if ($request->has('search')) {
             $key = explode(' ', $request['search']);
             $pro = $pro->where(function ($q) use ($key) {
                 foreach ($key as $value) {
-                    $q->Where('name', 'like', "%{$value}%");
+                    $q->Where('mac_id', 'like', "%{$value}%");
                 }
             });
             $query_param = ['search' => $request['search']];
         }
         $request_status = $request['status'];
         $pro = $pro->orderBy('id', 'DESC')->paginate(Helpers::pagination_limit())->appends(['status' => $request['status']])->appends($query_param);
+
         return view('admin-views.product.current-active-device', compact('pro', 'search', 'request_status'));
 
     }

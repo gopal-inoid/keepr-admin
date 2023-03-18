@@ -49,28 +49,39 @@
                         <thead class="thead-light thead-50 text-capitalize">
                             <tr>
                                 <th>{{\App\CPU\translate('SL')}}</th>
-                                <th>{{\App\CPU\translate('Product Name')}}</th>
-                                <th class="text-right">{{\App\CPU\translate('Product Type')}}</th>
-                                <th class="text-right">{{\App\CPU\translate('purchase_price')}}</th>
+                                <th>{{\App\CPU\translate('User Phone')}}</th>
+                                <th>{{\App\CPU\translate('Device Name')}}</th>
+                                <th class="text-right">{{\App\CPU\translate('MAC ID')}}</th>
+                                <th class="text-right">{{\App\CPU\translate('Device UUID')}}</th>
+                                <th class="text-right">{{\App\CPU\translate('Date')}}</th>
                             </tr>
                         </thead>
                         <tbody>
                         @foreach($pro as $k=>$p)
                             <tr>
                                 <th scope="row">{{$pro->firstItem()+$k}}</th>
+                                
+                                <td class="text-right">
+                                    {{ $p->user->phone }}
+                                </td>
                                 <td>
-                                    <a href="{{route('admin.product.view',[$p['id']])}}" class="media align-items-center gap-2">
-                                        <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$p['thumbnail']}}"
-                                             onerror="this.src='{{asset('/public/assets/back-end/img/brand-logo.png')}}'"class="avatar border" alt="">
+                                    <a href="javascript:void(0);" class="media align-items-center gap-2">
                                         <span class="media-body title-color hover-c1">
-                                            {{\Illuminate\Support\Str::limit($p['name'],20)}}
+                                            {{-- \Illuminate\Support\Str::limit($p['name'],20) --}}
+                                            {{$p['device_name']}}
                                         </span>
                                     </a>
                                 </td>
                                 <td class="text-right">
-                                    {{ ucfirst($p['product_type']) }}
+                                    {{ $p['mac_id'] }}
                                 </td>
-                                <td>
+                                <td class="text-right">
+                                    {{ $p['device_uuid'] }}
+                                </td>
+                                <td class="text-right">
+                                    {{ date('Y-m-d',strtotime($p['updated_at'])) }}
+                                </td>
+                                {{-- <td>
                                     <div class="d-flex justify-content-center gap-2">
                                         <a class="btn btn-outline--primary btn-sm square-btn"
                                             title="{{\App\CPU\translate('Edit')}}"
@@ -86,7 +97,7 @@
                                     <form action="{{route('admin.product.delete',[$p['id']])}}" method="post" id="product-{{$p['id']}}">
                                         @csrf @method('delete')
                                     </form>
-                                </td>
+                                </td> --}}
                             </tr>
                         @endforeach
                         </tbody>

@@ -9,6 +9,8 @@ use App\Model\Order;
 use App\Model\OrderDetail;
 use App\Model\OrderTransaction;
 use App\Model\Product;
+use App\Model\ConnectedDevice;
+use App\Model\ProductStock;
 use App\Model\SellerWallet;
 use App\Model\SellerWalletHistory;
 use App\Model\Shop;
@@ -197,6 +199,12 @@ class DashboardController extends Controller
         $product_query = new Product();
         $product = self::common_query_order_stats($product_query);
 
+        $connected_query = new ConnectedDevice();
+        $connected_device = self::common_query_order_stats($connected_query);
+
+        $stocks_query = new ProductStock();
+        $total_stocks = self::common_query_order_stats($stocks_query);
+
         $order_query = new Order();
         $order = self::common_query_order_stats($order_query);
 
@@ -221,7 +229,9 @@ class DashboardController extends Controller
             'delivered' => $delivered,
             'canceled' => $canceled,
             'returned' => $returned,
-            'failed' => $failed
+            'failed' => $failed,
+            'connected_device'=>$connected_device,
+            'total_stocks'=>$total_stocks
         ];
 
         return $data;

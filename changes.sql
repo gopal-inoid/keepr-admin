@@ -31,3 +31,5 @@ INSERT INTO `shipping_methods` (`id`, `creator_id`, `creator_type`, `title`, `co
 CREATE TABLE `keepr`.`countries` ( `id` INT NOT NULL AUTO_INCREMENT , `code` VARCHAR(10) NULL DEFAULT NULL , `name` VARCHAR(200) NULL DEFAULT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
 
 CREATE TABLE `keepr`.`shipping_method_rates` ( `id` INT NOT NULL AUTO_INCREMENT , `shipping_id` INT NOT NULL , `country_code` VARCHAR(10) NOT NULL , `normal_rate` INT NOT NULL , `express_rate` INT NOT NULL , `status` TINYINT(1) NOT NULL DEFAULT '1' COMMENT '0=inactive,1=active' , `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+CREATE TABLE `keepr`.`device_tracking_log` ( `id` INT NOT NULL AUTO_INCREMENT , `mac_id` VARCHAR(200) NULL DEFAULT NULL , `lat` VARCHAR(200) NULL DEFAULT NULL , `lan` VARCHAR(200) NULL DEFAULT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
