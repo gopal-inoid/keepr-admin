@@ -51,9 +51,9 @@
                                 <th>{{\App\CPU\translate('SL')}}</th>
                                 <th>{{\App\CPU\translate('User Phone')}}</th>
                                 <th>{{\App\CPU\translate('Device Name')}}</th>
-                                <th class="text-right">{{\App\CPU\translate('MAC ID')}}</th>
-                                <th class="text-right">{{\App\CPU\translate('Device UUID')}}</th>
-                                <th class="text-right">{{\App\CPU\translate('Date')}}</th>
+                                <th>{{\App\CPU\translate('MAC ID')}}</th>
+                                <th>{{\App\CPU\translate('Device UUID')}}</th>
+                                <th>{{\App\CPU\translate('Date')}}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -61,7 +61,7 @@
                             <tr>
                                 <th scope="row">{{$pro->firstItem()+$k}}</th>
                                 
-                                <td class="text-right">
+                                <td>
                                     {{ $p->user->phone }}
                                 </td>
                                 <td>
@@ -72,13 +72,13 @@
                                         </span>
                                     </a>
                                 </td>
-                                <td class="text-right">
+                                <td>
                                     {{ $p['mac_id'] }}
                                 </td>
-                                <td class="text-right">
+                                <td>
                                     {{ $p['device_uuid'] }}
                                 </td>
-                                <td class="text-right">
+                                <td>
                                     {{ date('Y-m-d',strtotime($p['updated_at'])) }}
                                 </td>
                                 {{-- <td>
