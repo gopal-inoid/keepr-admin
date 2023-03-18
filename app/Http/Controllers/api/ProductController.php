@@ -429,36 +429,71 @@ class ProductController extends Controller
     }
 
     public function device_tracking(Request $request){
-        $device_mac_id = $request->mac_id;
-        $lat = $request->lat;
-        $lan = $request->lan;
+        // $device_mac_id = $request->mac_id;
+        // $lat = $request->lat;
+        // $lan = $request->lan;
 
-        $validator = Validator::make($request->all(), [
-            'mac_id' => 'required',
-            'lat' => 'required',
-            'lan' => 'required',
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'mac_id' => 'required',
+        //     'lat' => 'required',
+        //     'lan' => 'required',
+        // ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        // }
 
+        $data = $request->data ?? [];
+
+        //echo "<pre>"; print_r($data); die;
+        $success = 0;
+        $already_added = 0;
+        $not_found = 0;
+        $response = [];
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
-            $check_connected = DeviceTracking::select('id')->where(['mac_id'=>$device_mac_id,'user_id'=>$user_details->id])->first();
-            if(!empty($check_connected->id)){
-                return response()->json(['status'=>400,'message'=>'Device already added in tracking'],400);
-            }
-            $device_info = ProductStock::where('mac_id',$device_mac_id)->first();
-            if(!empty($device_info->mac_id)){
-                $check = DeviceTracking::insert(['mac_id'=>$device_mac_id,'user_id'=>$user_details->id,'lat'=>$lat,'lan'=>$lan]);
-                if($check){
-                    return response()->json(['status'=>200,'message'=>'Device successfully added in tracking'],200);
+            if(!empty($data)){
+                foreach($data as $k => $val){
+                    DB::table('device_tracking_log')->insert(['mac_id'=>$val['mac_id'],'lat'=>$val['lat'],'lan'=>$val['lan']]);
+                    $check_connected = DeviceTracking::select('id')->where(['mac_id'=>$val['mac_id'],'user_id'=>$user_details->id])->first();
+                    if(empty($check_connected->id)){
+                        $device_info = ProductStock::where('mac_id',$val['mac_id'])->first();
+                        if(!empty($device_info->mac_id)){
+                            $check = DeviceTracking::insert(['mac_id'=>$val['mac_id'],'user_id'=>$user_details->id,'lat'=>$val['lat'],'lan'=>$val['lan']]);
+                            if($check){
+                                $success++;
+                            }
+                        }else{
+                            $not_found++;
+                        }
+                    }else{
+                        $already_added++;
+                    }
                 }
+            }
+
+            if($already_added > 0){
+                $response['status'] = true;
+                $response['message'][] = $already_added . ' Device already added in tracking';
+            }
+
+            if($success > 0){
+                $response['status'] = true;
+                $response['message'][] = $success . ' Device successfully added in tracking';
+            }
+
+            if($not_found > 0){
+                $response['status'] = true;
+                $response['message'][] = $not_found . ' Device not found';
+            }
+
+            if(isset($response['status'])){
+                return response()->json(['status'=>200,'message'=> $response['message'] ?? "Success"],200);
             }else{
                 return response()->json(['status'=>400,'message'=>'Device not found'],400);
             }
+
         }else{
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }

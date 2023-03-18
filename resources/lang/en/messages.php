@@ -2387,4 +2387,7 @@
   'Total stocks' => 'Total stocks',
   'Import' => 'Import',
   'Import Excel' => 'Import Excel',
+  'User Phone' => 'User Phone',
+  'Connected Devices' => 'Connected Devices',
+  'Total Product Stocks' => 'Total Product Stocks',
 );
