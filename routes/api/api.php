@@ -49,6 +49,9 @@ Route::group(['namespace' => 'api'], function () {
         Route::post('delete-user-account', 'GeneralController@delete_user_account');
         Route::post('user-profile', 'GeneralController@user_profile');
         Route::post('order-detail', 'GeneralController@order_detail');
+        Route::post('add-address', 'GeneralController@add_address');
+        Route::post('add-shipping-address', 'GeneralController@add_shipping_address');
+        Route::post('get-address', 'GeneralController@get_address');
         //
 
         //CART
@@ -58,6 +61,9 @@ Route::group(['namespace' => 'api'], function () {
         Route::delete('remove-all-cart','CartController@remove_all_from_cart');
         //
 
+        //CHECKOUT
+        Route::post('checkout', 'CartController@checkout');
+        Route::post('confirm-order', 'CartController@confirm_order');
     });
 
     //#KEEPR END

@@ -35,10 +35,10 @@ class Product extends Model
         'is_shipping_cost_updated' => 'integer'
     ];
 
-    // public function translations()
-    // {
-    //     return $this->morphMany('App\Model\Translation', 'translationable');
-    // }
+    public function translations()
+    {
+        return $this->morphMany('App\Model\Translation', 'translationable');
+    }
 
     // public function scopeActive($query)
     // {
@@ -77,20 +77,20 @@ class Product extends Model
         return $this->hasMany(ProductStock::class);
     }
 
-    // public function reviews()
-    // {
-    //     return $this->hasMany(Review::class, 'product_id');
-    // }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'product_id');
+    }
 
     public function brand()
     {
         return $this->belongsTo(Brand::class);
     }
 
-    // public function scopeStatus($query)
-    // {
-    //     return $query->where('featured_status', 1);
-    // }
+    public function scopeStatus($query)
+    {
+        return $query->where('featured_status', 1);
+    }
 
     public function shop()
     {
@@ -144,21 +144,21 @@ class Product extends Model
         return $this->translations[1]->value ?? $detail;
     }
 
-    // protected static function boot()
-    // {
-    //     parent::boot();
-    //     static::addGlobalScope('translate', function (Builder $builder) {
-    //         $builder->with(['translations' => function ($query) {
-    //             if (strpos(url()->current(), '/api')) {
-    //                 return $query->where('locale', App::getLocale());
-    //             } else {
-    //                 return $query->where('locale', Helpers::default_lang());
-    //             }
-    //         }, 'reviews'=>function($query){
-    //             $query->whereNull('delivery_man_id');
-    //         }])->withCount(['reviews'=>function($query){
-    //             $query->whereNull('delivery_man_id');
-    //         }]);
-    //     });
-    // }
+    protected static function boot()
+    {
+        parent::boot();
+        static::addGlobalScope('translate', function (Builder $builder) {
+            $builder->with(['translations' => function ($query) {
+                if (strpos(url()->current(), '/api')) {
+                    return $query->where('locale', App::getLocale());
+                } else {
+                    return $query->where('locale', Helpers::default_lang());
+                }
+            }, 'reviews'=>function($query){
+                $query->whereNull('delivery_man_id');
+            }])->withCount(['reviews'=>function($query){
+                $query->whereNull('delivery_man_id');
+            }]);
+        });
+    }
 }
