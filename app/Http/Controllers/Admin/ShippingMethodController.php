@@ -74,7 +74,7 @@ class ShippingMethodController extends Controller
         foreach($countries as $k => $val){
            $status = $val['status'] ?? 0;
            if(!empty($val['name'])){
-                ShippingMethodRates::where(['shipping_id'=>$id,'country_code'=>$val['name']])->update(['normal_rate'=>$val['normal_rate'],'express_rate'=>$val['express_rate'],'status'=>$status]);
+                ShippingMethodRates::where(['shipping_id'=>$id,'country_code'=>$val['name']])->update(['normal_rate'=>$val['normal_rate'] ?? '','express_rate'=>$val['express_rate'] ?? '','status'=>$status]);
            }
         }
         
