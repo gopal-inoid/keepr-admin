@@ -70,10 +70,12 @@ class ShippingMethodController extends Controller
     public function update(Request $request, $id)
     {
         $countries = $request->input('country');
-        echo "<pre>"; print_r($countries); die;
+        //echo "<pre>"; print_r($countries); die;
         foreach($countries as $k => $val){
            $status = $val['status'] ?? 0;
-           ShippingMethodRates::where(['shipping_id'=>$id,'country_code'=>$val['name']])->update(['normal_rate'=>$val['normal_rate'],'express_rate'=>$val['express_rate'],'status'=>$status]);
+           if(!empty($val['name'])){
+                ShippingMethodRates::where(['shipping_id'=>$id,'country_code'=>$val['name']])->update(['normal_rate'=>$val['normal_rate'],'express_rate'=>$val['express_rate'],'status'=>$status]);
+           }
         }
         
         //ShippingMethodRates::insert(['shipping_id'=>$id,'country_code'=>$val['name'],'normal_rate'=>$val['normal_rate'],'express_rate'=>$val['express_rate']]);
