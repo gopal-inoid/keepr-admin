@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\CPU\BackEndHelper;
 use App\Http\Controllers\Controller;
 use App\Model\ShippingMethod;
+use App\Model\ShippingMethodRates;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -59,7 +60,7 @@ class ShippingMethodController extends Controller
         if ($id != 1) {
             //$countries_list = DB::table('countries')->get();
             $method = ShippingMethod::where(['id' => $id])->first();
-            $countries_list = DB::table('shipping_method_rates')->get();
+            $countries_list = ShippingMethodRates::where('shipping_id',$id)->get();
             //echo "<pre>"; print_r($countries_list); die;
             return view('admin-views.shipping-method.edit', compact('method','countries_list'));
         }
@@ -69,12 +70,13 @@ class ShippingMethodController extends Controller
     public function update(Request $request, $id)
     {
         $countries = $request->input('country');
-        //echo "<pre>"; print_r($countries); die;
         foreach($countries as $k => $val){
-            $status = !empty($val['status']) ? 1 : 0;
-            DB::table('shipping_method_rates')->where(['shipping_id'=>$id,'country_code'=>$val['name']])->update(['normal_rate'=>$val['normal_rate'],'express_rate'=>$val['express_rate'],'status'=>$status]);
+           $status = $val['status'] ?? 0;
+           ShippingMethodRates::where(['shipping_id'=>$id,'country_code'=>$val['name']])->update(['normal_rate'=>$val['normal_rate'],'express_rate'=>$val['express_rate'],'status'=>$status]);
         }
-
+        
+        //ShippingMethodRates::insert(['shipping_id'=>$id,'country_code'=>$val['name'],'normal_rate'=>$val['normal_rate'],'express_rate'=>$val['express_rate']]);
+        //DB::table('shipping_method_rates')->where(['shipping_id'=>$id])->update($countries);
         //echo "<pre>"; print_r(); die;
         //DB::table('shipping_method_rates')->insert(['shipping_id'=>$id,'country_code'=>$val['name'],'normal_rate'=>$val['normal_rate'],'express_rate'=>$val['express_rate']]);
 
