@@ -384,16 +384,16 @@ class ProductController extends Controller
     }
 
     public function get_device_detail(Request $request){
-        $mac_id = $request->mac_id;
+        $device_id = $request->device_id;
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
-            $device_info = ProductStock::select('product_id')->where('mac_id',$mac_id)->first();
+            //$device_info = ProductStock::select('product_id')->where('mac_id',$mac_id)->first();
             $devices_details_array = [];
-            if(!empty($device_info->product_id)){
-                $devices_details = Product::select('id','name','images','thumbnail','details','specification','faq')->where(['status'=>1,'id'=>$device_info->product_id])->first();
+            //if(!empty($device_info->product_id)){
+                $devices_details = Product::select('id','name','images','thumbnail','details','specification','faq')->where(['status'=>1,'id'=>$device_id])->first();
                 if(!empty($devices_details->id)){
-                    $device_request = DeviceRequest::select('status')->where(['mac_id'=>$mac_id,'user_id'=>$user_details->id])->first();
+                    //$device_request = DeviceRequest::select('status')->where(['mac_id'=>$mac_id,'user_id'=>$user_details->id])->first();
                     $devices_details_array['id'] = $devices_details->id;
                     $devices_details_array['name'] = $devices_details->name;
                     $devices_details_array['details'] = $devices_details->details;
@@ -406,7 +406,7 @@ class ProductController extends Controller
                             }
                         }
                     }
-                    $devices_details_array['device_request_status'] = $device_request->status ?? '';
+                    $devices_details_array['device_request_status'] = ''; //$device_request->status ?? '';
                     if(!empty($devices_details->specification)){
                         $devices_details_array['specification'] = json_decode($devices_details->specification,true);
                     }
@@ -422,7 +422,7 @@ class ProductController extends Controller
                 }else{
                     return response()->json(['status'=>400,'message'=>'Devices not found'],400);
                 }
-            }
+            //}
         }else{
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
@@ -443,7 +443,7 @@ class ProductController extends Controller
         //     return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         // }
 
-        $data = $request->data ?? [];
+        $data = $request->all(); //$request->data ?? [];
 
         //echo "<pre>"; print_r($data); die;
         $success = 0;
