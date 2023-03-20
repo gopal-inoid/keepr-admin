@@ -447,14 +447,11 @@ class ProductController extends Controller
 
         $data = $request->data ?? []; //$request->all();
 
-        //$a = json_encode($data,true);
-        // $b = json_decode($a,true);
+        $left = ltrim($data, "'");
+        $right = rtrim($left, "'");
+        $data = json_decode($right,true);
 
-        // $left = ltrim($data, "'");
-        // $right = rtrim($left, "'");
-        // $data = json_decode($right,true);
-
-        //echo "<pre>"; print_r($request->all()); die;
+        //echo "<pre>"; print_r($request->data); die;
         $success = 0;
         $already_added = 0;
         $not_found = 0;

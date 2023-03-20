@@ -176,13 +176,15 @@ class CartController extends Controller
     public function checkout(Request $request)
     {
         //instead of device id and number device there will be  Device id array  contain [{"device_id":"", "count":""}]
-        $device_id = $request->product_id;
-        $number_device = $request->number_device;
+        $device_id = $request->product_id; //array of id and total devices
         $billing_address = $request->billing_address;
         $shipping_address = $request->shipping_address;
-        
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
+
+        // here i will add stripe checkout code
+
+        return response()->json(['status'=>200,'message'=>'Success'],200);
 
     }
 
