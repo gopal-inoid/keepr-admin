@@ -2390,4 +2390,5 @@
   'User Phone' => 'User Phone',
   'Connected Devices' => 'Connected Devices',
   'Total Product Stocks' => 'Total Product Stocks',
+  'Product ID is required!' => 'Product ID is required!',
 );
