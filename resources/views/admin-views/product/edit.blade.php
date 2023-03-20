@@ -70,7 +70,7 @@
                                     <label class="title-color">{{ \App\CPU\translate('Price') }}</label>
                                     <input type="number" min="0" step="0.01"
                                         placeholder="{{ \App\CPU\translate('Purchase price') }}"
-                                        value="{{ $product_stock->price }}" name="purchase_price"
+                                        value="{{ $product->purchase_price }}" name="purchase_price"
                                         class="form-control" required>
                                 </div>
                                 <div class="col-md-12">

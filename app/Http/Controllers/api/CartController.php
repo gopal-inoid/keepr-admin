@@ -172,4 +172,26 @@ class CartController extends Controller
         Cart::where(['customer_id' => $user_details->id])->delete();
         return response()->json(translate('successfully_removed'));
     }
+
+    public function checkout(Request $request)
+    {
+        //instead of device id and number device there will be  Device id array  contain [{"device_id":"", "count":""}]
+        $device_id = $request->product_id;
+        $number_device = $request->number_device;
+        $billing_address = $request->billing_address;
+        $shipping_address = $request->shipping_address;
+        
+        $auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
+
+    }
+
+    public function confirm_order(Request $request)
+    {
+        $auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
+        
+        return response()->json(['status'=>200,'message'=>'Success'],200);
+    }
+    
 }

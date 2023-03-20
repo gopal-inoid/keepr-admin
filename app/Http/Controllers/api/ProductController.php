@@ -338,7 +338,7 @@ class ProductController extends Controller
     }
 
     public function all_available_devices(){
-        $devices_list = Product::select('id','device_id','name','details','purchase_price','thumbnail')->where(['status'=>1])->get();
+        $devices_list = Product::select('id','name','details','purchase_price','thumbnail')->where(['status'=>1])->get();
         if(!empty($devices_list)){
             foreach($devices_list as $k => $devices){
                 if(!empty($devices->thumbnail)){
@@ -384,20 +384,21 @@ class ProductController extends Controller
     }
 
     public function get_device_detail(Request $request){
-        $device_id = $request->device_id;
+        $device_id = $request->id;
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
             //$device_info = ProductStock::select('product_id')->where('mac_id',$mac_id)->first();
             $devices_details_array = [];
             //if(!empty($device_info->product_id)){
-                $devices_details = Product::select('id','name','images','thumbnail','details','specification','faq')->where(['status'=>1,'id'=>$device_id])->first();
+                $devices_details = Product::select('id','name','images','thumbnail','details','specification','faq','purchase_price')->where(['status'=>1,'id'=>$device_id])->first();
                 if(!empty($devices_details->id)){
                     //$device_request = DeviceRequest::select('status')->where(['mac_id'=>$mac_id,'user_id'=>$user_details->id])->first();
                     $devices_details_array['id'] = $devices_details->id;
                     $devices_details_array['name'] = $devices_details->name;
                     $devices_details_array['details'] = $devices_details->details;
                     $devices_details_array['thumbnail'] = $devices_details->thumbnail;
+                    $devices_details_array['price'] = $devices_details->purchase_price;
                     if(!empty($devices_details->images)){
                         $device_images = json_decode($devices_details->images);
                         if(!empty($device_images)){
@@ -414,7 +415,8 @@ class ProductController extends Controller
                         $faq = json_decode($devices_details->faq,true);
                         if(!empty($faq['question'])){
                             foreach($faq['question'] as $k => $question){
-                                $devices_details_array['faq'][$question] = $faq['answer'][$k];
+                                $devices_details_array['faq'][$k]['question'] = $question;
+                                $devices_details_array['faq'][$k]['answer'] = $faq['answer'][$k];
                             }
                         }
                     }
@@ -443,9 +445,16 @@ class ProductController extends Controller
         //     return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         // }
 
-        $data = $request->all(); //$request->data ?? [];
+        $data = $request->data ?? []; //$request->all();
 
-        //echo "<pre>"; print_r($data); die;
+        //$a = json_encode($data,true);
+        // $b = json_decode($a,true);
+
+        // $left = ltrim($data, "'");
+        // $right = rtrim($left, "'");
+        // $data = json_decode($right,true);
+
+        //echo "<pre>"; print_r($request->all()); die;
         $success = 0;
         $already_added = 0;
         $not_found = 0;
