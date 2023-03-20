@@ -63,7 +63,7 @@
                                         </td>
                                         <td>
                                             <label class="switcher mx-auto">
-                                                <input type="checkbox" name="country[{{$k}}][status]" class="switcher_input" {{$name->status == 1?'checked':''}}>
+                                                <input type="checkbox" name="country[{{$k}}][status]" class="switcher_input" value="1" {{$name->status == 1?'checked':''}}>
                                                 <span class="switcher_control"></span>
                                             </label>
                                         </td>

@@ -51,7 +51,7 @@ class BannerController extends Controller
             if(!empty($banner->photo)){
                 $banner->photo = asset("/banner/$banner->photo");
             }
-            $data[] = $banner;
+            $data['data'][] = $banner;
         }
       
         return response()->json($data, 200);
