@@ -52,13 +52,14 @@ Route::group(['namespace' => 'api'], function () {
         Route::post('add-address', 'GeneralController@add_address');
         Route::post('add-shipping-address', 'GeneralController@add_shipping_address');
         Route::post('get-address', 'GeneralController@get_address');
+        Route::get('order-history', 'GeneralController@order_history');
         //
 
         //CART
         Route::post('add-cart', 'CartController@add_to_cart');
-        Route::put('update-cart', 'CartController@update_cart');
-        Route::delete('remove-cart', 'CartController@remove_from_cart');
-        Route::delete('remove-all-cart','CartController@remove_all_from_cart');
+        Route::post('update-cart', 'CartController@update_cart');
+        Route::post('remove-cart', 'CartController@remove_from_cart');
+        Route::post('remove-all-cart','CartController@remove_all_from_cart');
         //
 
         //CHECKOUT

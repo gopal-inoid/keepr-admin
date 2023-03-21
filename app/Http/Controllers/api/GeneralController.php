@@ -51,14 +51,14 @@ class GeneralController extends Controller
     public function verify_user(Request $request){
         $mobile = $request->mobile;
         $user = User::select('id','phone','is_active')->where(['phone'=>$mobile])->first();
-        if(!empty($user)){
+        if(!empty($user->id)){
             if($user->is_active != 1){
                 return response()->json(['status'=>400,'message'=>'Not Activated'],200);
             }else{
                 return response()->json(['status'=>200,'message'=>'Success'],200);
             }
         }else{
-            return response()->json(['status'=>400,'message'=>'User not found'],200);
+            return response()->json(['status'=>200,'message'=>'Success'],200);
         }
     }
 
@@ -240,6 +240,17 @@ class GeneralController extends Controller
             }
 
             return response()->json(['status'=>200,'message'=>'Success','data'=>$address],200);
+        }else{
+            return response()->json(['status'=>400,'message'=>'User not found'],400);
+        }
+    }
+
+    public function order_history(Request $request){
+        $auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
+        if(!empty($user_details->id)){
+            $get_orders = Order::select('customer_id','payment_status','order_status','payment_method','order_amount','shipping_address','created_at','coupon_code')->where(['customer_id'=>$user_details->id])->get();
+            return response()->json(['status'=>200,'message'=>'Success','data'=>$get_orders],200);
         }else{
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }

@@ -29,7 +29,7 @@
             {{\App\CPU\translate('changing_some_settings_will_take_time_to_show_effect_please_clear_session_or_wait_for_60_minutes_else_browse_from_incognito_mode')}}
         </div>
 
-        <div class="card mb-3">
+        {{-- <div class="card mb-3">
             <div class="card-body">
                 <div class="border rounded border-color-c1 px-4 py-3 d-flex justify-content-between mb-1">
                     @php($config=\App\CPU\Helpers::get_business_settings('maintenance_mode'))
@@ -47,7 +47,7 @@
                 </div>
                 <p>*By turning on maintaince mode, all your app and customer side website will be off. Only admin panel and seller panel will be functional</p>
             </div>
-        </div>
+        </div> --}}
 
         <form action="{{ route('admin.business-settings.update-info') }}" method="POST"
                 enctype="multipart/form-data">
@@ -731,6 +731,16 @@
                                     <option value="ZM" {{ $cc?($cc=='ZM'?'selected':''):'' }}>Zambia</option>
                                     <option value="ZW" {{ $cc?($cc=='ZW'?'selected':''):'' }}>Zimbabwe</option>
                                 </select>
+                            </div>
+                        </div>
+                        @php($minimum_distance_fire_alarm=\App\CPU\Helpers::get_business_settings('minimum_distance_fire_alarm'))
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label
+                                    class="title-color d-flex">{{\App\CPU\translate('Minimum distance to fire alarm')}}</label>
+                                <input class="form-control" type="number" name="minimum_distance_fire_alarm"
+                                    value="{{ isset($minimum_distance_fire_alarm)?$minimum_distance_fire_alarm:'' }}"
+                                    placeholder="{{\App\CPU\translate('Minimum distance to fire alarm')}}">
                             </div>
                         </div>
                     </div>

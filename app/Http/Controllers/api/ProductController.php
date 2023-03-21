@@ -371,7 +371,7 @@ class ProductController extends Controller
 
     public function search_device(Request $request){
         $keyword = $request->keyword;
-        $devices_list = Product::select('id','name','images','thumbnail','details','specification','faq')->where('status',1);
+        $devices_list = Product::select('id','name','images','purchase_price as price','thumbnail','details','specification','faq')->where('status',1);
         if(!empty($keyword)){
             $devices_list = $devices_list->whereRaw('name like "%'.$keyword.'%"');
         }
