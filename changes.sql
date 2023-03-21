@@ -38,3 +38,10 @@ CREATE TABLE `keepr`.`device_tracking_log` ( `id` INT NOT NULL AUTO_INCREMENT , 
 ALTER TABLE `users` ADD `add_shipping_address` VARCHAR(250) NULL DEFAULT NULL AFTER `auth_access_token`;
 
 ALTER TABLE `users` ADD `is_billing_address_same` TINYINT(1) NULL DEFAULT NULL COMMENT '1=same,0=not' AFTER `add_shipping_address`;
+
+
+CREATE TABLE `keepr`.`checkout_info` ( `id` INT NOT NULL AUTO_INCREMENT , `product_id` INT NOT NULL , `customer_id` INT NOT NULL , `mac_ids` TEXT NULL DEFAULT NULL , `total_order` INT NULL DEFAULT NULL , `total_amount` DOUBLE NOT NULL DEFAULT '0' , `tax_amount` DOUBLE NOT NULL DEFAULT '0' , `last_updated_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+ALTER TABLE `checkout_info` CHANGE `product_id` `product_id` TEXT NULL DEFAULT NULL;
+
+ALTER TABLE `users` ADD `state` VARCHAR(50) NULL DEFAULT NULL AFTER `city`;

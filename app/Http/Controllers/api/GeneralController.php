@@ -183,19 +183,47 @@ class GeneralController extends Controller
     }
 
     public function add_address(Request $request){
-        $address = $request->address;
+
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required'
+        ], [
+            'phone.required' => 'Phone is required!'
+        ]);
+
+        if ($validator->errors()->count() > 0) {
+            return response()->json(['errors' => Helpers::error_processor($validator)]);
+        }
+
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
-            $user_details->street_address = $address;
+            $user_details->street_address = $request->address;
+            $user_details->name = $request->name;
+            $user_details->email = $request->email;
+            $user_details->phone = $request->phone;
+            $user_details->country = $request->country;
+            $user_details->city = $request->city;
+            $user_details->state = $request->state;
+            $user_details->zip = $request->zip_code;
             $user_details->save();
-            return response()->json(['status'=>200,'message'=>'Success','data'=>['address'=>$user_details->street_address]],200);
+            return response()->json(['status'=>200,'message'=>'Success'],200);
         }else{
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
     }
 
     public function add_shipping_address(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required'
+        ], [
+            'phone.required' => 'Phone is required!'
+        ]);
+
+        if ($validator->errors()->count() > 0) {
+            return response()->json(['errors' => Helpers::error_processor($validator)]);
+        }
+
         $address = $request->address;
         $is_billing_same = $request->is_billing_same;
         $auth_token   = $request->headers->get('X-Access-Token');
@@ -208,8 +236,17 @@ class GeneralController extends Controller
                 $user_details->add_shipping_address = $address;
                 $user_details->is_billing_address_same = 0; 
             }
+
+            $user_details->name = $request->name;
+            $user_details->email = $request->email;
+            $user_details->phone = $request->phone;
+            $user_details->country = $request->country;
+            $user_details->city = $request->city;
+            $user_details->state = $request->state;
+            $user_details->zip = $request->zip_code;
+
             $user_details->save();
-            return response()->json(['status'=>200,'message'=>'Success','data'=>['is_billing_address'=>$user_details->is_billing_address_same,'address'=>$user_details->add_shipping_address]],200);
+            return response()->json(['status'=>200,'message'=>'Success'],200);
         }else{
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
@@ -238,6 +275,14 @@ class GeneralController extends Controller
             }else{
                 $address['address'] = $user_details->street_address;
             }
+
+           $address['name'] = $request->name;
+           $address['email'] = $request->email;
+           $address['phone'] = $request->phone;
+           $address['country'] = $request->country;
+           $address['city'] = $request->city;
+           $address['state'] = $request->state;
+           $address['zip'] = $request->zip_code;
 
             return response()->json(['status'=>200,'message'=>'Success','data'=>$address],200);
         }else{
