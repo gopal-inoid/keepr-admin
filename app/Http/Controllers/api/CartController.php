@@ -97,6 +97,7 @@ class CartController extends Controller
         $price = $product['purchase_price'];
         $tax = Helpers::tax_calculation($price, $product['tax'], 'percent');
         $cart['customer_id'] = $user_details->id ?? 0;
+        $cart['product_id'] = $request->product_id ?? 0;
         $cart['quantity'] = $request['quantity'];
         $cart['price'] = $price;
         $cart['tax'] = $tax;
@@ -129,23 +130,30 @@ class CartController extends Controller
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         $cart = Cart::where(['id' => $request->id, 'customer_id' => $user_details->id])->first();
-        $product = Product::find($cart['product_id']);
-        $current_stock = ProductStock::where('product_id',$cart['product_id'])->count();
-        if ($current_stock < $request['quantity']) {
-            $status = 0;
-            $qty = $cart['quantity'];
+        //$product = Product::find($cart['product_id']);
+        if(!empty($cart->id)){
+            $current_stock = ProductStock::where('product_id',$cart['product_id'])->count();
+            if ($current_stock < $request['quantity']) {
+                $status = 0;
+                $qty = $cart['quantity'];
+            }
+
+            if ($status) {
+                $qty = $request->quantity;
+                $cart['quantity'] = $request->quantity;
+            }
+
+            $cart->save();
+            return response()->json([
+                'status' => $status,
+                'qty' => $qty,
+                'message' => $status == 1 ? translate('successfully_updated!') : translate('sorry_stock_is_limited')
+            ],200);
+
+        }else{
+            return response()->json(['status'=>400,'message'=>'No product added in cart please add first'],400);
         }
 
-        if ($status) {
-            $qty = $request->quantity;
-            $cart['quantity'] = $request->quantity;
-        }
-        $cart->save();
-        return response()->json([
-            'status' => $status,
-            'qty' => $qty,
-            'message' => $status == 1 ? translate('successfully_updated!') : translate('sorry_stock_is_limited')
-        ],200);
     }
 
     public function remove_from_cart(Request $request)
@@ -163,14 +171,14 @@ class CartController extends Controller
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         Cart::where(['id' => $request->id, 'customer_id' => $user_details->id])->delete();
-        return response()->json(translate('successfully_removed'));
+        return response()->json(['status'=>200,'message'=>translate('successfully_removed')],200);
     }
     public function remove_all_from_cart(Request $request)
     {
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         Cart::where(['customer_id' => $user_details->id])->delete();
-        return response()->json(translate('successfully_removed'));
+        return response()->json(['status'=>200,'message'=>translate('successfully_removed')],200);
     }
 
     public function checkout(Request $request)
