@@ -56,6 +56,7 @@ Route::group(['namespace' => 'api'], function () {
         //
 
         //CART
+        Route::get('get-cart', 'CartController@get_cart');
         Route::post('add-cart', 'CartController@add_to_cart');
         Route::post('update-cart', 'CartController@update_cart');
         Route::post('remove-cart', 'CartController@remove_from_cart');

@@ -10,6 +10,7 @@ use App\Model\CartShipping;
 use App\Model\Color;
 use App\Model\Product;
 use App\Model\ProductStock;
+use App\Model\CheckoutInfo;
 use App\Model\Shop;
 use App\User;
 use Illuminate\Support\Str;
@@ -59,6 +60,25 @@ class CartController extends Controller
         }
 
         return response()->json($cart, 200);
+    }
+
+    public function get_cart(Request $request)
+    {   
+        $auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
+        $cart = Cart::select('quantity','product_id','quantity','name','thumbnail')->where(['customer_id' => $user_details->id])->get();
+        if($cart) {
+            foreach($cart as $key => $value){
+                if(!isset($value['product'])){
+                    $cart_data = Cart::find($value['id']);
+                    $cart_data->delete();
+                }
+                unset($value['product']);
+                $cart[$key]['total_current_stock'] = ProductStock::where('product_id',$value['product_id'])->count() ?? 0;
+            }
+        }
+
+        return response()->json(['status'=>200,'message'=>'Success','data'=>$cart],200);
     }
 
     public function add_to_cart(Request $request)
@@ -184,16 +204,46 @@ class CartController extends Controller
     public function checkout(Request $request)
     {
         //instead of device id and number device there will be  Device id array  contain [{"device_id":"", "count":""}]
-        $device_id = $request->product_id; //array of id and total devices
+        $device_ids = $request->product_id; //array of id and total devices
         $billing_address = $request->billing_address;
         $shipping_address = $request->shipping_address;
+        $mac_ids = [];
+        $total_order = 0;
+        $total_price = 0;
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
+        if(!empty($user_details->id)){
+            if(!empty($device_ids)){
+                foreach($device_ids as $k => $ids){
+                   $total_order += $ids['count'];
+                   $price = Product::select('purchase_price as price')->where('id',$ids['device_id'])->first()->price ?? 0;
+                   $total_price += ($price * $ids['count']);
+                   $get_random_stocks = ProductStock::select('mac_id')->where('product_id',$ids['device_id'])->inRandomOrder()->limit($ids['count'])->get();
+                   if(!empty($get_random_stocks)){
+                        foreach($get_random_stocks as $macid){
+                            $mac_ids[$ids['device_id']][] = $macid['mac_id'];
+                        }
+                    }
+                }
+            }
 
-        // here i will add stripe checkout code
+            CheckoutInfo::insert(['product_id'=>json_encode($device_ids),'customer_id'=>$user_details->id,'mac_ids'=>json_encode($mac_ids),'total_order'=>$total_order,'total_amount'=>$total_price,'tax_amount'=>0]);
 
-        return response()->json(['status'=>200,'message'=>'Success'],200);
+            $data['device_ids'] = $device_ids;
+            $data['customer_id'] = $user_details->id;
+            $data['mac_ids'] = $mac_ids;
+            $data['total_order'] = $total_order;
+            $data['total_amount'] = $total_price;
+            $data['tax_amount'] = 0;
 
+            //echo "<pre>"; print_r($mac_ids); die;
+
+            return response()->json(['status'=>200,'message'=>'Success','data'=>$data],200);
+        }else{
+            return response()->json(['status'=>400,'message'=>'User not found'],400);
+        }
+
+        // here i will add stripe tax api and calculate price based on no of device and will send in response
     }
 
     public function confirm_order(Request $request)
