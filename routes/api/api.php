@@ -50,6 +50,7 @@ Route::group(['namespace' => 'api'], function () {
         Route::post('user-profile', 'GeneralController@user_profile');
         Route::post('order-detail', 'GeneralController@order_detail');
         Route::post('add-address', 'GeneralController@add_address');
+        Route::post('edit-address', 'GeneralController@edit_address');
         Route::post('add-shipping-address', 'GeneralController@add_shipping_address');
         Route::post('get-address', 'GeneralController@get_address');
         Route::get('order-history', 'GeneralController@order_history');
