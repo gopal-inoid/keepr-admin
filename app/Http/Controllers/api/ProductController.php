@@ -258,6 +258,7 @@ class ProductController extends Controller
     public function connect_device(Request $request){
         $device_uuid = $request->uuid;
         $device_mac_id = $request->mac_id;
+        $distance = $request->distance;
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
@@ -268,7 +269,7 @@ class ProductController extends Controller
             $device_info = ProductStock::where('mac_id',$device_mac_id)->first();
             //$device_info = Product::select('name')->where('mac_id',$device_mac_id)->first();
             if(!empty($device_info->mac_id)){
-                $check = ConnectedDevice::insert(['device_name'=>$device_info->mac_id,'mac_id'=>$device_mac_id,'user_id'=>$user_details->id,'device_uuid'=>$device_uuid]);
+                $check = ConnectedDevice::insert(['device_name'=>$device_info->mac_id,'mac_id'=>$device_mac_id,'user_id'=>$user_details->id,'device_uuid'=>$device_uuid,'distance'=>$distance]);
                 if($check){
                     return response()->json(['status'=>200,'message'=>'Device connected successfully'],200);
                 }

@@ -45,3 +45,9 @@ CREATE TABLE `keepr`.`checkout_info` ( `id` INT NOT NULL AUTO_INCREMENT , `produ
 ALTER TABLE `checkout_info` CHANGE `product_id` `product_id` TEXT NULL DEFAULT NULL;
 
 ALTER TABLE `users` ADD `state` VARCHAR(50) NULL DEFAULT NULL AFTER `city`;
+
+ALTER TABLE `users` ADD `shipping_country` VARCHAR(50) NULL DEFAULT NULL AFTER `is_billing_address_same`, ADD `shipping_city` VARCHAR(50) NULL DEFAULT NULL AFTER `shipping_country`, ADD `shipping_state` VARCHAR(50) NULL DEFAULT NULL AFTER `shipping_city`, ADD `shipping_zip` VARCHAR(20) NULL DEFAULT NULL AFTER `shipping_state`;
+
+ALTER TABLE `users` ADD `shipping_name` VARCHAR(80) NULL DEFAULT NULL AFTER `shipping_zip`, ADD `shipping_email` VARCHAR(80) NULL DEFAULT NULL AFTER `shipping_name`, ADD `shipping_phone` VARCHAR(25) NULL DEFAULT NULL AFTER `shipping_email`;
+
+ALTER TABLE `connected_device` ADD `distance` VARCHAR(100) NULL DEFAULT NULL AFTER `device_uuid`;
