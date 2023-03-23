@@ -310,44 +310,31 @@ class GeneralController extends Controller
     }
 
     public function get_address(Request $request){
-        $type = $request->type;
         
-        // $validator = Validator::make($request->all(), [
-        //     'type' => 'required'
-        // ], [
-        //     'type.required' => 'Type is required!'
-        // ]);
-
-        // if ($validator->errors()->count() > 0) {
-        //     return response()->json(['errors' => Helpers::error_processor($validator)]);
-        // }
-
         $address = [];
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
-            if($type == 'shipping'){
-                $address['address'] = $user_details->add_shipping_address;
-                $address['isSameBillingAdd'] = $user_details->is_billing_address_same;
-                $address['name'] = $user_details->shipping_name;
-                $address['email'] = $user_details->shipping_email;
-                $address['phone'] = $user_details->shipping_phone;
-                $address['country'] = $user_details->shipping_country;
-                $address['city'] = $user_details->shipping_city;
-                $address['state'] = $user_details->shipping_state;
-                $address['zip'] = $user_details->shipping_zip;
-            }else{
-                $address['address'] = $user_details->street_address;
-                $address['name'] = $user_details->name;
-                $address['email'] = $user_details->email;
-                $address['phone'] = $user_details->phone;
-                $address['country'] = $user_details->country;
-                $address['city'] = $user_details->city;
-                $address['state'] = $user_details->state;
-                $address['zip'] = $user_details->zip;
-            }
 
-            return response()->json(['status'=>200,'message'=>'Success','data'=>$address],200);
+                $shipping['address'] = $user_details->add_shipping_address;
+                $shipping['name'] = $user_details->shipping_name;
+                $shipping['email'] = $user_details->shipping_email;
+                $shipping['phone'] = $user_details->shipping_phone;
+                $shipping['country'] = $user_details->shipping_country;
+                $shipping['city'] = $user_details->shipping_city;
+                $shipping['state'] = $user_details->shipping_state;
+                $shipping['zip'] = $user_details->shipping_zip;
+           
+                $billing['address'] = $user_details->street_address;
+                $billing['name'] = $user_details->name;
+                $billing['email'] = $user_details->email;
+                $billing['phone'] = $user_details->phone;
+                $billing['country'] = $user_details->country;
+                $billing['city'] = $user_details->city;
+                $billing['state'] = $user_details->state;
+                $billing['zip'] = $user_details->zip;
+
+            return response()->json(['status'=>200,'message'=>'Success','shipping'=>$shipping,'billing'=>$billing],200);
         }else{
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
