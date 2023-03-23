@@ -67,6 +67,7 @@ class CartController extends Controller
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         $cart = Cart::select('id','quantity','product_id','quantity','name','thumbnail')->where(['customer_id' => $user_details->id])->get();
+        $total_cart_price = 0;
         if($cart) {
             foreach($cart as $key => $value){
                 if(!isset($value['product'])){
@@ -77,10 +78,11 @@ class CartController extends Controller
                 unset($value['product']);
                 $cart[$key]['total_current_stock'] = ProductStock::where('product_id',$value['product_id'])->count() ?? 0;
                 $cart[$key]['price'] = $price;
+                $total_cart_price += $price;
             }
         }
 
-        return response()->json(['status'=>200,'message'=>'Success','data'=>$cart],200);
+        return response()->json(['status'=>200,'message'=>'Success','total_price'=>$total_cart_price,'data'=>$cart],200);
     }
 
     public function add_to_cart(Request $request)
@@ -213,14 +215,10 @@ class CartController extends Controller
         ], [
             'id.required' => translate('Cart ID is required!')
         ]);
-
         if ($validator->errors()->count() > 0) {
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
-
-        $auth_token   = $request->headers->get('X-Access-Token');
-        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
-        Cart::where(['id' => $request->id,'customer_id' => $user_details->id])->delete();
+        Cart::find($request->id)->delete();
         return response()->json(['status'=>200,'message'=>translate('successfully_removed')],200);
     }
 
@@ -232,12 +230,14 @@ class CartController extends Controller
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
-            $cart_info = Cart::select('id','customer_id','product_id','quantity','name','thumbnail')->where(['customer_id' => $user_details->id])->get()->toArray();
+            $cart_info = Cart::select('id','customer_id','product_id','quantity','name','thumbnail')->where(['customer_id' => $user_details->id])->get();
             if(!empty($cart_info)){
                 foreach($cart_info as $cart){
                     $total_order += $cart['quantity'];
                     $price = Product::select('purchase_price as price')->where('id',$cart['product_id'])->first()->price ?? 0;
                     $total_price += ($price * $cart['quantity']);
+
+                    $cart['price'] = $price;
 
                     $get_random_stocks = ProductStock::select('mac_id')->where('product_id',$cart['product_id'])->inRandomOrder()->limit($cart['quantity'])->get();
                     if(!empty($get_random_stocks)){
@@ -270,9 +270,10 @@ class CartController extends Controller
             $data['customer_id'] = $user_details->id;
             $data['mac_ids'] = $mac_ids;
             $data['total_order'] = $total_order;
-            $data['total_amount'] = $total_price;
-            $data['tax_amount'] = 0;
-
+            $data['sub_total'] = 0;
+            $data['shipping'] = 0;
+            $data['tax'] = 0;
+            $data['total'] = $total_price;
             //echo "<pre>"; print_r($mac_ids); die;
 
             return response()->json(['status'=>200,'message'=>'Success','data'=>$data],200);
