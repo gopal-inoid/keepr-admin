@@ -197,16 +197,12 @@ class CartController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
 
-        $auth_token   = $request->headers->get('X-Access-Token');
-        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
-        $cart = Cart::where(['id' => $request->id, 'customer_id' => $user_details->id])->first();
+        $cart = Cart::find($request->id);
         if(isset($cart['quantity'])){
-            $total_quantity = ($cart['quantity'] - 1);
-        }else{
-            $total_quantity = 0;
+            $cart->quantity  = ($cart['quantity'] - 1);
+            $cart->save();
         }
-        $cart['quantity'] = $total_quantity;
-        $cart->save();
+       
         return response()->json(['status'=>200,'message'=>translate('successfully_removed')],200);
     }
 
