@@ -182,77 +182,7 @@ class GeneralController extends Controller
         }
     }
 
-    public function add_address(Request $request){
-
-        $validator = Validator::make($request->all(), [
-            'phone' => 'required'
-        ], [
-            'phone.required' => 'Phone is required!'
-        ]);
-
-        if ($validator->errors()->count() > 0) {
-            return response()->json(['errors' => Helpers::error_processor($validator)]);
-        }
-
-        $auth_token   = $request->headers->get('X-Access-Token');
-        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
-        if(!empty($user_details->id)){
-            $user_details->street_address = $request->address;
-            $user_details->name = $request->name;
-            $user_details->email = $request->email;
-            $user_details->phone = $request->phone;
-            $user_details->country = $request->country;
-            $user_details->city = $request->city;
-            $user_details->state = $request->state;
-            $user_details->zip = $request->zip_code;
-            $user_details->save();
-            return response()->json(['status'=>200,'message'=>'Success'],200);
-        }else{
-            return response()->json(['status'=>400,'message'=>'User not found'],400);
-        }
-    }
-
-    public function add_shipping_address(Request $request){
-
-        $validator = Validator::make($request->all(), [
-            'phone' => 'required'
-        ], [
-            'phone.required' => 'Phone is required!'
-        ]);
-
-        if ($validator->errors()->count() > 0) {
-            return response()->json(['errors' => Helpers::error_processor($validator)]);
-        }
-
-        $address = $request->address;
-        $is_billing_same = $request->is_billing_same;
-        $auth_token   = $request->headers->get('X-Access-Token');
-        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
-        if(!empty($user_details->id)){
-            if($is_billing_same === 'true'){
-                $user_details->is_billing_address_same = 1;
-                $user_details->add_shipping_address = $user_details->street_address;
-            }else{
-                $user_details->add_shipping_address = $address;
-                $user_details->is_billing_address_same = 0; 
-            }
-
-            $user_details->shipping_name = $request->name;
-            $user_details->shipping_email = $request->email;
-            $user_details->shipping_phone = $request->phone;
-            $user_details->shipping_country = $request->country;
-            $user_details->shipping_city = $request->city;
-            $user_details->shipping_state = $request->state;
-            $user_details->shipping_zip = $request->zip_code;
-
-            $user_details->save();
-            return response()->json(['status'=>200,'message'=>'Success'],200);
-        }else{
-            return response()->json(['status'=>400,'message'=>'User not found'],400);
-        }
-    }
-
-    public function edit_address(Request $request){
+    public function set_address(Request $request){
         $type = $request->type;
         $validator = Validator::make($request->all(), [
             'phone' => 'required'
@@ -266,31 +196,16 @@ class GeneralController extends Controller
 
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
-        
         if(!empty($user_details->id)){
-
             if($type == 'shipping'){
-                if($request->is_billing_same === 'true'){
-                    $user_details->is_billing_address_same = 1;
-                    $user_details->add_shipping_address = $user_details->street_address;
-                    $user_details->shipping_name = $user_details->name;
-                    $user_details->shipping_email = $user_details->email;
-                    $user_details->shipping_phone = $user_details->phone;
-                    $user_details->shipping_country = $user_details->country;
-                    $user_details->shipping_city = $user_details->city;
-                    $user_details->shipping_state = $user_details->state;
-                    $user_details->shipping_zip = $user_details->zip;
-                }else{
-                    $user_details->add_shipping_address = $request->address;
-                    $user_details->is_billing_address_same = 0;
-                    $user_details->shipping_name = $request->name;
-                    $user_details->shipping_email = $request->email;
-                    $user_details->shipping_phone = $request->phone;
-                    $user_details->shipping_country = $request->country;
-                    $user_details->shipping_city = $request->city;
-                    $user_details->shipping_state = $request->state;
-                    $user_details->shipping_zip = $request->zip;
-                }
+                $user_details->add_shipping_address = $request->address;
+                $user_details->shipping_name = $request->name;
+                $user_details->shipping_email = $request->email;
+                $user_details->shipping_phone = $request->phone;
+                $user_details->shipping_country = $request->country;
+                $user_details->shipping_city = $request->city;
+                $user_details->shipping_state = $request->state;
+                $user_details->shipping_zip = $request->zip;
             }else{
                 $user_details->street_address = $request->address;
                 $user_details->name = $request->name;
@@ -301,7 +216,6 @@ class GeneralController extends Controller
                 $user_details->state = $request->state;
                 $user_details->zip = $request->zip_code;
             }
-
             $user_details->save();
             return response()->json(['status'=>200,'message'=>'Address successfully updated'],200);
         }else{
@@ -310,12 +224,9 @@ class GeneralController extends Controller
     }
 
     public function get_address(Request $request){
-        
-        $address = [];
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
-
                 $shipping['address'] = $user_details->add_shipping_address;
                 $shipping['name'] = $user_details->shipping_name;
                 $shipping['email'] = $user_details->shipping_email;
