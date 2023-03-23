@@ -350,9 +350,7 @@ class ProductController extends Controller
                 }else{
                     $devices->thumbnail = asset('public/assets/front-end/img/image-place-holder.png');
                 }
-
                 $devices['total_stocks'] = ProductStock::where('product_id',$devices->id)->count();
-                $devices['cart_info'] = Cart::select('id','quantity','name','thumbnail')->where(['product_id'=>$devices->id,'customer_id' => $user_details->id])->first();
             }
             $total_quantity = Cart::where(['customer_id' => $user_details->id])->sum('quantity');
             return response()->json(['status'=>200,'message'=>'Success','total_quantity'=>$total_quantity,'data'=>$devices_list],200);
@@ -401,6 +399,7 @@ class ProductController extends Controller
             //if(!empty($device_info->product_id)){
                 $devices_details = Product::select('id','name','images','thumbnail','details','specification','faq','purchase_price')->where(['status'=>1,'id'=>$device_id])->first();
                 if(!empty($devices_details->id)){
+                    $devices_details_array['total_quantity'] = Cart::where(['customer_id' => $user_details->id])->sum('quantity');
                     //$device_request = DeviceRequest::select('status')->where(['mac_id'=>$mac_id,'user_id'=>$user_details->id])->first();
                     $devices_details_array['id'] = $devices_details->id;
                     $devices_details_array['name'] = $devices_details->name;
@@ -415,9 +414,6 @@ class ProductController extends Controller
                             }
                         }
                     }
-
-                    $devices_details_array['cart_info'] = Cart::select('id','product_id','quantity','name','thumbnail')->where(['customer_id' => $user_details->id])->get();
-                    
                     $devices_details_array['device_request_status'] = ''; //$device_request->status ?? '';
                     if(!empty($devices_details->specification)){
                         $devices_details_array['specification'] = json_decode($devices_details->specification,true);
