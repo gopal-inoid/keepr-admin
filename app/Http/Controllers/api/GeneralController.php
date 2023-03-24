@@ -245,7 +245,7 @@ class GeneralController extends Controller
                 $billing['state'] = $user_details->state;
                 $billing['zip'] = $user_details->zip;
 
-            return response()->json(['status'=>200,'message'=>'Success','shipping'=>[$shipping],'billing'=>[$billing]],200);
+            return response()->json(['status'=>200,'message'=>'Success','shipping'=>$shipping,'billing'=>$billing],200);
         }else{
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
