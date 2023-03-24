@@ -77,7 +77,8 @@ class CartController extends Controller
                 $price = $value['product']['purchase_price'];
                 unset($value['product']);
                 $cart[$key]['total_current_stock'] = ProductStock::where('product_id',$value['product_id'])->count() ?? 0;
-                $cart[$key]['price'] = number_format($price,2);
+                //$cart[$key]['price'] = $price;
+                $cart[$key]['purchase_price'] = number_format($price,2);
                 $total_cart_price += $price;
             }
         }
@@ -270,9 +271,9 @@ class CartController extends Controller
             $data['customer_id'] = $user_details->id;
             $data['mac_ids'] = $mac_ids;
             $data['total_order'] = $total_order;
-            $data['sub_total'] = 0;
-            $data['shipping'] = 0;
-            $data['tax'] = 0;
+            $data['sub_total'] = number_format(0,2);
+            $data['shipping'] = number_format(0,2);
+            $data['tax'] = number_format(0,2);
             $data['total'] = number_format($total_price,2);
             //echo "<pre>"; print_r($mac_ids); die;
 
