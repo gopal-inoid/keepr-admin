@@ -350,7 +350,9 @@ class ProductController extends Controller
                 }else{
                     $devices->thumbnail = asset('public/assets/front-end/img/image-place-holder.png');
                 }
+                $devices->price = number_format($devices->purchase_price,2);
                 $devices['total_stocks'] = ProductStock::where('product_id',$devices->id)->count();
+                unset($devices->purchase_price);
             }
             $total_quantity = (int) Cart::where(['customer_id' => $user_details->id])->sum('quantity');
             return response()->json(['status'=>200,'message'=>'Success','total_quantity'=>$total_quantity,'data'=>$devices_list],200);
@@ -377,12 +379,17 @@ class ProductController extends Controller
 
     public function search_device(Request $request){
         $keyword = $request->keyword;
-        $devices_list = Product::select('id','name','images','purchase_price as price','thumbnail','details','specification','faq')->where('status',1);
+        $devices_list = Product::select('id','name','images','purchase_price','thumbnail','details','specification','faq')->where('status',1);
         if(!empty($keyword)){
             $devices_list = $devices_list->whereRaw('name like "%'.$keyword.'%"');
         }
         $devices_list = $devices_list->get();
         if(!empty($devices_list[0])){
+            foreach($devices_list as $k => $devices){
+                $devices->price = number_format($devices->purchase_price,2);
+                unset($devices->purchase_price);
+            }
+
             return response()->json(['status'=>200,'message'=>'Success','data'=>$devices_list],200);
         }else{
             return response()->json(['status'=>400,'message'=>'Devices not found'],400);
