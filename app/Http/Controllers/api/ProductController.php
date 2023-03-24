@@ -362,7 +362,7 @@ class ProductController extends Controller
     }
 
     public function devices_type_list(){
-        $devices_list = Product::select('device_id','name','thumbnail')->where(['status'=>1])->get();
+        $devices_list = Product::select('id','device_id','name','thumbnail')->where(['status'=>1])->get();
         if(!empty($devices_list)){
             foreach($devices_list as $k => $devices){
                 if(!empty($devices->thumbnail)){

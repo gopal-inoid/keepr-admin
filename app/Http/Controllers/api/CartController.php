@@ -201,12 +201,14 @@ class CartController extends Controller
         }
 
         $cart = Cart::find($request->id);
-        if(isset($cart['quantity'])){
+        if(isset($cart['quantity']) && $cart['quantity'] > 0){
             $cart->quantity  = ($cart['quantity'] - 1);
             $cart->save();
+            return response()->json(['status'=>1,'message'=>translate('successfully_removed')],200);
+        }else{
+            return response()->json(['status'=>0,'message'=>'Item should not be empty'],200);
         }
        
-        return response()->json(['status'=>200,'message'=>translate('successfully_removed')],200);
     }
 
     public function remove_all_from_cart(Request $request)
