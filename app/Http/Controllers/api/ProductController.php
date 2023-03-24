@@ -405,7 +405,7 @@ class ProductController extends Controller
                     $devices_details_array['name'] = $devices_details->name;
                     $devices_details_array['details'] = $devices_details->details;
                     $devices_details_array['thumbnail'] = $devices_details->thumbnail;
-                    $devices_details_array['price'] = $devices_details->purchase_price;
+                    $devices_details_array['price'] = number_format($devices_details->purchase_price,2);
                     if(!empty($devices_details->images)){
                         $device_images = json_decode($devices_details->images);
                         if(!empty($device_images)){
