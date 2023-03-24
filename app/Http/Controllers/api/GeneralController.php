@@ -166,22 +166,6 @@ class GeneralController extends Controller
         }
     }
 
-    public function order_detail(Request $request){
-        $order_id = $request->order_id;
-        $auth_token   = $request->headers->get('X-Access-Token');
-        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
-        if(!empty($user_details->id)){
-            $get_orders = Order::where(['id'=>$order_id])->first();
-            if(!empty($get_orders->id)){
-                return response()->json(['status'=>200,'message'=>'Success','data'=>$get_orders],200);
-            }else{
-                return response()->json(['status'=>400,'message'=>'Order not found'],400);
-            }
-        }else{
-            return response()->json(['status'=>400,'message'=>'User not found'],400);
-        }
-    }
-
     public function set_address(Request $request){
         $type = $request->type;
         $validator = Validator::make($request->all(), [
@@ -255,8 +239,65 @@ class GeneralController extends Controller
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
-            $get_orders = Order::select('customer_id','payment_status','order_status','payment_method','order_amount','shipping_address','created_at','coupon_code')->where(['customer_id'=>$user_details->id])->get();
-            return response()->json(['status'=>200,'message'=>'Success','data'=>$get_orders],200);
+
+            $order_list = [];
+            $get_orders = Order::select('id as order_id','customer_id','mac_ids','order_amount','created_at')
+                               ->where(['customer_id'=>$user_details->id])->get();
+            foreach($get_orders as $k => $order){
+
+                $order_list[$k]['order_id'] = $order['order_id'];
+                $order_list[$k]['customer_id'] = $order['customer_id'];
+                $order_list[$k]['order_amount'] = number_format($order['order_amount'],2);
+                $order_list[$k]['order_date'] = date('F j,Y, h:i A',strtotime($order['created_at']));
+                $mac_ids = 0;
+                if(!empty($order['mac_ids'])){
+                    $mac_ids = json_decode($order['mac_ids'],true);
+                }
+                $order_list[$k]['total_devices'] = count($mac_ids);
+            }
+            
+            return response()->json(['status'=>200,'message'=>'Success','data'=>$order_list],200);
+        }else{
+            return response()->json(['status'=>400,'message'=>'User not found'],400);
+        }
+    }
+
+    public function order_detail(Request $request){
+        $order_id = $request->order_id;
+        $auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
+        if(!empty($user_details->id)){
+            $get_orders = Order::select('id','customer_id','mac_ids','payment_status','order_status','order_amount','shipping_address','created_at')
+                                ->where(['id'=>$order_id])->first();
+            if(!empty($get_orders->id)){
+
+                $get_orders->order_amount = number_format($get_orders->order_amount,2);
+                $get_orders->order_date = date('F j,Y, h:i A',strtotime($get_orders->created_at));
+                
+                $product_ids = [];
+                if(!empty($get_orders->mac_ids)){
+                    $mac_ids = json_decode($get_orders->mac_ids,true);
+                    if(!empty($mac_ids)){
+                        foreach($mac_ids as $k => $val){
+                            if(!in_array($val['product_id'],$product_ids)){
+                                array_push($product_ids,$val['product_id']);
+                            }
+                        }
+
+                        foreach($product_ids as $k => $products){
+                           $product_data[] = Product::select('id','name','thumbnail','purchase_price')->where(['id'=>$products])->first();
+                           $get_orders->order_items = $product_data;
+                        }
+
+                    }
+                }
+
+                //$get_orders->total_devices = count($mac_ids);
+
+                return response()->json(['status'=>200,'message'=>'Success','data'=>$get_orders],200);
+            }else{
+                return response()->json(['status'=>400,'message'=>'Order not found'],400);
+            }
         }else{
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
