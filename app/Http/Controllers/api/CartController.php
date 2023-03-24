@@ -238,7 +238,7 @@ class CartController extends Controller
                     $price = Product::select('purchase_price as price')->where('id',$cart['product_id'])->first()->price ?? 0;
                     $total_price += ($price * $cart['quantity']);
 
-                    $cart['price'] = number_format($price,2);
+                    $cart['purchase_price'] = number_format($price,2);
 
                     $get_random_stocks = ProductStock::select('mac_id')->where('product_id',$cart['product_id'])->inRandomOrder()->limit($cart['quantity'])->get();
                     if(!empty($get_random_stocks)){
