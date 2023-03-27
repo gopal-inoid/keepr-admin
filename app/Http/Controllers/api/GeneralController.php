@@ -244,11 +244,11 @@ class GeneralController extends Controller
             $get_orders = Order::select('id as order_id','customer_id','mac_ids','order_amount','created_at')
                                ->where(['customer_id'=>$user_details->id])->get();
             foreach($get_orders as $k => $order){
-
                 $order_list[$k]['order_id'] = $order['order_id'];
                 $order_list[$k]['customer_id'] = $order['customer_id'];
                 $order_list[$k]['order_amount'] = number_format($order['order_amount'],2);
                 $order_list[$k]['order_date'] = date('F j,Y, h:i A',strtotime($order['created_at']));
+                $order_list[$k]['delivery_message']  = 'Estimated Delivery on February 25';
                 $mac_ids = 0;
                 if(!empty($order['mac_ids'])){
                     $mac_ids = json_decode($order['mac_ids'],true);
@@ -269,6 +269,7 @@ class GeneralController extends Controller
         if(!empty($user_details->id)){
             $get_orders = Order::select('id','customer_id','mac_ids','payment_status','order_status','order_amount','shipping_address','created_at')
                                 ->where(['id'=>$order_id])->first();
+            $total_mac_ids = [];
             if(!empty($get_orders->id)){
 
                 //$get_orders->order_amount = number_format($get_orders->order_amount,2);
@@ -278,6 +279,8 @@ class GeneralController extends Controller
 
                 $shipping_address = User::select('add_shipping_address','shipping_name','shipping_email','shipping_phone','shipping_country','shipping_city','shipping_state','shipping_zip')
                                             ->where(['id'=>$get_orders->customer_id])->first();
+
+                $get_orders->delivery_message = 'Estimated Delivery on February 25';
 
                 $get_orders->shipping = [
                                             'address'=>$shipping_address->add_shipping_address ?? '',
@@ -295,6 +298,7 @@ class GeneralController extends Controller
                     $mac_ids = json_decode($get_orders->mac_ids,true);
                     if(!empty($mac_ids)){
                         foreach($mac_ids as $k => $val){
+                            $total_mac_ids[$val['product_id']][] = $val['mac_id'];
                             if(!in_array($val['product_id'],$product_ids)){
                                 array_push($product_ids,$val['product_id']);
                             }
@@ -303,6 +307,7 @@ class GeneralController extends Controller
                         foreach($product_ids as $k => $products){
                            $product_d = Product::select('id','name','thumbnail','purchase_price')->where(['id'=>$products])->first();
                            $product_d->price = number_format($product_d->purchase_price,2);
+                           $product_d->quantity = count($total_mac_ids[$product_d->id] ?? 0);
                            unset($product_d->purchase_price);
                            $product_data[] = $product_d;
                            $get_orders->order_items = $product_data;
