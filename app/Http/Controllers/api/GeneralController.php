@@ -189,7 +189,7 @@ class GeneralController extends Controller
                 $user_details->shipping_country = $request->country;
                 $user_details->shipping_city = $request->city;
                 $user_details->shipping_state = $request->state;
-                $user_details->shipping_zip = $request->zip;
+                $user_details->shipping_zip = $request->zip_code;
             }else{
                 $user_details->street_address = $request->address;
                 $user_details->name = $request->name;
@@ -271,9 +271,25 @@ class GeneralController extends Controller
                                 ->where(['id'=>$order_id])->first();
             if(!empty($get_orders->id)){
 
-                $get_orders->order_amount = number_format($get_orders->order_amount,2);
+                //$get_orders->order_amount = number_format($get_orders->order_amount,2);
+                $get_orders->amount = number_format($get_orders->order_amount,2);
+                unset($get_orders->order_amount);
                 $get_orders->order_date = date('F j,Y, h:i A',strtotime($get_orders->created_at));
-                
+
+                $shipping_address = User::select('add_shipping_address','shipping_name','shipping_email','shipping_phone','shipping_country','shipping_city','shipping_state','shipping_zip')
+                                            ->where(['id'=>$get_orders->customer_id])->first();
+
+                $get_orders->shipping = [
+                                            'address'=>$shipping_address->add_shipping_address ?? '',
+                                            'name'=>$shipping_address->shipping_name ?? '',
+                                            'email'=>$shipping_address->shipping_email ?? '',
+                                            'phone'=>$shipping_address->shipping_phone ?? '',
+                                            'country'=>$shipping_address->shipping_country ?? '',
+                                            'city'=>$shipping_address->shipping_city ?? '',
+                                            'state'=>$shipping_address->shipping_state ?? '',
+                                            'zip'=>$shipping_address->shipping_zip ?? '',
+                                        ];
+
                 $product_ids = [];
                 if(!empty($get_orders->mac_ids)){
                     $mac_ids = json_decode($get_orders->mac_ids,true);
@@ -285,7 +301,10 @@ class GeneralController extends Controller
                         }
 
                         foreach($product_ids as $k => $products){
-                           $product_data[] = Product::select('id','name','thumbnail','purchase_price')->where(['id'=>$products])->first();
+                           $product_d = Product::select('id','name','thumbnail','purchase_price')->where(['id'=>$products])->first();
+                           $product_d->price = number_format($product_d->purchase_price,2);
+                           unset($product_d->purchase_price);
+                           $product_data[] = $product_d;
                            $get_orders->order_items = $product_data;
                         }
 

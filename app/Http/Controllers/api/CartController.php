@@ -79,7 +79,7 @@ class CartController extends Controller
                 $cart[$key]['total_current_stock'] = ProductStock::where('product_id',$value['product_id'])->count() ?? 0;
                 //$cart[$key]['price'] = $price;
                 $cart[$key]['purchase_price'] = number_format($price,2);
-                $total_cart_price += $price;
+                $total_cart_price += ($value['quantity'] * $price);
             }
         }
 
@@ -227,56 +227,79 @@ class CartController extends Controller
 
     public function checkout(Request $request)
     {
-        $mac_ids = [];
+        $mac_ids_array = [];
+        $device_ids = [];
+        $existed_mac_ids = [];
         $total_order = 0;
         $total_price = 0;
+        $error = 0;
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
-            $cart_info = Cart::select('id','customer_id','product_id','quantity','name','thumbnail')->where(['customer_id' => $user_details->id])->get();
-            if(!empty($cart_info)){
-                foreach($cart_info as $cart){
-                    $total_order += $cart['quantity'];
-                    $price = Product::select('purchase_price as price')->where('id',$cart['product_id'])->first()->price ?? 0;
-                    $total_price += ($price * $cart['quantity']);
 
-                    $cart['purchase_price'] = number_format($price,2);
-
-                    $get_random_stocks = ProductStock::select('mac_id')->where('product_id',$cart['product_id'])->inRandomOrder()->limit($cart['quantity'])->get();
-                    if(!empty($get_random_stocks)){
-                        foreach($get_random_stocks as $m => $macid){
-                            $mac_ids[$m]['product_id'] = $cart['product_id'];
-                            $mac_ids[$m]['mac_id'] = $macid['mac_id'];
+            $check_mac_ids = CheckoutInfo::select('mac_ids')->get();
+            if(!empty($check_mac_ids)){
+                foreach($check_mac_ids as $mac_ids){
+                    $mac_id_arr = json_decode($mac_ids['mac_ids'],true);
+                    if(!empty($mac_id_arr)){
+                        foreach($mac_id_arr as $product_id => $mac_values){
+                            foreach($mac_values as $k => $mac_ids){
+                                array_push($existed_mac_ids,$mac_ids);
+                            }
                         }
                     }
                 }
             }
 
-            // foreach($device_ids as $k => $ids){
-            //    $total_order += $ids['count'];
-            //    $price = Product::select('purchase_price as price')->where('id',$ids['device_id'])->first()->price ?? 0;
-            //    $total_price += ($price * $ids['count']);
+            $cart_info = Cart::select('id','customer_id','product_id','quantity','name','thumbnail')->where(['customer_id' => $user_details->id])->get();
+            if(!empty($cart_info)){
+                foreach($cart_info as $k => $cart){
+                    $total_order += $cart['quantity'];
+                    $price = Product::select('purchase_price as price')->where('id',$cart['product_id'])->first()->price ?? 0;
+                    $total_price += ($price * $cart['quantity']);
+                    $cart['purchase_price'] = number_format($price,2);
 
+                    $get_random_stocks = ProductStock::select('mac_id')->where('product_id',$cart['product_id'])->whereNotIn('mac_id',$existed_mac_ids)
+                                                      ->inRandomOrder()->limit($cart['quantity'])->get();
+                    if(!empty($get_random_stocks)){
+                        foreach($get_random_stocks as $m => $macid){
+                            $mac_ids_array[$cart['product_id']][$m] = $macid['mac_id'];
+                        }
+                    }
+
+                    array_push($device_ids,$cart['product_id']);
+
+                    if($cart['quantity'] < 1){
+                        unset($cart_info[$k]);
+                    }
+
+                    if(!in_array($cart['product_id'],$device_ids)){
+                        $error = 1;
+                    }
+
+                }
+            }
+
+            if($error == 1){
+                return response()->json(['status'=>400,'message'=>'Device not available'],400);
+            }
             
-            //    $get_random_stocks = ProductStock::select('mac_id')->where('product_id',$ids['device_id'])->inRandomOrder()->limit($ids['count'])->get();
-            //    if(!empty($get_random_stocks)){
-            //         foreach($get_random_stocks as $macid){
-            //             $mac_ids[$ids['device_id']][] = $macid['mac_id'];
-            //         }
-            //     }
-            // }
-            
+            //echo "<pre>"; print_r($mac_ids_array); die;
             //die;
-            //CheckoutInfo::insert(['product_id'=>json_encode($device_ids),'customer_id'=>$user_details->id,'mac_ids'=>json_encode($mac_ids),'total_order'=>$total_order,'total_amount'=>$total_price,'tax_amount'=>0]);
+
+            CheckoutInfo::insert(['product_id'=>json_encode($device_ids),'customer_id'=>$user_details->id,'mac_ids'=>json_encode($mac_ids_array),'total_order'=>$total_order,'total_amount'=>$total_price,'tax_amount'=>7]);
+
+            $shipping = number_format(8,2);
+            $tax = number_format(7,2);
 
             $data['cart_info'] = $cart_info;
+            //$data['mac_ids'] = $mac_ids;
             $data['customer_id'] = $user_details->id;
-            $data['mac_ids'] = $mac_ids;
             $data['total_order'] = $total_order;
-            $data['sub_total'] = number_format(0,2);
-            $data['shipping'] = number_format(0,2);
-            $data['tax'] = number_format(0,2);
-            $data['total'] = number_format($total_price,2);
+            $data['sub_total'] = number_format($total_price,2);
+            $data['shipping'] = $shipping;
+            $data['tax'] = $tax;
+            $data['total'] = number_format(($total_price + $shipping + $tax),2);
             //echo "<pre>"; print_r($mac_ids); die;
 
             return response()->json(['status'=>200,'message'=>'Success','data'=>$data],200);
