@@ -50,7 +50,8 @@ class GeneralController extends Controller
     //GET MOBILE NO. CHECK AND VERIFY INTO DB AND SEND IN RESPONSE
     public function verify_user(Request $request){
         $mobile = $request->mobile;
-        $user = User::select('id','phone','is_active')->where(['phone'=>$mobile])->first();
+        $phone_code = $request->phone_code;
+        $user = User::select('id','phone','is_active')->where(['phone_code'=>$phone_code,'phone'=>$mobile])->first();
         if(!empty($user->id)){
             if($user->is_active != 1){
                 return response()->json(['status'=>400,'message'=>'Not Activated'],200);
@@ -76,11 +77,23 @@ class GeneralController extends Controller
         $auth_token = '';
         $uid = $verifiedIdToken->claims()->get('sub');
         $user = $auth->getUser($uid);
+
         if(!empty($user->phoneNumber)){
-            $user_check = User::select('id','phone','firebase_auth_id','auth_access_token')->where(['phone'=>$user->phoneNumber])->first();
+
+            $mobile_number = preg_replace(
+                '/\+(?:998|996|995|994|993|992|977|976|975|974|973|972|971|970|968|967|966|965|964|963|962|961|960|886|880|856|855|853|852|850|692|691|690|689|688|687|686|685|683|682|681|680|679|678|677|676|675|674|673|672|670|599|598|597|595|593|592|591|590|509|508|507|506|505|504|503|502|501|500|423|421|420|389|387|386|385|383|382|381|380|379|378|377|376|375|374|373|372|371|370|359|358|357|356|355|354|353|352|351|350|299|298|297|291|290|269|268|267|266|265|264|263|262|261|260|258|257|256|255|254|253|252|251|250|249|248|246|245|244|243|242|241|240|239|238|237|236|235|234|233|232|231|230|229|228|227|226|225|224|223|222|221|220|218|216|213|212|211|98|95|94|93|92|91|90|86|84|82|81|66|65|64|63|62|61|60|58|57|56|55|54|53|52|51|49|48|47|46|45|44\D?1624|44\D?1534|44\D?1481|44|43|41|40|39|36|34|33|32|31|30|27|20|7|1\D?939|1\D?876|1\D?869|1\D?868|1\D?849|1\D?829|1\D?809|1\D?787|1\D?784|1\D?767|1\D?758|1\D?721|1\D?684|1\D?671|1\D?670|1\D?664|1\D?649|1\D?473|1\D?441|1\D?345|1\D?340|1\D?284|1\D?268|1\D?264|1\D?246|1\D?242|1)\D?/'
+               , '', $user->phoneNumber);
+
+            preg_match(
+                '/\+(?:998|996|995|994|993|992|977|976|975|974|973|972|971|970|968|967|966|965|964|963|962|961|960|886|880|856|855|853|852|850|692|691|690|689|688|687|686|685|683|682|681|680|679|678|677|676|675|674|673|672|670|599|598|597|595|593|592|591|590|509|508|507|506|505|504|503|502|501|500|423|421|420|389|387|386|385|383|382|381|380|379|378|377|376|375|374|373|372|371|370|359|358|357|356|355|354|353|352|351|350|299|298|297|291|290|269|268|267|266|265|264|263|262|261|260|258|257|256|255|254|253|252|251|250|249|248|246|245|244|243|242|241|240|239|238|237|236|235|234|233|232|231|230|229|228|227|226|225|224|223|222|221|220|218|216|213|212|211|98|95|94|93|92|91|90|86|84|82|81|66|65|64|63|62|61|60|58|57|56|55|54|53|52|51|49|48|47|46|45|44\D?1624|44\D?1534|44\D?1481|44|43|41|40|39|36|34|33|32|31|30|27|20|7|1\D?939|1\D?876|1\D?869|1\D?868|1\D?849|1\D?829|1\D?809|1\D?787|1\D?784|1\D?767|1\D?758|1\D?721|1\D?684|1\D?671|1\D?670|1\D?664|1\D?649|1\D?473|1\D?441|1\D?345|1\D?340|1\D?284|1\D?268|1\D?264|1\D?246|1\D?242|1)\D?/'
+               ,$user->phoneNumber,$mobile_code);
+
+            $phone_code = $mobile_code[0] ?? '';
+            $user_check = User::select('id','phone','firebase_auth_id','auth_access_token')->where(['phone_code'=>$phone_code,'phone'=>$mobile_number])->first();
             if(empty($user_check->id)){
                 $get_user = User::create([
-                    'phone' => $user->phoneNumber,
+                    'phone' => $mobile_number,
+                    'phone_code'=>$phone_code,
                     'firebase_auth_id' => $uid,
                     'fcm_token' => $fcm_token
                 ]);
@@ -92,7 +105,7 @@ class GeneralController extends Controller
             }
 
             if($auth_token != ''){
-                return response()->json(['status'=>200,'phone'=>$user->phoneNumber,'auth_token'=>$auth_token,'message'=>'Success'],200);
+                return response()->json(['status'=>200,'phone'=>$mobile_number,'phone_code'=>$phone_code,'auth_token'=>$auth_token,'message'=>'Success'],200);
             }else{
                 return response()->json(['status'=>401,'message'=>'Token not Authorized'],401);
             }
@@ -186,6 +199,7 @@ class GeneralController extends Controller
                 $user_details->shipping_name = $request->name;
                 $user_details->shipping_email = $request->email;
                 $user_details->shipping_phone = $request->phone;
+                $user_details->shipping_phone_code = $request->phone_code;
                 $user_details->shipping_country = $request->country;
                 $user_details->shipping_city = $request->city;
                 $user_details->shipping_state = $request->state;
@@ -195,6 +209,7 @@ class GeneralController extends Controller
                 $user_details->name = $request->name;
                 $user_details->email = $request->email;
                 $user_details->phone = $request->phone;
+                $user_details->phone_code = $request->phone_code;
                 $user_details->country = $request->country;
                 $user_details->city = $request->city;
                 $user_details->state = $request->state;
@@ -215,14 +230,16 @@ class GeneralController extends Controller
                 $shipping['name'] = $user_details->shipping_name;
                 $shipping['email'] = $user_details->shipping_email;
                 $shipping['phone'] = $user_details->shipping_phone;
+                $shipping['phone_code'] = $user_details->shipping_phone_code;
                 $shipping['country'] = $user_details->shipping_country;
                 $shipping['city'] = $user_details->shipping_city;
                 $shipping['state'] = $user_details->shipping_state;
                 $shipping['zip'] = $user_details->shipping_zip;
-           
+            
                 $billing['address'] = $user_details->street_address;
                 $billing['name'] = $user_details->name;
                 $billing['email'] = $user_details->email;
+                $billing['phone_code'] = $user_details->phone_code;
                 $billing['phone'] = $user_details->phone;
                 $billing['country'] = $user_details->country;
                 $billing['city'] = $user_details->city;
@@ -244,11 +261,15 @@ class GeneralController extends Controller
             $get_orders = Order::select('id as order_id','customer_id','mac_ids','order_amount','created_at')
                                ->where(['customer_id'=>$user_details->id])->get();
             foreach($get_orders as $k => $order){
-
                 $order_list[$k]['order_id'] = $order['order_id'];
                 $order_list[$k]['customer_id'] = $order['customer_id'];
                 $order_list[$k]['order_amount'] = number_format($order['order_amount'],2);
                 $order_list[$k]['order_date'] = date('F j,Y, h:i A',strtotime($order['created_at']));
+                if($k == 0){
+                    $order_list[$k]['delivery_message']  = 'Estimated Delivery on February 25';
+                }else{
+                    $order_list[$k]['delivery_message']  = 'Delivered on February 25';
+                }
                 $mac_ids = 0;
                 if(!empty($order['mac_ids'])){
                     $mac_ids = json_decode($order['mac_ids'],true);
@@ -269,6 +290,7 @@ class GeneralController extends Controller
         if(!empty($user_details->id)){
             $get_orders = Order::select('id','customer_id','mac_ids','payment_status','order_status','order_amount','shipping_address','created_at')
                                 ->where(['id'=>$order_id])->first();
+            $total_mac_ids = [];
             if(!empty($get_orders->id)){
 
                 //$get_orders->order_amount = number_format($get_orders->order_amount,2);
@@ -278,6 +300,12 @@ class GeneralController extends Controller
 
                 $shipping_address = User::select('add_shipping_address','shipping_name','shipping_email','shipping_phone','shipping_country','shipping_city','shipping_state','shipping_zip')
                                             ->where(['id'=>$get_orders->customer_id])->first();
+
+                if($order_id == 10 || $order_id == 11 || $order_id == 12 || $order_id == 13){
+                    $get_orders->delivery_message = 'Estimated Delivery on February 25';
+                }else{
+                    $get_orders->delivery_message  = 'Delivered on February 25';
+                }
 
                 $get_orders->shipping = [
                                             'address'=>$shipping_address->add_shipping_address ?? '',
@@ -295,6 +323,7 @@ class GeneralController extends Controller
                     $mac_ids = json_decode($get_orders->mac_ids,true);
                     if(!empty($mac_ids)){
                         foreach($mac_ids as $k => $val){
+                            $total_mac_ids[$val['product_id']][] = $val['mac_id'];
                             if(!in_array($val['product_id'],$product_ids)){
                                 array_push($product_ids,$val['product_id']);
                             }
@@ -303,6 +332,7 @@ class GeneralController extends Controller
                         foreach($product_ids as $k => $products){
                            $product_d = Product::select('id','name','thumbnail','purchase_price')->where(['id'=>$products])->first();
                            $product_d->price = number_format($product_d->purchase_price,2);
+                           $product_d->quantity = count($total_mac_ids[$product_d->id] ?? 0);
                            unset($product_d->purchase_price);
                            $product_data[] = $product_d;
                            $get_orders->order_items = $product_data;
