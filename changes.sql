@@ -51,3 +51,5 @@ ALTER TABLE `users` ADD `shipping_country` VARCHAR(50) NULL DEFAULT NULL AFTER `
 ALTER TABLE `users` ADD `shipping_name` VARCHAR(80) NULL DEFAULT NULL AFTER `shipping_zip`, ADD `shipping_email` VARCHAR(80) NULL DEFAULT NULL AFTER `shipping_name`, ADD `shipping_phone` VARCHAR(25) NULL DEFAULT NULL AFTER `shipping_email`;
 
 ALTER TABLE `connected_device` ADD `distance` VARCHAR(100) NULL DEFAULT NULL AFTER `device_uuid`;
+
+ALTER TABLE `users` ADD `phone_code` VARCHAR(10) NULL DEFAULT NULL AFTER `shipping_phone`, ADD `shipping_phone_code` VARCHAR(10) NULL DEFAULT NULL AFTER `phone_code`;

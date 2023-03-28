@@ -251,7 +251,7 @@ class CartController extends Controller
                 }
             }
 
-            $cart_info = Cart::select('id','customer_id','product_id','quantity','name','thumbnail')->where(['customer_id' => $user_details->id])->get();
+            $cart_info = Cart::select('id','customer_id','product_id','quantity','name','thumbnail')->where('customer_id',$user_details->id)->where('quantity','>',0)->get();
             if(!empty($cart_info)){
                 foreach($cart_info as $k => $cart){
                     $total_order += $cart['quantity'];
@@ -259,8 +259,8 @@ class CartController extends Controller
                     $total_price += ($price * $cart['quantity']);
                     $cart['purchase_price'] = number_format($price,2);
 
-                    $get_random_stocks = ProductStock::select('mac_id')->where('product_id',$cart['product_id'])->whereNotIn('mac_id',$existed_mac_ids)
-                                                      ->inRandomOrder()->limit($cart['quantity'])->get();
+                    $get_random_stocks = ProductStock::select('mac_id','product_id')->where('product_id',$cart['product_id'])->whereNotIn('mac_id',$existed_mac_ids)
+                                                      ->inRandomOrder()->limit($cart['quantity'])->get()->toArray();
                     if(!empty($get_random_stocks)){
                         foreach($get_random_stocks as $m => $macid){
                             $mac_ids_array[$cart['product_id']][$m] = $macid['mac_id'];
@@ -269,23 +269,22 @@ class CartController extends Controller
 
                     array_push($device_ids,$cart['product_id']);
 
-                    if($cart['quantity'] < 1){
-                        unset($cart_info[$k]);
-                    }
+                    //echo "<pre>"; print_r($get_random_stocks);
 
-                    if(!in_array($cart['product_id'],$device_ids)){
+                    if(!in_array($cart['product_id'],array_keys($mac_ids_array))){
                         $error = 1;
                     }
 
                 }
+
             }
 
             if($error == 1){
                 return response()->json(['status'=>400,'message'=>'Device not available'],400);
             }
             
-            //echo "<pre>"; print_r($mac_ids_array); die;
-            //die;
+            // echo "<pre>"; print_r($error); die;
+            // die;
 
             CheckoutInfo::insert(['product_id'=>json_encode($device_ids),'customer_id'=>$user_details->id,'mac_ids'=>json_encode($mac_ids_array),'total_order'=>$total_order,'total_amount'=>$total_price,'tax_amount'=>7]);
 
