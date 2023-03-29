@@ -322,6 +322,8 @@ class ProductController extends Controller
                                             ->join('products','products.id','product_stocks.product_id')
                                             ->where('product_stocks.mac_id',$devices->mac_id)->first();
                         
+                        $device_request = DeviceRequest::select('status')->where(['mac_id'=>$devices->mac_id,'user_id'=>$user_details->id])->first();
+                        $get_all_devices[$k]['device_request_status'] = $device_request->status ?? null; // 0 = lost , 1 = found
                         if(!empty($device_info->thumbnail)){
                             $get_all_devices[$k]['thumbnail'] = asset("/product/thumbnail/$device_info->thumbnail");
                         }else{
@@ -407,7 +409,6 @@ class ProductController extends Controller
                 $devices_details = Product::select('id','name','images','thumbnail','details','specification','faq','purchase_price')->where(['status'=>1,'id'=>$device_id])->first();
                 if(!empty($devices_details->id)){
                     $devices_details_array['total_quantity'] = (int) Cart::where(['customer_id' => $user_details->id])->sum('quantity');
-                    //$device_request = DeviceRequest::select('status')->where(['mac_id'=>$mac_id,'user_id'=>$user_details->id])->first();
                     $devices_details_array['id'] = $devices_details->id;
                     $devices_details_array['name'] = $devices_details->name;
                     $devices_details_array['details'] = $devices_details->details;
@@ -421,7 +422,6 @@ class ProductController extends Controller
                             }
                         }
                     }
-                    $devices_details_array['device_request_status'] = ''; //$device_request->status ?? '';
                     if(!empty($devices_details->specification)){
                         $devices_details_array['specification'] = json_decode($devices_details->specification,true);
                     }
@@ -470,6 +470,7 @@ class ProductController extends Controller
         $already_added = 0;
         $not_found = 0;
         $response = [];
+        $message = '';
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
@@ -495,21 +496,21 @@ class ProductController extends Controller
 
             if($already_added > 0){
                 $response['status'] = true;
-                $response['message'][] = $already_added . ' Device already added in tracking';
+                $message = $already_added . ' Device already added, ';
             }
 
             if($success > 0){
                 $response['status'] = true;
-                $response['message'][] = $success . ' Device successfully added in tracking';
+                $message = $success . ' Device successfully added, ';
             }
 
             if($not_found > 0){
                 $response['status'] = true;
-                $response['message'][] = $not_found . ' Device not found';
+                $message = $not_found . ' Device not found, ';
             }
 
             if(isset($response['status'])){
-                return response()->json(['status'=>200,'message'=> $response['message'] ?? "Success"],200);
+                return response()->json(['status'=>200,'message'=> $message . ' in Tracking' ?? "Success"],200);
             }else{
                 return response()->json(['status'=>400,'message'=>'Device not found'],400);
             }
