@@ -89,7 +89,7 @@ class GeneralController extends Controller
                ,$user->phoneNumber,$mobile_code);
 
             $phone_code = $mobile_code[0] ?? '';
-            $user_check = User::select('id','phone','firebase_auth_id','auth_access_token')->where(['phone_code'=>$phone_code,'phone'=>$mobile_number])->first();
+            $user_check = User::select('id','phone','firebase_auth_id','auth_access_token')->where(['phone'=>$mobile_number])->first();
             if(empty($user_check->id)){
                 $get_user = User::create([
                     'phone' => $mobile_number,
@@ -99,9 +99,8 @@ class GeneralController extends Controller
                 ]);
                 $auth_token = $this->auth_token($get_user->id,"");
             }else{
-                if(!empty($user_check->id)){ //echo "<pre>"; print_r(); die;
-                    $auth_token = $this->auth_token($user_check->id,$user_check->auth_access_token,$fcm_token);
-                }
+                //echo "<pre>"; print_r(); die;
+                $auth_token = $this->auth_token($user_check->id,$user_check->auth_access_token,$fcm_token);
             }
 
             if($auth_token != ''){
