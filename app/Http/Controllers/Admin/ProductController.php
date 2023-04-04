@@ -580,23 +580,23 @@ class ProductController extends BaseController
             });
         }
 
-        if ($validator->errors()->count() > 0) {
-            //echo "<pre>"; print_r(); die;
-            $errors = Helpers::error_processor($validator);
-            if(!empty($errors)){
+        // if ($validator->errors()->count() > 0) {
+        //     //echo "<pre>"; print_r(); die;
+        //     $errors = Helpers::error_processor($validator);
+        //     if(!empty($errors)){
                 
-                foreach($errors as $k => $val){
-                    //$val = 'Product updated successfully.';
-                    // if($val['code'] == 'images'){
-                    //     return 
-                    // }
-                    // $err_array .= $val['message'] . ",";
-                    Toastr::error($val['message']); return back();
-                }
+        //         foreach($errors as $k => $val){
+        //             //$val = 'Product updated successfully.';
+        //             // if($val['code'] == 'images'){
+        //             //     return 
+        //             // }
+        //             // $err_array .= $val['message'] . ",";
+        //             Toastr::error($val['message']); return back();
+        //         }
                 
-            }
+        //     }
            
-        }
+        // }
 
         //echo "<pre>"; print_r($validator->errors()); die;
 
@@ -653,10 +653,10 @@ class ProductController extends BaseController
         $product = Product::find($request['id']);
         $array = [];
         
-        // if (count(json_decode($product['images'])) < 1) {
-        //     Toastr::warning('You cannot delete all images!');
-        //     return back();
-        // }
+        if (count(json_decode($product['images'])) < 1) {
+            Toastr::warning('You cannot delete all images!');
+            return back();
+        }
 
         $images = json_decode($product['images']);
         if(count($images) > 0){

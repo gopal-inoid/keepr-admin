@@ -183,7 +183,6 @@
                                                                     alt="Product image">
                                                                 <a href="{{route('admin.product.remove-image',['id'=>$product['id'],'name'=>$photo])}}"
                                                                 class="btn btn-danger btn-block">{{\App\CPU\translate('Remove')}}</a>
-
                                                             </div>
                                                         </div>
                                                     </div>
