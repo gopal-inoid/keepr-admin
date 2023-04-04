@@ -32,6 +32,8 @@ Route::group(['namespace' => 'api'], function () {
         Route::get('get-banners', 'BannerController@get_banners');
         //
 
+        Route::get('sendNotification', 'GeneralController@sendNotification');
+        
         //DEVICE
         Route::post('connect-device', 'ProductController@connect_device');
         Route::post('edit-device', 'ProductController@edit_device');

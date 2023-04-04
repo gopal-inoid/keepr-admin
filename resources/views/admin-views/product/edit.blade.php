@@ -170,21 +170,23 @@
                                     </div>
                                     <div class="p-2 border border-dashed">
                                         <div class="row gy-3" id="coba">
-                                            @foreach (json_decode($product->images) as $key => $photo)
-                                                <div class="col-sm-6">
-                                                    <div class="card">
-                                                        <div class="card-body">
-                                                            <img class="w-100" height="auto"
-                                                                 onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
-                                                                 src="{{asset("/product/$photo")}}"
-                                                                 alt="Product image">
-                                                            <a href="{{route('admin.product.remove-image',['id'=>$product['id'],'name'=>$photo])}}"
-                                                               class="btn btn-danger btn-block">{{\App\CPU\translate('Remove')}}</a>
+                                            @if(!empty($product->images))
+                                                @foreach (json_decode($product->images) as $key => $photo)
+                                                    <div class="col-sm-6">
+                                                        <div class="card">
+                                                            <div class="card-body">
+                                                                <img class="w-100" height="auto"
+                                                                    onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                                                                    src="{{asset("/product/$photo")}}"
+                                                                    alt="Product image">
+                                                                <a href="{{route('admin.product.remove-image',['id'=>$product['id'],'name'=>$photo])}}"
+                                                                class="btn btn-danger btn-block">{{\App\CPU\translate('Remove')}}</a>
 
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            @endforeach
+                                                @endforeach
+                                            @endif
                                         </div>
                                     </div>
 
