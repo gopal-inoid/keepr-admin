@@ -173,7 +173,6 @@
                                     </div>
                                     <div class="p-2 border border-dashed">
                                         <div class="row gy-3" id="coba">
-                                            @if(!empty($product->images))
                                                 @foreach (json_decode($product->images) as $key => $photo)
                                                     <div class="col-sm-6">
                                                         <div class="card">
@@ -189,7 +188,6 @@
                                                         </div>
                                                     </div>
                                                 @endforeach
-                                            @endif
                                         </div>
                                     </div>
 
