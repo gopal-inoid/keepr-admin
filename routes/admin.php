@@ -274,7 +274,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
         Route::group(['prefix' => 'product', 'as' => 'product.','middleware'=>['module:product_management']], function () {
             Route::get('add-new', 'ProductController@add_new')->name('add-new');
             Route::post('store', 'ProductController@store')->name('store');
-            Route::get('remove-image', 'ProductController@remove_image')->name('remove-image');
+            Route::get('remove-image/{id}/{name}', 'ProductController@remove_image')->name('remove-image');
             Route::post('status-update', 'ProductController@status_update')->name('status-update');
             Route::get('list', 'ProductController@list')->name('list');
             Route::get('current-active-device', 'ProductController@current_active_device')->name('current-active-device');
