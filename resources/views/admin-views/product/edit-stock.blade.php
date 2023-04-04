@@ -74,7 +74,7 @@
                                                         @if($k == 0)
                                                         <label class="title-color">{{ \App\CPU\translate('Device MAC ID') }}</label>
                                                         @endif
-                                                        <input type="text" name="device_id[{{$k}}]" class="form-control" value="{{ $mac_ids->mac_id }}" placeholder="{{ \App\CPU\translate('Device MAC ID') }}">
+                                                        <input type="text" name="device_id[{{$k}}]" class="form-control macAddress" value="{{ $mac_ids->mac_id }}" placeholder="{{ \App\CPU\translate('Device MAC ID') }}">
                                                     </div>
                                                 </div>
                                                 @if($k != 0)
@@ -103,6 +103,19 @@
     <script src="{{asset('public/assets/back-end')}}/js/tags-input.min.js"></script>
     <script src="{{asset('public/assets/back-end/js/spartan-multi-image-picker.js')}}"></script>
     <script>
+
+    function formatMAC(e) {
+        var r = /([a-f0-9]{2})([a-f0-9]{2})/i,
+            str = e.target.value.replace(/[^a-f0-9]/ig, "");
+        
+        while (r.test(str)) {
+            str = str.replace(r, '$1' + ':' + '$2');
+        }
+
+        e.target.value = str.slice(0, 17);
+    };
+
+    $(document).on('keyup','.macAddress',formatMAC);
 
         var cnt = (parseInt("{{$product_stock_cnt}}") - 1);
 

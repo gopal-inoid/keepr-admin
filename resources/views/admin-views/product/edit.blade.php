@@ -58,19 +58,22 @@
                                     <div class="form-group">
                                         <label class="title-color"
                                                for="exampleFormControlInput1">{{ \App\CPU\translate('product_code_sku') }}
-                                            <span class="text-danger">*</span>
-                                            <a class="style-one-pro" style="cursor: pointer;"
-                                               onclick="document.getElementById('generate_number').value = getRndInteger()">{{ \App\CPU\translate('generate') }}
-                                                {{ \App\CPU\translate('code') }}</a></label>
+                                            <span class="text-danger">*</span></label>
                                         <input type="text" id="generate_number" name="code"
                                                class="form-control"  value="{{ $product->code  }}" required>
                                     </div>
                                 </div>
-                                <div class="col-md-4 form-group">
+                                <div class="col-md-2 form-group">
                                     <label class="title-color">{{ \App\CPU\translate('Price') }}</label>
                                     <input type="number" min="0" step="0.01"
                                         placeholder="{{ \App\CPU\translate('Purchase price') }}"
                                         value="{{ $product->purchase_price }}" name="purchase_price"
+                                        class="form-control" required>
+                                </div>
+                                <div class="col-md-2 form-group">
+                                    <label class="title-color">{{ \App\CPU\translate('RSSI') }}</label>
+                                    <input type="text" placeholder="{{ \App\CPU\translate('RSSI') }}"
+                                        value="{{ $product->rssi }}" name="rssi"
                                         class="form-control" required>
                                 </div>
                                 <div class="col-md-12">

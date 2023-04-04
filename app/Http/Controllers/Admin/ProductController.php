@@ -87,6 +87,7 @@ class ProductController extends BaseController
             'images'               => 'required',
             'image'                => 'required',
             'code'                 => 'required|numeric|min:1|digits_between:6,20|unique:products',
+            'rssi'                 => 'required|unique:products',
         ], [
             'images.required'                  => 'Product images is required!',
             'image.required'                   => 'Product thumbnail is required!',
@@ -102,11 +103,29 @@ class ProductController extends BaseController
             });
         }
 
+        if ($validator->errors()->count() > 0) {
+            //echo "<pre>"; print_r(); die;
+            $errors = Helpers::error_processor($validator);
+            if(!empty($errors)){
+                
+                foreach($errors as $k => $val){
+                    //$val = 'Product updated successfully.';
+                    // if($val['code'] == 'images'){
+                    //     return 
+                    // }
+                    // $err_array .= $val['message'] . ",";
+                    Toastr::error($val['message']); return back();
+                }
+                
+            }
+        }
+
         $p = new Product();
         $p->user_id  = auth('admin')->id();
         $p->added_by = "admin";
         $p->name     = $request->name[array_search('en', $request->lang)];
         $p->code     = $request->code;
+        $p->rssi                  = $request->rssi;
         $p->slug     = Str::slug($request->name[array_search('en', $request->lang)], '-') . '-' . Str::random(6);
         $p->details              = $request['description'] ?? '';
         $p->purchase_price     = BackEndHelper::currency_to_usd($request->purchase_price);
@@ -545,6 +564,7 @@ class ProductController extends BaseController
             'images'               => 'required',
             'image'                => 'required',
             'code'                 => 'required|numeric|min:1|digits_between:6,20|unique:products',
+            'rssi'                 => 'required|unique:products',
         ], [
             'images.required'                  => 'Product images is required!',
             'image.required'                   => 'Product thumbnail is required!',
@@ -560,8 +580,29 @@ class ProductController extends BaseController
             });
         }
 
+        if ($validator->errors()->count() > 0) {
+            //echo "<pre>"; print_r(); die;
+            $errors = Helpers::error_processor($validator);
+            if(!empty($errors)){
+                
+                foreach($errors as $k => $val){
+                    //$val = 'Product updated successfully.';
+                    // if($val['code'] == 'images'){
+                    //     return 
+                    // }
+                    // $err_array .= $val['message'] . ",";
+                    Toastr::error($val['message']); return back();
+                }
+                
+            }
+           
+        }
+
+        //echo "<pre>"; print_r($validator->errors()); die;
+
         $product->name = $request->name[array_search('en', $request->lang)];
         $product->code                  = $request->code;
+        $product->rssi                  = $request->rssi;
         $product_images                 = json_decode($product->images);
         $product->details              = $request['description'] ?? '';
         $product->purchase_price     = BackEndHelper::currency_to_usd($request->purchase_price);
@@ -608,18 +649,24 @@ class ProductController extends BaseController
 
     public function remove_image(Request $request)
     {
-        ImageManager::delete('/product/' . $request['image']);
+        ImageManager::delete('/product/' . $request['name']);
         $product = Product::find($request['id']);
         $array = [];
-        if (count(json_decode($product['images'])) < 2) {
-            Toastr::warning('You cannot delete all images!');
-            return back();
-        }
-        foreach (json_decode($product['images']) as $image) {
-            if ($image != $request['name']) {
-                array_push($array, $image);
+        
+        // if (count(json_decode($product['images'])) < 1) {
+        //     Toastr::warning('You cannot delete all images!');
+        //     return back();
+        // }
+
+        $images = json_decode($product['images']);
+        if(count($images) > 0){
+            foreach ($images as $image) {
+                if ($image != $request['name']) {
+                    array_push($array, $image);
+                }
             }
         }
+       
         Product::where('id', $request['id'])->update([
             'images' => json_encode($array),
         ]);
@@ -653,7 +700,7 @@ class ProductController extends BaseController
 
     public function delete_stock($id)
     {
-        $product = ProductStock::find($id);
+        $product = ProductStock::where('product_id',$id);
         $product->delete();
 
         // Cart::where('product_id', $product->id)->delete();
