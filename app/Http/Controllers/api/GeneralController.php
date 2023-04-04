@@ -190,6 +190,10 @@ class GeneralController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
 
+        if($request->phone == '' || $request->phone == null){
+            return response()->json(['status'=>400,'message'=>"Phone can't be NULL"],400);
+        }
+
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
@@ -352,5 +356,60 @@ class GeneralController extends Controller
     }
 
     //END USER API's
+
+    public function sendNotification(){
+        $SERVER_ID = env('FIREBASE_NOTIF_SERVER_ID');
+		$FCM_URL   = env('FCM_URL');
+
+		$registrationIds[] = 'fFnXe66JQ7yVDtkI0UIwyS:APA91bEtXxEDLy24twUZjZoE1AU8LwzZ-ymuetQf3z8XYspHuJms5xnjSlGZsCljxXUp_iRASm767_M4OcULYc_it-lHanPWXrvqq1XCNyalWj4a0ibarEYSVBEl4rSuUM-F4CxrMJOE'; //$registration_id;
+		$title             = 'Keepr App';
+		// prep the bundle
+		$notification = [
+			'title' => $title,
+			'body' => "This is Keepr Test Message",
+			'vibrate' => '1',
+			'sound' => 'default',
+		];
+
+		$data1 = [
+			'notification' => $notification,
+			'data' => [
+                'message' => "This is Keepr Test Message",
+                'type' => 'transfer',
+                'vibrate' => 1,
+                'sound' => 1,
+                'largeIcon' => 'large_icon',
+                'smallIcon' => 'small_icon',
+            ],
+			'title' => $title,
+			'body' => "This is Keepr Test Message",
+			'sound' => 1,
+		];
+
+		$fields = array(
+			'data' => $data1,
+			'notification' => $data1,
+			'registration_ids' => $registrationIds,
+		);
+
+		$headers = array(
+			'Authorization: key=' . $SERVER_ID,
+			'Content-Type: application/json',
+		);
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $FCM_URL);
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+		$result = curl_exec($ch);
+		curl_close($ch);
+
+        echo "<pre>"; print_r($result); die;
+
+		//return $result;
+    }
 
 }
