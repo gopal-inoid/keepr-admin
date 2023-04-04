@@ -647,13 +647,11 @@ class ProductController extends BaseController
         return (new FastExcel($data))->download('product_stocks_list.xlsx');
     }
 
-    public function remove_image(Request $request)
+    public function remove_image($id,$name)
     {
-        ImageManager::delete('/product/' . $request['name']);
-        $product = Product::find($request['id']);
+        ImageManager::delete('/product/' . $name);
+        $product = Product::find($id);
         $array = [];
-
-        echo "image-<pre>"; print_r($request->all()); die;
 
         if (count(json_decode($product['images'])) < 1) {
             Toastr::warning('You cannot delete all images!');
@@ -663,13 +661,13 @@ class ProductController extends BaseController
         $images = json_decode($product['images']);
         if(count($images) > 0){
             foreach ($images as $image) {
-                if ($image != $request['name']) {
+                if ($image != $name) {
                     array_push($array, $image);
                 }
             }
         }
        
-        Product::where('id', $request['id'])->update([
+        Product::where('id', $id)->update([
             'images' => json_encode($array),
         ]);
         Toastr::success('Product image removed successfully!');
