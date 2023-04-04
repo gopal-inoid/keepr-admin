@@ -653,7 +653,7 @@ class ProductController extends BaseController
         $product = Product::find($request['id']);
         $array = [];
 
-        echo "<pre>"; print_r($product); die;
+        echo "image-<pre>"; print_r($product); die;
 
         if (count(json_decode($product['images'])) < 1) {
             Toastr::warning('You cannot delete all images!');
