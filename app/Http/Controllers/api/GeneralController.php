@@ -218,6 +218,8 @@ class GeneralController extends Controller
                 $user_details->state = $request->state;
                 $user_details->zip = $request->zip_code;
             }
+
+            $user_details->country_iso = $request->country_iso;
             $user_details->save();
             return response()->json(['status'=>200,'message'=>'Address successfully updated'],200);
         }else{
@@ -249,7 +251,9 @@ class GeneralController extends Controller
                 $billing['state'] = $user_details->state;
                 $billing['zip'] = $user_details->zip;
 
-            return response()->json(['status'=>200,'message'=>'Success','shipping'=>$shipping,'billing'=>$billing],200);
+                $country_iso = $user_details->country_iso;
+
+            return response()->json(['status'=>200,'message'=>'Success','country_iso'=>$country_iso,'shipping'=>$shipping,'billing'=>$billing],200);
         }else{
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
@@ -361,7 +365,7 @@ class GeneralController extends Controller
         $SERVER_ID = env('FIREBASE_NOTIF_SERVER_ID');
 		$FCM_URL   = env('FCM_URL');
 
-		$registrationIds[] = 'fFnXe66JQ7yVDtkI0UIwyS:APA91bEtXxEDLy24twUZjZoE1AU8LwzZ-ymuetQf3z8XYspHuJms5xnjSlGZsCljxXUp_iRASm767_M4OcULYc_it-lHanPWXrvqq1XCNyalWj4a0ibarEYSVBEl4rSuUM-F4CxrMJOE'; //$registration_id;
+		$registrationIds[] = 'dnb22lIwT0a_4zyG2_2d2j:APA91bG7rTinxWypnxX6nMhESlBzXXkb7fuwquTUmv5W-p0lRM9LbU89F9nWlLKVtU0oQNWiedQLoBUR3MDxDCOjSK0OP0yLG29arfvLDv_Gd4xqfxRz_CIkIm1UN1I_1ZzeiXR6K7a5'; //$registration_id;
 		$title             = 'Keepr App';
 		// prep the bundle
 		$notification = [
@@ -375,11 +379,8 @@ class GeneralController extends Controller
 			'notification' => $notification,
 			'data' => [
                 'message' => "This is Keepr Test Message",
-                'type' => 'transfer',
                 'vibrate' => 1,
                 'sound' => 1,
-                'largeIcon' => 'large_icon',
-                'smallIcon' => 'small_icon',
             ],
 			'title' => $title,
 			'body' => "This is Keepr Test Message",

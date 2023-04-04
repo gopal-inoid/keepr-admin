@@ -2394,4 +2394,5 @@
   'Cart ID is required!' => 'Cart ID is required!',
   'successfully_removed' => 'Successfully removed',
   'Minimum distance to fire alarm' => 'Minimum distance to fire alarm',
+  'RSSI' => 'RSSI',
 );

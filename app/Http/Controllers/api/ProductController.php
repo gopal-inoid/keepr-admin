@@ -318,10 +318,14 @@ class ProductController extends Controller
             if(!empty($get_all_devices)){
                 if(!empty($get_all_devices)){
                     foreach($get_all_devices as $k => $devices){
-                        $device_info = ProductStock::select('products.thumbnail')
+                        $device_info = ProductStock::select('products.thumbnail','products.rssi','products.id as product_id','products.name as device_type')
                                             ->join('products','products.id','product_stocks.product_id')
                                             ->where('product_stocks.mac_id',$devices->mac_id)->first();
                         
+                        $get_all_devices[$k]['rssi'] = $device_info->rssi ?? '';
+                        $get_all_devices[$k]['device_id'] = $device_info->product_id ?? '';
+                        $get_all_devices[$k]['device_type'] = $device_info->device_type ?? '';
+
                         $device_request = DeviceRequest::select('status')->where(['mac_id'=>$devices->mac_id,'user_id'=>$user_details->id])->first();
                         $get_all_devices[$k]['device_request_status'] = $device_request->status ?? null; // 0 = lost , 1 = found
                         if(!empty($device_info->thumbnail)){

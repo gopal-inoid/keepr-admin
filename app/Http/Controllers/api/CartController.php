@@ -271,17 +271,17 @@ class CartController extends Controller
 
                     //echo "<pre>"; print_r($get_random_stocks);
 
-                    if(!in_array($cart['product_id'],array_keys($mac_ids_array))){
-                        $error = 1;
-                    }
+                    // if(!in_array($cart['product_id'],array_keys($mac_ids_array))){
+                    //     $error = 1;
+                    // }
 
                 }
 
             }
 
-            if($error == 1){
-                return response()->json(['status'=>400,'message'=>'Device not available'],400);
-            }
+            // if($error == 1){
+            //     return response()->json(['status'=>400,'message'=>'Device not available'],400);
+            // }
             
             // echo "<pre>"; print_r($error); die;
             // die;

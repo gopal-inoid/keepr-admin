@@ -67,7 +67,7 @@
                                         <div class="col-md-5">
                                             <div class="form-group">
                                                 <label class="title-color">{{ \App\CPU\translate('Device MAC ID') }}</label>
-                                                <input type="text" name="device_id[]" class="form-control" value="{{ old('device_id') }}" placeholder="{{ \App\CPU\translate('Device MAC ID') }}" required>
+                                                <input type="text" name="device_id[]" maxlength="17" class="form-control macAddress" value="{{ old('device_id') }}" placeholder="{{ \App\CPU\translate('Device MAC ID') }}" required>
                                             </div>
                                         </div>
                                     </div>
@@ -89,8 +89,21 @@
     <script src="{{ asset('public/assets/back-end') }}/js/tags-input.min.js"></script>
     <script src="{{ asset('public/assets/back-end/js/spartan-multi-image-picker.js') }}"></script>
     <script>
-        $(function() {
 
+    function formatMAC(e) {
+        var r = /([a-f0-9]{2})([a-f0-9]{2})/i,
+            str = e.target.value.replace(/[^a-f0-9]/ig, "");
+        
+        while (r.test(str)) {
+            str = str.replace(r, '$1' + ':' + '$2');
+        }
+
+        e.target.value = str.slice(0, 17);
+    };
+
+    $(document).on('keyup','.macAddress',formatMAC);
+
+        $(function() {
             $('.add-mac_id-btn').on('click',function(){
                 $('#mac_id_device_field').append(
                     `<div class="row mac_id-individual">
