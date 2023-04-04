@@ -231,7 +231,10 @@
     <script src="{{asset('public/assets/back-end')}}/js/tags-input.min.js"></script>
     <script src="{{asset('public/assets/back-end/js/spartan-multi-image-picker.js')}}"></script>
     <script>
+        imageCount = 0;
+        @if(!empty($product->images))
         var imageCount = {{10-count(json_decode($product->images))}};
+        @endif
         var thumbnail = '{{\App\CPU\ProductManager::product_image_path('thumbnail').'/'.$product->thumbnail??asset('public/assets/back-end/img/400x400/img2.jpg')}}';
         $(function () {
 
