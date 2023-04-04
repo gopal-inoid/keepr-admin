@@ -207,6 +207,7 @@ class GeneralController extends Controller
                 $user_details->shipping_city = $request->city;
                 $user_details->shipping_state = $request->state;
                 $user_details->shipping_zip = $request->zip_code;
+                $user_details->shipping_country_iso = $request->country_iso;
             }else{
                 $user_details->street_address = $request->address;
                 $user_details->name = $request->name;
@@ -217,9 +218,9 @@ class GeneralController extends Controller
                 $user_details->city = $request->city;
                 $user_details->state = $request->state;
                 $user_details->zip = $request->zip_code;
+                $user_details->country_iso = $request->country_iso;
             }
 
-            $user_details->country_iso = $request->country_iso;
             $user_details->save();
             return response()->json(['status'=>200,'message'=>'Address successfully updated'],200);
         }else{
@@ -240,7 +241,8 @@ class GeneralController extends Controller
                 $shipping['city'] = $user_details->shipping_city;
                 $shipping['state'] = $user_details->shipping_state;
                 $shipping['zip'] = $user_details->shipping_zip;
-            
+                $shipping['country_iso'] = $user_details->shipping_country_iso;
+
                 $billing['address'] = $user_details->street_address;
                 $billing['name'] = $user_details->name;
                 $billing['email'] = $user_details->email;
@@ -250,10 +252,9 @@ class GeneralController extends Controller
                 $billing['city'] = $user_details->city;
                 $billing['state'] = $user_details->state;
                 $billing['zip'] = $user_details->zip;
+                $billing['country_iso'] = $user_details->country_iso;
 
-                $country_iso = $user_details->country_iso;
-
-            return response()->json(['status'=>200,'message'=>'Success','country_iso'=>$country_iso,'shipping'=>$shipping,'billing'=>$billing],200);
+            return response()->json(['status'=>200,'message'=>'Success','shipping'=>$shipping,'billing'=>$billing],200);
         }else{
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
