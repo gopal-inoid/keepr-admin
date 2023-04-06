@@ -320,15 +320,15 @@ class CartController extends Controller
                         }
                     }
 
-                    if(!in_array($cart['product_id'],array_keys($mac_ids_array))){
-                        $error = 1;
-                    }
+                    // if(!in_array($cart['product_id'],array_keys($mac_ids_array))){
+                    //     $error = 1;
+                    // }
                 }
             }
 
-            if($error == 1){
-                return response()->json(['status'=>400,'message'=>'Device not available'],400);
-            }
+            // if($error == 1){
+            //     return response()->json(['status'=>400,'message'=>'Device not available'],400);
+            // }
             
             //Insert into Order
             $order = new Order();
