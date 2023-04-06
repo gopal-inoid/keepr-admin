@@ -57,3 +57,5 @@ ALTER TABLE `users` ADD `phone_code` VARCHAR(10) NULL DEFAULT NULL AFTER `shippi
 ALTER TABLE `products` ADD `rssi` VARCHAR(200) NULL DEFAULT NULL AFTER `device_id`;
 
 ALTER TABLE `users` ADD `shipping_country_iso` VARCHAR(20) NULL DEFAULT NULL AFTER `country_iso`;
+
+ALTER TABLE `orders` CHANGE `transaction_ref` `transaction_ref` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
