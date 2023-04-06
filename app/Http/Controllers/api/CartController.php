@@ -12,6 +12,8 @@ use App\Model\Product;
 use App\Model\ProductStock;
 use App\Model\CheckoutInfo;
 use App\Model\Shop;
+use App\Model\Order;
+use App\Model\OrderDetail;
 use App\User;
 use Illuminate\Support\Str;
 use App\Model\ShippingType;
@@ -309,12 +311,31 @@ class CartController extends Controller
         // here i will add stripe tax api and calculate price based on no of device and will send in response
     }
 
+    public function place_order(Request $request)
+    {
+        $auth_token   = $request->headers->get('X-Access-Token');
+        $cart_id = $request->cart_id;
+        $cart_info = Cart::select('id','customer_id','product_id','price','quantity')->where('id',$cart_id)->first();
+        //$order = Order::insert(['customer_id'=>$cart_info->customer_id]);
+        $order = new Order();
+        $order->customer_id = $cart_info->customer_id;
+        $order->save();
+
+        return response()->json(['status'=>200,'message'=>'Success','order_id'=>$order->id ?? NULL],200);
+    }
+
     public function confirm_order(Request $request)
     {
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
-        
-        return response()->json(['status'=>200,'message'=>'Success'],200);
+        $order_id = $request->order_id;
+        $transaction_id = $request->transaction_id;
+        $update_order = Order::where(['id'=>$order_id])->update(['transaction_ref'=>$transaction_id]);
+        if($update_order){
+            return response()->json(['status'=>200,'message'=>'Order Successfully Confirmed','order_id'=>$order_id],200);
+        }else{
+            return response()->json(['status'=>400,'message'=>'Order not Confirmed,something went wrong'],200);
+        }
     }
     
 }
