@@ -314,11 +314,28 @@ class CartController extends Controller
     public function place_order(Request $request)
     {
         $auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         $cart_id = $request->cart_id;
-        $cart_info = Cart::select('id','customer_id','product_id','price','quantity')->where('id',$cart_id)->first();
-        //$order = Order::insert(['customer_id'=>$cart_info->customer_id]);
+
+        $left = ltrim($cart_id, "'");
+        $right = rtrim($left, "'");
+        $data = json_decode($right,true);
+        $cart_ids = [];
+        if(!empty($data)){
+            foreach($data as $k => $val){
+                array_push($cart_ids,$val['id']);
+            }
+        }
+
+        $cart_info = Cart::select('id','customer_id','product_id','price','quantity')->whereIn('id',$cart_ids)->get();
+        //echo "<pre>"; print_r($cart_info); die;
+
+        $mac_ids = "";
+
+        //Insert into Order
         $order = new Order();
-        $order->customer_id = $cart_info->customer_id;
+        $order->customer_id = $user_details['id'];
+        $order->mac_ids = $mac_ids;
         $order->save();
 
         return response()->json(['status'=>200,'message'=>'Success','order_id'=>$order->id ?? NULL],200);
