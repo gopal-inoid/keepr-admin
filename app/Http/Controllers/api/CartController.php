@@ -354,7 +354,7 @@ class CartController extends Controller
         $transaction_id = $request->transaction_id;
         $update_order = Order::where(['id'=>$order_id])->update(['transaction_ref'=>$transaction_id]);
         if($update_order){
-            return response()->json(['status'=>200,'message'=>'Order Successfully Confirmed','order_id'=>$order_id],200);
+            return response()->json(['status'=>200,'message'=>'Order Successfully Confirmed','order_id'=>(int)$order_id],200);
         }else{
             return response()->json(['status'=>400,'message'=>'Order not Confirmed,something went wrong'],200);
         }
