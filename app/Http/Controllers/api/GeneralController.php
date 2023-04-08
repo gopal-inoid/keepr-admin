@@ -362,11 +362,13 @@ class GeneralController extends Controller
 
     //END USER API's
 
-    public function sendNotification(){
+    public function sendNotification(Request $request){
         $SERVER_ID = env('FIREBASE_NOTIF_SERVER_ID');
 		$FCM_URL   = env('FCM_URL');
 
-		$registrationIds[] = 'dnb22lIwT0a_4zyG2_2d2j:APA91bG7rTinxWypnxX6nMhESlBzXXkb7fuwquTUmv5W-p0lRM9LbU89F9nWlLKVtU0oQNWiedQLoBUR3MDxDCOjSK0OP0yLG29arfvLDv_Gd4xqfxRz_CIkIm1UN1I_1ZzeiXR6K7a5'; //$registration_id;
+        $token = $request->token; //"f_4tUDB2Q0qcaoCeCN0L4T:APA91bGTWw5jIg4aQXy8jharK3CaXAjj6qukWe7t2r3vf8Uao2oCasPTVY1hnrEGH_a78cCmSlQgzt1m1_T3JoilpE8BtcqOJjb58XBHbXY8crhEfm5AsO9okao-dl2bTHuwPCfRmNlq";
+
+		$registrationIds[] = $token; //$registration_id;
 		$title             = 'Keepr App';
 		// prep the bundle
 		$notification = [
@@ -379,18 +381,16 @@ class GeneralController extends Controller
 		$data1 = [
 			'notification' => $notification,
 			'data' => [
+                'title' => $title,
                 'message' => "This is Keepr Test Message",
                 'vibrate' => 1,
                 'sound' => 1,
             ],
-			'title' => $title,
-			'body' => "This is Keepr Test Message",
-			'sound' => 1,
 		];
 
 		$fields = array(
 			'data' => $data1,
-			'notification' => $data1,
+			'notification' => $notification,
 			'registration_ids' => $registrationIds,
 		);
 

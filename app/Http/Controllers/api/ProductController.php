@@ -487,12 +487,32 @@ class ProductController extends Controller
                         if(!empty($device_info->mac_id)){
                             $check = DeviceTracking::insert(['mac_id'=>$val['mac_id'],'user_id'=>$user_details->id,'lat'=>$val['lat'],'lan'=>$val['lan']]);
                             if($check){
+                                $check_lost_device = DeviceRequest::select('user_id')->where('mac_id',$val['mac_id'])->where('status',0)->where('user_id',"<>",$user_details->id)->first();
+                                if(!empty($check_lost_device->user_id)){
+                                    $tracking_user = User::where(['id'=>$check_lost_device->user_id])->first();
+                                    if(!empty($tracking_user->id)){
+                                        $msg = "Your device found";
+                                        $payload = ['lat'=>$val['lat'],'lan'=>$val['lan']];
+                                        $this->sendNotification($tracking_user->fcm_token,$msg,$payload);
+                                    }
+                                }
                                 $success++;
                             }
                         }else{
                             $not_found++;
                         }
                     }else{
+
+                        $check_lost_device = DeviceRequest::select('user_id')->where('mac_id',$val['mac_id'])->where('status',0)->where('user_id',"<>",$user_details->id)->first();
+                        if(!empty($check_lost_device->user_id)){
+                            $tracking_user = User::where(['id'=>$check_lost_device->user_id])->first();
+                            if(!empty($tracking_user->id)){
+                                $msg = "Your device found";
+                                $payload = ['lat'=>$val['lat'],'lan'=>$val['lan']];
+                                $this->sendNotification($tracking_user->fcm_token,$msg,$payload);
+                            }
+                        }
+
                         $already_added++;
                     }
                 }
@@ -566,5 +586,59 @@ class ProductController extends Controller
     }
 
     //END DEVICE API's
+
+    public function sendNotification($fcm_token,$msg,$payload){
+        $SERVER_ID = env('FIREBASE_NOTIF_SERVER_ID');
+		$FCM_URL   = env('FCM_URL');
+
+		$registrationIds[] = $fcm_token; //$registration_id;
+		$title             = 'Keepr';
+		// prep the bundle
+		$notification = [
+			'title' => $title,
+			'body' => $msg,
+			'vibrate' => '1',
+			'sound' => 'default',
+		];
+
+		$data1 = [
+			'notification' => $notification,
+			'data' => [
+                'title' => $title,
+                'message' => $msg,
+                'vibrate' => 1,
+                'sound' => 1,
+                'payload'=>$payload
+            ],
+		];
+
+		$fields = array(
+			'data' => $data1,
+			'notification' => $notification,
+			'registration_ids' => $registrationIds,
+		);
+
+		$headers = array(
+			'Authorization: key=' . $SERVER_ID,
+			'Content-Type: application/json',
+		);
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $FCM_URL);
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+		$result = curl_exec($ch);
+		curl_close($ch);
+        $res = json_decode($result,true);
+        if(isset($res['success']) && $res['success'] == 1){
+            return true;
+        }else{
+            return false;
+        }
+        //echo "<pre>"; print_r($result); die;
+    }
 
 }
