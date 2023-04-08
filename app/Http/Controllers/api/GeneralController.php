@@ -390,7 +390,7 @@ class GeneralController extends Controller
 
 		$fields = array(
 			'data' => $data1,
-			'notification' => $data1,
+			'notification' => $notification,
 			'registration_ids' => $registrationIds,
 		);
 
