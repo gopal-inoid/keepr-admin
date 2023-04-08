@@ -608,7 +608,9 @@ class ProductController extends Controller
                 'message' => $msg,
                 'vibrate' => 1,
                 'sound' => 1,
-                'payload'=>$payload
+                'type' => 'device_found',
+                "lat"=>(string) $payload['lat'],
+                "lan"=>(string) $payload['lat']
             ],
 		];
 

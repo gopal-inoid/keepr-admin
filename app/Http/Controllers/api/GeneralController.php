@@ -385,6 +385,10 @@ class GeneralController extends Controller
                 'message' => "This is Keepr Test Message",
                 'vibrate' => 1,
                 'sound' => 1,
+                'type' => 'device_found',
+                "lat"=>"2323.23",
+                "lan"=>"34413.32"
+                
             ],
 		];
 
