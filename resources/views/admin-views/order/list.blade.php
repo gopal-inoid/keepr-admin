@@ -39,13 +39,6 @@
                                     <h4>{{\App\CPU\translate('select')}} {{\App\CPU\translate('date')}} {{\App\CPU\translate('range')}}</h4>
                                 </div>
                                 <div class="col-sm-6 col-md-3">
-                                    <select name="filter" class="form-control">
-                                        <option value="all" {{ $filter == 'all' ? 'selected' : '' }}>All</option>
-                                        <option value="type1" {{ $filter == 'type1' ? 'selected' : '' }}>type1</option>
-                                        <option value="type2" {{ $filter == 'type2' ? 'selected' : '' }}>type2</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-6 col-md-3">
                                     <div class="form-floating">
                                         <input type="date" name="from" value="{{$from}}" id="from_date" class="form-control">
                                         <label>Start Date</label>
@@ -103,10 +96,9 @@
                                     <th>{{\App\CPU\translate('Order')}} {{\App\CPU\translate('ID')}}</th>
                                     <th>{{\App\CPU\translate('Order')}} {{\App\CPU\translate('Date')}}</th>
                                     <th>{{\App\CPU\translate('customer')}} {{\App\CPU\translate('info')}}</th>
-                                    <th>{{\App\CPU\translate('Store')}}</th>
-                                    <th class="text-right">{{\App\CPU\translate('Total')}} {{\App\CPU\translate('Amount')}}</th>
-                                    <th class="text-center">{{\App\CPU\translate('Order')}} {{\App\CPU\translate('Status')}} </th>
-                                    <th class="text-center">{{\App\CPU\translate('Action')}}</th>
+                                    <th>{{\App\CPU\translate('Total')}} {{\App\CPU\translate('Amount')}}</th>
+                                    <th>{{\App\CPU\translate('Order')}} {{\App\CPU\translate('Status')}} </th>
+                                    <th>{{\App\CPU\translate('Action')}}</th>
                                 </tr>
                             </thead>
 
@@ -139,7 +131,7 @@
                                         @endif
                                     </td>
                                     
-                                    <td class="text-right">
+                                    <td>
                                         <div>{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order->order_amount))}}</div>
 
                                         @if($order->payment_status=='paid')
@@ -152,7 +144,7 @@
                                             </span>
                                         @endif
                                     </td>
-                                    <td class="text-center text-capitalize">
+                                    <td class="text-capitalize">
                                         @if($order['order_status']=='pending')
                                             <span class="badge badge-soft-info fz-12">
                                                     {{$order['order_status']}}
@@ -181,7 +173,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <div class="d-flex justify-content-center gap-2">
+                                        <div class="d-flex gap-2">
                                             <a class="btn btn-outline--primary square-btn btn-sm mr-1" title="{{\App\CPU\translate('view')}}"
                                                 href="{{route('admin.orders.details',['id'=>$order['id']])}}">
                                                 <img src="{{asset('/public/assets/back-end/img/eye.svg')}}" class="svg" alt="">

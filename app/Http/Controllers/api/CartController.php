@@ -333,6 +333,7 @@ class CartController extends Controller
             //Insert into Order
             $order = new Order();
             $order->customer_id = $user_details->id;
+            $order->payment_method = 'Stripe';
             $order->mac_ids = json_encode($mac_ids_array);
             $order->order_amount = number_format($total_price,2);
             $order->save();
@@ -352,7 +353,7 @@ class CartController extends Controller
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         $order_id = $request->order_id;
         $transaction_id = $request->transaction_id;
-        $update_order = Order::where(['id'=>$order_id])->update(['transaction_ref'=>$transaction_id]);
+        $update_order = Order::where(['id'=>$order_id])->update(['transaction_ref'=>$transaction_id,'payment_status'=>'paid','order_status'=>'confirmed']);
         if($update_order){
             return response()->json(['status'=>200,'message'=>'Order Successfully Confirmed','order_id'=>(int)$order_id],200);
         }else{

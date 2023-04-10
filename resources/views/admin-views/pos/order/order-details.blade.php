@@ -108,104 +108,32 @@
                                     <tr>
                                         <th>{{\App\CPU\translate('SL')}}</th>
                                         <th>{{\App\CPU\translate('Item_Details')}}</th>
-                                        <th>{{\App\CPU\translate('Variations')}}</th>
-                                        <th>{{\App\CPU\translate('Tax')}}</th>
-                                        <th>{{\App\CPU\translate('Discount')}}</th>
-                                        <th>{{\App\CPU\translate('Price')}}</th>
+                                        <th>MAC ID</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
-                                @php($subtotal=0)
-                                @php($total=0)
-                                @php($shipping=0)
-                                @php($discount=0)
-                                @php($tax=0)
-                                @php($extra_discount=0)
-                                @php($product_price=0)
-                                @php($total_product_price=0)
-                                @php($coupon_discount=0)
-                                @foreach($order->details as $key=>$detail)
-                                    @if($detail->product)
-                                        <tr>
-                                            <td>1</td>
-                                            <td>
-                                                <div class="media align-items-center gap-10">
-                                                    <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$detail->product['thumbnail']}}" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt="">
-                                                    @if($detail->product->product_type == 'digital')
-                                                        <button type="button" class="btn btn-sm btn--primary mt-1" title="File Upload" data-toggle="modal" data-target="#fileUploadModal-{{ $detail->id }}" onclick="modalFocus('fileUploadModal-{{ $detail->id }}')">
-                                                            <i class="tio-file-outlined"></i> File
-                                                        </button>
-                                                    @endif
-                                                    <div>
-                                                        <a href="#" class="title-color hover-c1"><h6>{{substr($detail->product['name'],0,30)}}{{strlen($detail->product['name'])>10?'...':''}}</h6></a>
-                                                        <div><strong>{{\App\CPU\translate('Price')}} :</strong> {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($detail['price']))}}</div>
-                                                        <div><strong>{{\App\CPU\translate('Qty')}} :</strong> {{ $detail['qty'] }}</div>
-                                                    </div>
+                                @foreach($products as $key => $detail)
+                                    <tr>
+                                        <td>1</td>
+                                        <td>
+                                            <div class="media align-items-center gap-10">
+                                                <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$detail['thumbnail']}}" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt="">
+                                                <div>
+                                                    <a href="#" class="title-color hover-c1"><h6>{{substr($detail['name'],0,30)}}{{strlen($detail['name'])>10?'...':''}}</h6></a>
                                                 </div>
-                                            </td>
-                                            <td>{{$detail['variant']}}</td>
-                                            <td>{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($detail['tax']))}}</td>
-                                            <td>{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($detail['discount']))}}</td>
-
-                                            @php($subtotal=$detail['price']*$detail->qty+$detail['tax']-$detail['discount'])
-                                            @php($product_price = $detail['price']*$detail['qty'])
-                                            @php($total_product_price+=$product_price)
-                                            <td>{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($subtotal))}}</td>
-                                            @if($detail->product->product_type == 'digital')
-                                                <div class="modal fade" id="fileUploadModal-{{ $detail->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog modal-dialog-centered">
-                                                        <div class="modal-content">
-                                                            <form action="{{ route('admin.pos.digital-file-upload-after-sell') }}" method="post" enctype="multipart/form-data">
-                                                                @csrf
-                                                                <div class="modal-body">
-                                                                    @if($detail->product->digital_product_type == 'ready_after_sell' && $detail->digital_file_after_sell)
-                                                                        <div class="mb-4">
-                                                                            {{\App\CPU\translate('uploaded_file')}} :
-                                                                            <a href="{{ asset('storage/app/public/product/digital-product/'.$detail->digital_file_after_sell) }}"
-                                                                               class="btn btn-success btn-sm" title="Download" download><i class="tio-download"></i> Download</a>
-                                                                        </div>
-                                                                    @elseif($detail->product->digital_product_type == 'ready_product' && $detail->product->digital_file_ready)
-                                                                        <div class="mb-4">
-                                                                            {{\App\CPU\translate('uploaded_file')}} :
-                                                                            <a href="{{ asset('storage/app/public/product/digital-product/'.$detail->product->digital_file_ready) }}"
-                                                                               class="btn btn-success btn-sm" title="Download" download><i class="tio-download"></i> Download</a>
-                                                                        </div>
-                                                                    @endif
-
-                                                                    @if($detail->product->digital_product_type == 'ready_after_sell')
-                                                                        <input type="file" name="digital_file_after_sell" class="form-control">
-                                                                        <div class="mt-1 text-info">{{\App\CPU\translate('File type: jpg, jpeg, png, gif, zip, pdf')}}</div>
-                                                                        <input type="hidden" value="{{ $detail->id }}" name="order_id">
-                                                                    @endif
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{\App\CPU\translate('Close')}}</button>
-                                                                    @if($detail->product->digital_product_type == 'ready_after_sell')
-                                                                        <button type="submit" class="btn btn--primary">{{\App\CPU\translate('Upload')}}</button>
-                                                                    @endif
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endif
-                                        </tr>
-                                        @php($discount+=$detail['discount'])
-                                        @php($tax+=$detail['tax'])
-                                        @php($total+=$subtotal)
-                                    @endif
-                                    @php($sellerId=$detail->seller_id)
+                                            </div>
+                                        </td>
+                                        <td>565:564:DF:9FD</td>
+                                    </tr>
                                 @endforeach
                                 </tbody>
                             </table>
                         </div>
-
-                        @php($shipping=$order['shipping_cost'])
                         <hr>
                         <?php
                             if ($order['extra_discount_type'] == 'percent') {
-                                $extra_discount = ($total_product_price / 100) * $order['extra_discount'];
+                                $extra_discount = 0; //($total_product_price / 100) * $order['extra_discount'];
                             } else {
                                 $extra_discount = $order['extra_discount'];
                             }
@@ -229,7 +157,7 @@
 
                                     <dt class="col-sm-6">{{\App\CPU\translate('Total')}}</dt>
                                     <dd class="col-sm-6 title-color">
-                                        <strong>{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($total+$shipping-$extra_discount-$coupon_discount))}}</strong>
+                                        <strong>{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order['order_amount']))}}</strong>
                                     </dd>
                                 </dl>
                                 <!-- End Row -->
@@ -265,7 +193,7 @@
                                 <div class="media-body d-flex flex-column gap-1">
                                     <span class="title-color hover-c1"><strong>{{$order->customer['f_name'].' '.$order->customer['l_name']}}</strong></span>
                                     <span class="title-color">
-                                        <strong>{{\App\Model\Order::where('order_type','POS')->where('customer_id',$order['customer_id'])->count()}} </strong>{{\App\CPU\translate('orders')}}
+                                        <strong>{{$total_orders}} </strong>{{\App\CPU\translate('orders')}}
                                     </span>
                                     <span class="title-color break-all"><strong>{{$order->customer['phone']}}</strong></span>
                                     <span class="title-color break-all">{{$order->customer['email']}}</span>

@@ -130,39 +130,38 @@ class OrderController extends Controller
     {
         $company_name =BusinessSetting::where('type', 'company_name')->first()->value;
         $company_web_logo =BusinessSetting::where('type', 'company_web_logo')->first()->value;
-
-        $order = Order::with('details.product', 'shipping', 'seller.shop')->where(['id' => $id])->first();
-
+        $order = Order::where(['id' => $id])->first();
         $physical_product = false;
-        foreach($order->details as $product){
-            if(isset($product->product) && $product->product->product_type == 'physical'){
-                $physical_product = true;
+        $total_delivered = Order::where(['order_status' => 'delivered', 'order_type' => 'default_type'])->count();
+        $shipping_method = Helpers::get_business_settings('shipping_method');
+        $products = [];
+        $total_orders = 0;
+        if(!empty($order->mac_ids)){
+            $mac_ids = json_decode($order->mac_ids,true);
+            if(!empty($mac_ids)){
+                foreach($mac_ids as $k => $val){
+                    $total_orders += count($val);
+                    $products[$k] = Product::select('name','thumbnail')->find($k);
+                }
             }
         }
 
-        $linked_orders = Order::where(['order_group_id' => $order['order_group_id']])
-            ->whereNotIn('order_group_id', ['def-order-group'])
-            ->whereNotIn('id', [$order['id']])
-            ->get();
+        //echo "<pre>"; print_r($total_orders); die;
 
-        $total_delivered = Order::where(['seller_id' => $order->seller_id, 'order_status' => 'delivered', 'order_type' => 'default_type'])->count();
+        // $delivery_men = DeliveryMan::where('is_active', 1)->when($order->seller_is == 'admin', function ($query) {
+        //     $query->where(['seller_id' => 0]);
+        // })->when($order->seller_is == 'seller' && $shipping_method == 'sellerwise_shipping', function ($query) use ($order) {
+        //     $query->where(['seller_id' => $order['seller_id']]);
+        // })->when($order->seller_is == 'seller' && $shipping_method == 'inhouse_shipping', function ($query) use ($order) {
+        //     $query->where(['seller_id' => 0]);
+        // })->get();
 
-        $shipping_method = Helpers::get_business_settings('shipping_method');
-        $delivery_men = DeliveryMan::where('is_active', 1)->when($order->seller_is == 'admin', function ($query) {
-            $query->where(['seller_id' => 0]);
-        })->when($order->seller_is == 'seller' && $shipping_method == 'sellerwise_shipping', function ($query) use ($order) {
-            $query->where(['seller_id' => $order['seller_id']]);
-        })->when($order->seller_is == 'seller' && $shipping_method == 'inhouse_shipping', function ($query) use ($order) {
-            $query->where(['seller_id' => 0]);
-        })->get();
-
-        $shipping_address = ShippingAddress::find($order->shipping_address);
-        if($order->order_type == 'default_type')
-        {
-            return view('admin-views.order.order-details', compact('shipping_address','order', 'linked_orders', 'delivery_men', 'total_delivered', 'company_name', 'company_web_logo', 'physical_product'));
-        }else{
-            return view('admin-views.pos.order.order-details', compact('order', 'company_name', 'company_web_logo'));
-        }
+        // if($order->order_type == 'default_type')
+        // {
+        //     return view('admin-views.order.order-details', compact('order', 'delivery_men', 'total_delivered', 'company_name', 'company_web_logo'));
+        // }else{
+            return view('admin-views.pos.order.order-details', compact('order','total_orders','products', 'company_name', 'company_web_logo'));
+        //}
 
     }
 
