@@ -146,7 +146,7 @@ class OrderController extends Controller
             }
         }
 
-        //echo "<pre>"; print_r($total_orders); die;
+        //echo "<pre>"; print_r($mac_ids); die;
 
         // $delivery_men = DeliveryMan::where('is_active', 1)->when($order->seller_is == 'admin', function ($query) {
         //     $query->where(['seller_id' => 0]);
