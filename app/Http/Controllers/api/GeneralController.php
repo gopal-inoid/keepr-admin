@@ -379,17 +379,13 @@ class GeneralController extends Controller
 		];
 
 		$data1 = [
-			'notification' => $notification,
-			'data' => [
-                'title' => $title,
-                'message' => "This is Keepr Test Message",
-                'vibrate' => 1,
-                'sound' => 1,
-                'type' => 'device_found',
-                "lat"=>"2323.23",
-                "lan"=>"34413.32"
-                
-            ],
+            'title' => $title,
+            'message' => "This is Keepr Test Message",
+            'vibrate' => 1,
+            'sound' => 1,
+            'type' => 'device_found',
+            "lat"=>"2323.23",
+            "lan"=>"34413.32"
 		];
 
 		$fields = array(
