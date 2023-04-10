@@ -368,8 +368,6 @@ class GeneralController extends Controller
 
         $token = $request->token; //"f_4tUDB2Q0qcaoCeCN0L4T:APA91bGTWw5jIg4aQXy8jharK3CaXAjj6qukWe7t2r3vf8Uao2oCasPTVY1hnrEGH_a78cCmSlQgzt1m1_T3JoilpE8BtcqOJjb58XBHbXY8crhEfm5AsO9okao-dl2bTHuwPCfRmNlq";
 
-        echo "<pre>"; print_r($token); die;
-
 		$registrationIds[] = $token; //$registration_id;
 		$title             = 'Keepr App';
 		// prep the bundle
