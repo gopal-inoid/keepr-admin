@@ -65,7 +65,7 @@ class CartController extends Controller
     }
 
     public function get_cart(Request $request)
-    {   
+    {
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         $cart = Cart::select('id','quantity','product_id','quantity','name','thumbnail')->where(['customer_id' => $user_details->id])->get();
@@ -78,7 +78,7 @@ class CartController extends Controller
                 }
                 $price = $value['product']['purchase_price'];
                 unset($value['product']);
-                $cart[$key]['total_current_stock'] = ProductStock::where('product_id',$value['product_id'])->count() ?? 0;
+                $cart[$key]['total_current_stock'] = ProductStock::where('product_id',$value['product_id'])->where('is_purchased',0)->count() ?? 0;
                 //$cart[$key]['price'] = $price;
                 $cart[$key]['purchase_price'] = number_format($price,2);
                 $total_cart_price += ($value['quantity'] * $price);
@@ -104,7 +104,7 @@ class CartController extends Controller
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         $product = Product::find($request->product_id);
         $cart = Cart::where(['product_id' => $request->product_id, 'customer_id' => $user_details->id])->first();
-        $current_stock = ProductStock::where('product_id',$request->product_id)->count();
+        $current_stock = ProductStock::where('product_id',$request->product_id)->where('is_purchased',0)->count();
         if(isset($cart) == false){
             $cart = new Cart();
             if ($current_stock < 1) {
@@ -312,7 +312,7 @@ class CartController extends Controller
                 foreach($cart_info as $cart){
                     $price = Product::select('purchase_price as price')->where('id',$cart['product_id'])->first()->price ?? 0;
                     $total_price += ($price * $cart['quantity']);
-                    $get_random_stocks = ProductStock::select('mac_id','product_id')->where('product_id',$cart['product_id'])->whereNotIn('mac_id',$existed_mac_ids)
+                    $get_random_stocks = ProductStock::select('mac_id','product_id')->where('is_purchased',0)->where('product_id',$cart['product_id'])->whereNotIn('mac_id',$existed_mac_ids)
                                                         ->inRandomOrder()->limit($cart['quantity'])->get();
                     if(!empty($get_random_stocks)){
                         foreach($get_random_stocks as $m => $macid){
@@ -353,8 +353,21 @@ class CartController extends Controller
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         $order_id = $request->order_id;
         $transaction_id = $request->transaction_id;
-        $update_order = Order::where(['id'=>$order_id])->update(['transaction_ref'=>$transaction_id,'payment_status'=>'paid','order_status'=>'confirmed']);
+        $update_order = Order::where(['id'=>$order_id])->first();
         if($update_order){
+            if(!empty($update_order->mac_ids)){
+                $mac_ids = json_decode($update_order->mac_ids,true);
+                foreach($mac_ids as $product_id => $macs){
+                    foreach($macs as $val){
+                        ProductStock::where('product_id',$product_id)->where('mac_id',$val)->update(['is_purchased'=>1]);
+                        Cart::where('customer_id',$user_details->id)->where('product_id',$product_id)->delete();
+                    }
+                }
+            }
+            $update_order->transaction_ref = $transaction_id;
+            $update_order->payment_status = 'paid';
+            $update_order->order_status = 'confirmed';
+            $update_order->save();
             return response()->json(['status'=>200,'message'=>'Order Successfully Confirmed','order_id'=>(int)$order_id],200);
         }else{
             return response()->json(['status'=>400,'message'=>'Order not Confirmed,something went wrong'],200);

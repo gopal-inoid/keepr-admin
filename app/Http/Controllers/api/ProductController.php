@@ -357,7 +357,7 @@ class ProductController extends Controller
                     $devices->thumbnail = asset('public/assets/front-end/img/image-place-holder.png');
                 }
                 $devices->price = number_format($devices->purchase_price,2);
-                $devices['total_stocks'] = ProductStock::where('product_id',$devices->id)->count();
+                $devices['total_stocks'] = ProductStock::where('is_purchased',0)->where('product_id',$devices->id)->count();
                 unset($devices->purchase_price);
             }
             $total_quantity = (int) Cart::where(['customer_id' => $user_details->id])->sum('quantity');
