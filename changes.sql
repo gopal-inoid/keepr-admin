@@ -59,3 +59,5 @@ ALTER TABLE `products` ADD `rssi` VARCHAR(200) NULL DEFAULT NULL AFTER `device_i
 ALTER TABLE `users` ADD `shipping_country_iso` VARCHAR(20) NULL DEFAULT NULL AFTER `country_iso`;
 
 ALTER TABLE `orders` CHANGE `transaction_ref` `transaction_ref` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+
+ALTER TABLE `product_stocks` ADD `is_purchased` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '1= purchased, 0= not' AFTER `status`;
