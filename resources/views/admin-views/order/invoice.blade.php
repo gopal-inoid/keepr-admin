@@ -225,10 +225,6 @@
                 <h4 class="text-uppercase mb-1 fz-14">
                     {{\App\CPU\translate('invoice')}} #{{ $order->id }}
                 </h4>
-                @if($order['seller_is']!='admin' && isset($order['seller']) && $order['seller']->gst != null)
-                <h4 class="text-capitalize fz-14">{{\App\CPU\translate('GST')}}
-                        : {{ $order['seller']->gst }}</h4>
-                @endif
             </th>
             <th class="content-position-y text-right">
                 <h4 class="fz-14">{{\App\CPU\translate('date')}} : {{date('d-m-Y h:i:s a',strtotime($order['created_at']))}}</h4>
@@ -244,14 +240,14 @@
                     <table>
                         <tr>
                             <td>
-                                @if ($order->shippingAddress)
+                                @if (!empty($order->customer->add_shipping_address))
                                     <span class="h2" style="margin: 0px;">{{\App\CPU\translate('shipping_to')}} </span>
                                     <div class="h4 montserrat-normal-600">
                                         <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer !=null? $order->customer['f_name'].' '.$order->customer['l_name']:\App\CPU\translate('name_not_found')}}</p>
                                         <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer !=null? $order->customer['email']:\App\CPU\translate('email_not_found')}}</p>
                                         <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer !=null? $order->customer['phone']:\App\CPU\translate('phone_not_found')}}</p>
-                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->shippingAddress ? $order->shippingAddress['address'] : ""}}</p>
-                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->shippingAddress ? $order->shippingAddress['city'] : ""}} {{$order->shippingAddress ? $order->shippingAddress['zip'] : ""}}</p>
+                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer ? $order->customer['add_shipping_address'] : ""}}</p>
+                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer ? $order->customer['shipping_city'] : ""}} {{$order->customer ? $order->customer['shipping_zip'] : ""}}</p>
                                     </div>
                                 @else
                                     <span class="h2" style="margin: 0px;">{{\App\CPU\translate('customer_info')}} </span>
@@ -268,18 +264,17 @@
                         </tr>
                     </table>
                 </td>
-
                 <td>
                     <table>
                         <tr>
                             <td class="text-right">
-                                @if ($order->billingAddress)
+                                @if (!empty($order->customer->street_address))
                                     <span class="h2" >{{\App\CPU\translate('billing_address')}} </span>
                                     <div class="h4 montserrat-normal-600">
-                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->billingAddress ? $order->billingAddress['contact_person_name'] : ""}}</p>
-                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->billingAddress ? $order->billingAddress['phone'] : ""}}</p>
-                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->billingAddress ? $order->billingAddress['address'] : ""}}</p>
-                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->billingAddress ? $order->billingAddress['city'] : ""}} {{$order->billingAddress ? $order->billingAddress['zip'] : ""}}</p>
+                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer['name'] ? $order->customer['name'] : ""}}</p>
+                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer['phone'] ? $order->customer['phone'] : ""}}</p>
+                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer['street_address'] ? $order->customer['street_address'] : ""}}</p>
+                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer['city'] ? $order->customer['city'] : ""}} {{$order->customer['zip'] ? $order->customer['zip'] : ""}}</p>
                                     </div>
                                 @endif
                             </td>
@@ -288,8 +283,6 @@
                 </td>
             </tr>
         </table>
-
-
     </section>
 </div>
 

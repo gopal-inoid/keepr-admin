@@ -386,13 +386,12 @@ class OrderController extends Controller
         $company_name =BusinessSetting::where('type', 'company_name')->first()->value;
         $company_web_logo =BusinessSetting::where('type', 'company_web_logo')->first()->value;
 
-        $order = Order::with('seller')->with('shipping')->with('details')->where('id', $id)->first();
-        $seller = Seller::find($order->details->first()->seller_id);
+        $order = Order::where('id', $id)->first();
         $data["email"] = $order->customer !=null?$order->customer["email"]:\App\CPU\translate('email_not_found');
         $data["client_name"] = $order->customer !=null? $order->customer["f_name"] . ' ' . $order->customer["l_name"]:\App\CPU\translate('customer_not_found');
         $data["order"] = $order;
         $mpdf_view = View::make('admin-views.order.invoice',
-            compact('order', 'seller', 'company_phone', 'company_name', 'company_email', 'company_web_logo')
+            compact('order', 'company_phone', 'company_name', 'company_email', 'company_web_logo')
         );
         Helpers::gen_mpdf($mpdf_view, 'order_invoice_', $order->id);
     }
