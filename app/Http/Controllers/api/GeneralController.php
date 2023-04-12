@@ -309,10 +309,10 @@ class GeneralController extends Controller
                 $shipping_address = User::select('add_shipping_address','shipping_name','shipping_email','shipping_phone','shipping_country','shipping_city','shipping_state','shipping_zip')
                                             ->where(['id'=>$get_orders->customer_id])->first();
 
-                if($order_id == 10 || $order_id == 11 || $order_id == 12 || $order_id == 13){
-                    $get_orders->delivery_message = 'Estimated Delivery on February 25';
-                }else{
-                    $get_orders->delivery_message  = 'Delivered on February 25';
+                if(time() < strtotime($get_orders->created_at . '+7 days') && $get_orders->order_status != 'delivered'){
+                    $get_orders->delivery_message = 'Estimated Delivery on '. date('F j',strtotime($get_orders->created_at . '+7 days'));
+                }elseif(time() > strtotime($get_orders->created_at . '+7 days') && $get_orders->order_status == 'delivered'){
+                    $get_orders->delivery_message  = 'Delivered on '.  date('F j',strtotime($get_orders->created_at . '+7 days'));
                 }
 
                 $get_orders->shipping = [
@@ -331,9 +331,9 @@ class GeneralController extends Controller
                     $mac_ids = json_decode($get_orders->mac_ids,true);
                     if(!empty($mac_ids)){
                         foreach($mac_ids as $k => $val){
-                            $total_mac_ids[$val['product_id']][] = $val['mac_id'];
-                            if(!in_array($val['product_id'],$product_ids)){
-                                array_push($product_ids,$val['product_id']);
+                            $total_mac_ids[$k][] = $val;
+                            if(!in_array($k,$product_ids)){
+                                array_push($product_ids,$k);
                             }
                         }
 
