@@ -324,21 +324,40 @@ class CartController extends Controller
                         $error = 1;
                     }
                 }
-            }
 
-            if($error == 1){
-                return response()->json(['status'=>400,'message'=>'Device not available'],400);
-            }
-            
-            //Insert into Order
-            $order = new Order();
-            $order->customer_id = $user_details->id;
-            $order->payment_method = 'Stripe';
-            $order->mac_ids = json_encode($mac_ids_array);
-            $order->order_amount = number_format($total_price,2);
-            $order->save();
+                if($error == 1){
+                    return response()->json(['status'=>400,'message'=>'Device not available'],400);
+                }
+                
+                //Insert into Order
+                $order = new Order();
+                $order->customer_id = $user_details->id;
+                $order->payment_method = 'Stripe';
+                $order->mac_ids = json_encode($mac_ids_array);
+                $order->order_amount = number_format($total_price,2);
+                $order->save();
 
-            return response()->json(['status'=>200,'message'=>'Success','order_id'=>$order->id ?? NULL],200);
+                $msg = "Your Order has been placed, Estimated Delivery on " . date('F j',strtotime($order->created_at . '+7 days'));
+                $payload['order_id'] = $order->id ?? NULL;
+                $this->sendNotification($user_details->fcm_token,$msg,$payload);
+
+                if(!empty($order->mac_ids)){
+                    $mac_ids = json_decode($order->mac_ids,true);
+                    foreach($mac_ids as $product_id => $macs){
+                        foreach($macs as $val){
+                            ProductStock::where('product_id',$product_id)->where('mac_id',$val)->update(['is_purchased'=>1]);
+                            Cart::where('customer_id',$user_details->id)->where('product_id',$product_id)->delete();
+                        }
+                    }
+                }
+
+                return response()->json(['status'=>200,'message'=>'Success','order_id'=>$order->id ?? NULL],200);
+
+            }else{
+
+                return response()->json(['status'=>400,'message'=>'No device found in cart'],200);
+                
+            }
 
         }else{
 
@@ -355,15 +374,17 @@ class CartController extends Controller
         $transaction_id = $request->transaction_id;
         $update_order = Order::where(['id'=>$order_id])->first();
         if($update_order){
-            if(!empty($update_order->mac_ids)){
-                $mac_ids = json_decode($update_order->mac_ids,true);
-                foreach($mac_ids as $product_id => $macs){
-                    foreach($macs as $val){
-                        ProductStock::where('product_id',$product_id)->where('mac_id',$val)->update(['is_purchased'=>1]);
-                        Cart::where('customer_id',$user_details->id)->where('product_id',$product_id)->delete();
-                    }
-                }
-            }
+            
+            // if(!empty($update_order->mac_ids)){
+            //     $mac_ids = json_decode($update_order->mac_ids,true);
+            //     foreach($mac_ids as $product_id => $macs){
+            //         foreach($macs as $val){
+            //             ProductStock::where('product_id',$product_id)->where('mac_id',$val)->update(['is_purchased'=>1]);
+            //             Cart::where('customer_id',$user_details->id)->where('product_id',$product_id)->delete();
+            //         }
+            //     }
+            // }
+
             $update_order->transaction_ref = $transaction_id;
             $update_order->payment_status = 'paid';
             $update_order->order_status = 'confirmed';
@@ -372,6 +393,61 @@ class CartController extends Controller
         }else{
             return response()->json(['status'=>400,'message'=>'Order not Confirmed,something went wrong'],200);
         }
+    }
+
+    public function sendNotification($fcm_token,$msg,$payload){
+        $SERVER_ID = env('FIREBASE_NOTIF_SERVER_ID');
+		$FCM_URL   = env('FCM_URL');
+
+		$registrationIds[] = $fcm_token; //$registration_id;
+		$title             = 'Keepr';
+		// prep the bundle
+		$notification = [
+			'title' => $title,
+			'body' => $msg,
+			'vibrate' => '1',
+			'sound' => 'default',
+		];
+
+		$data1 = [
+			'notification' => $notification,
+			'data' => [
+                'title' => $title,
+                'message' => $msg,
+                'vibrate' => 1,
+                'sound' => 1,
+                'type' => 'order_placed',
+                'order_id'=> $payload['order_id']
+            ],
+		];
+
+		$fields = array(
+			'data' => $data1,
+			'notification' => $notification,
+			'registration_ids' => $registrationIds,
+		);
+
+		$headers = array(
+			'Authorization: key=' . $SERVER_ID,
+			'Content-Type: application/json',
+		);
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $FCM_URL);
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+		$result = curl_exec($ch);
+		curl_close($ch);
+        $res = json_decode($result,true);
+        if(isset($res['success']) && $res['success'] == 1){
+            return true;
+        }else{
+            return false;
+        }
+        //echo "<pre>"; print_r($result); die;
     }
     
 }

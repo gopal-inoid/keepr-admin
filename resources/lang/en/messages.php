@@ -2396,4 +2396,6 @@
   'Minimum distance to fire alarm' => 'Minimum distance to fire alarm',
   'RSSI' => 'RSSI',
   'All_copy_right_reserved_©_2023_' => 'All copy right reserved © 2023 ',
+  'Change Status' => 'Change Status',
+  'Order status change successfully' => 'Order status change successfully',
 );
