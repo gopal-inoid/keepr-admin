@@ -97,11 +97,11 @@
                                     <th>{{\App\CPU\translate('Order')}} {{\App\CPU\translate('Date')}}</th>
                                     <th>{{\App\CPU\translate('customer')}} {{\App\CPU\translate('info')}}</th>
                                     <th>{{\App\CPU\translate('Total')}} {{\App\CPU\translate('Amount')}}</th>
-                                    <th>{{\App\CPU\translate('Order')}} {{\App\CPU\translate('Status')}} </th>
+                                    <th>{{\App\CPU\translate('Order')}} {{\App\CPU\translate('Status')}}</th>
+                                    <th>{{\App\CPU\translate('Change Status')}}</th>
                                     <th>{{\App\CPU\translate('Action')}}</th>
                                 </tr>
                             </thead>
-
                             <tbody>
                             @foreach($orders as $key=>$order)
 
@@ -171,6 +171,16 @@
                                                 {{$order['order_status']}}
                                             </span>
                                         @endif
+                                    </td>
+                                    <td>
+                                        <div class="d-flex gap-2">
+                                            <select class="form-control js-select2-custom" id="change_order_status" order_id="{{$order['id']}}" name="change_order_status">
+                                                <option {{($order['order_status'] == 'pending' ? 'selected' : '')}} value="pending">Pending</option>
+                                                <option {{($order['order_status'] == 'confirmed' ? 'selected' : '')}} value="confirmed">Confirmed</option>
+                                                <option {{($order['order_status'] == 'failed' ? 'selected' : '')}} value="failed">Failed To Deliver</option>
+                                                <option {{($order['order_status'] == 'delivered' ? 'selected' : '')}} value="delivered">Delivered</option>
+                                            </select>
+                                        </div>
                                     </td>
                                     <td>
                                         <div class="d-flex gap-2">
@@ -272,6 +282,29 @@
                 }
             }
 
-        })
+        });
+       
+        $(document).on('change','#change_order_status',function () {
+            
+            var value = $(this).val();
+            var id = $(this).attr('order_id');
+            $.get({
+                url: '{{route('admin.orders.change-order-status')}}',
+                data:{id:id,status:value},
+                beforeSend: function () {
+                    $('#loading').show();
+                },
+                success: function (data) {
+                    toastr.success('{{\App\CPU\translate('Order status change successfully')}}');
+                    location.reload();
+                },
+                complete: function () {
+                    $('#loading').hide();
+                },
+            });
+        });
+
+        
+
     </script>
 @endpush

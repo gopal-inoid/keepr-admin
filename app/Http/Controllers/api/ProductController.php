@@ -358,6 +358,9 @@ class ProductController extends Controller
                 }
                 $devices->price = number_format($devices->purchase_price,2);
                 $devices['total_stocks'] = ProductStock::where('is_purchased',0)->where('product_id',$devices->id)->count();
+                if($devices['total_stocks'] < 1){
+                    unset($devices_list[$k]);
+                }
                 unset($devices->purchase_price);
             }
             $total_quantity = (int) Cart::where(['customer_id' => $user_details->id])->sum('quantity');
@@ -610,7 +613,7 @@ class ProductController extends Controller
                 'sound' => 1,
                 'type' => 'device_found',
                 "lat"=>(string) $payload['lat'],
-                "lan"=>(string) $payload['lat']
+                "lan"=>(string) $payload['lan']
             ],
 		];
 
