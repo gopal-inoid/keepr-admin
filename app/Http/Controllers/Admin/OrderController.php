@@ -412,15 +412,12 @@ class OrderController extends Controller
 		];
 
 		$data1 = [
-			'notification' => $notification,
-			'data' => [
-                'title' => $title,
-                'message' => $msg,
-                'vibrate' => 1,
-                'sound' => 1,
-                'type' => 'order_status',
-                'order_id'=>$payload['order_id']
-            ],
+            'title' => $title,
+            'message' => $msg,
+            'vibrate' => 1,
+            'sound' => 1,
+            'type' => 'order_status',
+            'order_id'=>$payload['order_id']
 		];
 
 		$fields = array(
