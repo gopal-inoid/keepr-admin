@@ -266,10 +266,7 @@ class CartController extends Controller
 
             //TAX calculation
 
-            //$config = \App\CPU\Helpers::get_business_settings('stripe');
-            //Stripe::setApiKey('pk_test_51MprMPC6n3N1q7nDBNa55LUx73vFVPMnW8N59YG8h3QNZkO55xpqPyMlK6JGCxHbVU8cw2eUWJwbYFlCd0LMLVLf00tDtJ7g0k'); //$config['api_key']
-            //header('Content-Type: application/json');
-            // $stripe = new \Stripe\StripeClient('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
+            $stripe = new \Stripe\StripeClient('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
             // $tax_resp = $stripe->tax->calculations->create(
             //     [
             //       'currency' => 'usd',
@@ -288,7 +285,7 @@ class CartController extends Controller
             //     ]
             // );
 
-            // echo "<pre>"; print_r($tax_resp); die;
+            echo "<pre>"; print_r($a); die;
 
             //END Tax calculation
 
@@ -412,16 +409,6 @@ class CartController extends Controller
         $update_order = Order::where(['id'=>$order_id])->first();
         if($update_order){
             
-            // if(!empty($update_order->mac_ids)){
-            //     $mac_ids = json_decode($update_order->mac_ids,true);
-            //     foreach($mac_ids as $product_id => $macs){
-            //         foreach($macs as $val){
-            //             ProductStock::where('product_id',$product_id)->where('mac_id',$val)->update(['is_purchased'=>1]);
-            //             Cart::where('customer_id',$user_details->id)->where('product_id',$product_id)->delete();
-            //         }
-            //     }
-            // }
-
             $update_order->transaction_ref = $transaction_id;
             $update_order->payment_status = 'paid';
             $update_order->order_status = 'confirmed';
@@ -452,15 +439,12 @@ class CartController extends Controller
 		];
 
 		$data1 = [
-			'notification' => $notification,
-			'data' => [
-                'title' => $title,
-                'message' => $msg,
-                'vibrate' => 1,
-                'sound' => 1,
-                'type' => 'order_placed',
-                'order_id'=> $payload['order_id']
-            ],
+            'title' => $title,
+            'message' => $msg,
+            'vibrate' => 1,
+            'sound' => 1,
+            'type' => 'order_placed',
+            'order_id'=> $payload['order_id']
 		];
 
 		$fields = array(
