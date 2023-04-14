@@ -77,12 +77,7 @@ class ShippingMethodController extends Controller
                 ShippingMethodRates::where(['shipping_id'=>$id,'country_code'=>$val['name']])->update(['normal_rate'=>$val['normal_rate'] ?? '','express_rate'=>$val['express_rate'] ?? '','status'=>$status]);
            }
         }
-        
-        //ShippingMethodRates::insert(['shipping_id'=>$id,'country_code'=>$val['name'],'normal_rate'=>$val['normal_rate'],'express_rate'=>$val['express_rate']]);
-        //DB::table('shipping_method_rates')->where(['shipping_id'=>$id])->update($countries);
-        //echo "<pre>"; print_r(); die;
-        //DB::table('shipping_method_rates')->insert(['shipping_id'=>$id,'country_code'=>$val['name'],'normal_rate'=>$val['normal_rate'],'express_rate'=>$val['express_rate']]);
-
+        ShippingMethod::where('id',$id)->update(['title'=>$request->title,'normal_duration'=>$request->normal_duration,'express_duration'=>$request->express_duration]);
         Toastr::success('Successfully updated.');
         return redirect()->back();
     }
