@@ -260,7 +260,7 @@ class CartController extends Controller
 
             $country = "Zimbabwe";
            
-            $shipping_rates = ShippingMethodRates::select('normal_rate','express_rate','shipping_methods.title as shipping_company')
+            $shipping_rates = ShippingMethodRates::select('normal_rate','express_rate','shipping_methods.title as shipping_company','shipping_methods.normal_duration','shipping_methods.express_duration')
                             ->join('shipping_methods','shipping_methods.id','shipping_method_rates.shipping_id')
                             ->where('shipping_method_rates.status',1)->where('country_code',$country)->get()->toArray();
             //$rate = $shipping_rate->normal_rate ?? 0;
@@ -272,9 +272,13 @@ class CartController extends Controller
                     if($val['normal_rate'] < $val['express_rate']){
                         $shipping_cost_check[$k]['company'] = $val['shipping_company'];
                         $shipping_cost_check[$k]['shipping_rate'] = $val['normal_rate'];
+                        $shipping_cost_check[$k]['mode'] = "normal_rate";
+                        $shipping_cost_check[$k]['delivery_days'] = $val['normal_duration'];
                     }else{
                         $shipping_cost_check[$k]['company'] = $val['shipping_company'];
                         $shipping_cost_check[$k]['shipping_rate'] = $val['express_rate'];
+                        $shipping_cost_check[$k]['mode'] = "express_rate";
+                        $shipping_cost_check[$k]['delivery_days'] = $val['express_duration'];
                     }
                 }
             }

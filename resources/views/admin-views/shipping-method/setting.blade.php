@@ -36,8 +36,8 @@
                                     <tr>
                                         <th>{{\App\CPU\translate('sl')}}</th>
                                         <th>{{\App\CPU\translate('title')}}</th>
-                                        <th>{{\App\CPU\translate('duration')}}</th>
-                                        <th>{{\App\CPU\translate('cost')}}</th>
+                                        <th>{{\App\CPU\translate('normal duration')}}</th>
+                                        <th>{{\App\CPU\translate('express duration')}}</th>
                                         <th class="text-center">{{\App\CPU\translate('status')}}</th>
                                         <th class="text-center">{{\App\CPU\translate('action')}}</th>
                                     </tr>
@@ -48,10 +48,10 @@
                                         <th>{{$k+1}}</th>
                                         <td>{{$method['title']}}</td>
                                         <td>
-                                            {{$method['duration']}}
+                                            {{$method['normal_duration']}}
                                         </td>
                                         <td>
-                                            {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($method['cost']))}}
+                                            {{$method['express_duration']}}
                                         </td>
                                         <td>
                                             <label class="switcher mx-auto">

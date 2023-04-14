@@ -2398,4 +2398,8 @@
   'All_copy_right_reserved_©_2023_' => 'All copy right reserved © 2023 ',
   'Change Status' => 'Change Status',
   'Order status change successfully' => 'Order status change successfully',
+  'normal duration' => 'Normal duration',
+  'express duration' => 'Express duration',
+  'normal delivery days' => 'Normal delivery days',
+  'express delivery days' => 'Express delivery days',
 );

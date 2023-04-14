@@ -61,3 +61,7 @@ ALTER TABLE `users` ADD `shipping_country_iso` VARCHAR(20) NULL DEFAULT NULL AFT
 ALTER TABLE `orders` CHANGE `transaction_ref` `transaction_ref` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
 
 ALTER TABLE `product_stocks` ADD `is_purchased` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '1= purchased, 0= not' AFTER `status`;
+
+ALTER TABLE `shipping_methods` CHANGE `duration` `normal_duration` VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+
+ALTER TABLE `shipping_methods` ADD `express_duration` VARCHAR(20) NULL DEFAULT NULL AFTER `normal_duration`;
