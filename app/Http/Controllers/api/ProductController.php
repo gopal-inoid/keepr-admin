@@ -348,7 +348,13 @@ class ProductController extends Controller
     public function all_available_devices(Request $request){
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
-        $devices_list = Product::select('id','name','details','purchase_price','thumbnail')->where(['status'=>1])->get();
+
+        $devices_list = Product::select('products.id','name','details','purchase_price','thumbnail',DB::raw('COUNT(product_stocks.id) as total_stocks'))
+                        ->Join('product_stocks','product_stocks.product_id','products.id')
+                        ->where('products.status',1)
+                        ->where('product_stocks.is_purchased',0)
+                        ->groupBy('products.id')->get();
+        
         if(!empty($devices_list)){
             foreach($devices_list as $k => $devices){
                 if(!empty($devices->thumbnail)){
@@ -357,11 +363,8 @@ class ProductController extends Controller
                     $devices->thumbnail = asset('public/assets/front-end/img/image-place-holder.png');
                 }
                 $devices->price = number_format($devices->purchase_price,2);
-                $devices['total_stocks'] = ProductStock::where('is_purchased',0)->where('product_id',$devices->id)->count();
-                if($devices['total_stocks'] < 1){
-                    unset($devices_list[$k]);
-                }
                 unset($devices->purchase_price);
+                
             }
             $total_quantity = (int) Cart::where(['customer_id' => $user_details->id])->sum('quantity');
             return response()->json(['status'=>200,'message'=>'Success','total_quantity'=>$total_quantity,'data'=>$devices_list],200);
