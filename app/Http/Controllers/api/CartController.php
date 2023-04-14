@@ -257,12 +257,27 @@ class CartController extends Controller
             }else{
                 $country = $user_details->country;
             }
-           
-            $shipping_rate = ShippingMethodRates::select('normal_rate')->where('country_code','like','%'.$country.'%')->first();
-            $rate = $shipping_rate->normal_rate ?? 0;
-            $shipping_cost = ($rate > 0) ? ($total_price / $rate) : 0;
-            $shipping = number_format($shipping_cost,2);
 
+            $country = "Zimbabwe";
+           
+            $shipping_rates = ShippingMethodRates::select('normal_rate','express_rate','shipping_methods.title as shipping_company')
+                            ->join('shipping_methods','shipping_methods.id','shipping_method_rates.shipping_id')
+                            ->where('shipping_method_rates.status',1)->where('country_code',$country)->get()->toArray();
+            //$rate = $shipping_rate->normal_rate ?? 0;
+            //$shipping_cost = ($rate > 0) ? ($total_price + $rate) : 0;
+            $shipping = number_format(0,2);
+            $shipping_cost_check = [];
+            if(!empty($shipping_rates)){
+                foreach($shipping_rates as $k => $val){
+                    if($val['normal_rate'] < $val['express_rate']){
+                        $shipping_cost_check[$k]['company'] = $val['shipping_company'];
+                        $shipping_cost_check[$k]['shipping_rate'] = $val['normal_rate'];
+                    }else{
+                        $shipping_cost_check[$k]['company'] = $val['shipping_company'];
+                        $shipping_cost_check[$k]['shipping_rate'] = $val['express_rate'];
+                    }
+                }
+            }
 
             //TAX calculation
 
@@ -293,6 +308,7 @@ class CartController extends Controller
             $tax = number_format(7,2);
 
             $data['cart_info'] = $cart_info;
+            $data['shipping_rates'] = $shipping_cost_check;
             $data['customer_id'] = $user_details->id;
             $data['total_order'] = $total_order;
             $data['sub_total'] = number_format($total_price,2);
