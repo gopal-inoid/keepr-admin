@@ -367,25 +367,35 @@ class GeneralController extends Controller
 		$FCM_URL   = env('FCM_URL');
 
         $token = $request->token; //"f_4tUDB2Q0qcaoCeCN0L4T:APA91bGTWw5jIg4aQXy8jharK3CaXAjj6qukWe7t2r3vf8Uao2oCasPTVY1hnrEGH_a78cCmSlQgzt1m1_T3JoilpE8BtcqOJjb58XBHbXY8crhEfm5AsO9okao-dl2bTHuwPCfRmNlq";
+        $title             = 'Keepr App';
+        $registrationIds[] = $token; //$registration_id;
+        if($request->type == 'order_placed'){
+            $data1 = [
+                'title' => $title,
+                'message' => "This is Keepr Test Message",
+                'vibrate' => 1,
+                'sound' => 1,
+                'type' => 'order_placed',
+                'order_id'=> 10
+            ];
+        }elseif($request->type == 'device_found'){
+            $data1 = [
+                'title' => $title,
+                'message' => "This is Keepr Test Message",
+                'vibrate' => 1,
+                'sound' => 1,
+                'type' => 'device_found',
+                "lat"=>"2323.23",
+                "lan"=>"34413.32"
+            ];
+        }
 
-		$registrationIds[] = $token; //$registration_id;
-		$title             = 'Keepr App';
 		// prep the bundle
 		$notification = [
 			'title' => $title,
 			'body' => "This is Keepr Test Message",
 			'vibrate' => '1',
 			'sound' => 'default',
-		];
-
-		$data1 = [
-            'title' => $title,
-            'message' => "This is Keepr Test Message",
-            'vibrate' => 1,
-            'sound' => 1,
-            'type' => 'device_found',
-            "lat"=>"2323.23",
-            "lan"=>"34413.32"
 		];
 
 		$fields = array(
