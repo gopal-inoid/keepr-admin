@@ -608,16 +608,13 @@ class ProductController extends Controller
 		];
 
 		$data1 = [
-			'notification' => $notification,
-			'data' => [
-                'title' => $title,
-                'message' => $msg,
-                'vibrate' => 1,
-                'sound' => 1,
-                'type' => 'device_found',
-                "lat"=>(string) $payload['lat'],
-                "lan"=>(string) $payload['lan']
-            ],
+            'title' => $title,
+            'message' => $msg,
+            'vibrate' => 1,
+            'sound' => 1,
+            'type' => 'device_found',
+            "lat"=>(string) $payload['lat'],
+            "lan"=>(string) $payload['lan']
 		];
 
 		$fields = array(
