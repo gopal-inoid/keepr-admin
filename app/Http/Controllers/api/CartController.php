@@ -266,7 +266,8 @@ class CartController extends Controller
 
             //TAX calculation
 
-            $stripe = new \Stripe\StripeClient('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
+            // $stripe = new \Stripe\StripeClient('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
+           
             // $tax_resp = $stripe->tax->calculations->create(
             //     [
             //       'currency' => 'usd',
@@ -285,7 +286,7 @@ class CartController extends Controller
             //     ]
             // );
 
-            echo "<pre>"; print_r($a); die;
+            // echo "<pre>"; print_r($tax_resp); die;
 
             //END Tax calculation
 
