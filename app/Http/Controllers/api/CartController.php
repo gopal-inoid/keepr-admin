@@ -425,6 +425,20 @@ class CartController extends Controller
         }
     }
 
+    
+    public function changeOrderStatus(Request $request){
+        $order = Order::find($request->order_id);
+        $order->order_status = $request->status;
+        $order->save();
+        $data = $request->order_status;
+
+        $user = User::select('fcm_token')->where('id',$order->customer_id)->first();
+        $msg = "Your Order is ". $request->order_status;
+        $payload['order_id'] = $request->order_id;
+        $this->sendNotification1($user->fcm_token ?? "",$msg,$payload);
+        return response()->json(['status'=>200,'message'=>'Success']);
+    }
+
     public function sendNotification($fcm_token,$msg,$payload){
         $SERVER_ID = env('FIREBASE_NOTIF_SERVER_ID');
 		$FCM_URL   = env('FCM_URL');
@@ -446,6 +460,58 @@ class CartController extends Controller
             'sound' => 1,
             'type' => 'order_placed',
             'order_id'=> $payload['order_id']
+		];
+
+		$fields = array(
+			'data' => $data1,
+			'notification' => $notification,
+			'registration_ids' => $registrationIds,
+		);
+
+		$headers = array(
+			'Authorization: key=' . $SERVER_ID,
+			'Content-Type: application/json',
+		);
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $FCM_URL);
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+		$result = curl_exec($ch);
+		curl_close($ch);
+        $res = json_decode($result,true);
+        if(isset($res['success']) && $res['success'] == 1){
+            return true;
+        }else{
+            return false;
+        }
+        //echo "<pre>"; print_r($result); die;
+    }
+
+    public function sendNotification1($fcm_token,$msg,$payload){
+        $SERVER_ID = env('FIREBASE_NOTIF_SERVER_ID');
+		$FCM_URL   = env('FCM_URL');
+
+		$registrationIds[] = $fcm_token; //$registration_id;
+		$title             = 'Keepr';
+		// prep the bundle
+		$notification = [
+			'title' => $title,
+			'body' => $msg,
+			'vibrate' => '1',
+			'sound' => 'default',
+		];
+
+		$data1 = [
+            'title' => $title,
+            'message' => $msg,
+            'vibrate' => 1,
+            'sound' => 1,
+            'type' => 'order_status',
+            'order_id'=>$payload['order_id']
 		];
 
 		$fields = array(
