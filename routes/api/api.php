@@ -33,6 +33,7 @@ Route::group(['namespace' => 'api'], function () {
         //
 
         Route::get('sendNotification', 'GeneralController@sendNotification');
+        Route::get('changeOrderStatus', 'CartController@changeOrderStatus');
         
         //DEVICE
         Route::post('connect-device', 'ProductController@connect_device');
