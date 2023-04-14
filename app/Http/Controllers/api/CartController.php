@@ -10,6 +10,7 @@ use App\Model\CartShipping;
 use App\Model\Color;
 use App\Model\Product;
 use App\Model\ProductStock;
+use App\Model\ShippingMethodRates;
 use App\Model\CheckoutInfo;
 use App\Model\Shop;
 use App\Model\Order;
@@ -19,6 +20,8 @@ use Illuminate\Support\Str;
 use App\Model\ShippingType;
 use App\Model\CategoryShippingCost;
 use Illuminate\Http\Request;
+use Stripe\Charge;
+use Stripe\Stripe;
 use Illuminate\Support\Facades\Validator;
 use function App\CPU\translate;
 
@@ -245,12 +248,50 @@ class CartController extends Controller
                     $cart['purchase_price'] = number_format($price,2);
                     array_push($device_ids,$cart['product_id']);
                 }
-
             }
 
             CheckoutInfo::insert(['product_id'=>json_encode($device_ids),'customer_id'=>$user_details->id,'total_order'=>$total_order,'total_amount'=>$total_price,'tax_amount'=>7]);
 
-            $shipping = number_format(8,2);
+            if(!empty($user_details->shipping_country)){
+                $country = $user_details->shipping_country;
+            }else{
+                $country = $user_details->country;
+            }
+           
+            $shipping_rate = ShippingMethodRates::select('normal_rate')->where('country_code','like','%'.$country.'%')->first();
+            $rate = $shipping_rate->normal_rate ?? 0;
+            $shipping_cost = ($rate > 0) ? ($total_price / $rate) : 0;
+            $shipping = number_format($shipping_cost,2);
+
+
+            //TAX calculation
+
+            //$config = \App\CPU\Helpers::get_business_settings('stripe');
+            //Stripe::setApiKey('pk_test_51MprMPC6n3N1q7nDBNa55LUx73vFVPMnW8N59YG8h3QNZkO55xpqPyMlK6JGCxHbVU8cw2eUWJwbYFlCd0LMLVLf00tDtJ7g0k'); //$config['api_key']
+            //header('Content-Type: application/json');
+            // $stripe = new \Stripe\StripeClient('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
+            // $tax_resp = $stripe->tax->calculations->create(
+            //     [
+            //       'currency' => 'usd',
+            //       'line_items' => [['amount' => 1000, 'reference' => 'L1']],
+            //       'customer_details' => [
+            //         'address' => [
+            //           'line1' => '354 Oyster Point Blvd',
+            //           'city' => 'South San Francisco',
+            //           'state' => 'CA',
+            //           'postal_code' => '94080',
+            //           'country' => 'US',
+            //         ],
+            //         'address_source' => 'shipping',
+            //       ],
+            //       'expand' => ['line_items.data.tax_breakdown'],
+            //     ]
+            // );
+
+            // echo "<pre>"; print_r($tax_resp); die;
+
+            //END Tax calculation
+
             $tax = number_format(7,2);
 
             $data['cart_info'] = $cart_info;
@@ -337,10 +378,6 @@ class CartController extends Controller
                 $order->order_amount = number_format($total_price,2);
                 $order->save();
 
-                $msg = "Your Order has been placed, Estimated Delivery on " . date('F j',strtotime($order->created_at . '+7 days'));
-                $payload['order_id'] = $order->id ?? NULL;
-                $this->sendNotification($user_details->fcm_token,$msg,$payload);
-
                 if(!empty($order->mac_ids)){
                     $mac_ids = json_decode($order->mac_ids,true);
                     foreach($mac_ids as $product_id => $macs){
@@ -389,6 +426,11 @@ class CartController extends Controller
             $update_order->payment_status = 'paid';
             $update_order->order_status = 'confirmed';
             $update_order->save();
+
+            $msg = "Your Order has been placed, Estimated Delivery on " . date('F j',strtotime($update_order->created_at . '+7 days'));
+            $payload['order_id'] = $update_order->id ?? NULL;
+            $this->sendNotification($user_details->fcm_token,$msg,$payload);
+
             return response()->json(['status'=>200,'message'=>'Order Successfully Confirmed','order_id'=>(int)$order_id],200);
         }else{
             return response()->json(['status'=>400,'message'=>'Order not Confirmed,something went wrong'],200);
