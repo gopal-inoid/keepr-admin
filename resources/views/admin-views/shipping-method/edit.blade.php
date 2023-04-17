@@ -45,13 +45,13 @@
                         <div class="col-3">
                             <div class="form-group">
                                 <label for="title">{{\App\CPU\translate('normal delivery days')}}</label>
-                                <input type="number" name="normal_duration" value="{{$method['normal_duration'] ?? ''}}" class="form-control" placeholder="Ex (10)">
+                                <input type="text" name="normal_duration" value="{{$method['normal_duration'] ?? ''}}" class="form-control" placeholder="Ex (5-6 days)">
                             </div>
                         </div>
                         <div class="col-3">
                             <div class="form-group">
                                 <label for="title">{{\App\CPU\translate('express delivery days')}}</label>
-                                <input type="number" name="express_duration" value="{{$method['express_duration'] ?? ''}}" class="form-control" placeholder="Ex (5)">
+                                <input type="text" name="express_duration" value="{{$method['express_duration'] ?? ''}}" class="form-control" placeholder="Ex (2-5 days)">
                             </div>
                         </div>
                         <div class="col-2">
