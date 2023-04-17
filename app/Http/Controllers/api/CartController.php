@@ -22,6 +22,7 @@ use App\Model\CategoryShippingCost;
 use Illuminate\Http\Request;
 use Stripe\Charge;
 use Stripe\Stripe;
+use Stripe\Tax;
 use Illuminate\Support\Facades\Validator;
 use function App\CPU\translate;
 
@@ -257,14 +258,11 @@ class CartController extends Controller
             }else{
                 $country = $user_details->country;
             }
-
-            $country = "Zimbabwe";
            
             $shipping_rates = ShippingMethodRates::select('normal_rate','express_rate','shipping_methods.title as shipping_company','shipping_methods.normal_duration','shipping_methods.express_duration')
                             ->join('shipping_methods','shipping_methods.id','shipping_method_rates.shipping_id')
-                            ->where('shipping_method_rates.status',1)->where('country_code',$country)->get()->toArray();
-            //$rate = $shipping_rate->normal_rate ?? 0;
-            //$shipping_cost = ($rate > 0) ? ($total_price + $rate) : 0;
+                            ->where('shipping_method_rates.status',1)->where('country_code',$country)->get();
+
             $shipping = number_format(0,2);
             $shipping_cost_check = [];
             if(!empty($shipping_rates)){
@@ -285,31 +283,46 @@ class CartController extends Controller
 
             //TAX calculation
 
-            // $stripe = new \Stripe\StripeClient('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
-           
-            // $tax_resp = $stripe->tax->calculations->create(
-            //     [
-            //       'currency' => 'usd',
-            //       'line_items' => [['amount' => 1000, 'reference' => 'L1']],
-            //       'customer_details' => [
-            //         'address' => [
-            //           'line1' => '354 Oyster Point Blvd',
-            //           'city' => 'South San Francisco',
-            //           'state' => 'CA',
-            //           'postal_code' => '94080',
-            //           'country' => 'US',
-            //         ],
-            //         'address_source' => 'shipping',
-            //       ],
-            //       'expand' => ['line_items.data.tax_breakdown'],
-            //     ]
-            // );
+            //$stripe = new \Stripe\StripeClient('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
+            //\Stripe\Stripe::setApiKey('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
+            
+            // $headers = [
+            //    'Content-Type: application/x-www-form-urlencoded',
+            //    'Authorization: Bearer sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg' 
+            // ];
 
-            // echo "<pre>"; print_r($tax_resp); die;
+            // $fields = [
+            //     'currency' => 'usd',
+            //     'line_items' => [['amount' => 1000, 'reference' => 'L1']],
+            //     'customer_details' => [
+            //     'address' => [
+            //         'line1' => '354 Oyster Point Blvd',
+            //         'city' => 'South San Francisco',
+            //         'state' => 'CA',
+            //         'postal_code' => '94080',
+            //         'country' => 'US',
+            //     ],
+            //     'address_source' => 'shipping',
+            //     ],
+            //     'expand' => ['line_items.data.tax_breakdown'],
+            // ];
+
+            // $ch = curl_init();
+            // curl_setopt($ch, CURLOPT_URL, "https://api.stripe.com/v1/tax/calculations");
+            // curl_setopt($ch, CURLOPT_POST, true);
+            // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            // curl_setopt($ch, CURLOPT_POSTFIELDS, 'currency=inr&line_items[0][amount]=50000&line_items[0][reference]=L1&customer_details[address][line1]="siwanchi gate"&customer_details[address][city]="jodhpur"&customer_details[address][state]=RJ&customer_details[address][postal_code]=342001&customer_details[address][country]=IN&customer_details[address_source]=shipping&expand[0]=line_items.data.tax_breakdown');
+            // $result = curl_exec($ch);
+            // curl_close($ch);
+            // $res = json_decode($result,true);
+            
+            //echo "<pre>"; print_r($res); die;
 
             //END Tax calculation
 
-            $tax = number_format(7,2);
+            $tax = number_format(0,2);
 
             $data['cart_info'] = $cart_info;
             $data['shipping_rates'] = $shipping_cost_check;
