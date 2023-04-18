@@ -258,8 +258,8 @@ class CartController extends Controller
             }else{
                 $country = $user_details->country;
             }
-           
-            $shipping_rates = ShippingMethodRates::select('normal_rate','express_rate','shipping_methods.title as shipping_company','shipping_methods.normal_duration','shipping_methods.express_duration')
+            
+            $shipping_rates = ShippingMethodRates::select('normal_rate','express_rate','shipping_methods.title as shipping_company','shipping_methods.normal_duration','shipping_methods.express_duration','shipping_methods.id as shippingid')
                             ->join('shipping_methods','shipping_methods.id','shipping_method_rates.shipping_id')
                             ->where('shipping_method_rates.status',1)->where('country_code',$country)->get();
 
@@ -267,13 +267,13 @@ class CartController extends Controller
             $shipping_cost_check = [];
             if(!empty($shipping_rates)){
                 foreach($shipping_rates as $k => $val){
+                    $shipping_cost_check[$k]['id'] = $val['shippingid'];
+                    $shipping_cost_check[$k]['company'] = $val['shipping_company'];
                     if($val['normal_rate'] < $val['express_rate']){
-                        $shipping_cost_check[$k]['company'] = $val['shipping_company'];
                         $shipping_cost_check[$k]['shipping_rate'] = $val['normal_rate'];
                         $shipping_cost_check[$k]['mode'] = "normal_rate";
                         $shipping_cost_check[$k]['delivery_days'] = $val['normal_duration'];
                     }else{
-                        $shipping_cost_check[$k]['company'] = $val['shipping_company'];
                         $shipping_cost_check[$k]['shipping_rate'] = $val['express_rate'];
                         $shipping_cost_check[$k]['mode'] = "express_rate";
                         $shipping_cost_check[$k]['delivery_days'] = $val['express_duration'];
@@ -348,6 +348,8 @@ class CartController extends Controller
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         $cart_id = $request->cart_id;
 
+        $shipping_id = $request->shipping_id;
+        
         $left = ltrim($cart_id, "'");
         $right = rtrim($left, "'");
         $data = json_decode($right,true);
@@ -405,6 +407,7 @@ class CartController extends Controller
                 $order = new Order();
                 $order->customer_id = $user_details->id;
                 $order->payment_method = 'Stripe';
+                $order->shipping_method_id = $shipping_id;
                 $order->mac_ids = json_encode($mac_ids_array);
                 $order->order_amount = number_format($total_price,2);
                 $order->save();
