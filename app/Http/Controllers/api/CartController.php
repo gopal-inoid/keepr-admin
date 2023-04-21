@@ -290,7 +290,7 @@ class CartController extends Controller
             //    'Content-Type: application/x-www-form-urlencoded',
             //    'Authorization: Bearer sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg' 
             // ];
-
+            
             // $fields = [
             //     'currency' => 'usd',
             //     'line_items' => [['amount' => 1000, 'reference' => 'L1']],
@@ -313,12 +313,24 @@ class CartController extends Controller
             // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            // curl_setopt($ch, CURLOPT_POSTFIELDS, 'currency=inr&line_items[0][amount]=50000&line_items[0][reference]=L1&customer_details[address][line1]="siwanchi gate"&customer_details[address][city]="jodhpur"&customer_details[address][state]=RJ&customer_details[address][postal_code]=342001&customer_details[address][country]=IN&customer_details[address_source]=shipping&expand[0]=line_items.data.tax_breakdown');
+            // //curl_setopt($ch, CURLOPT_POSTFIELDS, 'currency=usd&line_items[0][amount]=5000&line_items[0][reference]=L1&customer_details[address][line1]="354 Oyster Point Blvd"&customer_details[address][city]="South San Francisco"&customer_details[address][state]=CA&customer_details[address][postal_code]=94080&customer_details[address][country]=US&customer_details[address_source]=shipping&expand[0]=line_items.data.tax_breakdown');
+            // curl_setopt($ch, CURLOPT_POSTFIELDS, 
+            //     'currency=usd&
+            //     line_items[0][amount]=5000&
+            //     line_items[0][reference]=L1&
+            //     customer_details[address][line1]="354 Oyster Point Blvd"&
+            //     customer_details[address][city]="South San Francisco"&
+            //     customer_details[address][state]=CA&
+            //     customer_details[address][postal_code]=94080&
+            //     customer_details[address][country]=US&
+            //     customer_details[address_source]=shipping&
+            //     expand[0]=line_items.data.tax_breakdown'
+            // );
             // $result = curl_exec($ch);
             // curl_close($ch);
             // $res = json_decode($result,true);
             
-            //echo "<pre>"; print_r($res); die;
+            // echo "<pre>"; print_r($res); die;
 
             //END Tax calculation
 
