@@ -58,7 +58,7 @@ class APIMiddleware
     public function check_force_update($platform,$api_version){
         $check = \DB::table('api_versions')->where('platform',$platform)->first();
         if(!empty($check->id)){
-            if($check->status == 1 || $api_version > $check->version){
+            if($check->status == 1 && $api_version > $check->version){
                 return ['status'=>406,'message'=>$check->message];
             }else{
                 return [];
