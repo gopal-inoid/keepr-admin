@@ -39,9 +39,7 @@
                             <a class="nav-link" href="#faq">FAQ</a>
                         </li>
                     </ul>
-                    <form class="d-flex mt-3">
-                        <button class="btn download_keeper_btn" type="submit">Download Keepr</button>
-                    </form>
+                    <a href="#download_keepr" class="btn download_keeper_btn" >Download Keepr</a>
                 </div>
             </div>
         </nav>
@@ -60,7 +58,7 @@
                                     ut
                                     labore et dolore magna aliqua. Ut enim ad minim veniam,</p>
                                 <div class="download_app_btn">
-                                    <a href="" class="btn" type="button ">Download keepr</a>
+                                    <a href="#download_keepr" class="btn" type="button ">Download keepr</a>
                                 </div>
                             </div>
 
@@ -345,7 +343,7 @@
                             </div>
                         </div>
 
-                        <div class="container overlaping_div">
+                        <div class="container overlaping_div" id="download_keepr">
                             <div class="row">
                                 <div class="col-lg-5 col-md-5 col-sm-12 overlaping_div_content">
                                     <h1 class="abs_div_content">
