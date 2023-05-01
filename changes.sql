@@ -65,3 +65,9 @@ ALTER TABLE `product_stocks` ADD `is_purchased` TINYINT(1) NOT NULL DEFAULT '0' 
 ALTER TABLE `shipping_methods` CHANGE `duration` `normal_duration` VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
 
 ALTER TABLE `shipping_methods` ADD `express_duration` VARCHAR(20) NULL DEFAULT NULL AFTER `normal_duration`;
+
+CREATE TABLE `keepr`.`api_versions` ( `id` INT NOT NULL AUTO_INCREMENT , `android_platform` TINYINT(1) NOT NULL DEFAULT '0' , `ios_platform` TINYINT(1) NOT NULL DEFAULT '0' , `old_version` VARCHAR(20) NULL DEFAULT NULL , `new_version` VARCHAR(20) NULL DEFAULT NULL , `current_version` VARCHAR(20) NULL DEFAULT NULL , `status` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '2= force update, 1=normal update,0=no need for update' , `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+INSERT INTO `api_versions` (`id`, `android_platform`, `ios_platform`, `old_version`, `new_version`, `current_version`, `status`, `updated_at`) VALUES (NULL, '1', '0', '1.0', '1.0.2', '1.0.1', '1', '2023-04-24 13:22:38'), (NULL, '0', '1', '1.0', '1.0.2', '1.0.1', '1', '2023-04-24 13:22:38');
+
+ALTER TABLE `api_versions` CHANGE `android_platform` `platform` TINYINT(1) NOT NULL DEFAULT '0';
