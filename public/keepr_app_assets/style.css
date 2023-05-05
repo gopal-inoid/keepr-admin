@@ -66,7 +66,7 @@ body {
     /* background-size: contain; */
 }
 
-.leftKeeprPic {}
+/* .leftKeeprPic {} */
 
 .Main_Content {
     padding-top: 128px;
@@ -99,14 +99,11 @@ body {
 }
 
 .rightMobileIcon img {
+    padding-top: 115px;
     width: 100%;
     height: 100%;
     object-fit: contain;
-    padding-top: 60px;
-    /* max-height: 800px;
-    max-width: 900px;
-    object-fit: cover;
-    margin-left: -200px; */
+    padding-bottom: 60px;
 }
 
 .About_Main_Content {
@@ -126,6 +123,7 @@ body {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    padding: 0px 70px 0px 0px;
     /* max-height: 800px;
     max-width: 900px;
     object-fit: cover;
@@ -173,7 +171,7 @@ body {
 }
 
 .step-circle {
-    width: 40px;
+    width: 16%;
     height: 40px;
     border: 1px solid #fff;
     align-items: center;
@@ -188,6 +186,7 @@ body {
     color: #fff;
     font-size: 22px;
     margin-left: 10px;
+    width: 84%;
 }
 
 .arrow-icon {
@@ -249,7 +248,7 @@ body {
     margin-left: -220px; */
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
 }
 
 .Fifth_Section {
@@ -263,6 +262,12 @@ body {
     font-weight: 600;
 }
 
+.ibeacon-headline_2 {
+    font-size: 28px;
+    font-weight: 600;
+    padding-top: 75px;
+}
+
 .Product-1 {
     padding: 40px;
     background: #F8F8F8;
@@ -271,7 +276,8 @@ body {
 
 .Product-1 img,
 .Product-2 img {
-    max-width: 250px;
+    width: 100%;
+    object-fit: contain;
 }
 
 .Product-2 {
@@ -308,7 +314,7 @@ body {
     font-size: 15px;
 }
 
-.tellUs {
+.tellUs a {
     color: #33A5B8;
 }
 
@@ -328,17 +334,17 @@ body {
 .mail_section span {
     color: #33A5B8;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .Seven_Section_Social {
     padding-top: 40px;
-    display: flex;
+    display: inline-flex;
     justify-content: space-between;
 }
 
 .mail_section img {
-    width: 40px;
+    width: 36px;
 }
 
 .rightSection {
@@ -422,6 +428,7 @@ ul li {
 .app_download_btn img {
     height: 50px;
     width: 200px;
+    cursor: pointer;
 }
 
 .overlay {
@@ -438,6 +445,8 @@ ul li {
 .overlay-image {
     height: 550px;
     background: linear-gradient(rgba(66, 92, 194, 0.80)0%, rgba(54, 156, 193, 0.80)54%), url('./assests/Mask Group 43.png');
+    background-size: cover;
+    background-position: center center;
 }
 
 .HeadPhone_image img {
@@ -450,6 +459,10 @@ ul li {
 @media (min-width: 992px) and (max-width: 1280px) {
     .step_section {
         padding: 35px;
+    }
+
+    .step-circle {
+        width: 10%;
     }
 
     .steps {
@@ -465,7 +478,7 @@ ul li {
     }
 
     .rightMobileIcon img {
-        padding-top: 50px;
+        padding-top: 100px;
     }
 
     .Main_Content p,
@@ -502,6 +515,22 @@ ul li {
 }
 
 @media only screen and (max-width: 991px) {
+
+
+    .rightMobileIcon img {
+        padding-top: 50px;
+    }
+
+
+    .rightMobileIcon2 img {
+        padding: 0px !important;
+        margin-left: -40px;
+    }
+
+    #mail_section {
+        margin-left: 0px !important;
+    }
+
     .Main_Content {
         padding-top: 100px;
         padding-left: 0px;
@@ -611,7 +640,7 @@ ul li {
         line-height: 40px;
         font-weight: 600;
         font-size: 35px;
-        padding: 0px 40px 0px 0px;
+        padding: 0px 0px 0px 0px;
     }
 
     .mail_section img {
@@ -630,6 +659,19 @@ ul li {
 
 
 @media only screen and (max-width: 767px) {
+
+    .step-circle {
+        width: 12%;
+    }
+
+    .rightMobileIcon img {
+        padding-top: 80px;
+        padding-bottom: 50px;
+    }
+
+    .rightMobileIcon2 img {
+        padding: 0;
+    }
 
     .main_heading {
         line-height: 45px;
@@ -694,8 +736,12 @@ ul li {
     }
 
     .More_Questions {
-        padding: 20px 40px 0px 0px;
+        padding: 20px 0px 0px 0px;
     }
+
+    /* .Seven_Section_Social{
+        display: flex;
+    } */
 
     .desc-1,
     .desc-2,
@@ -722,7 +768,7 @@ ul li {
     }
 
     .overlaping_div {
-        top: -67%;
+        top: -61%;
     }
 
     .Seven_Section {
@@ -732,9 +778,18 @@ ul li {
     .Frequently_Questions {
         padding-top: 50px;
     }
+
+    .app_download_btn {
+        padding: 0px 15px 0px 15px;
+    }
 }
 
 @media only screen and (max-width: 500px) {
+
+    .Product-1{
+        padding-bottom: 20px;
+    }
+
     .overlaping_div {
         top: -58%;
     }
@@ -750,8 +805,13 @@ ul li {
     .arrow-icon {
         text-align: center;
     }
-}
 
+    .overlay-image img {
+        width: 83px;
+        left: 41%;
+        top: 50%;
+    }
+}
 
 .desc-1 {
     cursor: pointer;
@@ -769,10 +829,28 @@ ul li {
     cursor: pointer;
 }
 
-
 .active,
 .desc-1:hover {
     background-color: #31A4B7;
     color: white;
     transition: 0.2s;
 }
+
+.Price_Count {
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.CopyRight_Section img {
+    cursor: pointer;
+}
+
+#mail_section {
+    margin-left: 21px;
+}
+
+.btn:focus {
+    outline: 0;
+    box-shadow: none !important;
+}
+
