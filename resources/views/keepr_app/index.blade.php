@@ -375,8 +375,8 @@
                                 </div>
                                 <div class="CopyRight_Section">
                                 <img class="mx-1" src="{{ asset('keepr_app_assets/assests/Layer 2.svg') }}" alt="">
-                                <img class="mx-1" src="{{ asset('keepr_app_assets/assests/Layer (1).svg') }}" alt="">
-                                <img class="mx-1" src="{{ asset('keepr_app_assets/assests/Layer (2).svg') }}" alt="">
+                                <img class="mx-1" src="{{ asset('keepr_app_assets/assests/Layer 2 (1).svg') }}" alt="">
+                                <img class="mx-1" src="{{ asset('keepr_app_assets/assests/Layer 2 (2).svg') }}" alt="">
                                 </div>
                             </div>
                         </div>
