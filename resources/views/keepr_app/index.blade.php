@@ -406,7 +406,7 @@
             $(".desc-1").removeClass("active");
             $(".desc-3").removeClass("active");
             $(".desc-4").removeClass("active");
-            $("#AboutImage").attr("src", "{{ asset('keepr_app_assets/assests/About2.png') }}");
+            $("#AboutImage").attr("src", "{{ asset('keepr_app_assets/assests/25.png') }}");
         })
         $(".desc-3").hover(function() {
             $(this).addClass("active");
