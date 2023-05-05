@@ -33,6 +33,8 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
                     }
                     
                 }
+
+                echo "done"; die;
             }
 
             //echo "<pre>"; print_r($de_json); die;
