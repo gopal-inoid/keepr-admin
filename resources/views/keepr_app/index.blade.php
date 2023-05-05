@@ -399,28 +399,28 @@
             $(".desc-2").removeClass("active");
             $(".desc-3").removeClass("active");
             $(".desc-4").removeClass("active");
-            $("#AboutImage").attr("src", "./assests/25.png");
+            $("#AboutImage").attr("src", "{{ asset('keepr_app_assets/assests/25.png') }}");
         })
         $(".desc-2").hover(function() {
             $(this).addClass("active");
             $(".desc-1").removeClass("active");
             $(".desc-3").removeClass("active");
             $(".desc-4").removeClass("active");
-            $("#AboutImage").attr("src", "./assests/25.png");
+            $("#AboutImage").attr("src", "{{ asset('keepr_app_assets/assests/25.png') }}");
         })
         $(".desc-3").hover(function() {
             $(this).addClass("active");
             $(".desc-2").removeClass("active");
             $(".desc-1").removeClass("active");
             $(".desc-4").removeClass("active");
-            $("#AboutImage").attr("src", "./assests/25.png");
+            $("#AboutImage").attr("src", "{{ asset('keepr_app_assets/assests/25.png') }}");
         })
         $(".desc-4").hover(function() {
             $(this).addClass("active");
             $(".desc-2").removeClass("active");
             $(".desc-3").removeClass("active");
             $(".desc-1").removeClass("active");
-            $("#AboutImage").attr("src", "./assests/25.png");
+            $("#AboutImage").attr("src", "{{ asset('keepr_app_assets/assests/25.png') }}");
         })
     });
 </script>
