@@ -19,6 +19,25 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
     /*authenticated*/
     Route::group(['middleware' => ['admin']], function () {
 
+        Route::get('get-country-api', function(){
+            $json = file_get_contents("https://raw.githubusercontent.com/dr5hn/countries-states-cities-database/master/countries%2Bstates.json");
+            $de_json = json_decode($json,true);
+
+            if(!empty($de_json)){
+                foreach($de_json as $key => $val){
+                    \DB::table('country')->insert(['name','iso3','iso2','phone_code','capital','currency','currency_name','region','subregion',
+                                                    'timezones_gmtOffset','timezones_zoneName','latitude',
+                                                    'longitude','translations','numeric_code','currency_symbol','abbreviation']);
+                    foreach($val['states'] as $k => $vl){
+                        \DB::table('states')->insert(['name'=>$vl['name'],'state_code'=>$vl['state_code'],'latitude'=>$vl['latitude'],'longitude'=>$vl['longitude'],'country_id'=>$vl['name']]);
+                    }
+                    
+                }
+            }
+
+            //echo "<pre>"; print_r($de_json); die;
+        });
+
         //dashboard routes
         Route::get('/', 'DashboardController@dashboard')->name('dashboard');//previous dashboard route
         Route::get('countries', 'DashboardController@store_countries')->name('store.countries');
