@@ -124,10 +124,7 @@ body {
     height: 100%;
     object-fit: contain;
     padding: 0px 70px 0px 0px;
-    /* max-height: 800px;
-    max-width: 900px;
-    object-fit: cover;
-    margin-left: -300px; */
+    margin: auto;
 }
 
 .download_app_btn_About a {
@@ -165,7 +162,7 @@ body {
 
 .steps {
     display: flex;
-    align-items: center;
+    /* align-items: center; */
     color: #fff;
     /* flex-wrap: wrap; */
 }
@@ -191,6 +188,8 @@ body {
 
 .arrow-icon {
     margin-left: 60px;
+    align-items: center;
+    display: flex;
 }
 
 .Unlock_Next_Level {
@@ -525,6 +524,7 @@ ul li {
     .rightMobileIcon2 img {
         padding: 0px !important;
         margin-left: -40px;
+        margin: auto;
     }
 
     #mail_section {
@@ -671,6 +671,7 @@ ul li {
 
     .rightMobileIcon2 img {
         padding: 0;
+        margin: auto;
     }
 
     .main_heading {
@@ -739,9 +740,12 @@ ul li {
         padding: 20px 0px 0px 0px;
     }
 
-    /* .Seven_Section_Social{
-        display: flex;
-    } */
+    .Seven_Section_Social {
+        text-align: justify;
+        margin: auto;
+        vertical-align: middle;
+        display: inline-block;
+    }
 
     .desc-1,
     .desc-2,
@@ -786,7 +790,7 @@ ul li {
 
 @media only screen and (max-width: 500px) {
 
-    .Product-1{
+    .Product-1 {
         padding-bottom: 20px;
     }
 
@@ -810,6 +814,18 @@ ul li {
         width: 83px;
         left: 41%;
         top: 50%;
+    }
+
+    .step-circle {
+        /* width: 15%; */
+        height: 35px;
+        border: 1px solid #fff;
+        align-items: center;
+        text-align: center;
+        line-height: 32px;
+        color: #fff;
+        font-size: 20px;
+        border-radius: 50%;
     }
 }
 
@@ -854,3 +870,8 @@ ul li {
     box-shadow: none !important;
 }
 
+@media only screen and (max-width: 500px){
+    .overlaping_div {
+        top: -50%;
+    }
+}
