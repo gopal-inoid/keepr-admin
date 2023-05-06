@@ -65,7 +65,7 @@
 						</div>
 						<div class="col-md-6">
 							<div class="rightMobileIcon">
-								<img src="{{ asset(keepr_app_assets/assests/hero2@2x.png)}}" alt="">
+								<img src="{{ asset(keepr_app_assets/assests/hero2_large.png)}}" alt="">
 							</div>
 						</div>
 					</div>
