@@ -5,6 +5,11 @@
     padding: 0;
 }
 
+.container-fluid {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
 body {
     font-family: 'Titillium Web', sans-serif;
 }
@@ -46,6 +51,11 @@ body {
     height: 50px;
     font-size: 18px;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: auto;
+    justify-content: center;
 }
 
 .main_heading {
@@ -92,10 +102,13 @@ body {
     padding: 10px 30px;
     font-size: 20px;
     font-weight: 600;
+    border-radius: 10px;
 }
 
 .About_seocond {
-    padding-top: 150px;
+    padding-top: 80px;
+    padding-left: 30px;
+    padding-right: 30px;
 }
 
 .rightMobileIcon img {
@@ -110,7 +123,7 @@ body {
     color: #1F1F39 !important;
     /* padding-right: 340px; */
     color: #fff;
-    font-size: 50px;
+    font-size: 40px;
     font-weight: 600;
 }
 
@@ -144,16 +157,27 @@ body {
     color: #31A4B7;
 }
 
+.About_Main_Content span {
+    line-height: 55px;
+}
+
 .step_section_row {
-    background: transparent url('./assests/keepr.png') 100% 0% no-repeat padding-box;
-    padding-top: 120px;
+    /* background: transparent url('./assests/keepr.png') 100% 0% no-repeat padding-box; */
+    background: transparent linear-gradient(101deg, #4482DE 0%, #31A4B7 100%) 0% 0% no-repeat;
+    /* padding-top: 120px; */
+    justify-content: center;
+    border-radius: 20px;
+    /* padding: 45px; */
 }
 
 .step_section {
+    justify-content: center;
     border-radius: 20px;
     padding: 45px;
     /* height: 260px; */
-    background: transparent linear-gradient(101deg, #4482DE 0%, #31A4B7 100%) 0% 0% no-repeat padding-box;
+    /* background: transparent linear-gradient(101deg, #4482DE 0%, #31A4B7 100%) 0% 0% no-repeat padding-box; */
+    background: transparent url('./assests/keepr.png') 100% 100% no-repeat padding-box;
+
 }
 
 .section_three {
@@ -168,7 +192,7 @@ body {
 }
 
 .step-circle {
-    width: 16%;
+    /* width: 16%; */
     height: 40px;
     border: 1px solid #fff;
     align-items: center;
@@ -177,17 +201,20 @@ body {
     color: #fff;
     font-size: 25px;
     border-radius: 50%;
+    padding: 0;
 }
 
 .Steps_Content {
     color: #fff;
-    font-size: 22px;
-    margin-left: 10px;
-    width: 84%;
+    font-size: 16px;
+    /* margin-left: 10px; */
+    /* width: 84%; */
+    display: flex;
+    align-items: center;
 }
 
 .arrow-icon {
-    margin-left: 60px;
+    /* margin-left: 60px; */
     align-items: center;
     display: flex;
 }
@@ -297,7 +324,7 @@ body {
     opacity: 1;
     color: #fff;
     font-size: 20px;
-    line-height: 35px;
+    line-height: 39px;
     font-weight: 600;
 }
 
@@ -367,6 +394,7 @@ body {
 }
 
 .footer_menu {
+    width: 100%;
     padding: 0;
     display: inline-flex;
 }
@@ -380,6 +408,9 @@ ul li {
     padding-top: 40px;
     color: #fff;
     font-size: 15px;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    padding-bottom: 0px !important;
 }
 
 .footer-body2 {
@@ -396,7 +427,7 @@ ul li {
     top: -54%;
     position: absolute;
     border-radius: 20px;
-    background: transparent linear-gradient(118deg, #425CC2 0%, #369CC1 54%, #31A4B7 100%) 0% 0% no-repeat padding-box;
+    background: transparent linear-gradient(118deg, #31A4B7 0%,  #369CC1 54%, #425CC2  100%) 0% 0% no-repeat padding-box;
 }
 
 .overlaping_div_content {
@@ -432,20 +463,26 @@ ul li {
 
 .overlay {
     position: relative;
-    padding-top: 100px;
 }
 
 .video_Play_Button {
     position: absolute;
     top: 45%;
-    left: 48%;
+    left: 47%;
+}
+
+.overlay {
+    background: url('./assests/Mask Group 43.png');
+    background-position: center center;
 }
 
 .overlay-image {
     height: 550px;
-    background: linear-gradient(rgba(66, 92, 194, 0.80)0%, rgba(54, 156, 193, 0.80)54%), url('./assests/Mask Group 43.png');
+    background: transparent linear-gradient(105deg, hsla(228, 51%, 51%, 1) 0%, hsla(196, 56%, 48%, 1) 54%, hsla(189, 58%, 45%, 1) 100%) 0% 0% no-repeat padding-box;
+    ;
     background-size: cover;
     background-position: center center;
+    opacity: 0.7;
 }
 
 .HeadPhone_image img {
@@ -459,9 +496,16 @@ ul li {
     .step_section {
         padding: 35px;
     }
-
-    .step-circle {
+    .ibeacon-headline_2 {
+        /* font-size: 28px; */
+        font-weight: 600;
+        padding-top: 41px;
+    }
+    /* .step-circle {
         width: 10%;
+    } */
+    .arrow-icon {
+        margin-left: 60px;
     }
 
     .steps {
@@ -482,12 +526,12 @@ ul li {
 
     .Main_Content p,
     .About_Main_Content p {
-        font-size: 18px;
+        font-size: 16px;
     }
 
-    .About_Main_Content {
+    /* .About_Main_Content {
         font-size: 45px;
-    }
+    } */
 
     .download_app_btn_About {
         padding-top: 30px;
@@ -515,6 +559,17 @@ ul li {
 
 @media only screen and (max-width: 991px) {
 
+    .arrow-icon {
+        margin: auto;
+    }
+
+    #Frequently_Asked_Questions2 {
+        padding: 0 !important;
+    }
+
+    #Frequently_Asked_Questions1 {
+        padding-right: 0px !important;
+    }
 
     .rightMobileIcon img {
         padding-top: 50px;
@@ -576,7 +631,7 @@ ul li {
     }
 
     .Steps_Content {
-        font-size: 20px;
+        font-size: 16px;
     }
 
     .steps {
@@ -661,7 +716,11 @@ ul li {
 @media only screen and (max-width: 767px) {
 
     .step-circle {
-        width: 12%;
+        width: 10%;
+    }
+
+    .arrow-icon {
+        justify-content: center;
     }
 
     .rightMobileIcon img {
@@ -711,6 +770,7 @@ ul li {
 
     .steps p {
         margin-top: 0px !important;
+        margin-left: 55px !important;
     }
 
     .Unlock_Next_Level {
@@ -772,7 +832,7 @@ ul li {
     }
 
     .overlaping_div {
-        top: -61%;
+        top: -70%;
     }
 
     .Seven_Section {
@@ -870,8 +930,36 @@ ul li {
     box-shadow: none !important;
 }
 
-@media only screen and (max-width: 500px){
+@media only screen and (max-width: 500px) {
     .overlaping_div {
-        top: -50%;
+        top: -48%;
+    }
+
+    .footer_menu {
+        display: block;
+    }
+    .steps p{
+         margin-left: 50px !important;
     }
 }
+
+.steps p {
+    font-size: 14px;
+    margin-left: 37px;
+}
+
+#Frequently_Asked_Questions2 {
+    padding: 0px 0px 0px 90px;
+}
+
+#Frequently_Asked_Questions1 {
+    padding: 0px 90px 0px 30px;
+}
+
+/* #_block_1{
+    width: 80%;
+}
+#_block_2{
+    width: 20%;
+    margin-left: 0px;
+} */
