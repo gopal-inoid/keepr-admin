@@ -15,30 +15,35 @@
         <div class="Navbar-Section">
             <nav class="navbar container navbar-expand-lg navbar-light pb-3 pt-0">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="#"><img src="{{ asset('keepr_app_assets/assests/Keepe_logo.png')}}" alt=""></a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                    <a class="navbar-brand" href="#">
+                        <img src="{{ asset('keepr_app_assets/assests/Keepe_logo.png')}}" alt="">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false"
+                        aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarScroll">
-                        <ul class="navbar-nav me-auto m-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                        <ul class="navbar-nav me-auto m-auto my-2 my-lg-0 navbar-nav-scroll"
+                            style="--bs-scroll-height: 100px;">
                             <li class="nav-item">
-                                <a class="nav-link" aria-current="page" href="#">Home</a>
+                                <a class="nav-link" aria-current="page" href="#section_seocond">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">About</a>
+                                <a class="nav-link" href="#section_three">About</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Features</a>
+                                <a class="nav-link" href="#Four_Section">Features</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Products</a>
+                                <a class="nav-link" href="#Fifth_Section">Products</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">FAQ</a>
+                                <a class="nav-link" href="#Frequently_Questions">FAQ</a>
                             </li>
                         </ul>
                         <form class="d-flex mt-3">
-                            <button class="btn download_keeper_btn" type="submit">Download Keepr</button>
+                            <a class="btn download_keeper_btn" href="#Download_keepr" type="submit">Download Keepr</a>
                         </form>
                     </div>
                 </div>
@@ -47,25 +52,26 @@
     </div>
 
     <div class="container-fluid" style="padding-top: 80px;">
-        <div class="section_seocond">
+        <div class="section_seocond" id="section_seocond">
             <div class="For_picture">
                 <div class="container" id="Valuables_again">
                     <div class="row h-100">
-                        <div class="leftKeeprPic col-md-6">
+                        <div class="leftKeeprPic col-xl-5 col-md-6">
                             <div class="Main_Content">
                                 <span class="main_heading">Never Lose Your Valuables again!</span>
                                 <p>Do you find yourself in a position where you go out a lot and sometimes lose or
                                     forget your valuables? keepr will help stop that by alerting you when you leave your
                                     things behind </p>
                                 <div class="download_app_btn">
-                                    <a href="" class="btn" type="button ">Download keepr</a>
+                                    <a href="#Download_keepr" class="btn" type="button ">Download keepr</a>
                                 </div>
                             </div>
 
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-xl-7 col-md-6">
                             <div class="rightMobileIcon">
                                 <img src="{{ asset('keepr_app_assets/assests/DoubleMobileIcon.png') }}" alt="">
+
                             </div>
                         </div>
                     </div>
@@ -75,7 +81,7 @@
             </div>
 
         </div>
-        <div class="container-fluid section_three">
+        <div class="container-fluid section_three" id="section_three">
             <div class="container">
                 <div class="About_seocond row">
                     <div class="col-md-6">
@@ -97,7 +103,7 @@
                                 that you can retrieve the item before leaving
                             </p>
                             <div class="download_app_btn_About">
-                                <a href="" class="btn" type="button ">Download keepr</a>
+                                <a href="#Download_keepr" class="btn" type="button ">Download keepr</a>
                             </div>
                         </div>
                     </div>
@@ -106,7 +112,7 @@
                 <div class="container step_section_row mt-5">
                     <div class="step_section row">
                         <div class="col-md-4 col-sm-12 steps row ms-2">
-                            <div id="_block_1" class="col-lg-9 col-md-12">
+                            <div id="_block_1" class="col-lg-12 col-xl-9 col-sm-12 col-md-12">
                                 <div class="d-flex row">
                                     <div class="step-circle col-md-2 col-sm-2">
                                         1
@@ -124,7 +130,7 @@
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-12 steps row ms-2">
-                            <div id="_block_1" class="col-lg-9 col-md-12">
+                            <div id="_block_1" class="col-lg-12 col-xl-9 col-sm-12 col-md-12">
                                 <div class="d-flex row">
                                     <div class="step-circle col-md-2 col-sm-2">
                                         2
@@ -141,7 +147,7 @@
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-12 steps row ms-2">
-                            <div id="_block_1" class="col-lg-9 col-md-12">
+                            <div id="_block_1" class="col-lg-12 col-xl-9 col-sm-12 col-md-12">
                                 <div class="d-flex row">
                                     <div class="step-circle col-md-2 col-sm-2">
                                         3
@@ -150,11 +156,12 @@
                                         Pair the fob with the Application
                                     </div>
                                 </div>
-                                <p class=" mt-2">Once pairing is complete. you are all set and will be alerted as
+                                <p class=" mt-1">Once pairing is complete. you are all set and will be
+                                    alerted as
                                     you leave that you forgot the fob!
                                 </p>
                             </div>
-                            <div class="arrow-icon col-md-2" id="_block_2">
+                            <div class="arrow-icon col-md-1" id="_block_2">
                             </div>
                         </div>
                     </div>
@@ -162,13 +169,13 @@
             </div>
         </div>
 
-        <div class="container-fluid Four_Section">
+        <div class="container-fluid Four_Section" id="Four_Section">
             <div class="container">
                 <div class="Unlock_Next_Level mb-4"> Unlock Next-Level Amazing Features!</div>
                 <div class="row">
                     <!-- <div class="col-md-12 col-lg-1 col-xl-1"></div> -->
                     <!-- <div class="col-md-1"></div> -->
-                    <div class="col-md-7 pt-5 ps-5">
+                    <div class="col-xl-8 col-md-7 pt-5 ps-lg-5 ps-md-5">
                         <div class="desc-1 active p-3">
                             <h5>Easy to use and implement</h5>
                             <p>Everything from the fob purchase process to the pairing process is made easy so that you
@@ -185,8 +192,8 @@
                                 place of your job so you can find your things should you loose them.</p>
                         </div>
                     </div>
-                    <div class="col-md-5 pt-4 mobile-icon">
-                        <img id="AboutImage" src="{{ asset('keepr_app_assets/assests/MobileFront.png') }}" alt="">
+                    <div class="col-xl-4 col-md-5 pt-4 mobile-icon">
+                        <img id="AboutImage" src="{{ asset('keepr_app_assets/assests/25.png') }}" alt="">
                     </div>
                 </div>
 
@@ -198,18 +205,20 @@
             <div class="overlay">
                 <div class="overlay-image">
                     <img src="{{ asset('keepr_app_assets/assests/PlayButtonIcon.png') }}" data-toggle="modal" data-target="#exampleModalCenter" class="video_Play_Button" alt="video_Play_Button">
+                    
                 </div>
             </div>
         </div>
 
 
-        <div class="container-fluid Fifth_Section">
+        <div class="container-fluid Fifth_Section" id="Fifth_Section">
             <div class="container">
                 <h1 class="text-center" style="font-weight: 600;">Our Products</h1>
                 <div class="row justify-content-center mt-5">
                     <div class="col-md-12 col-lg-5 col-xl-5 Product-1 mx-1 my2">
 
                         <img src="{{ asset('keepr_app_assets/assests/KeeprDuoPhoto.png') }}" alt="">
+
                         <div>
                             <h4 class="ibeacon-headline">Keepr Duo </h4>
                             <div><span class="Price_Count">$19.99</span> <br><small>Does not include
@@ -239,7 +248,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="container mt-lg-5 pt-lg-5 mt-md-5 pt-md-5 Frequently_Questions">
+                <div class="container mt-lg-5 pt-lg-5 mt-md-5 pt-md-5 Frequently_Questions" id="Frequently_Questions">
                     <h1 class="text-center" style="font-weight: 600">Frequently Asked Questions</h1>
                     <div class="row justify-content-center mt-5">
                         <div class="col-md-6 Frequently_Asked_Questions" id="Frequently_Asked_Questions2">
@@ -291,7 +300,8 @@
                         </div>
                     </div>
                     <h6 class="text-center mt-4 mb-5">
-                        <b>Haven't find suitable answer? </b><b class="tellUs"><a href="mailto:support@thekeeprapp.com">support@thekeeprapp.com</a></b>
+                        <b>Haven't find suitable answer? </b><b class="tellUs"><a
+                                href="mailto:support@thekeeprapp.com">support@thekeeprapp.com</a></b>
                     </h6>
                 </div>
             </div>
@@ -300,16 +310,19 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-md-1"></div>
-                        <div class="col-md-6 rightSection">
+                        <div class="col-xl-6 col-md-6 rightSection">
                             <div>
                                 <h3 class="More_Questions">Have more questions? Don’t hesitate to get in touch!</h3>
                                 <div class="Seven_Section_Social">
                                     <div class="mail_section">
-                                        <img src="{{ asset('keepr_app_assets/assests/E-mail_icon.svg') }}" alt=""> <a href="mailto:support@thekeeprapp.com">
+                                        <img src="{{ asset('keepr_app_assets/assests/E-mail_icon.svg') }}" alt="">
+                                        <a href="mailto:support@thekeeprapp.com">
                                             &nbsp; support@thekeeprapp.com</a>
                                     </div>
                                     <div class="mail_section" id="mail_section">
-                                        <img src="{{ asset('keepr_app_assets/assests/Mobile_Number_Icon.svg') }}" alt=""> <span> &nbsp; +1
+                                        <img src="{{ asset('keepr_app_assets/assests/Mobile_Number_Icon.svg') }}"
+                                            alt="">
+                                        <span> &nbsp; +1
                                             647-614-1496</span>
                                     </div>
                                 </div>
@@ -317,8 +330,9 @@
                             </div>
                         </div>
                         <!-- <div class="col-md-1"></div> -->
-                        <div class="col-md-5 HeadPhone_image">
+                        <div class="col-xl-4 col-md-5 HeadPhone_image">
                             <img src="{{ asset('keepr_app_assets/assests/Overlapping_img.svg') }}" alt="">
+
                         </div>
                     </div>
                 </div>
@@ -331,33 +345,34 @@
                             <div class="col-md-12 footer-body">
 
                                 <img src="{{ asset('keepr_app_assets/assests/Footer_Log.svg') }}" alt="">
+
                             </div>
                             <div class="footer-body2">
                                 <div class="text-center">
                                     <ul class="footer_menu justify-content-center">
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" aria-current="page" href="#">Home</a>
+                                            <a class="nav-link" aria-current="page" href="#section_seocond">Home</a>
                                         </li>
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" href="#">About</a>
+                                            <a class="nav-link" href="#section_three">About</a>
                                         </li>
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" href="#">Features</a>
+                                            <a class="nav-link" href="#Four_Section">Features</a>
                                         </li>
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" href="#">Products</a>
+                                            <a class="nav-link" href="#Fifth_Section">Products</a>
                                         </li>
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" href="#">FAQ</a>
+                                            <a class="nav-link" href="#Frequently_Questions">FAQ</a>
                                         </li>
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" href="#">Terms and Conditions</a>
+                                            <a class="nav-link" href="{{route('terms-condition')}}">Terms and Conditions</a>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
 
-                            <div class="container overlaping_div">
+                            <div class="container overlaping_div" id="Download_keepr">
                                 <div class="row">
                                     <div class="col-lg-5 col-md-5 col-sm-12 overlaping_div_content">
                                         <h1 class="abs_div_content">
@@ -372,6 +387,7 @@
                                     </div>
                                     <div class="col-lg-7 col-md-7 col-sm-12 text-end">
                                         <img src="{{ asset('keepr_app_assets/assests/TriMobile.png')}}" alt="">
+
                                     </div>
                                 </div>
                             </div>
@@ -382,9 +398,12 @@
                                 </div>
                                 <div class="CopyRight_Section">
 
-                                    <img class="mx-1" src="{{ asset('keepr_app_assets/assests/FaceBook_Icon.svg') }}" alt="">
-                                    <img class="mx-1" src="{{ asset('keepr_app_assets/assests/TwitterIcon.svg') }}" alt="">
-                                    <img class="mx-1" src="{{ asset('keepr_app_assets/assests/InstgramIcon.svg') }}" alt="">
+                                    <img class="mx-1" src="{{ asset('keepr_app_assets/assests/FaceBook_Icon.svg') }}"
+                                        alt="">
+                                    <img class="mx-1" src="{{ asset('keepr_app_assets/assests/TwitterIcon.svg') }}"
+                                        alt="">
+                                    <img class="mx-1" src="{{ asset('keepr_app_assets/assests/InstgramIcon.svg') }}"
+                                        alt="">
                                 </div>
                             </div>
                         </div>
@@ -396,7 +415,8 @@
 
 
         <!-- Modal -->
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
