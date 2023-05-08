@@ -6,7 +6,7 @@
     <div class="mb-4 pb-2">
         <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
             <img src="{{asset('/public/assets/back-end/img/business-setup.png')}}" alt="">
-            {{\App\CPU\translate('Tax Settings')}}
+            {{\App\CPU\translate(' Tax Settings ')}}
         </h2>
     </div>
     <!-- End Page Title -->
@@ -24,7 +24,7 @@
                             <div class="row justify-content-between align-items-center flex-grow-1">
                                 <div class="col-sm-4 col-md-6 col-lg-8 mb-2 mb-sm-0">
                                     <h5 class="mb-0 text-capitalize d-flex align-items-center gap-2">
-                                        {{\App\CPU\translate('Tax Settings')}}
+                                        {{\App\CPU\translate(' Tax Settings ')}}
                                         <span class="badge badge-soft-dark radius-50 fz-12">{{-- $shipping_methods->count() --}} 2</span>
                                     </h5>
                                 </div>
