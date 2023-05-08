@@ -119,7 +119,7 @@
                                 </p>
                             </div>
                             <div class="arrow-icon col-md-3" id="_block_2">
-                                <!-- <img src="{{ asset(keepr_app_assets/assests/Group 14709.svg)}}" alt=""> -->
+                                
                                 <img src="{{ asset('keepr_app_assets/assests/Group 14709.svg') }}" alt="">
                             </div>
                         </div>
