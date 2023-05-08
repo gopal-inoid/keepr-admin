@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Keepr App</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('keepr_app_assets/style.css') }}">
@@ -18,25 +19,22 @@
                     <a class="navbar-brand" href="#">
                         <img src="{{ asset('keepr_app_assets/assests/Keepe_logo.png')}}" alt="">
                     </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false"
-                        aria-label="Toggle navigation">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="collapse navbar-collapse" id="navbarScroll">
-                        <ul class="navbar-nav me-auto m-auto my-2 my-lg-0 navbar-nav-scroll"
-                            style="--bs-scroll-height: 100px;">
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto m-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
                             <li class="nav-item">
-                                <a class="nav-link" aria-current="page" href="#section_seocond">Home</a>
+                                <a class="nav-link" aria-current="page" href="#Home">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#section_three">About</a>
+                                <a class="nav-link" href="#About">About</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#Four_Section">Features</a>
+                                <a class="nav-link" href="#Features">Features</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#Fifth_Section">Products</a>
+                                <a class="nav-link" href="#Products">Products</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#Frequently_Questions">FAQ</a>
@@ -51,12 +49,13 @@
         </div>
     </div>
 
+
     <div class="container-fluid" style="padding-top: 80px;">
-        <div class="section_seocond" id="section_seocond">
+        <div class="section_seocond" id="Home">
             <div class="For_picture">
                 <div class="container" id="Valuables_again">
-                    <div class="row h-100">
-                        <div class="leftKeeprPic col-xl-5 col-md-6">
+                    <div class="row">
+                        <div class="leftKeeprPic col-xl-5 col-md-6" id="leftKeeprPic">
                             <div class="Main_Content">
                                 <span class="main_heading">Never Lose Your Valuables again!</span>
                                 <p>Do you find yourself in a position where you go out a lot and sometimes lose or
@@ -70,7 +69,7 @@
                         </div>
                         <div class="col-xl-7 col-md-6">
                             <div class="rightMobileIcon">
-                                <img src="{{ asset('keepr_app_assets/assests/DoubleMobileIcon.png') }}" alt="">
+                                <img src="{{ asset('keepr_app_assets/assests/KeeprDistance.png') }}" alt="">
 
                             </div>
                         </div>
@@ -81,18 +80,18 @@
             </div>
 
         </div>
-        <div class="container-fluid section_three" id="section_three">
+        <div class="container-fluid section_three" id="About">
             <div class="container">
                 <div class="About_seocond row">
                     <div class="col-md-6">
                         <div class="rightMobileIcon2">
-                            <img src="{{ asset('keepr_app_assets/assests/About2.png') }}" alt="">
+                            <img src="{{ asset('keepr_app_assets/assests/Keepr-about.png') }}" alt="">
                         </div>
                     </div>
                     <div class="leftKeeprPic col-md-6">
                         <div class="ms-1 About_Content">About</div>
                         <div class="About_Main_Content">
-                            <span class="Ultimate_Bluetooth_Finder">Keepr's Solutuions to Keeping your things
+                            <span class="Ultimate_Bluetooth_Finder">Keepr's Solutions to Keeping your things
                                 safe</span>
                             <p>keepr was founded and designed with one goal in mind: Me wanted to make sure that when
                                 you go out that your valuables come back with you
@@ -169,7 +168,7 @@
             </div>
         </div>
 
-        <div class="container-fluid Four_Section" id="Four_Section">
+        <div class="container-fluid Four_Section" id="Features">
             <div class="container">
                 <div class="Unlock_Next_Level mb-4"> Unlock Next-Level Amazing Features!</div>
                 <div class="row">
@@ -193,7 +192,7 @@
                         </div>
                     </div>
                     <div class="col-xl-4 col-md-5 pt-4 mobile-icon">
-                        <img id="AboutImage" src="{{ asset('keepr_app_assets/assests/25.png') }}" alt="">
+                        <img id="AboutImage" src="{{ asset('keepr_app_assets/assests/Keepr-Features.png') }}" alt="">
                     </div>
                 </div>
 
@@ -205,13 +204,13 @@
             <div class="overlay">
                 <div class="overlay-image">
                     <img src="{{ asset('keepr_app_assets/assests/PlayButtonIcon.png') }}" data-toggle="modal" data-target="#exampleModalCenter" class="video_Play_Button" alt="video_Play_Button">
-                    
+
                 </div>
             </div>
         </div>
 
 
-        <div class="container-fluid Fifth_Section" id="Fifth_Section">
+        <div class="container-fluid Fifth_Section" id="Products">
             <div class="container">
                 <h1 class="text-center" style="font-weight: 600;">Our Products</h1>
                 <div class="row justify-content-center mt-5">
@@ -300,8 +299,7 @@
                         </div>
                     </div>
                     <h6 class="text-center mt-4 mb-5">
-                        <b>Haven't find suitable answer? </b><b class="tellUs"><a
-                                href="mailto:support@thekeeprapp.com">support@thekeeprapp.com</a></b>
+                        <b>Haven't find suitable answer? </b><b class="tellUs"><a href="mailto:support@thekeeprapp.com">support@thekeeprapp.com</a></b>
                     </h6>
                 </div>
             </div>
@@ -320,8 +318,7 @@
                                             &nbsp; support@thekeeprapp.com</a>
                                     </div>
                                     <div class="mail_section" id="mail_section">
-                                        <img src="{{ asset('keepr_app_assets/assests/Mobile_Number_Icon.svg') }}"
-                                            alt="">
+                                        <img src="{{ asset('keepr_app_assets/assests/Mobile_Number_Icon.svg') }}" alt="">
                                         <span> &nbsp; +1
                                             647-614-1496</span>
                                     </div>
@@ -351,16 +348,16 @@
                                 <div class="text-center">
                                     <ul class="footer_menu justify-content-center">
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" aria-current="page" href="#section_seocond">Home</a>
+                                            <a class="nav-link" aria-current="page" href="#Home">Home</a>
                                         </li>
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" href="#section_three">About</a>
+                                            <a class="nav-link" href="#About">About</a>
                                         </li>
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" href="#Four_Section">Features</a>
+                                            <a class="nav-link" href="#Features">Features</a>
                                         </li>
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" href="#Fifth_Section">Products</a>
+                                            <a class="nav-link" href="#Products">Products</a>
                                         </li>
                                         <li class="nav-item mx-3">
                                             <a class="nav-link" href="#Frequently_Questions">FAQ</a>
@@ -373,7 +370,7 @@
                             </div>
 
                             <div class="container overlaping_div" id="Download_keepr">
-                                <div class="row">
+                                <div class="row" id="Overlap-content">
                                     <div class="col-lg-5 col-md-5 col-sm-12 overlaping_div_content">
                                         <h1 class="abs_div_content">
                                             Download the keepr Mobile App For free
@@ -398,12 +395,9 @@
                                 </div>
                                 <div class="CopyRight_Section">
 
-                                    <img class="mx-1" src="{{ asset('keepr_app_assets/assests/FaceBook_Icon.svg') }}"
-                                        alt="">
-                                    <img class="mx-1" src="{{ asset('keepr_app_assets/assests/TwitterIcon.svg') }}"
-                                        alt="">
-                                    <img class="mx-1" src="{{ asset('keepr_app_assets/assests/InstgramIcon.svg') }}"
-                                        alt="">
+                                    <img class="mx-1" src="{{ asset('keepr_app_assets/assests/FaceBook_Icon.svg') }}" alt="">
+                                    <img class="mx-1" src="{{ asset('keepr_app_assets/assests/TwitterIcon.svg') }}" alt="">
+                                    <img class="mx-1" src="{{ asset('keepr_app_assets/assests/InstgramIcon.svg') }}" alt="">
                                 </div>
                             </div>
                         </div>
@@ -415,22 +409,17 @@
 
 
         <!-- Modal -->
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle"></h5>
                         <button type="button" class="close border-0" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        ...
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <iframe class="Youtube_Video" width="560" height="315" src="https://www.youtube.com/embed/D0UnqGm_miA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
