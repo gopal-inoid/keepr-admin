@@ -319,8 +319,9 @@
                                     </div>
                                     <div class="mail_section" id="mail_section">
                                         <img src="{{ asset('keepr_app_assets/assests/Mobile_Number_Icon.svg') }}" alt="">
-                                        <span> &nbsp; +1
-                                            647-614-1496</span>
+                                        <a href="tel:2125551212"> &nbsp; +1
+                                            647-614-1496</a>
+                                            
                                     </div>
                                 </div>
 
@@ -391,7 +392,7 @@
 
                             <div class="Copyright_Section pt-4 pb-4">
                                 <div class="CopyRight_Section">
-                                    <p class="text-light">&copy;Copyright 2023 Keepr, All Rights Reserved.</p>
+                                    <p class="text-light">&#9400; Copyright 2023 Keepr, All Rights Reserved.</p>
                                 </div>
                                 <div class="CopyRight_Section">
 
