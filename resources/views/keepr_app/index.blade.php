@@ -15,7 +15,7 @@
 		<div class="Navbar-Section">
 			<nav class="navbar container navbar-expand-lg navbar-light pb-3 pt-0">
 				<div class="container-fluid">
-					<a class="navbar-brand" href="#"><img src="{{ asset(keepr_app_assets/assests/Keepe_logo.png)}}" alt=""></a>
+					<a class="navbar-brand" href="#"><img src="{{ asset('keepr_app_assets/assests/Keepe_logo.png')}}" alt=""></a>
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="navbar-toggler-icon"></span>
 					</button>
