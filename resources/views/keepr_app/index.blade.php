@@ -65,7 +65,6 @@
                         </div>
                         <div class="col-md-6">
                             <div class="rightMobileIcon">
-                                <!-- <img src="{{ asset(keepr_app_assets/assests/hero2@2x.png)}}" alt=""> -->
                                 <img src="{{ asset('keepr_app_assets/assests/hero2@2x.png') }}" alt="">
                             </div>
                         </div>
@@ -81,7 +80,6 @@
                 <div class="About_seocond row">
                     <div class="col-md-6">
                         <div class="rightMobileIcon2">
-                            <!-- <img src="{{ asset(keepr_app_assets/assests/About2.png)}}" alt=""> -->
                             <img src="{{ asset('keepr_app_assets/assests/About2.png') }}" alt="">
                         </div>
                     </div>
@@ -139,7 +137,6 @@
                                 </p>
                             </div>
                             <div class="arrow-icon col-md-3" id="_block_2">
-                                <!-- <img src="{{ asset(keepr_app_assets/assests/Group 14709.svg)}}" alt=""> -->
                                 <img src="{{ asset('keepr_app_assets/assests/Group 14709.svg') }}" alt="">
                             </div>
                         </div>
@@ -158,7 +155,6 @@
                                 </p>
                             </div>
                             <div class="arrow-icon col-md-2" id="_block_2">
-                                <!-- <img src="./assests/Group 14709.svg" alt=""> -->
                             </div>
                         </div>
                     </div>
@@ -190,7 +186,6 @@
                         </div>
                     </div>
                     <div class="col-md-5 pt-4 mobile-icon">
-                        <!-- <img id="AboutImage" src="{{ asset(keepr_app_assets/assests/25 - Copy.png)}}" alt=""> -->
                         <img id="AboutImage" src="{{ asset('keepr_app_assets/assests/25 - Copy.png') }}" alt="">
                     </div>
                 </div>
@@ -213,7 +208,7 @@
                 <h1 class="text-center" style="font-weight: 600;">Our Products</h1>
                 <div class="row justify-content-center mt-5">
                     <div class="col-md-12 col-lg-5 col-xl-5 Product-1 mx-1 my2">
-                        <!-- <img src="{{ asset(keepr_app_assets/assests/KeeprDuoPhoto.png)}}" alt=""> -->
+                        
                         <img src="{{ asset('keepr_app_assets/assests/KeeprDuoPhoto.png') }}" alt="">
                         <div>
                             <h4 class="ibeacon-headline">Keepr Duo </h4>
@@ -228,7 +223,7 @@
                         </div>
                     </div>
                     <div class="col-md-12 col-lg-5 col-xl-5 mt-md-4 mt-sm-4 mt-lg-0 Product-2 mx-1 my-2">
-                        <!-- <img src="{{ asset(keepr_app_assets/assests/KeeprTriPhoto.jpeg)}}" alt=""> -->
+                       
                         <img src="{{ asset('keepr_app_assets/assests/KeeprTriPhoto.jpeg') }}" alt="">
                         <div>
                             <h4 class="ibeacon-headline_2">Keepr Tri</h4>
@@ -334,7 +329,7 @@
                     <div class="container">
                         <div class="row" style="position: relative;">
                             <div class="col-md-12 footer-body">
-                                <!-- <img src="{{ asset(keepr_app_assets/assests/Group 14743.svg)}}" alt=""> -->
+                               
                                 <img src="{{ asset('keepr_app_assets/assests/Group 14743.svg') }}" alt="">
                             </div>
                             <div class="footer-body2">
@@ -371,8 +366,7 @@
                                         <p class="mt-4">Download our latest version and please don’t <br> forget to rate
                                         </p>
                                         <div class="app_download_btn">
-                                            <!-- <img src="{{ asset(keepr_app_assets/assests/Group 14720.svg)}}" alt="">
-                                            <img src="{{ asset(keepr_app_assets/assests/Group 14721.svg)}}" alt=""> -->
+                                            
                                             <img src="{{ asset('keepr_app_assets/assests/Group 14720.svg') }}" alt="">
                                             <img src="{{ asset('keepr_app_assets/assests/Group 14721.svg') }}" alt="">
                                         </div>
@@ -388,9 +382,7 @@
                                     <p class="text-light">&copy;Copyright 2023 Keepr, All Rights Reserved.</p>
                                 </div>
                                 <div class="CopyRight_Section">
-                                    <!-- <img class="mx-1" src="{{ asset(keepr_app_assets/assests/Layer 2.svg)}}" alt="">
-                                    <img class="mx-1" src="{{ asset(keepr_app_assets/assests/Layer 2 (1).svg)}}" alt="">
-                                    <img class="mx-1" src="{{ asset(keepr_app_assets/assests/Layer 2 (2).svg)}}" alt=""> -->
+                                   
                                     <img class="mx-1" src="{{ asset('keepr_app_assets/assests/Layer 2.svg') }}" alt="">
                                     <img class="mx-1" src="{{ asset('keepr_app_assets/assests/Layer (1).svg') }}" alt="">
                                     <img class="mx-1" src="{{ asset('keepr_app_assets/assests/Layer (2).svg') }}" alt="">
