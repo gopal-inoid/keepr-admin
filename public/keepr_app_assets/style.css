@@ -12,6 +12,11 @@
 
 body {
     font-family: 'Titillium Web', sans-serif;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    list-style: none;
+    text-decoration: none;
 }
 
 .navbar-expand-lg .navbar-nav .nav-link {
@@ -66,21 +71,21 @@ body {
 .section_seocond {
     /* position: relative; */
     background: transparent linear-gradient(118deg, #425CC2 0%, #369CC1 54%, #31A4B7 100%) 0% 0% no-repeat padding-box;
-    /* height: 905px; */
-    height: fit-content;
 }
 
 .For_picture {
-    height: 100%;
+    /* height: 100%; */
     background: transparent url('./assests/bluetoothIcon.png') 0% 100% no-repeat padding-box;
     /* background-size: contain; */
-    min-height: 80vh;
+    /* min-height: 100vh; */
+    min-height: 70vh;
+    background-size: 500px;
 }
 
 /* .leftKeeprPic {} */
 
 .Main_Content {
-    padding-top: 128px;
+    /* padding-top: 128px; */
     padding-left: 50px;
     color: #fff;
     font-size: 50px;
@@ -131,6 +136,7 @@ body {
 .About_Main_Content p {
     margin-top: 20px;
     font-size: 19px;
+    color: #404040 !important;
 }
 
 .rightMobileIcon2 img {
@@ -152,6 +158,11 @@ body {
     font-weight: bold;
 }
 
+#leftKeeprPic {
+    display: flex;
+    align-items: center;
+}
+
 .About_Content {
     font-weight: 600;
     font-size: 30px;
@@ -160,6 +171,7 @@ body {
 
 .About_Main_Content span {
     line-height: 55px;
+    font-weight: 600;
 }
 
 .step_section_row {
@@ -269,6 +281,22 @@ body {
 
 .desc-4 {
     border-radius: 20px;
+}
+
+.desc-1 p {
+    margin-bottom: 0px;
+}
+
+.desc-2 p {
+    margin-bottom: 0px;
+}
+
+.desc-3 p {
+    margin-bottom: 0px;
+}
+
+.desc-4 p {
+    margin-bottom: 0px;
 }
 
 .mobile-icon img {
@@ -388,7 +416,7 @@ body {
 }
 
 .footer_content {
-    background: transparent url('./assests/Mask Group 48.png') 0% 65% no-repeat padding-box;
+    background: transparent url('./assests/footerBackground.svg') 0% 0% no-repeat padding-box;
 }
 
 .footer-body {
@@ -469,15 +497,11 @@ ul li {
     position: relative;
 }
 
-.video_Play_Button {
-    position: absolute;
-    top: 45%;
-    left: 47%;
-}
 
 .overlay {
     background: url('./assests/Mask Group 43.png');
     background-position: center center;
+    background-size: cover;
 }
 
 .overlay-image {
@@ -487,6 +511,9 @@ ul li {
     background-size: cover;
     background-position: center center;
     opacity: 0.7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .HeadPhone_image img {
@@ -499,7 +526,7 @@ ul li {
 @media (min-width: 992px) and (max-width: 1280px) {
 
 
-    .For_picture{
+    .For_picture {
         min-height: 65vh;
     }
 
@@ -557,11 +584,6 @@ ul li {
         text-align: center;
     }
 
-    .video_Play_Button {
-        position: absolute;
-        top: 45%;
-        left: 45%;
-    }
 
     .app_download_btn {
         padding: 24px 25px 30px;
@@ -573,8 +595,13 @@ ul li {
 @media only screen and (max-width: 991px) {
 
 
-    .For_picture{
-        min-height: 60vh;
+    .overlay-image {
+        height: 500px;
+    }
+
+    .For_picture {
+        min-height: 55vh;
+        background-size: 400px;
     }
 
     .arrow-icon {
@@ -647,6 +674,7 @@ ul li {
     .step_section {
         /* padding: 25px; */
         padding: 69px 0px;
+        background-size: 450px;
     }
 
     .Steps_Content {
@@ -658,7 +686,7 @@ ul li {
     }
 
     .steps p {
-        margin-left: 33px !important;
+        margin-left: 40px !important;
     }
 
     .About_seocond {
@@ -669,11 +697,6 @@ ul li {
         font-size: 40px;
     }
 
-    .video_Play_Button {
-        position: absolute;
-        top: 45%;
-        left: 45%;
-    }
 
     .overlay-image img {
         width: 130px;
@@ -806,14 +829,9 @@ ul li {
     }
 
     .overlay-image {
-        height: 450px;
+        height: 400px;
     }
 
-    .video_Play_Button {
-        position: absolute;
-        top: 42%;
-        left: 43%;
-    }
 
     .overlay-image img {
         width: 100px;
@@ -867,11 +885,25 @@ ul li {
     }
 
     .Frequently_Questions {
-        padding-top: 50px;
+        padding: 50px;
+    }
+
+    .step_section {
+        background-size: 340px;
     }
 
     .app_download_btn {
         padding: 0px 15px 0px 15px;
+    }
+
+    .arrow-icon img {
+        vertical-align: middle;
+        rotate: 90deg;
+        height: 24px;
+    }
+
+    #Frequently_Asked_Questions1 {
+        padding: 0px !important;
     }
 }
 
@@ -886,7 +918,8 @@ ul li {
     }
 
     .step_section {
-        padding: 18px;
+        /* padding: 18px; */
+        padding: 76px 0px;
     }
 
     .steps {
@@ -957,9 +990,14 @@ ul li {
     box-shadow: none !important;
 }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 575px) {
+    .Copyright_Section {
+        display: block;
+        text-align: center;
+    }
+
     .overlaping_div {
-        top: -48%;
+        top: -60%;
     }
 
     .footer_menu {
@@ -969,6 +1007,11 @@ ul li {
     .steps p {
         margin-left: 33px !important;
     }
+    .footer_menu{
+        display: grid;
+        grid-template-columns: 2fr 2fr 2fr;
+    }
+
 }
 
 .steps p {
@@ -990,4 +1033,40 @@ ul li {
 
 #Terms_conditionn_footer {
     padding-top: 100px;
+}
+
+#Overlap-content {
+    background: transparent url('./assests/Keepr-Back.svg') 0% 0% no-repeat padding-box;
+    background-size: contain;
+}
+
+ol,
+ul,
+dl {
+    padding-left: 0px !important;
+}
+
+#Terms_And_Condition_main {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.Youtube_Video {
+    width: 100%;
+    height: 450px;
+}
+
+.modal-header{
+    border-bottom: 0px !important;
+}
+.close span{
+    background: #fff;
+}
+
+.Heading_terms{
+    color: #1F1F39 !important;
+    /* padding-right: 340px; */
+    color: #fff;
+    font-size: 40px;
+    font-weight: 600;
 }

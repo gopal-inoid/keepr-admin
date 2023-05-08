@@ -27,20 +27,20 @@
                                 <a class="nav-link" aria-current="page" href="{{route('home')}}">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{route('home')}}/#section_three">About</a>
+                                <a class="nav-link" href="{{route('home')}}/#About">About</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{route('home')}}/#Four_Section">Features</a>
+                                <a class="nav-link" href="{{route('home')}}/#Features">Features</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{route('home')}}/#Fifth_Section">Products</a>
+                                <a class="nav-link" href="{{route('home')}}/#Products">Products</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{route('home')}}/#Frequently_Questions">FAQ</a>
                             </li>
                         </ul>
                         <form class="d-flex mt-3">
-                            <button class="btn download_keeper_btn" type="submit">Download Keepr</button>
+                            <a href="{{route('home')}}/#Download_keepr" class="btn download_keeper_btn" type="submit">Download Keepr</a>
                         </form>
                     </div>
                 </div>
@@ -50,8 +50,8 @@
 
     <div class="container-fluid" style="padding-top: 80px;">
         <div class="container-fluid" id="Terms_And_Condition">
-            <div class="container">
-                <h2 style="text-align: center;">TERMS AND CONDITIONS</h2>
+            <div class="container" id="Terms_And_Condition_main">
+                <h2 class="Heading_terms" style="text-align: center;">TERMS AND CONDITIONS</h2>
                 <ol>
                     <li><strong>Introduction</strong></li>
                 </ol>
@@ -131,16 +131,16 @@
                                 <div class="text-center">
                                     <ul class="footer_menu justify-content-center">
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" aria-current="page" href="#section_seocond">Home</a>
+                                            <a class="nav-link" aria-current="page" href="{{route('home')}}/#Home">Home</a>
                                         </li>
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" href="{{route('home')}}/#section_three">About</a>
+                                            <a class="nav-link" href="{{route('home')}}/#About">About</a>
                                         </li>
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" href="{{route('home')}}/#Four_Section">Features</a>
+                                            <a class="nav-link" href="{{route('home')}}/#Features">Features</a>
                                         </li>
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" href="{{route('home')}}/#Fifth_Section">Products</a>
+                                            <a class="nav-link" href="{{route('home')}}/#Products">Products</a>
                                         </li>
                                         <li class="nav-item mx-3">
                                             <a class="nav-link" href="{{route('home')}}/#Frequently_Questions">FAQ</a>
