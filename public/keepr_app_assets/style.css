@@ -74,6 +74,7 @@ body {
     height: 100%;
     background: transparent url('./assests/bluetoothIcon.png') 0% 100% no-repeat padding-box;
     /* background-size: contain; */
+    min-height: 80vh;
 }
 
 /* .leftKeeprPic {} */
@@ -116,7 +117,7 @@ body {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    padding-bottom: 60px;
+    /* padding-bottom: 60px; */
 }
 
 .About_Main_Content {
@@ -173,7 +174,7 @@ body {
 .step_section {
     justify-content: center;
     border-radius: 20px;
-    padding: 45px;
+    padding: 70px 30px;
     /* height: 260px; */
     /* background: transparent linear-gradient(101deg, #4482DE 0%, #31A4B7 100%) 0% 0% no-repeat padding-box; */
     background: transparent url('./assests/keepr.png') 100% 100% no-repeat padding-box;
@@ -193,6 +194,7 @@ body {
 
 .step-circle {
     /* width: 16%; */
+    width: 40px;
     height: 40px;
     border: 1px solid #fff;
     align-items: center;
@@ -291,13 +293,14 @@ body {
 .ibeacon-headline_2 {
     font-size: 28px;
     font-weight: 600;
-    padding-top: 75px;
+    padding-top: 20px;
 }
 
 .Product-1 {
     padding: 40px;
     background: #F8F8F8;
     text-align: center;
+    border-radius: 14px;
 }
 
 .Product-1 img,
@@ -310,6 +313,7 @@ body {
     padding: 40px;
     background: #F8F8F8;
     text-align: center;
+    border-radius: 14px;
 }
 
 .ibeacon_peragraph {
@@ -427,7 +431,7 @@ ul li {
     top: -54%;
     position: absolute;
     border-radius: 20px;
-    background: transparent linear-gradient(118deg, #31A4B7 0%,  #369CC1 54%, #425CC2  100%) 0% 0% no-repeat padding-box;
+    background: transparent linear-gradient(118deg, #31A4B7 0%, #369CC1 54%, #425CC2 100%) 0% 0% no-repeat padding-box;
 }
 
 .overlaping_div_content {
@@ -493,14 +497,23 @@ ul li {
 
 
 @media (min-width: 992px) and (max-width: 1280px) {
-    .step_section {
-        padding: 35px;
+
+
+    .For_picture{
+        min-height: 65vh;
     }
+
+
+    /* .step_section {
+        padding: 35px;
+    } */
+
     .ibeacon-headline_2 {
         /* font-size: 28px; */
         font-weight: 600;
         padding-top: 41px;
     }
+
     /* .step-circle {
         width: 10%;
     } */
@@ -558,6 +571,11 @@ ul li {
 }
 
 @media only screen and (max-width: 991px) {
+
+
+    .For_picture{
+        min-height: 60vh;
+    }
 
     .arrow-icon {
         margin: auto;
@@ -627,7 +645,8 @@ ul li {
     }
 
     .step_section {
-        padding: 25px;
+        /* padding: 25px; */
+        padding: 69px 0px;
     }
 
     .Steps_Content {
@@ -636,6 +655,10 @@ ul li {
 
     .steps {
         display: block;
+    }
+
+    .steps p {
+        margin-left: 33px !important;
     }
 
     .About_seocond {
@@ -770,12 +793,16 @@ ul li {
 
     .steps p {
         margin-top: 0px !important;
-        margin-left: 55px !important;
+        margin-left: 45px !important;
     }
 
     .Unlock_Next_Level {
         padding-top: 70px;
         font-size: 35px;
+    }
+
+    .step_section {
+        padding: 72px 20px;
     }
 
     .overlay-image {
@@ -784,7 +811,7 @@ ul li {
 
     .video_Play_Button {
         position: absolute;
-        top: 50%;
+        top: 42%;
         left: 43%;
     }
 
@@ -938,14 +965,15 @@ ul li {
     .footer_menu {
         display: block;
     }
-    .steps p{
-         margin-left: 50px !important;
+
+    .steps p {
+        margin-left: 33px !important;
     }
 }
 
 .steps p {
     font-size: 14px;
-    margin-left: 37px;
+    margin-left: 40px;
 }
 
 #Frequently_Asked_Questions2 {
@@ -956,10 +984,10 @@ ul li {
     padding: 0px 90px 0px 30px;
 }
 
-/* #_block_1{
-    width: 80%;
+#Terms_And_Condition {
+    padding-top: 100px;
 }
-#_block_2{
-    width: 20%;
-    margin-left: 0px;
-} */
+
+#Terms_conditionn_footer {
+    padding-top: 100px;
+}

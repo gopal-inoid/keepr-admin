@@ -28,6 +28,11 @@ Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function
         return view('keepr_app.index');
     })->name('home');
 
+    Route::get('/terms-condition', function (){
+        //return redirect()->route('admin.auth.login');
+        return view('keepr_app.terms_condition');
+    })->name('terms-condition');
+
     //Route::get('/', 'WebController@home')->name('home');
 
     Route::get('quick-view', 'WebController@quick_view')->name('quick-view');
