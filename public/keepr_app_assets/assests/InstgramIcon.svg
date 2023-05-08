@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="34" height="34" viewBox="0 0 34 34">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.146" y1="0.146" x2="0.854" y2="0.854" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#fae100"/>
+      <stop offset="0.15" stop-color="#fcb720"/>
+      <stop offset="0.3" stop-color="#ff7950"/>
+      <stop offset="0.5" stop-color="#ff1c74"/>
+      <stop offset="1" stop-color="#6c1cd1"/>
+    </linearGradient>
+  </defs>
+  <g id="Layer_2" data-name="Layer 2" transform="translate(0.328)">
+    <g id="Circle" transform="translate(0 0)">
+      <g id="_03.Instagram" data-name="03.Instagram">
+        <rect id="Background" width="34" height="34" rx="17" transform="translate(-0.328)" fill="url(#linear-gradient)"/>
+        <g id="Group_14745" data-name="Group 14745" transform="translate(0.004)">
+          <path id="Shade" d="M29.52,5.76A60.026,60.026,0,0,1,19.257,19.251,60.106,60.106,0,0,1,5.772,29.508q-.423-.368-.822-.766A16.835,16.835,0,1,1,28.755,4.93q.4.4.765.83Z" transform="translate(-0.016 0)" fill="#fff" opacity="0.1"/>
+          <g id="Icon" transform="translate(7.971 7.975)">
+            <path id="Path_14443" data-name="Path 14443" d="M48.849,36H40.874A4.874,4.874,0,0,0,36,40.874v7.975a4.874,4.874,0,0,0,4.874,4.874h7.975a4.874,4.874,0,0,0,4.874-4.874V40.874A4.874,4.874,0,0,0,48.849,36Zm3.323,12.149a4.023,4.023,0,0,1-4.023,4.023H41.574a4.023,4.023,0,0,1-4.023-4.023V41.574a4.023,4.023,0,0,1,4.023-4.023h6.575a4.023,4.023,0,0,1,4.023,4.023Z" transform="translate(-36 -36)" fill="#fff"/>
+            <path id="Path_14444" data-name="Path 14444" d="M63.366,56.71l-.042-.042-.035-.035a4.466,4.466,0,0,0-3.155-1.3,4.546,4.546,0,0,0-4.515,4.579,4.6,4.6,0,0,0,1.329,3.237,4.473,4.473,0,0,0,3.194,1.329,4.592,4.592,0,0,0,3.223-7.765Zm-3.232,6.2a3,3,0,1,1,2.962-3,3,3,0,0,1-2.962,3Z" transform="translate(-51.273 -51.048)" fill="#fff"/>
+            <path id="Path_14445" data-name="Path 14445" d="M94.887,50.565a1.081,1.081,0,0,1-1.074,1.09,1.066,1.066,0,0,1-.758-.317,1.092,1.092,0,0,1,.76-1.859,1.068,1.068,0,0,1,.685.248l.022.022a.676.676,0,0,1,.1.1l.024.027a1.09,1.09,0,0,1,.244.691Z" transform="translate(-80.171 -46.494)" fill="#fff"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

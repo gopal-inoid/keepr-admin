@@ -1,78 +1,78 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Keepr App</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-	<link rel="stylesheet" href="{{ asset('keepr_app_assets/style.css') }}">
-	<link rel="icon" type="image/x-icon" href="{{asset("public/company/Keepr-logo-black.png")}}">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keepr App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('keepr_app_assets/style.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{asset("public/company/Keepr-logo-black.png")}}">
 </head>
 
 <body>
-	<div>
-		<div class="Navbar-Section">
-			<nav class="navbar container navbar-expand-lg navbar-light pb-3 pt-0">
-				<div class="container-fluid">
-					<a class="navbar-brand" href="#"><img src="{{ asset('keepr_app_assets/assests/Keepe_logo.png')}}" alt=""></a>
-					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-						<span class="navbar-toggler-icon"></span>
-					</button>
-					<div class="collapse navbar-collapse" id="navbarScroll">
-						<ul class="navbar-nav me-auto m-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-							<li class="nav-item">
-								<a class="nav-link" aria-current="page" href="#">Home</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="#">About</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="#">Features</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="#">Products</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="#">FAQ</a>
-							</li>
-						</ul>
-						<form class="d-flex mt-3">
-							<button class="btn download_keeper_btn" type="submit">Download Keepr</button>
-						</form>
-					</div>
-				</div>
-			</nav>
-		</div>
-	</div>
+    <div>
+        <div class="Navbar-Section">
+            <nav class="navbar container navbar-expand-lg navbar-light pb-3 pt-0">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#"><img src="{{ asset('keepr_app_assets/assests/Keepe_logo.png')}}" alt=""></a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarScroll">
+                        <ul class="navbar-nav me-auto m-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" href="#">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">About</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Features</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Products</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">FAQ</a>
+                            </li>
+                        </ul>
+                        <form class="d-flex mt-3">
+                            <button class="btn download_keeper_btn" type="submit">Download Keepr</button>
+                        </form>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
 
-	<div class="container-fluid" style="padding-top: 80px;">
-		<div class="section_seocond">
-			<div class="For_picture">
-				<div class="container" id="Valuables_again">
-					<div class="row h-100">
-						<div class="leftKeeprPic col-md-6">
-							<div class="Main_Content">
-								<span class="main_heading">Never Lose Your Valuables again!</span>
-								<p>Do you find yourself in a position where you go out a lot and sometimes lose or
-									forget your valuables? keepr will help stop that by alerting you when you leave your
-									things behind </p>
-								<div class="download_app_btn">
-									<a href="" class="btn" type="button ">Download keepr</a>
-								</div>
-							</div>
+    <div class="container-fluid" style="padding-top: 80px;">
+        <div class="section_seocond">
+            <div class="For_picture">
+                <div class="container" id="Valuables_again">
+                    <div class="row h-100">
+                        <div class="leftKeeprPic col-md-6">
+                            <div class="Main_Content">
+                                <span class="main_heading">Never Lose Your Valuables again!</span>
+                                <p>Do you find yourself in a position where you go out a lot and sometimes lose or
+                                    forget your valuables? keepr will help stop that by alerting you when you leave your
+                                    things behind </p>
+                                <div class="download_app_btn">
+                                    <a href="" class="btn" type="button ">Download keepr</a>
+                                </div>
+                            </div>
 
                         </div>
                         <div class="col-md-6">
                             <div class="rightMobileIcon">
-                                <img src="{{ asset('keepr_app_assets/assests/hero2@2x.png') }}" alt="">
+                                <img src="{{ asset('keepr_app_assets/assests/DoubleMobileIcon.png') }}" alt="">
                             </div>
                         </div>
                     </div>
 
-				</div>
+                </div>
 
-			</div>
+            </div>
 
         </div>
         <div class="container-fluid section_three">
@@ -119,8 +119,8 @@
                                 </p>
                             </div>
                             <div class="arrow-icon col-md-3" id="_block_2">
-                                
-                                <img src="{{ asset('keepr_app_assets/assests/Group 14709.svg') }}" alt="">
+
+                                <img src="{{ asset('keepr_app_assets/assests/ArrowIcon.svg') }}" alt="">
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-12 steps row ms-2">
@@ -137,7 +137,7 @@
                                 </p>
                             </div>
                             <div class="arrow-icon col-md-3" id="_block_2">
-                                <img src="{{ asset('keepr_app_assets/assests/Group 14709.svg') }}" alt="">
+                                <img src="{{ asset('keepr_app_assets/assests/ArrowIcon.svg') }}" alt="">
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-12 steps row ms-2">
@@ -186,18 +186,18 @@
                         </div>
                     </div>
                     <div class="col-md-5 pt-4 mobile-icon">
-                        <img id="AboutImage" src="{{ asset('keepr_app_assets/assests/25 - Copy.png') }}" alt="">
+                        <img id="AboutImage" src="{{ asset('keepr_app_assets/assests/MobileFront.png') }}" alt="">
                     </div>
                 </div>
 
-			</div>
-		</div>
+            </div>
+        </div>
 
 
         <div class="container-fluid pt-5">
             <div class="overlay">
                 <div class="overlay-image">
-                    <img src="{{ asset('keepr_app_assets/assests/Group 14723.png') }}" data-toggle="modal" data-target="#exampleModalCenter" class="video_Play_Button" alt="video_Play_Button">
+                    <img src="{{ asset('keepr_app_assets/assests/PlayButtonIcon.png') }}" data-toggle="modal" data-target="#exampleModalCenter" class="video_Play_Button" alt="video_Play_Button">
                 </div>
             </div>
         </div>
@@ -208,7 +208,7 @@
                 <h1 class="text-center" style="font-weight: 600;">Our Products</h1>
                 <div class="row justify-content-center mt-5">
                     <div class="col-md-12 col-lg-5 col-xl-5 Product-1 mx-1 my2">
-                        
+
                         <img src="{{ asset('keepr_app_assets/assests/KeeprDuoPhoto.png') }}" alt="">
                         <div>
                             <h4 class="ibeacon-headline">Keepr Duo </h4>
@@ -223,7 +223,7 @@
                         </div>
                     </div>
                     <div class="col-md-12 col-lg-5 col-xl-5 mt-md-4 mt-sm-4 mt-lg-0 Product-2 mx-1 my-2">
-                       
+
                         <img src="{{ asset('keepr_app_assets/assests/KeeprTriPhoto.jpeg') }}" alt="">
                         <div>
                             <h4 class="ibeacon-headline_2">Keepr Tri</h4>
@@ -305,11 +305,11 @@
                                 <h3 class="More_Questions">Have more questions? Don’t hesitate to get in touch!</h3>
                                 <div class="Seven_Section_Social">
                                     <div class="mail_section">
-                                        <img src="{{ asset('keepr_app_assets/assests/Group 14740.svg') }}" alt=""> <a href="mailto:support@thekeeprapp.com">
+                                        <img src="{{ asset('keepr_app_assets/assests/E-mail_icon.svg') }}" alt=""> <a href="mailto:support@thekeeprapp.com">
                                             &nbsp; support@thekeeprapp.com</a>
                                     </div>
                                     <div class="mail_section" id="mail_section">
-                                        <img src="{{ asset('keepr_app_assets/assests/Group 14741.svg') }}" alt=""> <span> &nbsp; +1
+                                        <img src="{{ asset('keepr_app_assets/assests/Mobile_Number_Icon.svg') }}" alt=""> <span> &nbsp; +1
                                             647-614-1496</span>
                                     </div>
                                 </div>
@@ -318,7 +318,7 @@
                         </div>
                         <!-- <div class="col-md-1"></div> -->
                         <div class="col-md-5 HeadPhone_image">
-                            <img src="{{ asset('keepr_app_assets/assests/Group 14739.svg') }}" alt="">
+                            <img src="{{ asset('keepr_app_assets/assests/Overlapping_img.svg') }}" alt="">
                         </div>
                     </div>
                 </div>
@@ -329,8 +329,8 @@
                     <div class="container">
                         <div class="row" style="position: relative;">
                             <div class="col-md-12 footer-body">
-                               
-                                <img src="{{ asset('keepr_app_assets/assests/Group 14743.svg') }}" alt="">
+
+                                <img src="{{ asset('keepr_app_assets/assests/Footer_Log.svg') }}" alt="">
                             </div>
                             <div class="footer-body2">
                                 <div class="text-center">
@@ -366,13 +366,12 @@
                                         <p class="mt-4">Download our latest version and please don’t <br> forget to rate
                                         </p>
                                         <div class="app_download_btn">
-                                            
-                                            <img src="{{ asset('keepr_app_assets/assests/Group 14720.svg') }}" alt="">
-                                            <img src="{{ asset('keepr_app_assets/assests/Group 14721.svg') }}" alt="">
+                                            <img src="{{ asset('keepr_app_assets/assests/PlayStore_Icon.svg') }}" alt="">
+                                            <img src="{{ asset('keepr_app_assets/assests/AppStore_Icon.svg') }}" alt="">
                                         </div>
                                     </div>
                                     <div class="col-lg-7 col-md-7 col-sm-12 text-end">
-                                        <img src="{{ asset('keepr_app_assets/assests/Group 14763.png')}}" alt="">
+                                        <img src="{{ asset('keepr_app_assets/assests/TriMobile.png')}}" alt="">
                                     </div>
                                 </div>
                             </div>
@@ -382,10 +381,10 @@
                                     <p class="text-light">&copy;Copyright 2023 Keepr, All Rights Reserved.</p>
                                 </div>
                                 <div class="CopyRight_Section">
-                                   
-                                    <img class="mx-1" src="{{ asset('keepr_app_assets/assests/Layer 2.svg') }}" alt="">
-                                    <img class="mx-1" src="{{ asset('keepr_app_assets/assests/Layer (1).svg') }}" alt="">
-                                    <img class="mx-1" src="{{ asset('keepr_app_assets/assests/Layer (2).svg') }}" alt="">
+
+                                    <img class="mx-1" src="{{ asset('keepr_app_assets/assests/FaceBook_Icon.svg') }}" alt="">
+                                    <img class="mx-1" src="{{ asset('keepr_app_assets/assests/TwitterIcon.svg') }}" alt="">
+                                    <img class="mx-1" src="{{ asset('keepr_app_assets/assests/InstgramIcon.svg') }}" alt="">
                                 </div>
                             </div>
                         </div>
