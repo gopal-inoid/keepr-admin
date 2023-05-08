@@ -11,7 +11,7 @@
 }
 
 body {
-    font-family: 'Titillium Web', sans-serif;
+    font-family: 'Titillium Web', regular;
     padding: 0;
     margin: 0;
     box-sizing: border-box;
@@ -22,6 +22,10 @@ body {
 .navbar-expand-lg .navbar-nav .nav-link {
     padding-right: 3.5rem;
     padding-left: 0.5rem;
+}
+
+.navbar-expand-lg .navbar-collapse {
+    align-items: center !important;
 }
 
 .navbar-brand {
@@ -35,6 +39,7 @@ body {
     background: #fff;
     width: 100%;
     z-index: 99999;
+    box-shadow: 0 3px 5px -3px #e9e4e4;
 }
 
 .nav-item {
@@ -137,6 +142,7 @@ body {
     margin-top: 20px;
     font-size: 19px;
     color: #404040 !important;
+    font-weight: regular;
 }
 
 .rightMobileIcon2 img {
@@ -530,7 +536,6 @@ ul li {
         min-height: 65vh;
     }
 
-
     /* .step_section {
         padding: 35px;
     } */
@@ -594,6 +599,12 @@ ul li {
 
 @media only screen and (max-width: 991px) {
 
+
+    .footer_content {
+        background: transparent url('./assests/footerBackground.svg') 0% 100% no-repeat padding-box;
+        background-size: 300px;
+
+    }
 
     .overlay-image {
         height: 500px;
@@ -1007,11 +1018,20 @@ ul li {
     .steps p {
         margin-left: 33px !important;
     }
-    .footer_menu{
+
+    .footer_menu {
         display: grid;
         grid-template-columns: 2fr 2fr 2fr;
     }
 
+    .footer_content {
+        background: transparent url(./assests/footerBackground.svg) 0% 0% no-repeat padding-box;
+        background-size: 230px;
+    }
+
+    .Four_Section {
+        background-size: 250px;
+    }
 }
 
 .steps p {
@@ -1056,17 +1076,26 @@ dl {
     height: 450px;
 }
 
-.modal-header{
+.modal-header {
     border-bottom: 0px !important;
 }
-.close span{
+
+.close span {
     background: #fff;
 }
 
-.Heading_terms{
+.Heading_terms {
     color: #1F1F39 !important;
     /* padding-right: 340px; */
     color: #fff;
     font-size: 40px;
     font-weight: 600;
+}
+
+.navbar-collapse > ul{
+    --bs-scroll-height: auto !important;
+}
+.navbar-collapse > ul > li{
+    padding-top: 6px;
+    padding-bottom: 6px;
 }
