@@ -155,7 +155,7 @@
 
                             <div class="Copyright_Section pb-4 mt-3">
                                 <div class="CopyRight_Section">
-                                    <p class="text-light">&copy;Copyright 2023 Keepr, All Rights Reserved.</p>
+                                    <p class="text-light">&#9400; Copyright 2023 Keepr, All Rights Reserved.</p>
                                 </div>
                                 <div class="CopyRight_Section">
 
