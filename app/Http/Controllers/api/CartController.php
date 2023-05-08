@@ -253,10 +253,12 @@ class CartController extends Controller
 
             CheckoutInfo::insert(['product_id'=>json_encode($device_ids),'customer_id'=>$user_details->id,'total_order'=>$total_order,'total_amount'=>$total_price,'tax_amount'=>7]);
 
-            if(!empty($user_details->shipping_country)){
+            if (!empty($user_details->shipping_country) && !empty($user_details->shipping_state)) {
                 $country = $user_details->shipping_country;
-            }else{
+                $states = $user_details->shipping_state;
+            } else {
                 $country = $user_details->country;
+                $states = $user_details->state;
             }
             
             $shipping_rates = ShippingMethodRates::select('normal_rate','express_rate','shipping_methods.title as shipping_company','shipping_methods.normal_duration','shipping_methods.express_duration','shipping_methods.id as shippingid')
@@ -334,16 +336,16 @@ class CartController extends Controller
 
             //END Tax calculation
 
-            $tax = number_format(0,2);
-
+            $tax_amt =0;
+            $tax =0;
             $data['cart_info'] = $cart_info;
             $data['shipping_rates'] = $shipping_cost_check;
             $data['customer_id'] = $user_details->id;
             $data['total_order'] = $total_order;
-            $data['sub_total'] = number_format($total_price,2);
+            $data['sub_total'] = number_format($total_price, 2);
             $data['shipping'] = $shipping;
             $data['tax'] = $tax;
-            $data['total'] = number_format(($total_price + $shipping + $tax),2);
+            $data['total'] = number_format(($total_price + $shipping +  $tax_amt ), 2);
             //echo "<pre>"; print_r($mac_ids); die;
 
             return response()->json(['status'=>200,'message'=>'Success','data'=>$data],200);

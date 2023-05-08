@@ -372,7 +372,12 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
                 Route::post('status-update', 'ShippingMethodController@status_update')->name('status-update');
                 Route::get('setting', 'ShippingMethodController@setting')->name('setting');
                 Route::post('shipping-store','ShippingMethodController@shippingStore')->name('shipping-store');
+                Route::get('tax-calculation', 'ShippingMethodController@tax_calculation')->name('tax-calculation');
+                Route::get('edit-tax/{id}', 'ShippingMethodController@edit_tax')->name('edit-tax');
+
             });
+
+            
 
             Route::group(['prefix' => 'shipping-type', 'as' => 'shipping-type.','middleware'=>['module:system_settings']], function () {
                 Route::post('store', 'ShippingTypeController@store')->name('store');

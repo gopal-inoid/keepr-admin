@@ -178,6 +178,57 @@ class GeneralController extends Controller
         }
     }
 
+    public function get_countries(Request $request)
+    {
+
+        $countries_list =  \DB::table('country')->select(['id', 'name'])->get();
+        $countries = [];
+        $auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_access_token' => $auth_token])->first();
+        if (!empty($user_details->id)) {
+            if (!empty($countries_list)) {
+                foreach ($countries_list as $key => $country) {
+                    $countries[$key] = $country;
+                }
+                return response()->json(['status' => 200, 'message' => 'Success', 'data' => $countries], 200);
+            } else {
+                return response()->json(['status' => 400, 'message' => 'User not found'], 400);
+            }
+        } else {
+            return response()->json(['status' => 400, 'message' => 'User not found'], 400);
+        }
+    }
+    public function get_states(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'country_id' => 'required'
+        ],);
+
+        if ($validator->errors()->count() > 0) {
+            return response()->json(['errors' => Helpers::error_processor($validator)]);
+        }
+
+        $states = [];
+        $auth_token   = $request->headers->get('X-Access-Token');
+        $user_details = User::where(['auth_access_token' => $auth_token])->first();
+        if (!empty($user_details->id)) {
+            $states_list =  \DB::table('states')->select(['id', 'name'])->where('country_id', $request->country_id)->get();
+
+            $states = [];
+            if (!empty($states_list)) {
+                foreach ($states_list as $key => $state) {
+                    $states[$key] = $state;
+                }
+                return response()->json(['status' => 200, 'message' => 'Success', 'data' => $states], 200);
+            } else {
+                return response()->json(['status' => 400, 'message' => 'User not found'], 400);
+            }
+        } else {
+            return response()->json(['status' => 400, 'message' => 'User not found'], 400);
+        }
+    }
+
     public function set_address(Request $request){
         $type = $request->type;
         $validator = Validator::make($request->all(), [

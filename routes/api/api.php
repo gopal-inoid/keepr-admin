@@ -32,6 +32,9 @@ Route::group(['namespace' => 'api'], function () {
         Route::get('get-banners', 'BannerController@get_banners');
         //
 
+        Route::get('get-countries', 'GeneralController@get_countries');
+        Route::post('get-states', 'GeneralController@get_states');
+
         Route::get('sendNotification', 'GeneralController@sendNotification');
         Route::post('changeOrderStatus', 'CartController@changeOrderStatus');
         
