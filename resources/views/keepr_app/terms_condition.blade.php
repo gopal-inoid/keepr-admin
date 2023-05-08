@@ -18,10 +18,10 @@
                     <a class="navbar-brand" href="#">
                         <img src="{{ asset('keepr_app_assets/assests/Keepe_logo.png')}}" alt="">
                     </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="collapse navbar-collapse" id="navbarScroll">
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto m-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
                             <li class="nav-item">
                                 <a class="nav-link" aria-current="page" href="{{route('home')}}">Home</a>
@@ -153,7 +153,7 @@
                             </div>
 
 
-                            <div class="Copyright_Section pb-4">
+                            <div class="Copyright_Section pb-4 mt-3">
                                 <div class="CopyRight_Section">
                                     <p class="text-light">&copy;Copyright 2023 Keepr, All Rights Reserved.</p>
                                 </div>

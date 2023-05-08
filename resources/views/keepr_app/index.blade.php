@@ -14,7 +14,7 @@
 <body>
     <div>
         <div class="Navbar-Section">
-            <nav class="navbar container navbar-expand-lg navbar-light pb-3 pt-0">
+            <nav class="navbar container navbar-expand-lg navbar-light pt-0">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="#">
                         <img src="{{ asset('keepr_app_assets/assests/Keepe_logo.png')}}" alt="">
@@ -50,7 +50,7 @@
     </div>
 
 
-    <div class="container-fluid" style="padding-top: 80px;">
+    <div class="container-fluid" style="padding-top: 74px;">
         <div class="section_seocond" id="Home">
             <div class="For_picture">
                 <div class="container" id="Valuables_again">
@@ -274,7 +274,7 @@
                                     required to be paid.</p>
                             </div>
                         </div>
-                        <div class="col-md-6 Frequently_Asked_Questions" id="Frequently_Asked_Questions1">
+                        <div class="col-md-6 Frequently_Asked_Questions mt-lg-0 mt-md-3" id="Frequently_Asked_Questions1">
                             <div>
                                 <h5>How long does shipping take?</h5>
                                 <p>Shiiping depends on the country you live in. but generally normal shipping can take
@@ -327,7 +327,7 @@
                             </div>
                         </div>
                         <!-- <div class="col-md-1"></div> -->
-                        <div class="col-xl-4 col-md-5 HeadPhone_image">
+                        <div class="col-xl-4 col-md-5 HeadPhone_image pt-4">
                             <img src="{{ asset('keepr_app_assets/assests/Overlapping_img.svg') }}" alt="">
 
                         </div>
