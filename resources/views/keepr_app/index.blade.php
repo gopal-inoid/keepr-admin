@@ -372,7 +372,7 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-7 col-md-7 col-sm-12 text-end">
-                                        <img src="{{ asset(keepr_app_assets/assests/Group 14763.png)}}" alt="">
+                                        <img src="{{ asset('keepr_app_assets/assests/Group 14763.png')}}" alt="">
                                     </div>
                                 </div>
                             </div>
