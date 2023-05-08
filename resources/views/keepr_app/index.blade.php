@@ -1,66 +1,66 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keepr App</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ asset('keepr_app_assets/style.css') }}">
-    <link rel="icon" type="image/x-icon" href="{{asset("public/company/Keepr-logo-black.png")}}">
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Keepr App</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<link rel="stylesheet" href="{{ asset('keepr_app_assets/style.css') }}">
+	<link rel="icon" type="image/x-icon" href="{{asset("public/company/Keepr-logo-black.png")}}">
 </head>
 
 <body>
-    <div>
-        <div class="Navbar-Section">
-            <nav class="navbar container navbar-expand-lg navbar-light pb-3 pt-0">
-                <div class="container-fluid">
-                    <a class="navbar-brand" href="#"><img src="{{ asset('keepr_app_assets/assests/Keepe_logo.png') }}" alt=""></a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarScroll">
-                        <ul class="navbar-nav me-auto m-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-                            <li class="nav-item">
-                                <a class="nav-link" aria-current="page" href="#">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">About</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Features</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Products</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">FAQ</a>
-                            </li>
-                        </ul>
-                        <form class="d-flex mt-3">
-                            <button class="btn download_keeper_btn" type="submit">Download Keepr</button>
-                        </form>
-                    </div>
-                </div>
-            </nav>
-        </div>
-    </div>
+	<div>
+		<div class="Navbar-Section">
+			<nav class="navbar container navbar-expand-lg navbar-light pb-3 pt-0">
+				<div class="container-fluid">
+					<a class="navbar-brand" href="#"><img src="{{ asset(keepr_app_assets/assests/Keepe_logo.png)}}" alt=""></a>
+					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+					<div class="collapse navbar-collapse" id="navbarScroll">
+						<ul class="navbar-nav me-auto m-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+							<li class="nav-item">
+								<a class="nav-link" aria-current="page" href="#">Home</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="#">About</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="#">Features</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="#">Products</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="#">FAQ</a>
+							</li>
+						</ul>
+						<form class="d-flex mt-3">
+							<button class="btn download_keeper_btn" type="submit">Download Keepr</button>
+						</form>
+					</div>
+				</div>
+			</nav>
+		</div>
+	</div>
 
-    <div class="container-fluid" style="padding-top: 80px;">
-        <div class="section_seocond">
-            <div class="For_picture">
-                <div class="container" id="Valuables_again">
-                    <div class="row h-100">
-                        <div class="leftKeeprPic col-md-6">
-                            <div class="Main_Content">
-                                <span class="main_heading">Never Lose Your Valuables again!</span>
-                                <p>Do you find yourself in a position where you go out a lot and sometimes lose or
-                                    forget your valuables? keepr will help stop that by alerting you when you leave your
-                                    things behind </p>
-                                <div class="download_app_btn">
-                                    <a href="" class="btn" type="button ">Download keepr</a>
-                                </div>
-                            </div>
+	<div class="container-fluid" style="padding-top: 80px;">
+		<div class="section_seocond">
+			<div class="For_picture">
+				<div class="container" id="Valuables_again">
+					<div class="row h-100">
+						<div class="leftKeeprPic col-md-6">
+							<div class="Main_Content">
+								<span class="main_heading">Never Lose Your Valuables again!</span>
+								<p>Do you find yourself in a position where you go out a lot and sometimes lose or
+									forget your valuables? keepr will help stop that by alerting you when you leave your
+									things behind </p>
+								<div class="download_app_btn">
+									<a href="" class="btn" type="button ">Download keepr</a>
+								</div>
+							</div>
 
                         </div>
                         <div class="col-md-6">
@@ -71,9 +71,9 @@
                         </div>
                     </div>
 
-                </div>
+				</div>
 
-            </div>
+			</div>
 
         </div>
         <div class="container-fluid section_three">
@@ -195,8 +195,8 @@
                     </div>
                 </div>
 
-            </div>
-        </div>
+			</div>
+		</div>
 
 
         <div class="container-fluid pt-5">
