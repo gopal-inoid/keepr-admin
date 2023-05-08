@@ -71,3 +71,8 @@ CREATE TABLE `keepr`.`api_versions` ( `id` INT NOT NULL AUTO_INCREMENT , `androi
 INSERT INTO `api_versions` (`id`, `android_platform`, `ios_platform`, `old_version`, `new_version`, `current_version`, `status`, `updated_at`) VALUES (NULL, '1', '0', '1.0', '1.0.2', '1.0.1', '1', '2023-04-24 13:22:38'), (NULL, '0', '1', '1.0', '1.0.2', '1.0.1', '1', '2023-04-24 13:22:38');
 
 ALTER TABLE `api_versions` CHANGE `android_platform` `platform` TINYINT(1) NOT NULL DEFAULT '0';
+
+ALTER TABLE `states` CHANGE `latitude` `latitude` INT(11) NULL DEFAULT NULL;
+ALTER TABLE `states` CHANGE `longitude` `longitude` INT(11) NULL DEFAULT NULL;
+CREATE TABLE `keepr`.`tax_calculation` (`id` INT(11) NOT NULL AUTO_INCREMENT , `country` VARCHAR(100) NULL DEFAULT NULL , `type` VARCHAR(50) NULL DEFAULT NULL , `tax_amt` VARCHAR(255) NULL DEFAULT NULL , `tax_type` VARCHAR(50) NULL DEFAULT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+ALTER TABLE `tax_calculation` CHANGE `tax_amt` `tax_amt` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;

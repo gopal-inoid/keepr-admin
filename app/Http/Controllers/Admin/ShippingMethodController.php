@@ -102,6 +102,22 @@ class ShippingMethodController extends Controller
         $all_category_shipping_cost = CategoryShippingCost::where('seller_id',0)->get();
         return view('admin-views.shipping-method.setting',compact('all_category_shipping_cost','shipping_methods'));
     }
+
+    public function tax_calculation()
+    {
+        $tax_data =   \DB::table('tax_calculation')->select('id','country','type')->get();
+        return view('admin-views.shipping-method.tax-setting',compact('tax_data'));
+    }
+    public function edit_tax($id)
+    {
+        $tax_data =   \DB::table('tax_calculation')->select('id','country','type','tax_amt')->where('id',$id)->get();
+        // echo  "<pre>";
+        // $tax_amt = ( json_decode($tax_data[0]->tax_amt));
+        // die;
+      
+        return view('admin-views.shipping-method.edit-tax', compact('tax_data'));
+    }
+
     public function shippingStore(Request $request)
     {
         DB::table('business_settings')->updateOrInsert(['type' => 'shipping_method'], [
