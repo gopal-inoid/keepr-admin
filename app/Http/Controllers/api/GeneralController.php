@@ -289,8 +289,10 @@ class GeneralController extends Controller
                 $shipping['phone'] = $user_details->shipping_phone;
                 $shipping['phone_code'] = $user_details->shipping_phone_code;
                 $shipping['country'] = $user_details->shipping_country;
+                $shipping['country_name'] = $this->getCountryName($user_details->shipping_country);
                 $shipping['city'] = $user_details->shipping_city;
                 $shipping['state'] = $user_details->shipping_state;
+                $shipping['state_name'] = $this->getStateName($user_details->shipping_state);
                 $shipping['zip'] = $user_details->shipping_zip;
                 $shipping['country_iso'] = $user_details->shipping_country_iso;
 
@@ -300,8 +302,10 @@ class GeneralController extends Controller
                 $billing['phone_code'] = $user_details->phone_code;
                 $billing['phone'] = $user_details->phone;
                 $billing['country'] = $user_details->country;
+                $billing['country_name'] = $this->getCountryName($user_details->country);
                 $billing['city'] = $user_details->city;
                 $billing['state'] = $user_details->state;
+                $billing['state_name'] = $this->getStateName($user_details->state);
                 $billing['zip'] = $user_details->zip;
                 $billing['country_iso'] = $user_details->country_iso;
 
@@ -309,6 +313,16 @@ class GeneralController extends Controller
         }else{
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
+    }
+
+    public function getCountryName($id){
+        $country_names = \DB::table('country')->select('name')->where('id',$id)->first();
+        return $country_names->name ?? "";
+    }
+
+    public function getStateName($id){
+        $state_names = \DB::table('states')->select('name')->where('id',$id)->first();
+        return $state_names->name ?? "";
     }
 
     public function order_history(Request $request){
