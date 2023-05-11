@@ -254,18 +254,18 @@ class CartController extends Controller
             CheckoutInfo::insert(['product_id'=>json_encode($device_ids),'customer_id'=>$user_details->id,'total_order'=>$total_order,'total_amount'=>$total_price,'tax_amount'=>7]);
 
             if (!empty($user_details->shipping_country) && !empty($user_details->shipping_state)) {
-                $country = $user_details->shipping_country;
-                $states = $user_details->shipping_state;
+                $country_name = $this->getCountryName($user_details->shipping_country);
+                $state_name = $this->getStateName($user_details->shipping_state);
             } else {
-                $country = $user_details->country;
-                $states = $user_details->state;
+                $country_name = $this->getCountryName($user_details->country);
+                $state_name = $this->getStateName($user_details->state);
             }
             
             $shipping_rates = ShippingMethodRates::select('normal_rate','express_rate','shipping_methods.title as shipping_company','shipping_methods.normal_duration','shipping_methods.express_duration','shipping_methods.id as shippingid')
                             ->join('shipping_methods','shipping_methods.id','shipping_method_rates.shipping_id')
-                            ->where('shipping_method_rates.status',1)->where('country_code',$country)->get();
+                            ->where('shipping_method_rates.status',1)->where('country_code',$country_name)->get();
 
-            $shipping = number_format(0,2);
+            //$shipping = number_format(0,2);
             $shipping_cost_check = [];
             if(!empty($shipping_rates)){
                 foreach($shipping_rates as $k => $val){
@@ -284,68 +284,26 @@ class CartController extends Controller
             }
 
             //TAX calculation
-
-            //$stripe = new \Stripe\StripeClient('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
-            //\Stripe\Stripe::setApiKey('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
-            
-            // $headers = [
-            //    'Content-Type: application/x-www-form-urlencoded',
-            //    'Authorization: Bearer sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg' 
-            // ];
-            
-            // $fields = [
-            //     'currency' => 'usd',
-            //     'line_items' => [['amount' => 1000, 'reference' => 'L1']],
-            //     'customer_details' => [
-            //     'address' => [
-            //         'line1' => '354 Oyster Point Blvd',
-            //         'city' => 'South San Francisco',
-            //         'state' => 'CA',
-            //         'postal_code' => '94080',
-            //         'country' => 'US',
-            //     ],
-            //     'address_source' => 'shipping',
-            //     ],
-            //     'expand' => ['line_items.data.tax_breakdown'],
-            // ];
-
-            // $ch = curl_init();
-            // curl_setopt($ch, CURLOPT_URL, "https://api.stripe.com/v1/tax/calculations");
-            // curl_setopt($ch, CURLOPT_POST, true);
-            // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            // //curl_setopt($ch, CURLOPT_POSTFIELDS, 'currency=usd&line_items[0][amount]=5000&line_items[0][reference]=L1&customer_details[address][line1]="354 Oyster Point Blvd"&customer_details[address][city]="South San Francisco"&customer_details[address][state]=CA&customer_details[address][postal_code]=94080&customer_details[address][country]=US&customer_details[address_source]=shipping&expand[0]=line_items.data.tax_breakdown');
-            // curl_setopt($ch, CURLOPT_POSTFIELDS, 
-            //     'currency=usd&
-            //     line_items[0][amount]=5000&
-            //     line_items[0][reference]=L1&
-            //     customer_details[address][line1]="354 Oyster Point Blvd"&
-            //     customer_details[address][city]="South San Francisco"&
-            //     customer_details[address][state]=CA&
-            //     customer_details[address][postal_code]=94080&
-            //     customer_details[address][country]=US&
-            //     customer_details[address_source]=shipping&
-            //     expand[0]=line_items.data.tax_breakdown'
-            // );
-            // $result = curl_exec($ch);
-            // curl_close($ch);
-            // $res = json_decode($result,true);
-            
-            // echo "<pre>"; print_r($res); die;
-
+            $tax_arr = $this->getTaxCalculation(20,"Canada","Quebec");
+            //$tax_arr = $this->getTaxCalculation($total_price,$country_name,$state_name);
             //END Tax calculation
 
-            $tax_amt =0;
-            $tax =0;
+            $tax = "";
+            $tax_amt = $tax_arr['tax_amt'] ?? 0;
+            if(!empty($tax_arr['tax_percent']) && !empty($tax_arr['tax_name'])){
+                $tax = "Total Tax " . $tax_arr['tax_percent'] . "% " . $tax_arr['tax_name'];
+            }
+            
             $data['cart_info'] = $cart_info;
             $data['shipping_rates'] = $shipping_cost_check;
             $data['customer_id'] = $user_details->id;
             $data['total_order'] = $total_order;
             $data['sub_total'] = number_format($total_price, 2);
-            $data['shipping'] = $shipping;
-            $data['tax'] = $tax;
-            $data['total'] = number_format(($total_price + $shipping +  $tax_amt ), 2);
+            //$data['shipping'] = $shipping;
+            $data['total_tax_percent'] = $tax_arr['tax_percent'] ?? 0;
+            $data['total_tax_amount'] = $tax_amt;
+            $data['tax_desc'] = $tax;
+            $data['total'] = number_format(($total_price +  $tax_amt ), 2);
             //echo "<pre>"; print_r($mac_ids); die;
 
             return response()->json(['status'=>200,'message'=>'Success','data'=>$data],200);
