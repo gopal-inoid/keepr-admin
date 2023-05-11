@@ -39,9 +39,9 @@ class Controller extends BaseController
             if($taxes->type == "fixed"){
                 if($tax_rates[0]['tax1'] != ""){
                     $tax_amt = (($amount * $tax_rates[0]['tax1']) / 100);
-                    $tax_calculation['tax_amt'] = $tax_amt;
-                    $tax_calculation['tax_percent'] = $tax_rates[0]['tax1'];
-                    $tax_calculation['tax_name'] = $tax_rates[0]['tax_txt1'];
+                    $tax_calculation[0]['title'] = $tax_rates[0]['tax1'] . "% " . $tax_rates[0]['tax_txt1'];
+                    $tax_calculation[0]['amount'] = number_format($tax_amt,2);
+                    $tax_calculation[0]['percent'] = $tax_rates[0]['tax1'];
                 }else{
                     return [];
                 }
@@ -50,12 +50,16 @@ class Controller extends BaseController
                 foreach($tax_rates as $taxval){
                     if($state_name == $taxval['state']){
                         $tax_amt1 = (($amount * $taxval['tax1']) / 100);
+                        $tax_calculation[0]['title'] = $taxval['tax1'] . "% " . $taxval['tax_txt1'];
+                        $tax_calculation[0]['amount'] = number_format($tax_amt1,2);
+                        $tax_calculation[0]['percent'] = number_format($taxval['tax1'],3);
+                        
                         if(!empty($taxval['tax2'])){
                             $tax_amt2 = (($amount * $taxval['tax2']) / 100);
+                            $tax_calculation[1]['title'] = $taxval['tax2'] . "% " . $taxval['tax_txt2'];
+                            $tax_calculation[1]['amount'] = number_format($tax_amt2,2);
+                            $tax_calculation[1]['percent'] = number_format($taxval['tax2'],3);
                         }
-                        $tax_calculation['tax_amt'] = $tax_amt1 + ($tax_amt2 ?? 0);
-                        $tax_calculation['tax_percent'] = $taxval['tax1'] + ($taxval['tax2'] ?? 0);
-                        $tax_calculation['tax_name'] = $taxval['tax1'] . "% " . $taxval['tax_txt1'] . (!empty($taxval['tax_txt2']) ? ",". $taxval['tax2'] . "% " . $taxval['tax_txt2']:"");
                     }
                 }
             }
