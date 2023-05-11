@@ -314,8 +314,6 @@ class CartController extends Controller
         }else{
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
-
-        // here i will add stripe tax api and calculate price based on no of device and will send in response
     }
 
     public function place_order(Request $request)
