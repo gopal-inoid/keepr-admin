@@ -391,7 +391,7 @@ class ProductController extends Controller
 
     public function search_device(Request $request){
         $keyword = $request->keyword;
-        $devices_list = Product::select('id','name','images','purchase_price','thumbnail','details','specification','faq')->where('status',1);
+        $devices_list = Product::select('id','name','images','purchase_price','thumbnail','details')->where('status',1);
         if(!empty($keyword)){
             $devices_list = $devices_list->whereRaw('name like "%'.$keyword.'%"');
         }
@@ -436,13 +436,13 @@ class ProductController extends Controller
                         $devices_details_array['specification'] = json_decode($devices_details->specification,true);
                     }
                     if(!empty($devices_details->faq)){
-                        $faq = json_decode($devices_details->faq,true);
-                        if(!empty($faq['question'])){
-                            foreach($faq['question'] as $k => $question){
-                                $devices_details_array['faq'][$k]['question'] = $question;
-                                $devices_details_array['faq'][$k]['answer'] = $faq['answer'][$k];
-                            }
-                        }
+                        $devices_details_array['faq'] = json_decode($devices_details->faq,true);
+                        // if(!empty($faq['question'])){
+                        //     foreach($faq['question'] as $k => $question){
+                        //         $devices_details_array['faq'][$k]['question'] = $question;
+                        //         $devices_details_array['faq'][$k]['answer'] = $faq['answer'][$k];
+                        //     }
+                        // }
                     }
                     return response()->json(['status'=>200,'message'=>'Success','data'=>$devices_details_array],200);
                 }else{

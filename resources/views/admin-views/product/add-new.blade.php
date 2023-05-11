@@ -7,11 +7,11 @@
     <link href="{{ asset('public/assets/select2/css/select2.min.css') }}" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
-        .add-product-faq-btn,.remove-product-faq-btn{
+        .add-product-spec-btn,.remove-product-spec-btn,.add-product-faq-btn,.remove-product-faq-btn{
             font-size: 25px;
             cursor: pointer;
         }
-        .faq-add-main-btn{
+        .spec-add-main-btn, .faq-add-main-btn{
             align-items: center;
             display: flex;
             flex-direction: row;
@@ -84,33 +84,26 @@
                         </div>
                     </div>
 
-                    <div class="card mt-2 rest-part physical_product_show">
+										<div class="card mt-2 rest-part physical_product_show">
                         <div class="card-header">
-                            <h4 class="mb-0">{{ \App\CPU\translate('Specification') }}</h4>
+                            <h4 class="mb-0">{{ \App\CPU\translate('Product Specifications') }}</h4>
+														<div class="spec-add-main-btn">
+																<label class="title-color">&nbsp;</label>
+																<i class="tio-add-circle-outlined text-success add-product-spec-btn mt-3"></i>
+														</div>
                         </div>
                         <div class="card-body">
                             <div class="row align-items-end">
-                                
-                                <div class="col-md-4 form-group">
-                                    <label class="title-color">{{ \App\CPU\translate('Size') }}</label>
-                                    <input type="text" value="{{ old('size') }}" name="specification[size]" class="form-control" placeholder="31.1 * 30 * 5.5mm">
+                                <div class="col-md-12 form-group" id="parent-spec-div">
+																	<div class="row spec-individual d-none">
+																		<div class="col-md-4 form-group mb-0">
+																				<label class="title-color">{{ \App\CPU\translate('Key') }}</label>
+																		</div>
+																		<div class="col-md-6 form-group mb-0">
+																				<label class="title-color">{{ \App\CPU\translate('Value') }}</label>
+																		</div>
+																	</div>
                                 </div>
-
-                                <div class="col-md-4 form-group">
-                                    <label class="title-color">{{ \App\CPU\translate('Weight') }}</label>
-                                    <input type="text" value="{{ old('weight') }}" name="specification[weight]" class="form-control" placeholder="4.8g (battery included)">
-                                </div>
-
-                                <div class="col-md-4 form-group">
-                                    <label class="title-color">{{ \App\CPU\translate('Bluetooth version') }}</label>
-                                    <input type="text" value="{{ old('bluetooth_version') }}" name="specification[bluetooth_version]" class="form-control" placeholder="LE 4.0 / 4.2">
-                                </div>
-
-                                <div class="col-md-12 form-group">
-                                    <label class="title-color">{{ \App\CPU\translate('Material') }}</label>
-                                    <textarea name="specification[material]" class="form-control" placeholder="{{ \App\CPU\translate('Material') }}">{{ old('material') }}</textarea>
-                                </div>
-
                             </div>
                         </div>
                     </div>
@@ -118,26 +111,23 @@
                     <div class="card mt-2 rest-part physical_product_show">
                         <div class="card-header">
                             <h4 class="mb-0">{{ \App\CPU\translate('Product FAQ') }}</h4>
+														<div class="faq-add-main-btn">
+																<label class="title-color">&nbsp;</label>
+																<i class="tio-add-circle-outlined text-success add-product-faq-btn mt-3"></i>
+														</div>
                         </div>
                         <div class="card-body">
                             <div class="row align-items-end">
                                 <div class="col-md-12 form-group" id="parent-faq-div">
-                                    <div class="row">
-                                        <div class="col-md-4 form-group">
-                                            <label class="title-color">{{ \App\CPU\translate('Question') }}</label>
-                                            <input type="text" value="{{ old('question') }}" name="faq[question][]" class="form-control" placeholder="{{ \App\CPU\translate('Question') }}">
-                                        </div>
-                                        <div class="col-md-6 form-group">
-                                            <label class="title-color">{{ \App\CPU\translate('Answer') }}</label>
-                                            <input type="text" value="{{ old('answer') }}" name="faq[answer][]" class="form-control" placeholder="{{ \App\CPU\translate('Answer') }}">
-                                        </div>
-                                        <div class="col-md-2 form-group faq-add-main-btn">
-                                            <label class="title-color">&nbsp;</label>
-                                            <i class="tio-add-circle-outlined text-success add-product-faq-btn mt-3"></i>
-                                        </div>
-                                    </div>
+																	<div class="row faq-individual d-none">
+																		<div class="col-md-4 form-group mb-0">
+																				<label class="title-color">{{ \App\CPU\translate('Question') }}</label>
+																		</div>
+																		<div class="col-md-6 form-group mb-0">
+																				<label class="title-color">{{ \App\CPU\translate('Answer') }}</label>
+																		</div>
+																	</div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -185,7 +175,36 @@
     <script>
         $(function() {
 
+            $('.add-product-spec-btn').on('click',function(){
+							if($(".spec-individual").length == 1){
+								$(".spec-individual").eq(0).removeClass('d-none');
+							}
+							$('#parent-spec-div').append(
+									`<div class="row spec-individual">
+											<div class="col-md-4 form-group">
+													<input type="text" value="" name="spec[key][]" class="form-control" placeholder="{{ \App\CPU\translate('Key') }}">
+											</div>
+											<div class="col-md-6 form-group">
+													<input type="text" value="" name="spec[value][]" class="form-control" placeholder="{{ \App\CPU\translate('Value') }}">
+											</div>
+											<div class="col-md-2 form-group spec-add-main-btn">
+													<i class="tio-delete-outlined text-danger remove-product-spec-btn"></i>
+											</div>
+									</div>`
+							);
+					});
+
+            $(document).on('click','.remove-product-spec-btn',function(){
+                $(this).closest('.spec-individual').remove();
+								if($(".spec-individual").length == 1){
+									$(".spec-individual").eq(0).addClass('d-none');
+								}
+            });
+
             $('.add-product-faq-btn').on('click',function(){
+							if($(".faq-individual").length == 1){
+								$(".faq-individual").eq(0).removeClass('d-none');
+							}
                 $('#parent-faq-div').append(
                     `<div class="row faq-individual">
                         <div class="col-md-4 form-group">
@@ -195,7 +214,7 @@
                             <input type="text" value="" name="faq[answer][]" class="form-control" placeholder="{{ \App\CPU\translate('Answer') }}">
                         </div>
                         <div class="col-md-2 form-group faq-add-main-btn">
-                            <i class="tio-delete-outlined text-danger remove-product-faq-btn mt-0"></i>
+                            <i class="tio-delete-outlined text-danger remove-product-faq-btn"></i>
                         </div>
                     </div>`
                 );
@@ -203,6 +222,9 @@
 
             $(document).on('click','.remove-product-faq-btn',function(){
                 $(this).closest('.faq-individual').remove();
+								if($(".faq-individual").length == 1){
+									$(".faq-individual").eq(0).addClass('d-none');
+								}
             });
 
             $("#coba").spartanMultiImagePicker({

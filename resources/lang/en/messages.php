@@ -2402,4 +2402,6 @@
   'express duration' => 'Express duration',
   'normal delivery days' => 'Normal delivery days',
   'express delivery days' => 'Express delivery days',
+  'Value' => 'Value',
+  'Product Specifications' => 'Product Specifications',
 );
