@@ -289,7 +289,7 @@ class CartController extends Controller
             //END Tax calculation
 
             $tax = "";
-            $tax_amt = $tax_arr['tax_amt'] ?? 0;
+            $tax_amt = $tax_arr['tax_amt'] ?? "0";
             if(!empty($tax_arr['tax_percent']) && !empty($tax_arr['tax_name'])){
                 $tax = "Total Tax " . $tax_arr['tax_percent'] . "% " . $tax_arr['tax_name'];
             }
@@ -300,8 +300,8 @@ class CartController extends Controller
             $data['total_order'] = $total_order;
             $data['sub_total'] = number_format($total_price, 2);
             //$data['shipping'] = $shipping;
-            $data['total_tax_percent'] = $tax_arr['tax_percent'] ?? 0;
-            $data['total_tax_amount'] = $tax_amt;
+            $data['total_tax_percent'] = number_format($tax_arr['tax_percent'],3) ?? "0";
+            $data['total_tax_amount'] = number_format($tax_amt,2);
             $data['tax_desc'] = $tax;
             $data['total'] = number_format(($total_price +  $tax_amt ), 2);
             //echo "<pre>"; print_r($mac_ids); die;
