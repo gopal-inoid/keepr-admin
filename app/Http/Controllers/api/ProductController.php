@@ -349,7 +349,7 @@ class ProductController extends Controller
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
 
-        $devices_list = Product::select('products.id','name','details','purchase_price','thumbnail',DB::raw('COUNT(product_stocks.id) as total_stocks'))
+        $devices_list = Product::select('product_stocks.color','products.id','name','details','purchase_price','thumbnail',DB::raw('COUNT(product_stocks.id) as total_stocks'))
                         ->Join('product_stocks','product_stocks.product_id','products.id')
                         ->where('products.status',1)
                         ->where('product_stocks.is_purchased',0)

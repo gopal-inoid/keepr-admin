@@ -76,3 +76,5 @@ ALTER TABLE `states` CHANGE `latitude` `latitude` INT(11) NULL DEFAULT NULL;
 ALTER TABLE `states` CHANGE `longitude` `longitude` INT(11) NULL DEFAULT NULL;
 CREATE TABLE `keepr`.`tax_calculation` (`id` INT(11) NOT NULL AUTO_INCREMENT , `country` VARCHAR(100) NULL DEFAULT NULL , `type` VARCHAR(50) NULL DEFAULT NULL , `tax_amt` VARCHAR(255) NULL DEFAULT NULL , `tax_type` VARCHAR(50) NULL DEFAULT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
 ALTER TABLE `tax_calculation` CHANGE `tax_amt` `tax_amt` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;
+
+ALTER TABLE `products` CHANGE `colors` `colors` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;
