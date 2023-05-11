@@ -7,11 +7,11 @@
     <link href="{{ asset('public/assets/select2/css/select2.min.css')}}" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
-        .add-product-faq-btn,.remove-product-faq-btn{
+        .add-product-spec-btn,.remove-product-spec-btn,.add-product-faq-btn,.remove-product-faq-btn{
             font-size: 25px;
             cursor: pointer;
         }
-        .faq-add-main-btn{
+        .spec-add-main-btn, .faq-add-main-btn{
             align-items: center;
             display: flex;
             flex-direction: row;
@@ -86,42 +86,49 @@
                         </div>
                     </div>
                     <?php 
-                        $specification = $faq = [];
+                        $specifications = $faqs = [];
                         if(!empty($product['specification'])){
-                            $specification =  json_decode($product['specification'],true);
+                            $specifications =  json_decode($product['specification'],true);
                         }
                         if(!empty($product['faq'])){
-                            $faq =  json_decode($product['faq'],true);
-                            $faq_cnt = !empty($faq['question']) ? count($faq['question']) : 0;
+                            $faqs = json_decode($product['faq'],true);
                         }
                     ?>
                     <div class="card mt-2 rest-part physical_product_show">
                         <div class="card-header">
-                            <h4 class="mb-0">{{ \App\CPU\translate('Specification') }}</h4>
+                            <h4 class="mb-0">{{ \App\CPU\translate('Product Specifications') }}</h4>
+														<div class="spec-add-main-btn">
+																<label class="title-color">&nbsp;</label>
+																<i class="tio-add-circle-outlined text-success add-product-spec-btn mt-3"></i>
+														</div>
                         </div>
                         <div class="card-body">
                             <div class="row align-items-end">
-                                
-                                <div class="col-md-4 form-group">
-                                    <label class="title-color">{{ \App\CPU\translate('Size') }}</label>
-                                    <input type="text" value="{{ $specification['size'] ?? '' }}" name="specification[size]" class="form-control" placeholder="31.1 * 30 * 5.5mm">
+                                <div class="col-md-12 form-group" id="parent-spec-div">
+																	<div class="row spec-individual <?= empty($specifications) ? 'd-none' : '';?>">
+																		<div class="col-md-4 form-group mb-0">
+																				<label class="title-color">{{ \App\CPU\translate('Key') }}</label>
+																		</div>
+																		<div class="col-md-6 form-group mb-0">
+																				<label class="title-color">{{ \App\CPU\translate('Value') }}</label>
+																		</div>
+																	</div>
+                                    <?php 
+                                        if(!empty($specifications)){
+                                            foreach($specifications as $k => $spec){ ?>
+                                                <div class="row spec-individual">
+                                                    <div class="col-md-4 form-group">
+																											<input type="text" value="{{$spec['key']}}" name="spec[key][]" class="form-control" placeholder="{{ \App\CPU\translate('Key') }}">
+                                                    </div>
+                                                    <div class="col-md-6 form-group">
+																											<input type="text" value="{{$spec['value']}}" name="spec[value][]" class="form-control" placeholder="{{ \App\CPU\translate('Value') }}">
+                                                    </div>
+																										<div class="col-md-2 form-group spec-add-main-btn">
+																												<i class="tio-delete-outlined text-danger remove-product-spec-btn"></i>
+																										</div>
+                                                </div>
+                                    <?php  } } ?>
                                 </div>
-
-                                <div class="col-md-4 form-group">
-                                    <label class="title-color">{{ \App\CPU\translate('Weight') }}</label>
-                                    <input type="text" value="{{ $specification['weight'] ?? '' }}" name="specification[weight]" class="form-control" placeholder="4.8g (battery included)">
-                                </div>
-
-                                <div class="col-md-4 form-group">
-                                    <label class="title-color">{{ \App\CPU\translate('Bluetooth version') }}</label>
-                                    <input type="text" value="{{ $specification['bluetooth_version'] ?? '' }}" name="specification[bluetooth_version]" class="form-control" placeholder="LE 4.0 / 4.2">
-                                </div>
-
-                                <div class="col-md-12 form-group">
-                                    <label class="title-color">{{ \App\CPU\translate('Material') }}</label>
-                                    <textarea name="specification[material]" class="form-control" placeholder="{{ \App\CPU\translate('Material') }}">{{ $specification['material'] ?? '' }}</textarea>
-                                </div>
-
                             </div>
                         </div>
                     </div>
@@ -129,32 +136,35 @@
                     <div class="card mt-2 rest-part physical_product_show">
                         <div class="card-header">
                             <h4 class="mb-0">{{ \App\CPU\translate('Product FAQ') }}</h4>
+														<div class="faq-add-main-btn">
+																<label class="title-color">&nbsp;</label>
+																<i class="tio-add-circle-outlined text-success add-product-faq-btn mt-3"></i>
+														</div>
                         </div>
                         <div class="card-body">
                             <div class="row align-items-end">
                                 <div class="col-md-12 form-group" id="parent-faq-div">
+																	<div class="row faq-individual <?= empty($faqs) ? 'd-none' : '';?>">
+																		<div class="col-md-4 form-group mb-0">
+																				<label class="title-color">{{ \App\CPU\translate('Question') }}</label>
+																		</div>
+																		<div class="col-md-6 form-group mb-0">
+																				<label class="title-color">{{ \App\CPU\translate('Answer') }}</label>
+																		</div>
+																	</div>
                                     <?php 
-                                        if(!empty($faq['question'])){
-                                            foreach($faq['question'] as $k => $question){ ?>
-                                                <div class="row">
+                                        if(!empty($faqs)){
+                                            foreach($faqs as $k => $faq){ ?>
+                                                <div class="row faq-individual">
                                                     <div class="col-md-4 form-group">
-                                                        <label class="title-color">{{ \App\CPU\translate('Question') }}</label>
-                                                        <input type="text" value="{{$question}}" name="faq[question][{{$k}}]" class="form-control" placeholder="{{ \App\CPU\translate('Question') }}">
+																											<input type="text" value="{{$faq['question']}}" name="faq[question][]" class="form-control" placeholder="{{ \App\CPU\translate('Question') }}">
                                                     </div>
                                                     <div class="col-md-6 form-group">
-                                                        <label class="title-color">{{ \App\CPU\translate('Answer') }}</label>
-                                                        <input type="text" value="{{$faq['answer'][$k]}}" name="faq[answer][{{$k}}]" class="form-control" placeholder="{{ \App\CPU\translate('Answer') }}">
+																											<input type="text" value="{{$faq['answer']}}" name="faq[answer][]" class="form-control" placeholder="{{ \App\CPU\translate('Answer') }}">
                                                     </div>
-                                                    <?php if($k == 0){ ?>
-                                                    <div class="col-md-2 form-group faq-add-main-btn">
-                                                        <label class="title-color">&nbsp;</label>
-                                                        <i class="tio-add-circle-outlined text-success add-product-faq-btn mt-3"></i>
-                                                    </div>
-                                                    <?php }else{ ?>
-                                                        <div class="col-md-2 form-group faq-add-main-btn">
-                                                            <i class="tio-delete-outlined text-danger remove-product-faq-btn mt-3"></i>
-                                                        </div>
-                                                    <?php } ?>
+																										<div class="col-md-2 form-group faq-add-main-btn">
+																												<i class="tio-delete-outlined text-danger remove-product-faq-btn"></i>
+																										</div>
                                                 </div>
                                     <?php  } } ?>
                                 </div>
@@ -238,27 +248,56 @@
         var thumbnail = '{{\App\CPU\ProductManager::product_image_path('thumbnail').'/'.$product->thumbnail??asset('public/assets/back-end/img/400x400/img2.jpg')}}';
         $(function () {
 
-            var cnt = (parseInt("{{$faq_cnt}}") - 1);
-            //console.log(cnt);
+					$('.add-product-spec-btn').on('click',function(){
+							if($(".spec-individual").length == 1){
+								$(".spec-individual").eq(0).removeClass('d-none');
+							}
+							$('#parent-spec-div').append(
+									`<div class="row spec-individual">
+											<div class="col-md-4 form-group">
+													<input type="text" value="" name="spec[key][]" class="form-control" placeholder="{{ \App\CPU\translate('Key') }}">
+											</div>
+											<div class="col-md-6 form-group">
+													<input type="text" value="" name="spec[value][]" class="form-control" placeholder="{{ \App\CPU\translate('Value') }}">
+											</div>
+											<div class="col-md-2 form-group spec-add-main-btn">
+													<i class="tio-delete-outlined text-danger remove-product-spec-btn"></i>
+											</div>
+									</div>`
+							);
+					});
+
+            $(document).on('click','.remove-product-spec-btn',function(){
+                $(this).closest('.spec-individual').remove();
+								if($(".spec-individual").length == 1){
+									$(".spec-individual").eq(0).addClass('d-none');
+								}
+            });
+
             $('.add-product-faq-btn').on('click',function(){
+							if($(".faq-individual").length == 1){
+								$(".faq-individual").eq(0).removeClass('d-none');
+							}
                 $('#parent-faq-div').append(
                     `<div class="row faq-individual">
                         <div class="col-md-4 form-group">
-                            <input type="text" value="" name="faq[question][`+(cnt+1)+`]" class="form-control" placeholder="{{ \App\CPU\translate('Question') }}">
+                            <input type="text" value="" name="faq[question][]" class="form-control" placeholder="{{ \App\CPU\translate('Question') }}">
                         </div>
                         <div class="col-md-6 form-group">
-                            <input type="text" value="" name="faq[answer][`+(cnt+1)+`]" class="form-control" placeholder="{{ \App\CPU\translate('Answer') }}">
+                            <input type="text" value="" name="faq[answer][]" class="form-control" placeholder="{{ \App\CPU\translate('Answer') }}">
                         </div>
                         <div class="col-md-2 form-group faq-add-main-btn">
-                            <i class="tio-delete-outlined text-danger remove-product-faq-btn mt-0"></i>
+                            <i class="tio-delete-outlined text-danger remove-product-faq-btn"></i>
                         </div>
                     </div>`
                 );
-                cnt++;
             });
 
             $(document).on('click','.remove-product-faq-btn',function(){
                 $(this).closest('.faq-individual').remove();
+								if($(".faq-individual").length == 1){
+									$(".faq-individual").eq(0).addClass('d-none');
+								}
             });
 
             if (imageCount > 0) {

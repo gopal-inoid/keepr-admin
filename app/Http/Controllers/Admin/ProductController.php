@@ -130,12 +130,26 @@ class ProductController extends BaseController
         $p->details              = $request['description'] ?? '';
         $p->purchase_price     = BackEndHelper::currency_to_usd($request->purchase_price);
         
-        if(count($request->specification) > 0){
-            $p->specification = json_encode($request->specification);
+				$specifications = [];
+        if(isset($request->spec) && count($request->spec) > 0){
+					foreach ($request->spec['key'] as $k => $key) {
+						if($key != '' && $request->spec['value'][$k] != ''){
+							$specifications[] = ['key'=>$key, 'value'=>$request->spec['value'][$k]];
+						}
+					}
+				}
+				$p->specification = json_encode($specifications);
+
+				$faqs = [];
+        if(isset($request->faq) && count($request->faq) > 0){
+					foreach ($request->faq['question'] as $k => $question) {
+						if ($question != '' && $request->faq['answer'][$k] != '') {
+							$faqs[] = ['question'=> $question, 'answer'=>$request->faq['answer'][$k]];
+						}
+					}
         }
-        if(count($request->faq) > 0){
-            $p->faq = json_encode($request->faq);
-        }
+				$p->faq = json_encode($faqs);
+
         if ($request->ajax()) {
             return response()->json([], 200);
         } else {
@@ -606,12 +620,26 @@ class ProductController extends BaseController
         $product_images                 = json_decode($product->images);
         $product->details              = $request['description'] ?? '';
         $product->purchase_price     = BackEndHelper::currency_to_usd($request->purchase_price);
-        if(count($request->specification) > 0){
-            $product->specification = json_encode($request->specification);
+				
+				$specifications = [];
+        if(isset($request->spec) && count($request->spec) > 0){
+					foreach ($request->spec['key'] as $k => $key) {
+						if($key != '' && $request->spec['value'][$k] != ''){
+							$specifications[] = ['key'=>$key, 'value'=>$request->spec['value'][$k]];
+						}
+					}
+				}
+				$product->specification = json_encode($specifications);
+
+				$faqs = [];
+        if(isset($request->faq) && count($request->faq) > 0){
+					foreach ($request->faq['question'] as $k => $question) {
+						if ($question != '' && $request->faq['answer'][$k] != '') {
+							$faqs[] = ['question'=> $question, 'answer'=>$request->faq['answer'][$k]];
+						}
+					}
         }
-        if(count($request->faq) > 0){
-            $product->faq = json_encode($request->faq);
-        }
+				$product->faq = json_encode($faqs);
 
         if ($request->ajax()) {
             return response()->json([], 200);
