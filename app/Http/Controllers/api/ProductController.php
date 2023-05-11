@@ -266,10 +266,10 @@ class ProductController extends Controller
             if(!empty($check_connected->id)){
                 return response()->json(['status'=>400,'message'=>'Device already connected'],400);
             }
-            $device_info = ProductStock::where('mac_id',$device_mac_id)->first();
+            $device_info = ProductStock::select('products.name')->join('products','product_stocks.product_id','products.id')->where('product_stocks.mac_id',$device_mac_id)->first();
             //$device_info = Product::select('name')->where('mac_id',$device_mac_id)->first();
-            if(!empty($device_info->mac_id)){
-                $check = ConnectedDevice::insert(['device_name'=>$device_info->mac_id,'mac_id'=>$device_mac_id,'user_id'=>$user_details->id,'device_uuid'=>$device_uuid,'distance'=>$distance]);
+            if(!empty($device_info->name)){
+                $check = ConnectedDevice::insert(['device_name'=>$device_info->name,'mac_id'=>$device_mac_id,'user_id'=>$user_details->id,'device_uuid'=>$device_uuid,'distance'=>$distance]);
                 if($check){
                     return response()->json(['status'=>200,'message'=>'Device connected successfully'],200);
                 }
