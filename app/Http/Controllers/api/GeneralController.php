@@ -315,16 +315,6 @@ class GeneralController extends Controller
         }
     }
 
-    public function getCountryName($id){
-        $country_names = \DB::table('country')->select('name')->where('id',$id)->first();
-        return $country_names->name ?? "";
-    }
-
-    public function getStateName($id){
-        $state_names = \DB::table('states')->select('name')->where('id',$id)->first();
-        return $state_names->name ?? "";
-    }
-
     public function order_history(Request $request){
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
