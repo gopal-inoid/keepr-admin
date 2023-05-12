@@ -72,10 +72,12 @@ class CartController extends Controller
     {
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
-        $cart = Cart::select('id','quantity','product_id','quantity','name','thumbnail')->where(['customer_id' => $user_details->id])->get();
+        $cart = Cart::select('id','quantity','product_id','quantity','name','thumbnail','color')->where(['customer_id' => $user_details->id])->get();
         $total_cart_price = 0;
         if($cart) {
             foreach($cart as $key => $value){
+                $colorStocks = Color::select('name')->where('id',$value->color)->first();
+                $value['color'] = $colorStocks->name ?? NULL;
                 if(!isset($value['product'])){
                     $cart_data = Cart::find($value['id']);
                     $cart_data->delete();
