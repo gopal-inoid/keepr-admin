@@ -7,16 +7,16 @@
     <link href="{{ asset('public/assets/select2/css/select2.min.css')}}" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
-        .add-product-spec-btn,.remove-product-spec-btn,.add-product-faq-btn,.remove-product-faq-btn{
+        .add-product-spec-btn,.remove-product-spec-btn,.add-product-faq-btn,
+        .remove-product-faq-btn,.add-product-colors-btn,.remove-product-colors-btn{
             font-size: 25px;
             cursor: pointer;
         }
-        .spec-add-main-btn, .faq-add-main-btn{
+        .spec-add-main-btn, .faq-add-main-btn,.colors-add-main-btn{
             align-items: center;
             display: flex;
             flex-direction: row;
         }
-        
     </style>
 @endpush
 
@@ -86,7 +86,10 @@
                         </div>
                     </div>
                     <?php 
-                        $specifications = $faqs = [];
+                        $specifications = $faqs = $colors = [];
+                        if(!empty($product['colors'])){
+                            $colors = json_decode($product['colors'],true);
+                        }
                         if(!empty($product['specification'])){
                             $specifications =  json_decode($product['specification'],true);
                         }
@@ -172,6 +175,39 @@
                         </div>
                     </div>
 
+                    <div class="card mt-2 rest-part physical_product_show">
+                        <div class="card-header">
+                            <h4 class="mb-0">{{ \App\CPU\translate('Product colors') }}</h4>
+														<div class="colors-add-main-btn">
+																<label class="title-color">&nbsp;</label>
+																<i class="tio-add-circle-outlined text-success add-product-colors-btn mt-3"></i>
+														</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row align-items-end">
+                                <div class="col-md-12 form-group" id="parent-colors-div">
+                                        <div class="row colors-individual <?= empty($colors) ? 'd-none' : '';?>">
+                                            <div class="col-md-4 form-group mb-0">
+                                                    <label class="title-color">{{ \App\CPU\translate('Key') }}</label>
+                                            </div>
+                                        </div>
+                                    <?php 
+                                        if(!empty($colors)){
+                                            foreach($colors as $k => $color){ ?>
+                                                <div class="row colors-individual">
+                                                    <div class="col-md-4 form-group">
+														<input type="text" value="{{$color['key']}}" name="colors[key][]" class="form-control" placeholder="{{ \App\CPU\translate('Key') }}">
+                                                    </div>
+                                                    <div class="col-md-2 form-group colors-add-main-btn">
+                                                            <i class="tio-delete-outlined text-danger remove-product-colors-btn"></i>
+                                                    </div>
+                                                </div>
+                                    <?php  } } ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="card mt-2 rest-part">
                         <div class="card-body">
                             <div class="row">
@@ -248,30 +284,53 @@
         var thumbnail = '{{\App\CPU\ProductManager::product_image_path('thumbnail').'/'.$product->thumbnail??asset('public/assets/back-end/img/400x400/img2.jpg')}}';
         $(function () {
 
-					$('.add-product-spec-btn').on('click',function(){
-							if($(".spec-individual").length == 1){
-								$(".spec-individual").eq(0).removeClass('d-none');
-							}
-							$('#parent-spec-div').append(
-									`<div class="row spec-individual">
-											<div class="col-md-4 form-group">
-													<input type="text" value="" name="spec[key][]" class="form-control" placeholder="{{ \App\CPU\translate('Key') }}">
-											</div>
-											<div class="col-md-6 form-group">
-													<input type="text" value="" name="spec[value][]" class="form-control" placeholder="{{ \App\CPU\translate('Value') }}">
-											</div>
-											<div class="col-md-2 form-group spec-add-main-btn">
-													<i class="tio-delete-outlined text-danger remove-product-spec-btn"></i>
-											</div>
-									</div>`
-							);
-					});
+            $('.add-product-spec-btn').on('click',function(){
+                    if($(".spec-individual").length == 1){
+                        $(".spec-individual").eq(0).removeClass('d-none');
+                    }
+                    $('#parent-spec-div').append(
+                            `<div class="row spec-individual">
+                                    <div class="col-md-4 form-group">
+                                            <input type="text" value="" name="spec[key][]" class="form-control" placeholder="{{ \App\CPU\translate('Key') }}">
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                            <input type="text" value="" name="spec[value][]" class="form-control" placeholder="{{ \App\CPU\translate('Value') }}">
+                                    </div>
+                                    <div class="col-md-2 form-group spec-add-main-btn">
+                                            <i class="tio-delete-outlined text-danger remove-product-spec-btn"></i>
+                                    </div>
+                            </div>`
+                    );
+            });
+
+            $('.add-product-colors-btn').on('click',function(){
+                if($(".colors-individual").length == 1){
+                    $(".colors-individual").eq(0).removeClass('d-none');
+                }
+                $('#parent-colors-div').append(
+                        `<div class="row colors-individual">
+                                <div class="col-md-4 form-group">
+                                    <input type="text" value="" name="colors[key][]" class="form-control" placeholder="{{ \App\CPU\translate('Key') }}">
+                                </div>
+                                <div class="col-md-2 form-group colors-add-main-btn">
+                                    <i class="tio-delete-outlined text-danger remove-product-colors-btn"></i>
+                                </div>
+                        </div>`
+                );
+            });
 
             $(document).on('click','.remove-product-spec-btn',function(){
                 $(this).closest('.spec-individual').remove();
-								if($(".spec-individual").length == 1){
-									$(".spec-individual").eq(0).addClass('d-none');
-								}
+                if($(".spec-individual").length == 1){
+                    $(".spec-individual").eq(0).addClass('d-none');
+                }
+            });
+
+            $(document).on('click','.remove-product-colors-btn',function(){
+                $(this).closest('.colors-individual').remove();
+                if($(".colors-individual").length == 1){
+                    $(".colors-individual").eq(0).addClass('d-none');
+                }
             });
 
             $('.add-product-faq-btn').on('click',function(){

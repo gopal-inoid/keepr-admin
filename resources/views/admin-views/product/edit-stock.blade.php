@@ -77,6 +77,23 @@
                                                         <input type="text" name="device_id[{{$k}}]" class="form-control macAddress" value="{{ $mac_ids->mac_id }}" placeholder="{{ \App\CPU\translate('Device MAC ID') }}">
                                                     </div>
                                                 </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        @if($k == 0)
+                                                        <label class="title-color">{{ \App\CPU\translate('Color') }}</label>
+                                                        @endif
+                                                        <select name="colors[]" class="form-control">
+                                                            @if(!empty($products[0]['colors']))
+                                                                @php
+                                                                    $colors = json_decode($products[0]['colors'],true);
+                                                                @endphp
+                                                                @foreach($colors as $color)
+                                                                    <option value="{{$color['key']}}">{{$color['key']}}</option>
+                                                                @endforeach
+                                                            @endif
+                                                        </select>
+                                                    </div>
+                                                </div>
                                                 @if($k != 0)
                                                     <div class="col-md-2 form-group mac_id-add-main-btn">
                                                         <i class="tio-delete-outlined text-danger remove-mac_id-btn mt-0"></i>
@@ -125,6 +142,20 @@
                     <div class="col-md-5">
                         <div class="form-group">
                             <input type="text" name="device_id[`+(cnt+1)+`]" class="form-control" value="" placeholder="{{ \App\CPU\translate('Device MAC ID') }}">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <select name="colors[]" class="form-control">
+                                @if(!empty($products[0]['colors']))
+                                    @php
+                                        $colors = json_decode($products[0]['colors'],true);
+                                    @endphp
+                                    @foreach($colors as $color)
+                                        <option value="{{$color['key']}}">{{$color['key']}}</option>
+                                    @endforeach
+                                @endif
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-2 form-group mac_id-add-main-btn">

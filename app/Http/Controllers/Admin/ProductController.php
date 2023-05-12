@@ -40,7 +40,7 @@ class ProductController extends BaseController
 
     public function add_new_stock()
     {
-        $products = Product::select('id','name')->where('status', 1)->get();
+        $products = Product::select('id','name','colors')->where('status', 1)->get();
         return view('admin-views.product.add-new-stock', compact('products'));
     }
 
@@ -129,26 +129,37 @@ class ProductController extends BaseController
         $p->slug     = Str::slug($request->name[array_search('en', $request->lang)], '-') . '-' . Str::random(6);
         $p->details              = $request['description'] ?? '';
         $p->purchase_price     = BackEndHelper::currency_to_usd($request->purchase_price);
-        
-				$specifications = [];
-        if(isset($request->spec) && count($request->spec) > 0){
-					foreach ($request->spec['key'] as $k => $key) {
-						if($key != '' && $request->spec['value'][$k] != ''){
-							$specifications[] = ['key'=>$key, 'value'=>$request->spec['value'][$k]];
-						}
-					}
-				}
-				$p->specification = json_encode($specifications);
 
-				$faqs = [];
-        if(isset($request->faq) && count($request->faq) > 0){
-					foreach ($request->faq['question'] as $k => $question) {
-						if ($question != '' && $request->faq['answer'][$k] != '') {
-							$faqs[] = ['question'=> $question, 'answer'=>$request->faq['answer'][$k]];
-						}
-					}
+        $colors = [];
+        $specifications = [];
+        $faqs = [];
+
+        if(isset($request->colors) && count($request->colors) > 0){
+            foreach ($request->colors['key'] as $k => $key) {
+                if($key != ''){
+                    $colors[] = ['key'=>$key];
+                }
+            }
         }
-				$p->faq = json_encode($faqs);
+        if(isset($request->spec) && count($request->spec) > 0){
+            foreach ($request->spec['key'] as $k => $key) {
+                if($key != '' && $request->spec['value'][$k] != ''){
+                    $specifications[] = ['key'=>$key, 'value'=>$request->spec['value'][$k]];
+                }
+            }
+        }
+        if(isset($request->faq) && count($request->faq) > 0){
+            foreach ($request->faq['question'] as $k => $question) {
+                if ($question != '' && $request->faq['answer'][$k] != '') {
+                    $faqs[] = ['question'=> $question, 'answer'=>$request->faq['answer'][$k]];
+                }
+            }
+        }
+
+        $p->colors = json_encode($colors);
+        $p->specification = json_encode($specifications);
+        $p->faq = json_encode($faqs);
+		
 
         if ($request->ajax()) {
             return response()->json([], 200);
@@ -188,11 +199,12 @@ class ProductController extends BaseController
             });
         }
         //echo "<pre>"; print_r($request->all()); die;
+        $colors = $request->colors;
         if(!empty($request->device_id)){
-            foreach($request->device_id as $mac_id){
+            foreach($request->device_id as $k => $mac_id){
                 $check = ProductStock::where(['product_id'=>$request->product_id,'mac_id'=>$mac_id])->count();
                 if($check == 0){
-                    ProductStock::insert(['product_id'=>$request->product_id,'mac_id'=>$mac_id]);
+                    ProductStock::insert(['product_id'=>$request->product_id,'mac_id'=>$mac_id,'color'=>$colors[$k] ?? NULL]);
                 }
             }
         }
@@ -218,11 +230,12 @@ class ProductController extends BaseController
 
         $product_stock = $request->device_id;
         ProductStock::where(['product_id'=>$id])->delete();
+        $colors = $request->colors;
         if(!empty($product_stock)){
-            foreach($product_stock as $mac_id){
+            foreach($product_stock as $k => $mac_id){
                 $check = ProductStock::where(['product_id'=>$id,'mac_id'=>$mac_id])->count();
                 if($check == 0){
-                    ProductStock::insert(['product_id'=>$id,'mac_id'=>$mac_id]);
+                    ProductStock::insert(['product_id'=>$id,'mac_id'=>$mac_id,'color'=>$colors[$k] ?? NULL]);
                 }
             }
         }
@@ -548,7 +561,7 @@ class ProductController extends BaseController
     {
         $product = Product::withoutGlobalScopes()->with('translations')->find($id);
         $product_category = json_decode($product->category_ids);
-        $product->colors = json_decode($product->colors);
+        //$product->colors = json_decode($product->colors);
         $categories = Category::where(['parent_id' => 0])->get();
         $br = Brand::orderBY('name', 'ASC')->get();
         $brand_setting = BusinessSetting::where('type', 'product_brand')->first()->value;
@@ -559,7 +572,7 @@ class ProductController extends BaseController
 
     public function edit_stock($id)
     {
-        $products = Product::select('id','name')->where('status', 1)->get();
+        $products = Product::select('id','name','colors')->where('status', 1)->get();
         $product_stock = Product::select('product_stocks.mac_id')
                         ->join('product_stocks','product_stocks.product_id','products.id')
                         ->where('product_stocks.product_id',$id)
@@ -621,26 +634,38 @@ class ProductController extends BaseController
         $product->details              = $request['description'] ?? '';
         $product->purchase_price     = BackEndHelper::currency_to_usd($request->purchase_price);
 				
-				$specifications = [];
-        if(isset($request->spec) && count($request->spec) > 0){
-					foreach ($request->spec['key'] as $k => $key) {
-						if($key != '' && $request->spec['value'][$k] != ''){
-							$specifications[] = ['key'=>$key, 'value'=>$request->spec['value'][$k]];
-						}
-					}
-				}
-				$product->specification = json_encode($specifications);
+        $colors = [];
+        $specifications = [];
+        $faqs = [];
 
-				$faqs = [];
-        if(isset($request->faq) && count($request->faq) > 0){
-					foreach ($request->faq['question'] as $k => $question) {
-						if ($question != '' && $request->faq['answer'][$k] != '') {
-							$faqs[] = ['question'=> $question, 'answer'=>$request->faq['answer'][$k]];
-						}
-					}
+        if(isset($request->colors) && count($request->colors) > 0){
+            foreach ($request->colors['key'] as $k => $key) {
+                if($key != ''){
+                    $colors[] = ['key'=>$key];
+                }
+            }
         }
-				$product->faq = json_encode($faqs);
+        if(isset($request->spec) && count($request->spec) > 0){
+            foreach ($request->spec['key'] as $k => $key) {
+                if($key != '' && $request->spec['value'][$k] != ''){
+                    $specifications[] = ['key'=>$key, 'value'=>$request->spec['value'][$k]];
+                }
+            }
+        }
+        if(isset($request->faq) && count($request->faq) > 0){
+            foreach ($request->faq['question'] as $k => $question) {
+                if ($question != '' && $request->faq['answer'][$k] != '') {
+                    $faqs[] = ['question'=> $question, 'answer'=>$request->faq['answer'][$k]];
+                }
+            }
+        }
 
+        $product->colors = json_encode($colors);
+        $product->specification = json_encode($specifications);
+        $product->faq = json_encode($faqs);
+
+        //echo "<pre>"; print_r($product->specification); die;
+        
         if ($request->ajax()) {
             return response()->json([], 200);
         } else {

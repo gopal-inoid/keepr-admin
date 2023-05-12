@@ -2404,4 +2404,6 @@
   'express delivery days' => 'Express delivery days',
   'Value' => 'Value',
   'Product Specifications' => 'Product Specifications',
+  'Product colors' => 'Product colors',
+  'Color' => 'Color',
 );

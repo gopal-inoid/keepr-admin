@@ -70,6 +70,21 @@
                                                 <input type="text" name="device_id[]" maxlength="17" class="form-control macAddress" value="{{ old('device_id') }}" placeholder="{{ \App\CPU\translate('Device MAC ID') }}" required>
                                             </div>
                                         </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label class="title-color">{{ \App\CPU\translate('Color') }}</label>
+                                                <select name="colors[]" class="form-control">
+                                                    @if(!empty($products[0]['colors']))
+                                                        @php
+                                                            $colors = json_decode($products[0]['colors'],true);
+                                                        @endphp
+                                                        @foreach($colors as $color)
+                                                            <option value="{{$color['key']}}">{{$color['key']}}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -110,6 +125,20 @@
                         <div class="col-md-5">
                             <div class="form-group">
                                 <input type="text" name="device_id[]" class="form-control" value="" placeholder="{{ \App\CPU\translate('Device MAC ID') }}">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <select name="colors[]" class="form-control">
+                                    @if(!empty($products[0]['colors']))
+                                        @php
+                                            $colors = json_decode($products[0]['colors'],true);
+                                        @endphp
+                                        @foreach($colors as $color)
+                                            <option value="{{$color['key']}}">{{$color['key']}}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-2 form-group mac_id-add-main-btn">
