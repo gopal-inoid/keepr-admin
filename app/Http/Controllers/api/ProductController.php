@@ -430,7 +430,7 @@ class ProductController extends Controller
                                             ->where(['status'=>1,'id'=>$device_id])->first();
                 if(!empty($devices_details->id)){
 
-										$colorStocks = ProductStock::select('colors.name', 'colors.code', DB::raw('COUNT(product_stocks.color) AS total_stocks'))
+										$colorStocks = ProductStock::select('colors.name AS color', 'colors.code', DB::raw('COUNT(product_stocks.color) AS total_stocks'))
 																						->join('colors', function ($join) {
 																							$join->whereRaw("FIND_IN_SET(colors.id, product_stocks.color)");
 																						})
