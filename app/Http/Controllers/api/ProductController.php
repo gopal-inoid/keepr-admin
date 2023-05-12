@@ -431,24 +431,16 @@ class ProductController extends Controller
                                             ->where(['status'=>1,'id'=>$device_id])->first();
                 if(!empty($devices_details->id)){
 
-									$colorStocks = Color::select('colors.name AS color', 'colors.code')
-													->selectSub(function($query, $devices_details) {
-														$query->selectRaw('COUNT(product_stocks.color) AS total_stocks')
-														->from('product_stocks')
-														->whereColumn('product_stocks.color', 'colors.id')
-														->where("product_stocks.product_id", $devices_details->id);
-													}, 'total_stocks')
-													->whereRaw("FIND_IN_SET(colors.id, '". $devices_details->colors."')")
-													->groupBy('colors.id')
-													->get();
-
-										$colorStocks = ProductStock::select('colors.name AS color', 'colors.code', DB::raw('COUNT(product_stocks.color) AS total_stocks'))
-																						->join('colors', function ($join) {
-																							$join->whereRaw("FIND_IN_SET(colors.id, product_stocks.color)");
-																						})
-                                            ->where(['status'=>1,'product_id'=>$device_id])
-																						->groupBy('colors.id')
-																						->get();
+                    $colorStocks = Color::select('colors.name AS color', 'colors.code')
+                                    ->selectSub(function($query) use ($devices_details) {
+                                        $query->selectRaw('COUNT(product_stocks.color) AS total_stocks')
+                                        ->from('product_stocks')
+                                        ->whereColumn('product_stocks.color', 'colors.id')
+                                        ->where("product_stocks.product_id", $devices_details->id);
+                                    }, 'total_stocks')
+                                    ->whereRaw("FIND_IN_SET(colors.id, '". $devices_details->colors."')")
+                                    ->groupBy('colors.id')
+                                    ->get();
 
                     $devices_details_array['total_quantity'] = (int) Cart::where(['customer_id' => $user_details->id])->sum('quantity');
                     $devices_details_array['id'] = $devices_details->id;
