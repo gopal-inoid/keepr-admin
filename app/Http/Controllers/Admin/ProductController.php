@@ -33,9 +33,11 @@ class ProductController extends BaseController
     {
         $cat = Category::where(['parent_id' => 0])->get();
         $br = Brand::orderBY('name', 'ASC')->get();
+        $color = Color::get();
+        
         $brand_setting = BusinessSetting::where('type', 'product_brand')->first()->value;
         $digital_product_setting = BusinessSetting::where('type', 'digital_product')->first()->value;
-        return view('admin-views.product.add-new', compact('cat', 'br', 'brand_setting', 'digital_product_setting'));
+        return view('admin-views.product.add-new', compact('cat','color', 'br', 'brand_setting', 'digital_product_setting'));
     }
 
     public function add_new_stock()
@@ -130,16 +132,14 @@ class ProductController extends BaseController
         $p->details              = $request['description'] ?? '';
         $p->purchase_price     = BackEndHelper::currency_to_usd($request->purchase_price);
 
-        $colors = [];
+        $colors = "";
         $specifications = [];
         $faqs = [];
 
+        //echo "<pre>"; print_r($request->colors); die;
+
         if(isset($request->colors) && count($request->colors) > 0){
-            foreach ($request->colors['key'] as $k => $key) {
-                if($key != ''){
-                    $colors[] = ['key'=>$key];
-                }
-            }
+            $colors = implode(",",$request->colors);
         }
         if(isset($request->spec) && count($request->spec) > 0){
             foreach ($request->spec['key'] as $k => $key) {
@@ -156,7 +156,7 @@ class ProductController extends BaseController
             }
         }
 
-        $p->colors = json_encode($colors);
+        $p->colors = $colors;
         $p->specification = json_encode($specifications);
         $p->faq = json_encode($faqs);
 		

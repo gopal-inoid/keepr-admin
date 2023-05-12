@@ -349,7 +349,7 @@ class ProductController extends Controller
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
 
-        $devices_list = Product::select('product_stocks.color','products.id','name','details','purchase_price','thumbnail',DB::raw('COUNT(product_stocks.id) as total_stocks'))
+        $devices_list = Product::select('products.colors','products.id','name','details','purchase_price','thumbnail',DB::raw('COUNT(product_stocks.id) as total_stocks'))
                         ->Join('product_stocks','product_stocks.product_id','products.id')
                         ->where('products.status',1)
                         ->where('product_stocks.is_purchased',0)
@@ -357,6 +357,16 @@ class ProductController extends Controller
         
         if(!empty($devices_list)){
             foreach($devices_list as $k => $devices){
+
+                $colors_stocks = \DB::table('product_stocks')->select('color',DB::raw('COUNT(id) as total_stocks'))
+                                        ->where('product_id',$devices->id)->where('is_purchased',0)->groupBy('color')->get();
+
+                //echo "<pre>"; print_r($colors_stocks); die;
+
+                if(!empty($devices->colors) && !empty($colors_stocks[0])){
+                    $devices->colors = $colors_stocks;
+                }
+
                 if(!empty($devices->thumbnail)){
                     $devices->thumbnail = asset("/product/thumbnail/$devices->thumbnail");
                 }else{
@@ -398,6 +408,7 @@ class ProductController extends Controller
         $devices_list = $devices_list->get();
         if(!empty($devices_list[0])){
             foreach($devices_list as $k => $devices){
+                $devices->thumbnail = asset("/product/thumbnail/$devices->thumbnail");
                 $devices->price = number_format($devices->purchase_price,2);
                 unset($devices->purchase_price);
             }
@@ -414,15 +425,19 @@ class ProductController extends Controller
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
             //$device_info = ProductStock::select('product_id')->where('mac_id',$mac_id)->first();
-            $devices_details_array = [];
-            //if(!empty($device_info->product_id)){
-                $devices_details = Product::select('id','name','images','thumbnail','details','specification','faq','purchase_price')->where(['status'=>1,'id'=>$device_id])->first();
+                $devices_details_array = [];
+                $devices_details = Product::select('id','name','images','thumbnail','details','specification','faq','purchase_price','colors')
+                                            ->where(['status'=>1,'id'=>$device_id])->first();
                 if(!empty($devices_details->id)){
+
+                    $colors_stocks = \DB::table('product_stocks')->select('color',DB::raw('COUNT(id) as total_stocks'))
+                                    ->where('product_id',$device_id)->where('is_purchased',0)->groupBy('color')->get();
+
                     $devices_details_array['total_quantity'] = (int) Cart::where(['customer_id' => $user_details->id])->sum('quantity');
                     $devices_details_array['id'] = $devices_details->id;
                     $devices_details_array['name'] = $devices_details->name;
                     $devices_details_array['details'] = $devices_details->details;
-                    $devices_details_array['thumbnail'] = $devices_details->thumbnail;
+                    $devices_details_array['thumbnail'] = asset("/product/thumbnail/$devices_details->thumbnail");
                     $devices_details_array['price'] = number_format($devices_details->purchase_price,2);
                     if(!empty($devices_details->images)){
                         $device_images = json_decode($devices_details->images);
@@ -437,18 +452,14 @@ class ProductController extends Controller
                     }
                     if(!empty($devices_details->faq)){
                         $devices_details_array['faq'] = json_decode($devices_details->faq,true);
-                        // if(!empty($faq['question'])){
-                        //     foreach($faq['question'] as $k => $question){
-                        //         $devices_details_array['faq'][$k]['question'] = $question;
-                        //         $devices_details_array['faq'][$k]['answer'] = $faq['answer'][$k];
-                        //     }
-                        // }
+                    }
+                    if(!empty($devices_details->colors) && !empty($colors_stocks[0])){
+                        $devices_details_array['colors'] = $colors_stocks;
                     }
                     return response()->json(['status'=>200,'message'=>'Success','data'=>$devices_details_array],200);
                 }else{
                     return response()->json(['status'=>400,'message'=>'Devices not found'],400);
                 }
-            //}
         }else{
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
