@@ -12,6 +12,7 @@ use App\Model\Order;
 use App\Model\OrderDetail;
 use App\Model\Product;
 use App\Model\ProductStock;
+use App\Model\Color;
 use App\Model\Review;
 use App\Model\ConnectedDevice;
 use App\Model\Cart;
@@ -429,6 +430,17 @@ class ProductController extends Controller
                 $devices_details = Product::select('id','name','images','thumbnail','details','specification','faq','purchase_price','colors')
                                             ->where(['status'=>1,'id'=>$device_id])->first();
                 if(!empty($devices_details->id)){
+
+									$colorStocks = Color::select('colors.name AS color', 'colors.code')
+													->selectSub(function($query) {
+														$query->selectRaw('COUNT(product_stocks.color) AS total_stocks')
+														->from('product_stocks')
+														->whereColumn('product_stocks.color', 'colors.id')
+														->where("product_stocks.product_id", $devices_details->id);
+													}, 'total_stocks')
+													->whereRaw("FIND_IN_SET(colors.id, '". $devices_details->colors."')")
+													->groupBy('colors.id')
+													->get();
 
 										$colorStocks = ProductStock::select('colors.name AS color', 'colors.code', DB::raw('COUNT(product_stocks.color) AS total_stocks'))
 																						->join('colors', function ($join) {
