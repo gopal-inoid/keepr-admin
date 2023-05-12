@@ -432,7 +432,7 @@ class ProductController extends Controller
                 if(!empty($devices_details->id)){
 
 									$colorStocks = Color::select('colors.name AS color', 'colors.code')
-													->selectSub(function($query) {
+													->selectSub(function($query, $devices_details) {
 														$query->selectRaw('COUNT(product_stocks.color) AS total_stocks')
 														->from('product_stocks')
 														->whereColumn('product_stocks.color', 'colors.id')
