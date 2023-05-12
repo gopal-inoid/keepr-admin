@@ -106,11 +106,12 @@ class CartController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
 
+        $colorStocks = Color::select('id')->where('name',$request->color)->first();
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         $product = Product::find($request->product_id);
-        $cart = Cart::where(['product_id' => $request->product_id,'color'=>$request->color, 'customer_id' => $user_details->id])->first();
-        $current_stock = ProductStock::where('product_id',$request->product_id)->where('color',$request->color)->where('is_purchased',0)->count();
+        $cart = Cart::where(['product_id' => $request->product_id,'color'=>$colorStocks->id ?? NULL, 'customer_id' => $user_details->id])->first();
+        $current_stock = ProductStock::where('product_id',$request->product_id)->where('color',$colorStocks->id ?? NULL)->where('is_purchased',0)->count();
         if(isset($cart) == false){
             $cart = new Cart();
             if ($current_stock < 1) {
@@ -138,7 +139,7 @@ class CartController extends Controller
         $tax = Helpers::tax_calculation($price, $product['tax'], 'percent');
         $cart['customer_id'] = $user_details->id ?? 0;
         $cart['product_id'] = $request->product_id ?? 0;
-        $cart['color'] = $request->color ?? NULL;
+        $cart['color'] = $colorStocks->id ?? NULL;
         $cart['quantity'] = $total_quantity;
         $cart['price'] = $price;
         $cart['tax'] = $tax;
