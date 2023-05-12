@@ -96,8 +96,10 @@ class CartController extends Controller
     {
         $validator = Validator::make($request->all(),[
             'product_id' => 'required',
+            'color' => 'required'
         ],[
-            'product_id.required' => translate('Product ID is required!')
+            'product_id.required' => translate('Product ID is required!'),
+            'color.required' => translate('Color is required!')
         ]);
 
         if ($validator->errors()->count() > 0) {
@@ -107,8 +109,8 @@ class CartController extends Controller
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         $product = Product::find($request->product_id);
-        $cart = Cart::where(['product_id' => $request->product_id, 'customer_id' => $user_details->id])->first();
-        $current_stock = ProductStock::where('product_id',$request->product_id)->where('is_purchased',0)->count();
+        $cart = Cart::where(['product_id' => $request->product_id,'color'=>$request->color, 'customer_id' => $user_details->id])->first();
+        $current_stock = ProductStock::where('product_id',$request->product_id)->where('color',$request->color)->where('is_purchased',0)->count();
         if(isset($cart) == false){
             $cart = new Cart();
             if ($current_stock < 1) {
@@ -136,6 +138,7 @@ class CartController extends Controller
         $tax = Helpers::tax_calculation($price, $product['tax'], 'percent');
         $cart['customer_id'] = $user_details->id ?? 0;
         $cart['product_id'] = $request->product_id ?? 0;
+        $cart['color'] = $request->color ?? NULL;
         $cart['quantity'] = $total_quantity;
         $cart['price'] = $price;
         $cart['tax'] = $tax;
@@ -149,50 +152,6 @@ class CartController extends Controller
             'message' => translate('successfully_added!')
         ], 200);
     }
-
-    // public function update_cart(Request $request)
-    // {
-    //     $validator = Validator::make($request->all(), [
-    //         'id' => 'required',
-    //         'quantity' => 'required',
-    //     ], [
-    //         'id.required' => translate('Cart ID is required!')
-    //     ]);
-
-    //     if ($validator->errors()->count() > 0) {
-    //         return response()->json(['errors' => Helpers::error_processor($validator)]);
-    //     }
-
-    //     $status = 1;
-    //     $qty = 0;
-    //     $auth_token   = $request->headers->get('X-Access-Token');
-    //     $user_details = User::where(['auth_access_token'=>$auth_token])->first();
-    //     $cart = Cart::where(['id' => $request->id, 'customer_id' => $user_details->id])->first();
-    //     //$product = Product::find($cart['product_id']);
-    //     if(!empty($cart->id)){
-    //         $current_stock = ProductStock::where('product_id',$cart['product_id'])->count();
-    //         if ($current_stock < $request['quantity']) {
-    //             $status = 0;
-    //             $qty = $cart['quantity'];
-    //         }
-
-    //         if ($status) {
-    //             $qty = $request->quantity;
-    //             $cart['quantity'] = $request->quantity;
-    //         }
-
-    //         $cart->save();
-    //         return response()->json([
-    //             'status' => $status,
-    //             'qty' => $qty,
-    //             'message' => $status == 1 ? translate('successfully_updated!') : translate('sorry_stock_is_limited')
-    //         ],200);
-
-    //     }else{
-    //         return response()->json(['status'=>400,'message'=>'No product added in cart please add first'],400);
-    //     }
-
-    // }
 
     public function remove_from_cart(Request $request)
     {

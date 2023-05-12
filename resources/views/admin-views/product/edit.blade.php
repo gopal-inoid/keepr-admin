@@ -86,9 +86,9 @@
                         </div>
                     </div>
                     <?php 
-                        $specifications = $faqs = $colors = [];
+                        $specifications = $faqs = $productColors = [];
                         if(!empty($product['colors'])){
-                            $colors = json_decode($product['colors'],true);
+                            $productColors = explode(",", $product['colors']);
                         }
                         if(!empty($product['specification'])){
                             $specifications =  json_decode($product['specification'],true);
@@ -178,31 +178,21 @@
                     <div class="card mt-2 rest-part physical_product_show">
                         <div class="card-header">
                             <h4 class="mb-0">{{ \App\CPU\translate('Product colors') }}</h4>
-														<div class="colors-add-main-btn">
-																<label class="title-color">&nbsp;</label>
-																<i class="tio-add-circle-outlined text-success add-product-colors-btn mt-3"></i>
-														</div>
                         </div>
                         <div class="card-body">
                             <div class="row align-items-end">
                                 <div class="col-md-12 form-group" id="parent-colors-div">
-                                        <div class="row colors-individual <?= empty($colors) ? 'd-none' : '';?>">
-                                            <div class="col-md-4 form-group mb-0">
-                                                    <label class="title-color">{{ \App\CPU\translate('Key') }}</label>
-                                            </div>
+                                    <div class="row colors-individual">
+                                        <div class="col-md-6 form-group">
+                                            <select name="colors[]" class="form-control color-select" multiple>
+                                                @if(!empty($colors))
+                                                    @foreach($colors as $col)
+                                                        <option value="{{$col['id']}}" <?= in_array($col['id'], $productColors) ? "selected='selected'" : "" ?>>{{$col['name']}}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
                                         </div>
-                                    <?php 
-                                        if(!empty($colors)){
-                                            foreach($colors as $k => $color){ ?>
-                                                <div class="row colors-individual">
-                                                    <div class="col-md-4 form-group">
-														<input type="text" value="{{$color['key']}}" name="colors[key][]" class="form-control" placeholder="{{ \App\CPU\translate('Key') }}">
-                                                    </div>
-                                                    <div class="col-md-2 form-group colors-add-main-btn">
-                                                            <i class="tio-delete-outlined text-danger remove-product-colors-btn"></i>
-                                                    </div>
-                                                </div>
-                                    <?php  } } ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -303,33 +293,10 @@
                     );
             });
 
-            $('.add-product-colors-btn').on('click',function(){
-                if($(".colors-individual").length == 1){
-                    $(".colors-individual").eq(0).removeClass('d-none');
-                }
-                $('#parent-colors-div').append(
-                        `<div class="row colors-individual">
-                                <div class="col-md-4 form-group">
-                                    <input type="text" value="" name="colors[key][]" class="form-control" placeholder="{{ \App\CPU\translate('Key') }}">
-                                </div>
-                                <div class="col-md-2 form-group colors-add-main-btn">
-                                    <i class="tio-delete-outlined text-danger remove-product-colors-btn"></i>
-                                </div>
-                        </div>`
-                );
-            });
-
             $(document).on('click','.remove-product-spec-btn',function(){
                 $(this).closest('.spec-individual').remove();
                 if($(".spec-individual").length == 1){
                     $(".spec-individual").eq(0).addClass('d-none');
-                }
-            });
-
-            $(document).on('click','.remove-product-colors-btn',function(){
-                $(this).closest('.colors-individual').remove();
-                if($(".colors-individual").length == 1){
-                    $(".colors-individual").eq(0).addClass('d-none');
                 }
             });
 
@@ -487,6 +454,10 @@
         $(".js-example-responsive").select2({
             width: 'resolve'
         });
+
+				$('.color-select').select2({
+						placeholder:"Select colors"
+				});
     </script>
 
     <script>
