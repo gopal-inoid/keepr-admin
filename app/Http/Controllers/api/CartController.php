@@ -121,7 +121,7 @@ class CartController extends Controller
                 ], 200);
             }
         }else{
-            if ($current_stock < $cart['quantity']) {
+            if ($current_stock <= $cart['quantity']) {
                 return response()->json([
                     'status' => 0,
                     'message' => translate('out_of_stock!')
