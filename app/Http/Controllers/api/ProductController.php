@@ -430,8 +430,13 @@ class ProductController extends Controller
                                             ->where(['status'=>1,'id'=>$device_id])->first();
                 if(!empty($devices_details->id)){
 
-                    $colors_stocks = \DB::table('product_stocks')->select('color',DB::raw('COUNT(id) as total_stocks'))
-                                    ->where('product_id',$device_id)->where('is_purchased',0)->groupBy('color')->get();
+										$colorStocks = ProductStock::select('colors.name', 'colors.code', DB::raw('COUNT(product_stocks.color) AS total_stocks'))
+																						->join('colors', function ($join) {
+																							$join->whereRaw("FIND_IN_SET(colors.id, product_stocks.color)");
+																						})
+                                            ->where(['status'=>1,'product_id'=>$device_id])
+																						->groupBy('colors.id')
+																						->get();
 
                     $devices_details_array['total_quantity'] = (int) Cart::where(['customer_id' => $user_details->id])->sum('quantity');
                     $devices_details_array['id'] = $devices_details->id;
@@ -453,8 +458,8 @@ class ProductController extends Controller
                     if(!empty($devices_details->faq)){
                         $devices_details_array['faq'] = json_decode($devices_details->faq,true);
                     }
-                    if(!empty($devices_details->colors) && !empty($colors_stocks[0])){
-                        $devices_details_array['colors'] = $colors_stocks;
+                    if(!empty($devices_details->colors) && !empty($colorStocks)){
+                        $devices_details_array['colors'] = $colorStocks;
                     }
                     return response()->json(['status'=>200,'message'=>'Success','data'=>$devices_details_array],200);
                 }else{

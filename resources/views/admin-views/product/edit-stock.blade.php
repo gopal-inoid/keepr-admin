@@ -47,11 +47,7 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <select name="product_id" class="form-control" disabled>
-                                            @if(!empty($products))
-                                                @foreach($products as $pro)
-                                                    <option {{ ($id == $pro->id) ? 'selected' : '' }} value="{{$pro->id}}">{{$pro->name}}</option>
-                                                @endforeach
-                                            @endif
+																					<option selected="selected" value="{{$product['id']}}">{{$product['name']}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -64,41 +60,48 @@
                             </div>
                             <div class="row">
                                     <div class="col-md-12" id="mac_id_device_field">
+																			<div class="row mac_id-individual">
+																				<div class="col-md-5">
+																						<div class="form-group mb-0">
+																							<label class="title-color">{{ \App\CPU\translate('Device MAC ID') }}</label>
+																						</div>
+																				</div>
+																				<div class="col-md-2">
+																						<div class="form-group mb-0">
+																								<label class="title-color">{{ \App\CPU\translate('Color') }}</label>
+																						</div>
+																				</div>
+																			</div>
                                     <?php
                                         $product_stock_cnt = !empty($product_stock) ? count($product_stock) : 0;
                                         if(!empty($product_stock)){
-                                            foreach($product_stock as $k => $mac_ids){ ?>
-                                            <div class="row">
+                                            foreach($product_stock as $k => $stocks){ ?>
+                                            <div class="row mac_id-individual">
                                                 <div class="col-md-5">
                                                     <div class="form-group">
-                                                        @if($k == 0)
-                                                        <label class="title-color">{{ \App\CPU\translate('Device MAC ID') }}</label>
-                                                        @endif
-                                                        <input type="text" name="device_id[{{$k}}]" class="form-control macAddress" value="{{ $mac_ids->mac_id }}" placeholder="{{ \App\CPU\translate('Device MAC ID') }}">
+                                                        <input type="text" name="device_id[{{$k}}]" class="form-control macAddress" value="{{ $stocks->mac_id }}" placeholder="{{ \App\CPU\translate('Device MAC ID') }}">
                                                     </div>
                                                 </div>
+																								
                                                 <div class="col-md-2">
                                                     <div class="form-group">
-                                                        @if($k == 0)
-                                                        <label class="title-color">{{ \App\CPU\translate('Color') }}</label>
-                                                        @endif
                                                         <select name="colors[]" class="form-control">
-                                                            @if(!empty($products[0]['colors']))
-                                                                @php
-                                                                    $colors = json_decode($products[0]['colors'],true);
-                                                                @endphp
-                                                                @foreach($colors as $color)
-                                                                    <option value="{{$color['key']}}">{{$color['key']}}</option>
-                                                                @endforeach
+                                                            @if(!empty($product['colors']) && !empty($colors))
+																															@php
+																															$productColors = explode(",", $product['colors']);
+                                                              @endphp
+																															@foreach($colors as $col)
+																																@if(in_array($col['id'], $productColors))
+																																	<option value="{{$col['id']}}" {{ $stocks->color == $col['id'] ? "selected='selected'" : "" }}>{{$col['name']}}</option>
+																																@endif
+																															@endforeach
                                                             @endif
                                                         </select>
                                                     </div>
                                                 </div>
-                                                @if($k != 0)
-                                                    <div class="col-md-2 form-group mac_id-add-main-btn">
-                                                        <i class="tio-delete-outlined text-danger remove-mac_id-btn mt-0"></i>
-                                                    </div>
-                                                @endif
+																								<div class="col-md-2 form-group mac_id-add-main-btn">
+																										<i class="tio-delete-outlined text-danger remove-mac_id-btn"></i>
+																								</div>
                                             </div>
                                     <?php  } } ?>
                                     </div>
@@ -137,6 +140,9 @@
         var cnt = (parseInt("{{$product_stock_cnt}}") - 1);
 
         $('.add-mac_id-btn').on('click',function(){
+					if($(".mac_id-individual").length == 1){
+							$(".mac_id-individual").eq(0).removeClass('d-none');
+					}
             $('#mac_id_device_field').append(
                 `<div class="row mac_id-individual">
                     <div class="col-md-5">
@@ -147,14 +153,16 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <select name="colors[]" class="form-control">
-                                @if(!empty($products[0]['colors']))
-                                    @php
-                                        $colors = json_decode($products[0]['colors'],true);
-                                    @endphp
-                                    @foreach($colors as $color)
-                                        <option value="{{$color['key']}}">{{$color['key']}}</option>
-                                    @endforeach
-                                @endif
+                                @if(!empty($product['colors']) && !empty($colors))
+																	@php
+																	$productColors = explode(",", $product['colors']);
+																	@endphp
+																	@foreach($colors as $col)
+																		@if(in_array($col['id'], $productColors))
+																			<option value="{{$col['id']}}">{{$col['name']}}</option>
+																		@endif
+																	@endforeach
+																@endif
                             </select>
                         </div>
                     </div>
@@ -169,6 +177,9 @@
 
         $(document).on('click','.remove-mac_id-btn',function(){
             $(this).closest('.mac_id-individual').remove();
+						if($(".mac_id-individual").length == 1){
+								$(".mac_id-individual").eq(0).addClass('d-none');
+						}
         });
 
         function getRequest(route, id, type) {

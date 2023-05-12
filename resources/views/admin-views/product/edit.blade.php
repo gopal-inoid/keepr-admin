@@ -86,9 +86,9 @@
                         </div>
                     </div>
                     <?php 
-                        $specifications = $faqs = $colors = [];
+                        $specifications = $faqs = $productColors = [];
                         if(!empty($product['colors'])){
-                            $colors = json_decode($product['colors'],true);
+                            $productColors = explode(",", $product['colors']);
                         }
                         if(!empty($product['specification'])){
                             $specifications =  json_decode($product['specification'],true);
@@ -184,10 +184,10 @@
                                 <div class="col-md-12 form-group" id="parent-colors-div">
                                     <div class="row colors-individual">
                                         <div class="col-md-6 form-group">
-                                            <select name="colors[]" class="form-control select2" multiple>
-                                                @if(!empty($color))
-                                                    @foreach($color as $col)
-                                                        <option value="{{$col['id']}}">{{$col['name']}}</option>
+                                            <select name="colors[]" class="form-control color-select" multiple>
+                                                @if(!empty($colors))
+                                                    @foreach($colors as $col)
+                                                        <option value="{{$col['id']}}" <?= in_array($col['id'], $productColors) ? "selected='selected'" : "" ?>>{{$col['name']}}</option>
                                                     @endforeach
                                                 @endif
                                             </select>
@@ -454,6 +454,10 @@
         $(".js-example-responsive").select2({
             width: 'resolve'
         });
+
+				$('.color-select').select2({
+						placeholder:"Select colors"
+				});
     </script>
 
     <script>

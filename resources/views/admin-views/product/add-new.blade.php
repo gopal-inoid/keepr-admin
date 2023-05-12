@@ -141,9 +141,9 @@
                                 <div class="col-md-12 form-group" id="parent-colors-div">
                                     <div class="row colors-individual">
                                         <div class="col-md-6 form-group">
-                                            <select name="colors[]" class="form-control select2" multiple>
-                                                @if(!empty($color))
-                                                    @foreach($color as $col)
+                                            <select name="colors[]" class="form-control color-select" multiple>
+                                                @if(!empty($colors))
+                                                    @foreach($colors as $col)
                                                         <option value="{{$col['id']}}">{{$col['name']}}</option>
                                                     @endforeach
                                                 @endif
@@ -198,7 +198,7 @@
     <script>
         $(function() {
 
-            $('.select2').select2({
+            $('.color-select').select2({
                 placeholder:"Select colors"
             });
 
