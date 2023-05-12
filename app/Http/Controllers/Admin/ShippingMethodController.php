@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\CPU\BackEndHelper;
 use App\Http\Controllers\Controller;
 use App\Model\ShippingMethod;
+use App\Model\TaxCalculation;
 use App\Model\ShippingMethodRates;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
@@ -105,17 +106,27 @@ class ShippingMethodController extends Controller
 
     public function tax_calculation()
     {
-        $tax_data =   \DB::table('tax_calculation')->select('id','country','type')->get();
+        $tax_data =   TaxCalculation::select('id','country','type')->get();
         return view('admin-views.shipping-method.tax-setting',compact('tax_data'));
     }
     public function edit_tax($id)
     {
-        $tax_data =   \DB::table('tax_calculation')->select('id','country','type','tax_amt')->where('id',$id)->get();
-        // echo  "<pre>";
-        // $tax_amt = ( json_decode($tax_data[0]->tax_amt));
-        // die;
-      
-        return view('admin-views.shipping-method.edit-tax', compact('tax_data'));
+        $tax_data =   TaxCalculation::select('id','country','type','tax_amt')->where('id',$id)->first();
+        $tx_amt = json_decode($tax_data->tax_amt,true);
+        //echo "<pre>"; print_r($tx_amt); die;
+        $country = \DB::table('country')->select('id')->where('name',$tax_data->country)->first();
+        $states = \DB::table('states')->select('id','name')->where('country_id',$country->id)->get();
+
+        return view('admin-views.shipping-method.edit-tax', compact('tax_data','tx_amt','states'));
+    }
+
+    public function tax_calculation_update(Request $request, $id)
+    {
+        //$countries = $request->input('country');
+        //echo "<pre>"; print_r($countries); die;
+        
+        Toastr::success('Successfully updated.');
+        return redirect()->back();
     }
 
     public function shippingStore(Request $request)

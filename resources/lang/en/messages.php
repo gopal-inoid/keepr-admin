@@ -2406,4 +2406,7 @@
   'Product Specifications' => 'Product Specifications',
   'Product colors' => 'Product colors',
   'Color' => 'Color',
+  'Tax Calculations' => 'Tax Calculations',
+  'edit_tax_calculations' => 'Edit tax calculations',
+  'states' => 'States',
 );
