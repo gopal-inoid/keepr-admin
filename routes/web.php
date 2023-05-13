@@ -30,7 +30,8 @@ Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function
 
     Route::get('/terms-condition', function (){
         //return redirect()->route('admin.auth.login');
-        return view('keepr_app.terms_condition');
+        $data = App\CPU\Helpers::get_business_settings('terms_condition');
+        return view('keepr_app.terms_condition',compact('data'));
     })->name('terms-condition');
 
     //Route::get('/', 'WebController@home')->name('home');
