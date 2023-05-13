@@ -52,7 +52,8 @@
         <div class="container-fluid" id="Terms_And_Condition">
             <div class="container" id="Terms_And_Condition_main">
                 <h2 class="Heading_terms" style="text-align: center;">TERMS AND CONDITIONS</h2>
-                <ol>
+                {!!  $data ?? "" !!}
+                <!-- <ol>
                     <li><strong>Introduction</strong></li>
                 </ol>
                 <p>The On Standard Terms and Conditions written on this webpage shall manage your use of On. These Terms will be applied fully and affect to your use of On. By using On, you agreed to accept all terms and conditions written in here. You must not use On if you disagree with any of the On Standard Terms and Conditions.</p>
@@ -112,7 +113,7 @@
                 <p>These Terms constitute the entire agreement between On and you in relation to your use of On, and supersede all prior agreements and understandings.</p>
                 <ol start="12">
                     <li><strong>Governing Law &amp; Jurisdiction</strong></li>
-                </ol>
+                </ol> -->
                
             </div>
         </div>

@@ -732,23 +732,17 @@ class ProductController extends BaseController
     public function delete($id)
     {
         $product = Product::find($id);
-
         $translation = Translation::where('translationable_type', 'App\Model\Product')
             ->where('translationable_id', $id);
         $translation->delete();
-
         Cart::where('product_id', $product->id)->delete();
-        Wishlist::where('product_id', $product->id)->delete();
-
         foreach (json_decode($product['images'], true) as $image) {
             ImageManager::delete('/product/' . $image);
         }
         ImageManager::delete('/product/thumbnail/' . $product['thumbnail']);
         $product->delete();
-
-        FlashDealProduct::where(['product_id' => $id])->delete();
-        DealOfTheDay::where(['product_id' => $id])->delete();
-
+        ProductStock::where(['product_id' => $id])->delete();
+        
         Toastr::success('Product removed successfully!');
         return back();
     }

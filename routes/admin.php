@@ -374,7 +374,8 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
                 Route::post('shipping-store','ShippingMethodController@shippingStore')->name('shipping-store');
                 Route::get('tax-calculation', 'ShippingMethodController@tax_calculation')->name('tax-calculation');
                 Route::get('edit-tax/{id}', 'ShippingMethodController@edit_tax')->name('edit-tax');
-
+                Route::put('tax-calculation-update/{id}', 'ShippingMethodController@tax_calculation_update')->name('tax-calculation-update');
+                
             });
 
             
