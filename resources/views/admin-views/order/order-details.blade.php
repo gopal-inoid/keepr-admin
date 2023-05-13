@@ -52,7 +52,7 @@
                                     </div>
                                     <a class="btn btn--primary px-4" target="_blank"
                                        href={{route('admin.orders.generate-invoice',[$order['id']])}}>
-                                        <i class="tio-print mr-1"></i> {{\App\CPU\translate('Print')}} {{\App\CPU\translate('invoice')}}
+                                        <i class="tio-print mr-1"></i> {{\App\CPU\translate('Download')}} {{\App\CPU\translate('invoice')}}
                                     </a>
                                 </div>
                                 <div class="d-flex flex-column gap-2 mt-3">

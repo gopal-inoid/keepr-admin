@@ -56,30 +56,39 @@
                                     </tr>
                                 </thead>
                                 <tbody id="parent-faq-div">
-                                    <tr>
-                                        <td>
-                                            <select name="states" class="form-control">
-                                                <option value="">Select States</option>
-                                                @foreach($states as $state)
-                                                <option value="{{$state->name}}">{{$state->name}}</option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <input type="number" min="0" max="1000000" value="" name="tax[tax_percent]" class="form-control" placeholder="10">
-                                            
-                                        </td>
-                                        <td>
-                                            <input type="text" value="" name="tax[tax_name]" class="form-control"placeholder="ex (GST or VAT)">
-                                        </td>
-                                        <td>
-                                            <input type="number" min="0" max="1000000" value="" name="tax[tax_percent]" class="form-control" placeholder="10">
-                                            
-                                        </td>
-                                        <td>
-                                            <input type="text" value="" name="tax[tax_name]" class="form-control"placeholder="ex (GST or VAT)">
-                                        </td>
-                                    </tr>
+                                    @if(!empty($tx_amt))
+                                        @foreach($tx_amt as $k => $val)
+                                            <tr>
+                                                <td>
+                                                    <select name="tax[state][]" class="form-control">
+                                                        <option value="">Select States</option>
+                                                        @foreach($states as $k => $state)
+                                                        <option {{($val['state'] == $state->name) ? 'selected' : ''}} value="{{$state->name}}">{{$state->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="number" min="0" step="0.001" value="{{$val['tax1'] ?? ''}}" name="tax[tax1][]" class="form-control" placeholder="10">
+                                                    
+                                                </td>
+                                                <td>
+                                                    <input type="text" value="{{$val['tax_txt1'] ?? ''}}" name="tax[tax_txt1][]" class="form-control"placeholder="ex (GST or VAT)">
+                                                </td>
+                                                <td>
+                                                    <input type="number" min="0" step="0.001" value="{{$val['tax2'] ?? ''}}" name="tax[tax2][]" class="form-control" placeholder="10">
+                                                    
+                                                </td>
+                                                <td>
+                                                    <input type="text" value="{{$val['tax_txt2'] ?? ''}}" name="tax[tax_txt2][]" class="form-control"placeholder="ex (GST or VAT)">
+                                                </td>
+                                                <td>
+                                                    <div class="col-md-2 form-group faq-add-main-btn">
+                                                        <i class="tio-delete-outlined text-danger remove-product-faq-btn"></i>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
@@ -105,7 +114,7 @@ $(function() {
         $('#parent-faq-div').append(
             `<tr class="inner-faq-div">
             <td>
-                <select name="states" class="form-control">
+                <select name="tax[state][]" class="form-control">
                     <option value="">Select States</option>
                     @foreach($states as $state)
                     <option value="{{$state->name}}">{{$state->name}}</option>
@@ -113,17 +122,17 @@ $(function() {
                 </select>
             </td>
             <td>
-                <input type="number" min="0" max="1000000" value="" name="tax[tax_percent]" class="form-control" placeholder="10">
+                <input type="number" value="" min="0" step="0.001" name="tax[tax1][]" class="form-control" placeholder="10">
             </td>
             <td>
-                <input type="text" value="" name="tax[tax_name]" class="form-control"placeholder="ex (GST or VAT)">
+                <input type="text" value="" name="tax[tax_txt1][]" class="form-control"placeholder="ex (GST or VAT)">
             </td>
             <td>
-                <input type="number" min="0" max="1000000" value="" name="tax[tax_percent]" class="form-control" placeholder="10">
+                <input type="number" value="" min="0" step="0.001" name="tax[tax2][]" class="form-control" placeholder="10">
                 
             </td>
             <td>
-                <input type="text" value="" name="tax[tax_name]" class="form-control"placeholder="ex (GST or VAT)">
+                <input type="text" value="" name="tax[tax_txt2][]" class="form-control"placeholder="ex (GST or VAT)">
             </td>
             <td>
                 <div class="col-md-2 form-group faq-add-main-btn">

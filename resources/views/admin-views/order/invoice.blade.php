@@ -214,7 +214,7 @@
     <table class="content-position mb-30">
         <tr>
             <th>
-                <img height="50" src="{{asset("storage/app/public/company/$company_web_logo")}}" alt="">
+                <img height="50" src="{{asset("/public/company/$company_web_logo")}}" alt="">
             </th>
         </tr>
     </table>
@@ -408,23 +408,6 @@
                                 <td class="p-1">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($shipping))}}</td>
                             </tr>
                         @endif
-                        <tr>
-                            <td class="p-1 text-left">{{\App\CPU\translate('coupon_discount')}}</td>
-                            <td class="p-1">
-                                - {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order->discount_amount))}} </td>
-                        </tr>
-                        @if ($order->order_type=='POS')
-                            <tr>
-                                <td class="p-1 text-left">{{\App\CPU\translate('extra_discount')}}</td>
-                                <td class="p-1">
-                                    - {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($ext_discount))}} </td>
-                            </tr>
-                        @endif
-                        <tr>
-                            <td class="p-1 text-left">{{\App\CPU\translate('discount_on_product')}}</td>
-                            <td class="p-1">
-                                - {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($total_discount_on_product))}} </td>
-                        </tr>
                         <tr>
                             <td class="border-dashed-top font-weight-bold text-left"><b>{{\App\CPU\translate('total')}}</b></td>
                             <td class="border-dashed-top font-weight-bold">

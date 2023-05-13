@@ -188,10 +188,10 @@
                                                 href="{{route('admin.orders.details',['id'=>$order['id']])}}">
                                                 <img src="{{asset('/public/assets/back-end/img/eye.svg')}}" class="svg" alt="">
                                             </a>
-                                            {{-- <a class="btn btn-outline-success square-btn btn-sm mr-1" target="_blank" title="{{\App\CPU\translate('invoice')}}"
+                                            <a class="btn btn-outline-success square-btn btn-sm mr-1" target="_blank" title="{{\App\CPU\translate('invoice')}}"
                                                 href="{{route('admin.orders.generate-invoice',[$order['id']])}}">
                                                 <i class="tio-download-to"></i>
-                                            </a> --}}
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>
