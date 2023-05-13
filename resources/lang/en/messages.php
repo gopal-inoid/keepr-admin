@@ -2409,4 +2409,5 @@
   'Tax Calculations' => 'Tax Calculations',
   'edit_tax_calculations' => 'Edit tax calculations',
   'states' => 'States',
+  'Cookie_policy' => 'Cookie policy',
 );
