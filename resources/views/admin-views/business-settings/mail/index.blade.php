@@ -62,7 +62,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 mb-3 mb-sm-0">
+            <div class="col-sm-12 mb-3 mb-sm-0">
                 <div class="card h-100">
                     <div class="card-header">
                         <h5 class="mb-0">{{\App\CPU\translate('smtp_mail_config')}}</h5>
@@ -147,7 +147,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6">
+            {{-- <div class="col-sm-6">
                 <div class="card h-100">
                     <div class="card-header">
                         <h5 class="mb-0">{{\App\CPU\translate('sendgrid_mail_config')}}</h5>
@@ -228,7 +228,7 @@
                         </form>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 @endsection

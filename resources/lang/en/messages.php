@@ -2412,4 +2412,11 @@
   'Cookie_policy' => 'Cookie policy',
   'Device' => 'Device',
   'Total Amount' => 'Total Amount',
+  'Email Verification' => 'Email Verification',
+  'email_templates' => 'Email templates',
+  'Email Templates List' => 'Email Templates List',
+  'Template Name' => 'Template Name',
+  'Edit Email Template' => 'Edit Email Template',
+  'subject' => 'Subject',
+  'Template Body' => 'Template Body',
 );

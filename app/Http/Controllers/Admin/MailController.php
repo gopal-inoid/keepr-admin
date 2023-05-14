@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\CPU\Helpers;
 use App\Http\Controllers\Controller;
 use App\Model\BusinessSetting;
+use App\Model\EmailTemplates;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -133,4 +134,29 @@ class MailController extends Controller
 
         return response()->json(['success' => $response_flag]);
     }
+
+    public function templates(Request $request){
+        $query_param = [];
+        //$email_templates = EmailTemplates::get();
+        $email_templates = EmailTemplates::orderBy('id', 'DESC')->paginate(Helpers::pagination_limit())->appends(['status' => $request['status']])->appends($query_param);
+        return view('admin-views.business-settings.mail.templates',compact('email_templates'));
+    }
+
+    public function template_edit($id){
+        $email_templates = EmailTemplates::find($id);
+        return view('admin-views.business-settings.mail.templates-edit',compact('email_templates'));
+    }
+
+    public function templates_update(Request $request){
+        $id = $request->id;
+        $name = $request->name;
+        $subject = $request->subject;
+        $status = $request->status ?? 0;
+        $body = $request->body;
+        EmailTemplates::where('id',$id)->update(['name'=>$name,'subject'=>$subject,'body'=>$body,'status'=>$status]);
+        Toastr::success('Email template updated successfully!');
+        return back();
+    }
+
+    
 }

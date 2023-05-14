@@ -534,8 +534,6 @@
                     }
                 });
 
-                alert('a');
-
                 $.post({
                     url: '{{ route('admin.product.store') }}',
                     data: formData,
