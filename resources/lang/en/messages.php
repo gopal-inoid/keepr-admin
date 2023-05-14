@@ -2410,4 +2410,6 @@
   'edit_tax_calculations' => 'Edit tax calculations',
   'states' => 'States',
   'Cookie_policy' => 'Cookie policy',
+  'Device' => 'Device',
+  'Total Amount' => 'Total Amount',
 );

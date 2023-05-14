@@ -142,27 +142,17 @@ class OrderController extends Controller
             if(!empty($mac_ids)){
                 foreach($mac_ids as $k => $val){
                     $total_orders += count($val);
-                    $products[$k] = Product::select('name','thumbnail')->find($k);
+                    $prod = Product::select('name','thumbnail')->find($k);
+                    $products[$k]['name'] = $prod->name ?? "";
+                    $products[$k]['thumbnail'] = $prod->thumbnail ?? "";
+                    $products[$k]['mac_ids'] = $val;
                 }
             }
         }
 
-        //echo "<pre>"; print_r($mac_ids); die;
+        //echo "<pre>"; print_r($order); die;
 
-        // $delivery_men = DeliveryMan::where('is_active', 1)->when($order->seller_is == 'admin', function ($query) {
-        //     $query->where(['seller_id' => 0]);
-        // })->when($order->seller_is == 'seller' && $shipping_method == 'sellerwise_shipping', function ($query) use ($order) {
-        //     $query->where(['seller_id' => $order['seller_id']]);
-        // })->when($order->seller_is == 'seller' && $shipping_method == 'inhouse_shipping', function ($query) use ($order) {
-        //     $query->where(['seller_id' => 0]);
-        // })->get();
-
-        // if($order->order_type == 'default_type')
-        // {
-        //     return view('admin-views.order.order-details', compact('order', 'delivery_men', 'total_delivered', 'company_name', 'company_web_logo'));
-        // }else{
-            return view('admin-views.pos.order.order-details', compact('order','total_orders','products', 'company_name', 'company_web_logo'));
-        //}
+        return view('admin-views.pos.order.order-details', compact('order','total_orders','products', 'company_name', 'company_web_logo'));
 
     }
 
@@ -460,9 +450,26 @@ class OrderController extends Controller
         $data["email"] = $order->customer !=null?$order->customer["email"]:\App\CPU\translate('email_not_found');
         $data["client_name"] = $order->customer !=null? $order->customer["f_name"] . ' ' . $order->customer["l_name"]:\App\CPU\translate('customer_not_found');
         $data["order"] = $order;
+
+        $products = [];
+        $total_orders = 0;
+        if(!empty($order->mac_ids)){
+            $mac_ids = json_decode($order->mac_ids,true);
+            if(!empty($mac_ids)){
+                foreach($mac_ids as $k => $val){
+                    $total_orders += count($val);
+                    $prod = Product::select('name','thumbnail')->find($k);
+                    $products[$k]['name'] = $prod->name ?? "";
+                    $products[$k]['thumbnail'] = $prod->thumbnail ?? "";
+                    $products[$k]['mac_ids'] = $val;
+                }
+            }
+        }
+
         $mpdf_view = View::make('admin-views.order.invoice',
-            compact('order', 'company_phone', 'company_name', 'company_email', 'company_web_logo')
+            compact('order', 'company_phone','total_orders','products', 'company_name', 'company_email', 'company_web_logo')
         );
+    
         Helpers::gen_mpdf($mpdf_view, 'order_invoice_', $order->id);
     }
 
