@@ -113,19 +113,34 @@ class ShippingMethodController extends Controller
     {
         $tax_data =   TaxCalculation::select('id','country','type','tax_amt')->where('id',$id)->first();
         $tx_amt = json_decode($tax_data->tax_amt,true);
-        //echo "<pre>"; print_r($tx_amt); die;
         $country = \DB::table('country')->select('id')->where('name',$tax_data->country)->first();
         $states = \DB::table('states')->select('id','name')->where('country_id',$country->id)->get();
-
+        //echo "<pre>"; print_r($tx_amt);  die;
         return view('admin-views.shipping-method.edit-tax', compact('tax_data','tx_amt','states'));
     }
 
     public function tax_calculation_update(Request $request, $id)
     {
-        //$countries = $request->input('country');
-        //echo "<pre>"; print_r($countries); die;
+        $tax = [];
+        if($request->tax){
+            foreach($request->tax as $key => $val){
+                foreach($val as $k => $v){
+                    if(!empty($v)){
+                        $tax[$k][$key] = $v;
+                    }
+                    if($key == "state" && empty($val[$k])){
+                        $tax[$k][$key] = "";
+                    }
+                }
+            }
+
+            $tax_calculation = json_encode($tax);
+            TaxCalculation::where('id',$id)->update(['tax_amt'=>$tax_calculation]);
+            Toastr::success('Successfully updated.');
+        }else{
+            Toastr::error('Error Occured.');
+        }
         
-        Toastr::success('Successfully updated.');
         return redirect()->back();
     }
 

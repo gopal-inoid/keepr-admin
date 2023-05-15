@@ -17,6 +17,8 @@ use App\Model\Wishlist;
 use App\Model\RefundRequest;
 use App\Traits\CommonTrait;
 use App\User;
+use App\Model\BusinessSetting;
+use App\Model\Product;
 use Barryvdh\DomPDF\Facade as PDF;
 use Brian2694\Toastr\Facades\Toastr;
 use Carbon\Carbon;
@@ -24,6 +26,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\View;
 use function App\CPU\translate;
 use App\CPU\Convert;
 use function React\Promise\all;
@@ -518,11 +521,35 @@ class UserProfileController extends Controller
 
     public function generate_invoice($id)
     {
-        $order = Order::with('seller')->with('shipping')->where('id', $id)->first();
-        $data["email"] = $order->customer["email"];
+        $company_phone =BusinessSetting::where('type', 'company_phone')->first()->value;
+        $company_email =BusinessSetting::where('type', 'company_email')->first()->value;
+        $company_name =BusinessSetting::where('type', 'company_name')->first()->value;
+        $company_web_logo =BusinessSetting::where('type', 'company_web_logo')->first()->value;
+
+        $order = Order::where('id', $id)->first();
+        $data["email"] = $order->customer !=null?$order->customer["email"]:\App\CPU\translate('email_not_found');
+        $data["client_name"] = $order->customer !=null? $order->customer["f_name"] . ' ' . $order->customer["l_name"]:\App\CPU\translate('customer_not_found');
         $data["order"] = $order;
 
-        $mpdf_view = \View::make('web-views.invoice')->with('order', $order);
+        $products = [];
+        $total_orders = 0;
+        if(!empty($order->mac_ids)){
+            $mac_ids = json_decode($order->mac_ids,true);
+            if(!empty($mac_ids)){
+                foreach($mac_ids as $k => $val){
+                    $total_orders += count($val);
+                    $prod = Product::select('name','thumbnail')->find($k);
+                    $products[$k]['name'] = $prod->name ?? "";
+                    $products[$k]['thumbnail'] = $prod->thumbnail ?? "";
+                    $products[$k]['mac_ids'] = $val;
+                }
+            }
+        }
+
+        $mpdf_view = View::make('admin-views.order.invoice',
+            compact('order', 'company_phone','total_orders','products', 'company_name', 'company_email', 'company_web_logo')
+        );
+    
         Helpers::gen_mpdf($mpdf_view, 'order_invoice_', $order->id);
     }
     public function refund_details($id)

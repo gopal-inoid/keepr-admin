@@ -52,7 +52,7 @@
                                     </div>
                                     <a class="btn btn--primary px-4" target="_blank"
                                        href={{route('admin.orders.generate-invoice',[$order['id']])}}>
-                                        <i class="tio-print mr-1"></i> {{\App\CPU\translate('Print')}} {{\App\CPU\translate('invoice')}}
+                                        <i class="tio-print mr-1"></i> {{\App\CPU\translate('Download')}} {{\App\CPU\translate('invoice')}}
                                     </a>
                                 </div>
                                 <div class="d-flex flex-column gap-2 mt-3">
@@ -515,13 +515,8 @@
                 <!-- Card -->
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="mb-4 d-flex gap-2">
-                            <img src="{{asset('/public/assets/back-end/img/shop-information.png')}}" alt="">
-                            {{\App\CPU\translate('Shop_Information')}}
-                        </h4>
 
-
-                        <div class="media">
+                        {{-- <div class="media">
                             @if($order->seller_is == 'admin')
                                 <div class="mr-3">
                                     <img class="avatar rounded avatar-70" onerror="this.src='https://6valley.6amtech.com/public/assets/front-end/img/image-place-holder.png'"
@@ -555,7 +550,7 @@
                                     </div>
                                 @endif
                             @endif
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
                 <!-- End Card -->
@@ -565,7 +560,7 @@
     </div>
 
     <!--Show locations on map Modal -->
-    <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="locationModalLabel">
+    {{-- <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="locationModalLabel">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -585,11 +580,11 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- End Modal -->
 
     <!--Show delivery info Modal -->
-    <div class="modal" id="shipping_chose" role="dialog" tabindex="-1" >
+    {{-- <div class="modal" id="shipping_chose" role="dialog" tabindex="-1" >
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -618,12 +613,10 @@
                             </form>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- End Modal -->
 @endsection
 

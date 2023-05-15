@@ -78,3 +78,9 @@ CREATE TABLE `keepr`.`tax_calculation` (`id` INT(11) NOT NULL AUTO_INCREMENT , `
 ALTER TABLE `tax_calculation` CHANGE `tax_amt` `tax_amt` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;
 
 ALTER TABLE `products` CHANGE `colors` `colors` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;
+
+CREATE TABLE `keepr`.`email_templates` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(200) NULL DEFAULT NULL , `subject` VARCHAR(200) NULL DEFAULT NULL , `body` TEXT NULL DEFAULT NULL , `status` TINYINT NOT NULL DEFAULT '1' COMMENT '1=active,0=inactive' , `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `update_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+INSERT INTO `email_templates` (`id`, `name`, `subject`, `body`, `status`, `created_at`, `update_at`) VALUES (NULL, 'Order', 'Your Order is Placed', '<h1>Your Order is Placed</h1>', '1', current_timestamp(), current_timestamp());
+
+ALTER TABLE `email_templates` CHANGE `update_at` `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;

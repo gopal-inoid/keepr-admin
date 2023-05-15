@@ -201,6 +201,30 @@
             font-weight: bold;
         }
 
+        .avatar {
+    position: relative;
+    display: inline-block;
+    width: 2.625rem;
+    height: 2.625rem;
+    border-radius: 0.3125rem;
+}
+
+        .avatar-60 {
+    width: 60px !important;
+    min-width: 60px !important;
+    height: 60px !important;
+}
+
+.title-color {
+    color: var(--title-color);
+}
+
+a {
+    color: #377dff;
+    text-decoration: none;
+    background-color: transparent;
+}
+
     </style>
 </head>
 
@@ -214,7 +238,7 @@
     <table class="content-position mb-30">
         <tr>
             <th>
-                <img height="50" src="{{asset("storage/app/public/company/$company_web_logo")}}" alt="">
+                <img height="50" src="{{asset("/public/company/$company_web_logo")}}" alt="">
             </th>
         </tr>
     </table>
@@ -294,61 +318,46 @@
             <thead>
                 <tr>
                     <th>{{\App\CPU\translate('SL')}}</th>
-                    <th>{{\App\CPU\translate('item_description')}}</th>
-                    <th>
-                        {{\App\CPU\translate('unit_price')}}
-                    </th>
-                    <th>
-                        {{\App\CPU\translate('qty')}}
-                    </th>
-                    <th>
-                        {{\App\CPU\translate('total')}}
-                    </th>
+                    <th>{{\App\CPU\translate('Product Image')}}</th>
+                    <th>{{\App\CPU\translate('Product Name')}}</th>
+                    <th>MAC ID</th>
+                    <th>Total Device</th>
                 </tr>
             </thead>
-            @php
-                $subtotal=0;
-                $total=0;
-                $sub_total=0;
-                $total_tax=0;
-                $total_shipping_cost=0;
-                $total_discount_on_product=0;
-                $ext_discount=0;
-            @endphp
             <tbody>
-            @foreach($order->details as $key=>$details)
-                @php $subtotal=($details['price'])*$details->qty @endphp
+                @php($i=0)
+            @foreach($products as $key => $detail)
+            @php($i++)
                 <tr>
-                    <td>{{$key+1}}</td>
+                    <td>{{$i}}</td>
                     <td>
-                        {{$details['product']?$details['product']->name:''}}
-                        <br>
-                        {{\App\CPU\translate('variation')}} : {{$details['variant']}}
+                        <div class="media align-items-center gap-10">
+                            <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$detail['thumbnail']}}" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt="">
+                        </div>
                     </td>
-                    <td>{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($details['price']))}}</td>
-                    <td>{{$details->qty}}</td>
-                    <td>{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($subtotal))}}</td>
+                    <td>
+                        <div>
+                            <a href="#" class="title-color hover-c1"><h3>{{substr($detail['name'],0,30)}}{{strlen($detail['name'])>10?'...':''}}</h3></a>
+                        </div>
+                    </td>
+                    <td>
+                        
+                        @if(!empty($detail['mac_ids']))
+                            @foreach($detail['mac_ids'] as $k => $val)
+                                {{$val}}<br>
+                            @endforeach
+                        @endif
+                        
+                    </td>
+                    <td>
+                        {{$total_orders}}
+                    </td>
                 </tr>
-
-                @php
-                    $sub_total+=$details['price']*$details['qty'];
-                    $total_tax+=$details['tax'];
-                    $total_shipping_cost+=$details->shipping ? $details->shipping->cost :0;
-                    $total_discount_on_product+=$details['discount'];
-                    $total+=$subtotal;
-                @endphp
             @endforeach
             </tbody>
         </table>
     </div>
 </div>
-<?php
-    if ($order['extra_discount_type'] == 'percent') {
-        $ext_discount = ($sub_total / 100) * $order['extra_discount'];
-    } else {
-        $ext_discount = $order['extra_discount'];
-    }
-?>
 @php($shipping=$order['shipping_cost'])
 <div class="content-position-y">
     <table class="fz-12">
@@ -359,42 +368,11 @@
                     {{$order->payment_status}}
                     , {{date('y-m-d',strtotime($order['created_at']))}}
                 </p>
-
-                @if ($order->delivery_type !=null)
-                    <h4 class="fz-12 mb-1">{{\App\CPU\translate('delivery_info')}} </h4>
-                    @if ($order->delivery_type == 'self_delivery')
-                        <p class="fz-12 font-normal">
-                            <span>
-                                {{\App\CPU\translate('self_delivery')}}
-                            </span>
-                            <br>
-                            <span>
-                                {{\App\CPU\translate('delivery_man_name')}} : {{$order->delivery_man['f_name'].' '.$order->delivery_man['l_name']}}
-                            </span>
-                            <br>
-                            <span>
-                                {{\App\CPU\translate('delivery_man_phone')}} : {{$order->delivery_man['phone']}}
-                            </span>
-                        </p>
-                    @else
-                    <p>
-                        <span>
-                            {{$order->delivery_service_name}}
-                        </span>
-                        <br>
-                        <span>
-                            {{\App\CPU\translate('tracking_id')}} : {{$order->third_party_delivery_tracking_id}}
-                        </span>
-                    </p>
-                    @endif
-                @endif
-
             </th>
-
             <th>
                 <table class="calc-table">
                     <tbody>
-                        <tr>
+                        {{-- <tr>
                             <td class="p-1 text-left">{{\App\CPU\translate('sub_total')}}</td>
                             <td class="p-1">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($sub_total))}}</td>
                         </tr>
@@ -402,31 +380,12 @@
                             <td class="p-1 text-left">{{\App\CPU\translate('tax')}}</td>
                             <td class="p-1">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($total_tax))}}</td>
                         </tr>
-                        @if ($order->order_type=='default_type')
-                            <tr>
-                                <td class="p-1 text-left">{{\App\CPU\translate('shipping')}}</td>
-                                <td class="p-1">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($shipping))}}</td>
-                            </tr>
-                        @endif
                         <tr>
-                            <td class="p-1 text-left">{{\App\CPU\translate('coupon_discount')}}</td>
-                            <td class="p-1">
-                                - {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order->discount_amount))}} </td>
-                        </tr>
-                        @if ($order->order_type=='POS')
-                            <tr>
-                                <td class="p-1 text-left">{{\App\CPU\translate('extra_discount')}}</td>
-                                <td class="p-1">
-                                    - {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($ext_discount))}} </td>
-                            </tr>
-                        @endif
+                            <td class="p-1 text-left">{{\App\CPU\translate('shipping')}}</td>
+                            <td class="p-1">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($shipping))}}</td>
+                        </tr> --}}
                         <tr>
-                            <td class="p-1 text-left">{{\App\CPU\translate('discount_on_product')}}</td>
-                            <td class="p-1">
-                                - {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($total_discount_on_product))}} </td>
-                        </tr>
-                        <tr>
-                            <td class="border-dashed-top font-weight-bold text-left"><b>{{\App\CPU\translate('total')}}</b></td>
+                            <td class="border-dashed-top font-weight-bold text-left"><b>{{\App\CPU\translate('Total Amount')}}</b></td>
                             <td class="border-dashed-top font-weight-bold">
                                 {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order->order_amount))}}
                             </td>

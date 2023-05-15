@@ -355,8 +355,7 @@ class GeneralController extends Controller
                                 ->where(['id'=>$order_id])->first();
             $total_mac_ids = [];
             if(!empty($get_orders->id)){
-
-                //$get_orders->order_amount = number_format($get_orders->order_amount,2);
+                $get_orders->invoice_path = route('generate-invoice',[$get_orders->id]);
                 $get_orders->amount = number_format($get_orders->order_amount,2);
                 unset($get_orders->order_amount);
                 $get_orders->order_date = date('F j,Y, h:i A',strtotime($get_orders->created_at));

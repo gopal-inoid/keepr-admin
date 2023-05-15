@@ -164,6 +164,14 @@ class BusinessSettingsController extends Controller
     {
         $terms_condition = BusinessSetting::where('type', 'terms_condition')->first();
         return view('admin-views.business-settings.terms-condition', compact('terms_condition'));
+    
+    }
+
+    public function cookie_policy()
+    {
+       
+        $cookie_policy = BusinessSetting::where('type', 'cookie_policy')->first();
+        return view('admin-views.business-settings.cookie-policy', compact('cookie_policy'));
     }
 
     public function shipping_method(Request $request)
@@ -436,6 +444,7 @@ class BusinessSettingsController extends Controller
         $privacy_policy = BusinessSetting::where('type', 'privacy_policy')->first();
         return view('admin-views.business-settings.privacy-policy', compact('privacy_policy'));
     }
+    
 
     public function privacy_policy_update(Request $data)
     {
@@ -447,6 +456,7 @@ class BusinessSettingsController extends Controller
         return redirect()->back();
     }
 
+    
     public function support()
     {
         $support = BusinessSetting::where('type', 'support')->first();

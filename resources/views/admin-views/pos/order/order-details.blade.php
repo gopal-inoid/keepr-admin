@@ -113,9 +113,11 @@
                                 </thead>
 
                                 <tbody>
+                                 @php($i=0)
                                 @foreach($products as $key => $detail)
+                                @php($i++)
                                     <tr>
-                                        <td>1</td>
+                                        <td>{{$i}}</td>
                                         <td>
                                             <div class="media align-items-center gap-10">
                                                 <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$detail['thumbnail']}}" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt="">
@@ -124,7 +126,15 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>565:564:DF:9FD</td>
+                                        <td>
+                                            
+                                            @if(!empty($detail['mac_ids']))
+                                                @foreach($detail['mac_ids'] as $k => $val)
+                                                    {{$val}}<br>
+                                                @endforeach
+                                            @endif
+                                            
+                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -145,7 +155,7 @@
                             <div class="col-md-9 col-lg-8">
                                 <dl class="row text-sm-right">
 
-                                    <dt class="col-sm-6">{{\App\CPU\translate('extra_discount')}}</dt>
+                                    {{-- <dt class="col-sm-6">{{\App\CPU\translate('extra_discount')}}</dt>
                                     <dd class="col-sm-6 title-color">
                                         <strong>- {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($extra_discount))}}</strong>
                                     </dd>
@@ -153,9 +163,9 @@
                                     <dt class="col-sm-6">{{\App\CPU\translate('coupon_discount')}}</dt>
                                     <dd class="col-sm-6 title-color">
                                         <strong>- {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($coupon_discount))}}</strong>
-                                    </dd>
+                                    </dd> --}}
 
-                                    <dt class="col-sm-6">{{\App\CPU\translate('Total')}}</dt>
+                                    <dt class="col-sm-6">{{\App\CPU\translate('Total Amount')}}</dt>
                                     <dd class="col-sm-6 title-color">
                                         <strong>{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order['order_amount']))}}</strong>
                                     </dd>
@@ -173,7 +183,6 @@
             <div class="col-lg-4 col-xl-3">
                 <!-- Card -->
                 <div class="card">
-
                     <!-- Body -->
                     @if($order->customer)
                         <div class="card-body">
@@ -193,7 +202,7 @@
                                 <div class="media-body d-flex flex-column gap-1">
                                     <span class="title-color hover-c1"><strong>{{$order->customer['f_name'].' '.$order->customer['l_name']}}</strong></span>
                                     <span class="title-color">
-                                        <strong>{{$total_orders}} </strong>{{\App\CPU\translate('orders')}}
+                                        <strong>{{$total_orders}} </strong>{{\App\CPU\translate('Device')}}
                                     </span>
                                     <span class="title-color break-all"><strong>{{$order->customer['phone']}}</strong></span>
                                     <span class="title-color break-all">{{$order->customer['email']}}</span>
@@ -203,13 +212,70 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="card-body">
+                            <h4 class="mb-4 d-flex gap-2">
+                                <img src="{{asset('/public/assets/back-end/img/seller-information.png')}}" alt="">
+                                {{\App\CPU\translate('shipping_address')}}
+                            </h4>
+                               
+                            <div class="d-flex flex-column gap-2">
+                                <div>
+                                    <span>{{\App\CPU\translate('Name')}} :</span>
+                                    <strong>{{$order->customer->shipping_name ? $order->customer->shipping_name : ''}}</strong>
+                                </div>
+                                <div>
+                                    <span>{{\App\CPU\translate('Contact')}}:</span>
+                                    <strong>{{$order->customer->shipping_phone ? $order->customer->shipping_phone  : ''}}</strong>
+                                </div>
+                                <div>
+                                    <span>{{\App\CPU\translate('City')}}:</span>
+                                    <strong>{{$order->customer->shipping_city ? $order->customer->shipping_city : ''}}</strong>
+                                </div>
+                                <div>
+                                    <span>{{\App\CPU\translate('zip_code')}} :</span>
+                                    <strong>{{$order->customer->shipping_zip ? $order->customer->shipping_zip  : ''}}</strong>
+                                </div>
+                                <div class="d-flex align-items-start gap-2">
+                                    <img src="{{asset('/public/assets/back-end/img/location.png')}}" alt="">
+                                    {{$order->customer->shipping_city ? $order->customer->shipping_city  : \App\CPU\translate('empty')}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h4 class="mb-4 d-flex gap-2">
+                                <img src="{{asset('/public/assets/back-end/img/seller-information.png')}}" alt="">
+                                {{\App\CPU\translate('billing_address')}}
+                            </h4>
+                            <div class="d-flex flex-column gap-2">
+                                <div>
+                                    <span>{{\App\CPU\translate('Name')}} :</span>
+                                    <strong>{{$order->customer->name ? $order->customer->name : ''}}</strong>
+                                </div>
+                                <div>
+                                    <span>{{\App\CPU\translate('Contact')}}:</span>
+                                    <strong>{{$order->customer->phone ? $order->customer->phone_code . " " . $order->customer->phone  : ''}}</strong>
+                                </div>
+                                <div>
+                                    <span>{{\App\CPU\translate('City')}}:</span>
+                                    <strong>{{$order->customer->city ? $order->customer->city : ''}}</strong>
+                                </div>
+                                <div>
+                                    <span>{{\App\CPU\translate('zip_code')}} :</span>
+                                    <strong>{{$order->customer->zip ? $order->customer->zip  : ''}}</strong>
+                                </div>
+                                <div class="d-flex align-items-start gap-2">
+                                    <img src="{{asset('/public/assets/back-end/img/location.png')}}" alt="">
+                                    {{$order->customer->city ? $order->customer->city  : ''}}
+                                </div>
+                            </div>
+                        </div>
                     @else
                         <div class="card-body">
                             <div class="media align-items-center">
                                 <span>{{\App\CPU\translate('no_customer_found')}}</span>
                             </div>
                         </div>
-                @endif
+                    @endif
                 <!-- End Body -->
                 </div>
                 <!-- End Card -->

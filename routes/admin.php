@@ -403,6 +403,9 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
 
             Route::group(['prefix' => 'mail', 'as' => 'mail.','middleware'=>['module:system_settings']], function () {
                 Route::get('/', 'MailController@index')->name('index');
+                Route::get('templates', 'MailController@templates')->name('templates');
+                Route::get('template_edit/{id}', 'MailController@template_edit')->name('template-edit');
+                Route::post('templates-update', 'MailController@templates_update')->name('templates-update');
                 Route::post('update', 'MailController@update')->name('update');
                 Route::post('update-sendgrid', 'MailController@update_sendgrid')->name('update-sendgrid');
                 Route::post('send', 'MailController@send')->name('send');
@@ -474,6 +477,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
                 Route::post('social-media-status-update', 'BusinessSettingsController@social_media_status_update')->name('social-media-status-update');
 
                 Route::get('terms-condition', 'BusinessSettingsController@terms_condition')->name('terms-condition');
+                Route::get('cookie-policy', 'BusinessSettingsController@cookie_policy')->name('cookie-policy');
                 Route::post('terms-condition', 'BusinessSettingsController@updateTermsCondition')->name('update-terms');
                 Route::get('privacy-policy', 'BusinessSettingsController@privacy_policy')->name('privacy-policy');
                 Route::post('privacy-policy', 'BusinessSettingsController@privacy_policy_update')->name('privacy-policy');

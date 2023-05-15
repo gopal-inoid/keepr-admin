@@ -34,6 +34,8 @@ Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function
         return view('keepr_app.terms_condition',compact('data'));
     })->name('terms-condition');
 
+    Route::get('generate-invoice/{id}', 'UserProfileController@generate_invoice')->name('generate-invoice');
+
     //Route::get('/', 'WebController@home')->name('home');
 
     Route::get('quick-view', 'WebController@quick_view')->name('quick-view');
@@ -101,7 +103,6 @@ Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function
     Route::get('account-payment', 'UserProfileController@account_payment')->name('account-payment');
     Route::get('account-oder', 'UserProfileController@account_oder')->name('account-oder');
     Route::get('account-order-details', 'UserProfileController@account_order_details')->name('account-order-details')->middleware('customer');
-    Route::get('generate-invoice/{id}', 'UserProfileController@generate_invoice')->name('generate-invoice');
     Route::get('account-wishlist', 'UserProfileController@account_wishlist')->name('account-wishlist'); //add to card not work
     Route::get('refund-request/{id}','UserProfileController@refund_request')->name('refund-request');
     Route::get('refund-details/{id}','UserProfileController@refund_details')->name('refund-details');
