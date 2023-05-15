@@ -238,7 +238,8 @@ a {
     <table class="content-position mb-30">
         <tr>
             <th>
-                <img height="50" src="{{asset("/public/company/$company_web_logo")}}" alt="">
+                {{-- <img height="50" src="{{asset("/public/company/$company_web_logo")}}" alt=""> --}}
+                <img height="50" src="{{asset("/public/company/Keepr-logo-black.png")}}" alt="">
             </th>
         </tr>
     </table>
