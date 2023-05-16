@@ -1,5 +1,4 @@
 <html>
-
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{\App\CPU\translate('invoice')}}</title>
@@ -12,13 +11,6 @@
             line-height: 1.3;
             font-family: sans-serif;
             color: #333542;
-        }
-
-
-        /* IE 6 */
-        * html .footer {
-            position: absolute;
-            top: expression((0-(footer.offsetHeight)+(document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight)+(ignoreMe=document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop))+'px');
         }
 
         body {
@@ -580,21 +572,20 @@
             margin-left: -1px;
         }
 
-        .btn-group> :not(.btn-check)+.btn {
+        .btn-group> :not(.btn-check) {
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
         }
 
-        img {
+        /* img {
             vertical-align: inherit;
-        }
+        } */
 
         h4 {
             margin-top: 0;
             margin-bottom: .5rem;
             font-weight: 500;
             line-height: 1.2;
-            font-size: calc(1.275rem + .3vw);
         }
 
         @media (min-width: 1200px) {
@@ -764,23 +755,18 @@
         .border-bottom-0 {
             border-bottom: 0 !important;
         }
-    </style>
-</head>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+</head>
 <body>
-
-
-
     <div class="container-fluid invoice-container snipcss-TSSAm">
         <header class="snipcss0-0-0-1">
             <div class="row align-items-center snipcss0-1-1-2">
                 <div class="col-sm-7 text-center text-sm-start mb-3 mb-sm-0 snipcss0-2-2-3">
-                    {{-- <img height="80" src="{{asset("/public/company/$company_web_logo")}}" alt=""> --}}
                     <img height="80" src="{{asset("/public/company/Keepr-logo-black.png")}}" alt="">
                 </div>
                 <div class="col-sm-5 text-center text-sm-end snipcss0-2-2-5">
@@ -907,8 +893,6 @@
                                 </tr>
                                 @endforeach
                             </tbody>
-                            @php($shipping=$order['shipping_cost'])
-                            @php($shipping=$order['shipping_cost'])
                             <div class="content-position-y">
                                 <table class="fz-12">
                                     <tr>
@@ -921,279 +905,268 @@
                                         </th>
                                         <th>
                                             <table class="calc-table">
-                                                <tbody>
-                                                    {{-- <tr>
-                            <td class="p-1 text-left">{{\App\CPU\translate('sub_total')}}</td>
-                                                    <td class="p-1">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($sub_total))}}</td>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td class="border-dashed-top font-weight-bold text-right"><b> <strong class="">{{\App\CPU\translate('Total Amount')}} </strong>&nbsp; {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order->order_amount))}}</b></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </th>
                                     </tr>
-                                    <tr>
-                                        <td class="p-1 text-left">{{\App\CPU\translate('tax')}}</td>
-                                        <td class="p-1">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($total_tax))}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-1 text-left">{{\App\CPU\translate('shipping')}}</td>
-                                        <td class="p-1">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($shipping))}}</td>
-                                    </tr> --}}
-                                    <tr>
-                                        <td class="border-dashed-top font-weight-bold text-right"><b> <strong class="">{{\App\CPU\translate('Total Amount')}} </strong>&nbsp; {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order->order_amount))}}</b></td>
-                                    </tr>
-                                    </tbody>
                                 </table>
-                                </th>
-                                </tr>
+                            </div>
                         </table>
                     </div>
-                    </table>
                 </div>
-            </div>
-            <br> <br> <br> <br>
-            <div class="row">
-                <section>
-                    <table class="">
-                        <tr>
-                            <th class="fz-12 font-normal pb-3">
-                                {{\App\CPU\translate('If_you_require_any_assistance_or_have_feedback_or_suggestions_about_our_site,_you')}} <br /> {{\App\CPU\translate('can_email_us_at')}} <a href="mail::to({{ $company_email }})">{{ $company_email }}</a>
-                            </th>
-                        </tr>
-                        <tr>
-                            <th class="content-position-y bg-light py-4">
-                                <div class="d-flex justify-content-center gap-2">
-                                    <div class="mb-2">
-                                        <i class="fa fa-phone"></i>
-                                        {{\App\CPU\translate('phone')}}
-                                        : {{ $company_phone }}
+                <br> <br> <br> <br>
+                <div class="row">
+                    <section>
+                        <table class="">
+                            <tr>
+                                <th class="fz-12 font-normal pb-3">
+                                    {{\App\CPU\translate('If_you_require_any_assistance_or_have_feedback_or_suggestions_about_our_site,_you')}} <br /> {{\App\CPU\translate('can_email_us_at')}} <a href="mail::to({{ $company_email }})">{{ $company_email }}</a>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th class="content-position-y bg-light py-4">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <div class="mb-2">
+                                            <i class="fa fa-phone"></i>
+                                            {{\App\CPU\translate('phone')}}
+                                            : {{ $company_phone }}
+                                        </div>
+                                        <div class="mb-2">
+                                            <i class="fa fa-envelope" aria-hidden="true"></i>
+                                            {{\App\CPU\translate('email')}}
+                                            : {{$company_email}}
+                                        </div>
                                     </div>
                                     <div class="mb-2">
-                                        <i class="fa fa-envelope" aria-hidden="true"></i>
-                                        {{\App\CPU\translate('email')}}
-                                        : {{$company_email}}
+                                        {{url('/')}}
                                     </div>
-                                </div>
-                                <div class="mb-2">
-                                    {{url('/')}}
-                                </div>
-                                <div>
-                                    {{\App\CPU\translate('All_copy_right_reserved_©_'.date('Y').'_').$company_name}}
-                                </div>
-                            </th>
-                        </tr>
-                    </table>
-                </section>
-            </div>
-    </div>
+                                    <div>
+                                        {{\App\CPU\translate('All_copy_right_reserved_©_'.date('Y').'_').$company_name}}
+                                    </div>
+                                </th>
+                            </tr>
+                        </table>
+                    </section>
+                </div>
+        </div>
     </main>
     </div>
+</body>
+</html>
+{{-- 
+    
 
+    
 
+<!-- 
+<div class="first">
+    <table class="content-position mb-30" id="keepr_invooice_table">
+        <tr>
+            <th id="Invoice_date_keepr" style="text-align: left;">
+                {{-- <img height="50" src="{{asset("/public/company/$company_web_logo")}}" alt=""> --}}
+                <img height="80" src="{{asset("/public/company/Keepr-logo-black.png")}}" alt="" style="margin-left : 10px">
+            </th>
+            <th class="content-position-y text-right" id="Invoice_date_keepr">
+                <h4 class="text-uppercase mb-1 fz-14" id="invoice_heading">
+                    Invoice
+                </h4>
+            </th>
+        </tr>
 
+    </table>
 
-
-    <!-- 
-    <div class="first">
-        <table class="content-position mb-30" id="keepr_invooice_table">
+    <table class="bs-0 mb-30 px-10">
+        <tr>
+            <th class="content-position-y text-left" id="Invoice_date_keepr">
+                <h4 class="fz-14"><strong class="date_invoice">{{\App\CPU\translate('date')}} </strong>: {{date('d-m-Y h:i:s a',strtotime($order['created_at']))}}</h4>
+            </th>
+            <th class="content-position-y text-right" id="Invoice_date_keepr">
+                <h4 class="text-uppercase mb-1 fz-14">
+                    <strong class="invoice_no">{{\App\CPU\translate('invoice')}}</strong> #{{ $order->id }}
+                </h4>
+            </th>
+        </tr>
+    </table>
+</div> -->
+<!-- <div class="">
+    <section>
+        <table class="content-position-y fz-12">
             <tr>
-                <th id="Invoice_date_keepr" style="text-align: left;">
-                    {{-- <img height="50" src="{{asset("/public/company/$company_web_logo")}}" alt=""> --}}
-                    <img height="80" src="{{asset("/public/company/Keepr-logo-black.png")}}" alt="" style="margin-left : 10px">
-                </th>
-                <th class="content-position-y text-right" id="Invoice_date_keepr">
-                    <h4 class="text-uppercase mb-1 fz-14" id="invoice_heading">
-                        Invoice
-                    </h4>
-                </th>
-            </tr>
-
-        </table>
-
-        <table class="bs-0 mb-30 px-10">
-            <tr>
-                <th class="content-position-y text-left" id="Invoice_date_keepr">
-                    <h4 class="fz-14"><strong class="date_invoice">{{\App\CPU\translate('date')}} </strong>: {{date('d-m-Y h:i:s a',strtotime($order['created_at']))}}</h4>
-                </th>
-                <th class="content-position-y text-right" id="Invoice_date_keepr">
-                    <h4 class="text-uppercase mb-1 fz-14">
-                        <strong class="invoice_no">{{\App\CPU\translate('invoice')}}</strong> #{{ $order->id }}
-                    </h4>
-                </th>
-            </tr>
-        </table>
-    </div> -->
-    <!-- <div class="">
-        <section>
-            <table class="content-position-y fz-12">
-                <tr>
-                    <td class="font-weight-bold p-1">
-                        <table>
-                            <tr>
-                                <td id="Invoice_date_keepr">
-                                    @if (!empty($order->customer->add_shipping_address))
-                                    <span class="h2" style="margin: 0px;">{{\App\CPU\translate('shipping_to')}} </span>
-                                    <div class="h4 montserrat-normal-600">
-                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer !=null? $order->customer['f_name'].' '.$order->customer['l_name']:\App\CPU\translate('name_not_found')}}</p>
-                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer !=null? $order->customer['email']:\App\CPU\translate('email_not_found')}}</p>
-                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer !=null? $order->customer['phone']:\App\CPU\translate('phone_not_found')}}</p>
-                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer ? $order->customer['add_shipping_address'] : ""}}</p>
-                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer ? $order->customer['shipping_city'] : ""}} {{$order->customer ? $order->customer['shipping_zip'] : ""}}</p>
-                                    </div>
-                                    @else
-                                    <span class="h2" style="margin: 0px;">{{\App\CPU\translate('customer_info')}} </span>
-                                    <div class="h4 montserrat-normal-600">
-                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer !=null? $order->customer['f_name'].' '.$order->customer['l_name']:\App\CPU\translate('name_not_found')}}</p>
-                                        @if (isset($order->customer) && $order->customer['id']!=0)
-                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer !=null? $order->customer['email']:\App\CPU\translate('email_not_found')}}</p>
-                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer !=null? $order->customer['phone']:\App\CPU\translate('phone_not_found')}}</p>
-                                        @endif
-                                    </div>
+                <td class="font-weight-bold p-1">
+                    <table>
+                        <tr>
+                            <td id="Invoice_date_keepr">
+                                @if (!empty($order->customer->add_shipping_address))
+                                <span class="h2" style="margin: 0px;">{{\App\CPU\translate('shipping_to')}} </span>
+                                <div class="h4 montserrat-normal-600">
+                                    <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer !=null? $order->customer['f_name'].' '.$order->customer['l_name']:\App\CPU\translate('name_not_found')}}</p>
+                                    <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer !=null? $order->customer['email']:\App\CPU\translate('email_not_found')}}</p>
+                                    <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer !=null? $order->customer['phone']:\App\CPU\translate('phone_not_found')}}</p>
+                                    <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer ? $order->customer['add_shipping_address'] : ""}}</p>
+                                    <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer ? $order->customer['shipping_city'] : ""}} {{$order->customer ? $order->customer['shipping_zip'] : ""}}</p>
+                                </div>
+                                @else
+                                <span class="h2" style="margin: 0px;">{{\App\CPU\translate('customer_info')}} </span>
+                                <div class="h4 montserrat-normal-600">
+                                    <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer !=null? $order->customer['f_name'].' '.$order->customer['l_name']:\App\CPU\translate('name_not_found')}}</p>
+                                    @if (isset($order->customer) && $order->customer['id']!=0)
+                                    <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer !=null? $order->customer['email']:\App\CPU\translate('email_not_found')}}</p>
+                                    <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer !=null? $order->customer['phone']:\App\CPU\translate('phone_not_found')}}</p>
                                     @endif
-                                    </p>
-                                </td>
-                                <td id="Invoice_date_keepr"></td>
-                            </tr>
-                        </table>
+                                </div>
+                                @endif
+                                </p>
+                            </td>
+                            <td id="Invoice_date_keepr"></td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td class="text-right">
+                                @if (!empty($order->customer->street_address))
+                                <span class="h2">{{\App\CPU\translate('billing_address')}} </span>
+                                <div class="h4 montserrat-normal-600">
+                                    <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer['name'] ? $order->customer['name'] : ""}}</p>
+                                    <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer['phone'] ? $order->customer['phone'] : ""}}</p>
+                                    <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer['street_address'] ? $order->customer['street_address'] : ""}}</p>
+                                    <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer['city'] ? $order->customer['city'] : ""}} {{$order->customer['zip'] ? $order->customer['zip'] : ""}}</p>
+                                </div>
+                                @endif
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </section>
+</div>
+
+<br> -->
+
+<!-- <div class="">
+    <div class="content-position-y">
+        <table class="customers bs-0">
+            <thead>
+                <tr>
+                    <th>{{\App\CPU\translate('SL')}}</th>
+                    <th>{{\App\CPU\translate('Product Image')}}</th>
+                    <th>{{\App\CPU\translate('Product Name')}}</th>
+                    <th>MAC ID</th>
+                    <th>Total Device</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php($i=0)
+                @foreach($products as $key => $detail)
+                @php($i++)
+                <tr>
+                    <td>{{$i}}</td>
+                    <td>
+                        <div class="media align-items-center gap-10">
+                            <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$detail['thumbnail']}}" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt="">
+                        </div>
                     </td>
                     <td>
-                        <table>
-                            <tr>
-                                <td class="text-right">
-                                    @if (!empty($order->customer->street_address))
-                                    <span class="h2">{{\App\CPU\translate('billing_address')}} </span>
-                                    <div class="h4 montserrat-normal-600">
-                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer['name'] ? $order->customer['name'] : ""}}</p>
-                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer['phone'] ? $order->customer['phone'] : ""}}</p>
-                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer['street_address'] ? $order->customer['street_address'] : ""}}</p>
-                                        <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer['city'] ? $order->customer['city'] : ""}} {{$order->customer['zip'] ? $order->customer['zip'] : ""}}</p>
-                                    </div>
-                                    @endif
-                                </td>
-                            </tr>
-                        </table>
+                        <div>
+                            <a href="#" class="title-color hover-c1">
+                                <h3>{{substr($detail['name'],0,30)}}{{strlen($detail['name'])>10?'...':''}}</h3>
+                            </a>
+                        </div>
+                    </td>
+                    <td>
+
+                        @if(!empty($detail['mac_ids']))
+                        @foreach($detail['mac_ids'] as $k => $val)
+                        {{$val}}<br>
+                        @endforeach
+                        @endif
+
+                    </td>
+                    <td>
+                        {{$total_orders}}
                     </td>
                 </tr>
-            </table>
-        </section>
-    </div>
-
-    <br> -->
-
-    <!-- <div class="">
-        <div class="content-position-y">
-            <table class="customers bs-0">
-                <thead>
-                    <tr>
-                        <th>{{\App\CPU\translate('SL')}}</th>
-                        <th>{{\App\CPU\translate('Product Image')}}</th>
-                        <th>{{\App\CPU\translate('Product Name')}}</th>
-                        <th>MAC ID</th>
-                        <th>Total Device</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php($i=0)
-                    @foreach($products as $key => $detail)
-                    @php($i++)
-                    <tr>
-                        <td>{{$i}}</td>
-                        <td>
-                            <div class="media align-items-center gap-10">
-                                <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$detail['thumbnail']}}" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt="">
-                            </div>
-                        </td>
-                        <td>
-                            <div>
-                                <a href="#" class="title-color hover-c1">
-                                    <h3>{{substr($detail['name'],0,30)}}{{strlen($detail['name'])>10?'...':''}}</h3>
-                                </a>
-                            </div>
-                        </td>
-                        <td>
-
-                            @if(!empty($detail['mac_ids']))
-                            @foreach($detail['mac_ids'] as $k => $val)
-                            {{$val}}<br>
-                            @endforeach
-                            @endif
-
-                        </td>
-                        <td>
-                            {{$total_orders}}
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-    @php($shipping=$order['shipping_cost']) -->
-    <!-- <div class="content-position-y">
-        <table class="fz-12">
-            <tr>
-                <th class="text-left">
-                    <h4 class="fz-12 mb-1">{{\App\CPU\translate('payment_details')}}</h4>
-                    <p class="fz-12 font-normal">
-                        {{$order->payment_status}}
-                        , {{date('y-m-d',strtotime($order['created_at']))}}
-                    </p>
-                </th>
-                <th>
-                    <table class="calc-table">
-                        <tbody>
-                            {{-- <tr>
-                            <td class="p-1 text-left">{{\App\CPU\translate('sub_total')}}</td>
-                            <td class="p-1">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($sub_total))}}</td>
-            </tr>
-            <tr>
-                <td class="p-1 text-left">{{\App\CPU\translate('tax')}}</td>
-                <td class="p-1">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($total_tax))}}</td>
-            </tr>
-            <tr>
-                <td class="p-1 text-left">{{\App\CPU\translate('shipping')}}</td>
-                <td class="p-1">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($shipping))}}</td>
-            </tr> --}}
-            <tr>
-                <td class="border-dashed-top font-weight-bold text-right"><b> <strong class="Total_amount_invoice">{{\App\CPU\translate('Total Amount')}} </strong>&nbsp; {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order->order_amount))}}</b></td>
-            </tr>
+                @endforeach
             </tbody>
         </table>
-        </th>
+    </div>
+</div>
+@php($shipping=$order['shipping_cost']) -->
+<!-- <div class="content-position-y">
+    <table class="fz-12">
+        <tr>
+            <th class="text-left">
+                <h4 class="fz-12 mb-1">{{\App\CPU\translate('payment_details')}}</h4>
+                <p class="fz-12 font-normal">
+                    {{$order->payment_status}}
+                    , {{date('y-m-d',strtotime($order['created_at']))}}
+                </p>
+            </th>
+            <th>
+                <table class="calc-table">
+                    <tbody>
+                        {{-- <tr>
+                        <td class="p-1 text-left">{{\App\CPU\translate('sub_total')}}</td>
+                        <td class="p-1">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($sub_total))}}</td>
         </tr>
-        </table>
-    </div> -->
+        <tr>
+            <td class="p-1 text-left">{{\App\CPU\translate('tax')}}</td>
+            <td class="p-1">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($total_tax))}}</td>
+        </tr>
+        <tr>
+            <td class="p-1 text-left">{{\App\CPU\translate('shipping')}}</td>
+            <td class="p-1">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($shipping))}}</td>
+        </tr> --}}
+        <tr>
+            <td class="border-dashed-top font-weight-bold text-right"><b> <strong class="Total_amount_invoice">{{\App\CPU\translate('Total Amount')}} </strong>&nbsp; {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order->order_amount))}}</b></td>
+        </tr>
+        </tbody>
+    </table>
+    </th>
+    </tr>
+    </table>
+</div> -->
 
 
-    <!-- <div class="row">
-        <section>
-            <table class="">
-                <tr>
-                    <th class="fz-12 font-normal pb-3">
-                        {{\App\CPU\translate('If_you_require_any_assistance_or_have_feedback_or_suggestions_about_our_site,_you')}} <br /> {{\App\CPU\translate('can_email_us_at')}} <a href="mail::to({{ $company_email }})">{{ $company_email }}</a>
-                    </th>
-                </tr>
-                <tr>
-                    <th class="content-position-y bg-light py-4">
-                        <div class="d-flex justify-content-center gap-2">
-                            <div class="mb-2">
-                                <i class="fa fa-phone"></i>
-                                {{\App\CPU\translate('phone')}}
-                                : {{ $company_phone }}
-                            </div>
-                            <div class="mb-2">
-                                <i class="fa fa-envelope" aria-hidden="true"></i>
-                                {{\App\CPU\translate('email')}}
-                                : {{$company_email}}
-                            </div>
+<!-- <div class="row">
+    <section>
+        <table class="">
+            <tr>
+                <th class="fz-12 font-normal pb-3">
+                    {{\App\CPU\translate('If_you_require_any_assistance_or_have_feedback_or_suggestions_about_our_site,_you')}} <br /> {{\App\CPU\translate('can_email_us_at')}} <a href="mail::to({{ $company_email }})">{{ $company_email }}</a>
+                </th>
+            </tr>
+            <tr>
+                <th class="content-position-y bg-light py-4">
+                    <div class="d-flex justify-content-center gap-2">
+                        <div class="mb-2">
+                            <i class="fa fa-phone"></i>
+                            {{\App\CPU\translate('phone')}}
+                            : {{ $company_phone }}
                         </div>
                         <div class="mb-2">
-                            {{url('/')}}
+                            <i class="fa fa-envelope" aria-hidden="true"></i>
+                            {{\App\CPU\translate('email')}}
+                            : {{$company_email}}
                         </div>
-                        <div>
-                            {{\App\CPU\translate('All_copy_right_reserved_©_'.date('Y').'_').$company_name}}
-                        </div>
-                    </th>
-                </tr>
-            </table>
-        </section>
-    </div> -->
-
-</body>
-
-</html>
+                    </div>
+                    <div class="mb-2">
+                        {{url('/')}}
+                    </div>
+                    <div>
+                        {{\App\CPU\translate('All_copy_right_reserved_©_'.date('Y').'_').$company_name}}
+                    </div>
+                </th>
+            </tr>
+        </table>
+    </section>
+</div> -->
+    
+    
+--}}
