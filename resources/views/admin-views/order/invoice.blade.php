@@ -5,7 +5,7 @@
     <title>{{\App\CPU\translate('invoice')}}</title>
     <meta http-equiv="Content-Type" content="text/html;" />
     <meta charset="UTF-8">
-    <style media="all">
+    <!-- <style media="all">
         * {
             margin: 0;
             padding: 0;
@@ -755,7 +755,7 @@
         .border-bottom-0 {
             border-bottom: 0 !important;
         }
-    </style>
+    </style> -->
 </head>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -767,7 +767,7 @@
 
 
 
-    <div class="container-fluid invoice-container snipcss-TSSAm">
+    <!-- <div class="container-fluid invoice-container snipcss-TSSAm">
         <header class="snipcss0-0-0-1">
 
             <table class="table mb-0">
@@ -789,17 +789,7 @@
                     </tr>
                 </thead>
             </table>
-            <!-- <div class="row snipcss0-1-1-2">
-                    <span class="col col-6 text-center text-sm-start">
-                        {{-- <img height="80" src="{{asset("/public/company/$company_web_logo")}}" alt=""> --}}
-                        <img height="80" src="{{asset("/public/company/Keepr-logo-black.png")}}" alt="">
-                    </span>
-                    <span class="col col-6 ">
-                        <h4 class="text-7 mb-0 snipcss0-3-5-6">
-                            Invoice
-                        </h4>
-                    </span>
-                </div> -->
+
         </header>
         <main>
             <div class="row mt-4">
@@ -917,6 +907,10 @@
                                 </tr>
                                 @endforeach
                             </tbody>
+                        
+                            
+
+
                             @php($shipping=$order['shipping_cost'])
                             @php($shipping=$order['shipping_cost'])
                             <div class="content-position-y">
@@ -992,13 +986,317 @@
             </div>
     </div>
     </main>
+    </div> -->
+
+
+    <table style="table-layout: fixed; width: 100%;">
+        <tbody>
+            <tr>
+                <td class="" width="30%">
+                    <span class="text-end">
+                        {{-- <img height="80" src="{{asset("/public/company/$company_web_logo")}}" alt=""> --}}
+                        <img height="80" src="{{asset("/public/company/Keepr-logo-black.png")}}" alt="">
+                    </span>
+                </td>
+                <td width="40%">
+
+                </td>
+                <td width="30%">
+                    <table class="tbl-padded" style="text-align: right;">
+                        <caption style="text-transform: uppercase; text-align: right; font-size: 30pt;">
+                            <strong>
+                                Invoice
+                            </strong>
+                        </caption>
+
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="padding-top: 1cm; padding-bottom: 1cm;">
+        <table style="table-layout: fixed; width: 100%;">
+            <tbody>
+                <tr>
+                    <td width="30%">
+                        <div class="col-sm-6">
+                            <strong>
+                                {{\App\CPU\translate('date')}}
+                            </strong>
+                            {{date('d-m-Y h:i:s a',strtotime($order['created_at']))}}
+                        </div>
+                    </td>
+                    <td width="40%">
+
+                    </td>
+                    <td width="30%">
+                        <div class="col-sm-6 text-sm-end">
+                            <strong>
+                                {{\App\CPU\translate('invoice')}} No
+                            </strong>
+                            #{{ $order->id }}
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div style="padding-top: 1cm; padding-bottom: 1cm;">
+        <table style="table-layout: fixed; width: 100%;">
+            <tbody>
+                <tr>
+                    <td width="30%">
+                        <div class="col-sm-6 text-sm-end order-sm-1">
+                            @if (!empty($order->customer->add_shipping_address))
+                            <span class="h2">{{\App\CPU\translate('shipping_to')}} </span>
+                            <div class="h4 montserrat-normal-600">
+                                <p>{{$order->customer !=null? $order->customer['f_name'].' '.$order->customer['l_name']:\App\CPU\translate('name_not_found')}}</p>
+                                <p>{{$order->customer !=null? $order->customer['email']:\App\CPU\translate('email_not_found')}}</p>
+                                <p>{{$order->customer !=null? $order->customer['phone']:\App\CPU\translate('phone_not_found')}}</p>
+                                <p>{{$order->customer ? $order->customer['add_shipping_address'] : ""}}</p>
+                                <p>{{$order->customer ? $order->customer['shipping_city'] : ""}} {{$order->customer ? $order->customer['shipping_zip'] : ""}}</p>
+                            </div>
+                            @else
+                            <span class="h4">{{\App\CPU\translate('customer_info')}} </span>
+                            <div class="h4 montserrat-normal-600">
+                                <p>{{$order->customer !=null? $order->customer['f_name'].' '.$order->customer['l_name']:\App\CPU\translate('name_not_found')}}</p>
+                                @if (isset($order->customer) && $order->customer['id']!=0)
+                                <p>{{$order->customer !=null? $order->customer['email']:\App\CPU\translate('email_not_found')}}</p>
+                                <p>{{$order->customer !=null? $order->customer['phone']:\App\CPU\translate('phone_not_found')}}</p>
+                                @endif
+                            </div>
+                            @endif
+                        </div>
+                    </td>
+                    <td width="40%">
+
+                    </td>
+                    <td width="30%">
+                        <div class="col-sm-6 order-sm-0">
+                            @if (!empty($order->customer->street_address))
+                            <span class="h2">{{\App\CPU\translate('billing_address')}} </span>
+                            <div class="h4 montserrat-normal-600">
+                                <p>{{$order->customer['name'] ? $order->customer['name'] : ""}}</p>
+                                <p>{{$order->customer['phone'] ? $order->customer['phone'] : ""}}</p>
+                                <p>{{$order->customer['street_address'] ? $order->customer['street_address'] : ""}}</p>
+                                <p>{{$order->customer['city'] ? $order->customer['city'] : ""}} {{$order->customer['zip'] ? $order->customer['zip'] : ""}}</p>
+                            </div>
+                            @endif
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <table style="table-layout: fixed; width: 100%;">
+            <thead>
+                <tr>
+                    <th align="left" style="border-top: 1px solid #eee; padding: 5px;">
+                        <strong>
+                            {{\App\CPU\translate('SL')}}
+                        </strong>
+                    </th>
+                    <th align="center" style="border-top: 1px solid #eee; padding: 5px;">
+                        <strong>
+                            {{\App\CPU\translate('SL')}}
+                        </strong>
+                    </th>
+                    <th align="center" style="border-top: 1px solid #eee; padding: 5px;">
+                        <strong>
+                            {{\App\CPU\translate('Product Name')}}
+                        </strong>
+                    </th>
+                    <th align="right" style="border-top: 1px solid #eee; padding: 5px;">
+                        <strong>
+                            MAC ID
+                        </strong>
+                    </th>
+                    <th align="right" style="border-top: 1px solid #eee; padding: 5px;">
+                        <strong>
+                            Total Device
+                        </strong>
+                    </th>
+                </tr>
+
+            </thead>
+
+
+
+            <!-- <tbody>
+                @php($i=0)
+                @foreach($products as $key => $detail)
+                @php($i++)
+                <tr>
+                    <td class="text-center">{{$i}}</td>
+                    <td class="text-center">
+                        <div class="media align-items-center gap-10">
+                            <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$detail['thumbnail']}}" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt="">
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <div>
+                            <a href="#" class="title-color hover-c1">
+                                <h3>{{substr($detail['name'],0,30)}}{{strlen($detail['name'])>10?'...':''}}</h3>
+                            </a>
+                        </div>
+                    </td>
+                    <td class="text-center">
+
+                        @if(!empty($detail['mac_ids']))
+                        @foreach($detail['mac_ids'] as $k => $val)
+                        {{$val}}<br>
+                        @endforeach
+                        @endif
+
+                    </td>
+                    <td class="text-end">
+                        {{$total_orders}}
+                    </td>
+                </tr>
+                @endforeach
+            </tbody> -->
+
+
+
+
+            <tbody>
+                @php($i=0)
+                @foreach($products as $key => $detail)
+                @php($i++)
+                <tr>
+                    <td style="border-top: 1px solid #eee; padding: 5px;">
+                        {{$i}}
+                    </td>
+                    <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
+                        <img width="70px" src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$detail['thumbnail']}}" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt="">
+                    </td>
+                    <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
+                        <span class="title-color hover-c1">
+                            <h3>{{substr($detail['name'],0,30)}}{{strlen($detail['name'])>10?'...':''}}</h3>
+                        </span>
+                    </td>
+                    <td align="right" style="border-top: 1px solid #eee; padding: 5px;">
+
+                        @if(!empty($detail['mac_ids']))
+                        @foreach($detail['mac_ids'] as $k => $val)
+                        {{$val}}
+                        @endforeach
+                        @endif
+                    </td>
+                    <td align="right" style="border-top: 1px solid #eee; padding: 5px;">
+                        {{$total_orders}}
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+
+
+    <div style="padding-top: 1cm; padding-bottom: 1cm;">
+        @php($shipping=$order['shipping_cost'])
+        @php($shipping=$order['shipping_cost'])
+        <table style="table-layout: fixed; width: 100%;">
+            <tbody>
+                <tr>
+                    <td width="30%">
+                        <div class="col-sm-6">
+                            <strong>
+                                {{\App\CPU\translate('payment_details')}}
+                            </strong>
+                            {{$order->payment_status}}
+                            , {{date('y-m-d',strtotime($order['created_at']))}}
+                        </div>
+                    </td>
+                    <td width="40%">
+
+                    </td>
+                    <td width="30%">
+                        <div class="col-sm-6 text-sm-end">
+                            <strong>
+                            {{\App\CPU\translate('sub_total')}}
+                            </strong>
+                           0
+                        </div>
+                        <div class="col-sm-6 text-sm-end">
+                            <strong>
+                            {{\App\CPU\translate('tax')}}
+                            </strong>
+                            0
+                        </div>
+                        <div class="col-sm-6 text-sm-end">
+                            <strong>
+                            {{\App\CPU\translate('shipping')}}
+                            </strong>
+                            0
+                        </div>
+                        <div class="col-sm-6 text-sm-end">
+                            <strong>
+                            {{\App\CPU\translate('Total Amount')}}
+                            </strong>
+                           0
+                        </div>
+                        
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div style="border-top: 1px solid #eee;">
+
+        <!-- <table style="table-layout: fixed; width: 100%; border-collapse: collapse;">
+            <tbody>
+                <tr>
+                    <td align="right" style="padding: 5px;">
+                        Subtotal
+                    </td>
+                    <td align="right" width="20%" style="padding: 5px;">
+                        1500.00
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right" style="padding: 5px;">
+                        + TAX
+                    </td>
+                    <td align="right" width="20%" style="padding: 5px;">
+                        5.00
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right" style="padding: 5px;">
+                        - Discount
+                    </td>
+                    <td align="right" width="20%" style="padding: 5px;">
+                        10.00
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right" style="border-top: 2px solid #eee; padding: 8px;">
+                        <span style="font-size: 16pt;">
+                            Total Amount
+                        </span>
+                    </td>
+                    <td align="right" width="20%" style="border-top: 2px solid #eee; padding: 8px;">
+                        <strong style="font-size: 16pt;">
+                            USD 1495.00
+                        </strong>
+                    </td>
+                </tr>
+            </tbody>
+        </table> -->
+
     </div>
 
 
 
-
-
-    <!-- 
+        <!-- 
     <div class="first">
         <table class="content-position mb-30" id="keepr_invooice_table">
             <tr>
@@ -1028,7 +1326,7 @@
             </tr>
         </table>
     </div> -->
-    <!-- <div class="">
+        <!-- <div class="">
         <section>
             <table class="content-position-y fz-12">
                 <tr>
@@ -1085,7 +1383,7 @@
 
     <br> -->
 
-    <!-- <div class="">
+        <!-- <div class="">
         <div class="content-position-y">
             <table class="customers bs-0">
                 <thead>
@@ -1134,7 +1432,7 @@
         </div>
     </div>
     @php($shipping=$order['shipping_cost']) -->
-    <!-- <div class="content-position-y">
+        <!-- <div class="content-position-y">
         <table class="fz-12">
             <tr>
                 <th class="text-left">
@@ -1170,7 +1468,7 @@
     </div> -->
 
 
-    <!-- <div class="row">
+        <!-- <div class="row">
         <section>
             <table class="">
                 <tr>
