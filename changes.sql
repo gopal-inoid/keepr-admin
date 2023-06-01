@@ -84,3 +84,9 @@ CREATE TABLE `keepr`.`email_templates` ( `id` INT NOT NULL AUTO_INCREMENT , `nam
 INSERT INTO `email_templates` (`id`, `name`, `subject`, `body`, `status`, `created_at`, `update_at`) VALUES (NULL, 'Order', 'Your Order is Placed', '<h1>Your Order is Placed</h1>', '1', current_timestamp(), current_timestamp());
 
 ALTER TABLE `email_templates` CHANGE `update_at` `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE `product_stocks` ADD `uuid` MEDIUMTEXT NULL DEFAULT NULL AFTER `updated_at`, ADD `major` INT NULL DEFAULT NULL AFTER `uuid`, ADD `minor` INT NULL DEFAULT NULL AFTER `major`;
+
+ALTER TABLE `connected_device` ADD `major` INT NULL DEFAULT NULL AFTER `distance`, ADD `minor` INT NULL DEFAULT NULL AFTER `major`;
+
+ALTER TABLE `device_trackings` ADD `uuid` MEDIUMTEXT NULL DEFAULT NULL AFTER `updated_at`, ADD `major` INT NULL DEFAULT NULL AFTER `uuid`, ADD `minor` INT NULL DEFAULT NULL AFTER `major`;
