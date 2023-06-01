@@ -310,7 +310,7 @@ class ProductController extends Controller
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
-            $check = ConnectedDevice::where(['uuid'=>$uuid,'major'=>$major,'minor'=>$minor,'user_id'=>$user_details->id])->delete();
+            $check = ConnectedDevice::where(['device_uuid'=>$uuid,'major'=>$major,'minor'=>$minor,'user_id'=>$user_details->id])->delete();
             if($check){
                 return response()->json(['status'=>200,'message'=>'Device deleted successfully'],200);
             }
