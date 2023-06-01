@@ -92,3 +92,5 @@ ALTER TABLE `connected_device` ADD `major` INT NULL DEFAULT NULL AFTER `distance
 ALTER TABLE `device_trackings` ADD `uuid` MEDIUMTEXT NULL DEFAULT NULL AFTER `updated_at`, ADD `major` INT NULL DEFAULT NULL AFTER `uuid`, ADD `minor` INT NULL DEFAULT NULL AFTER `major`;
 
 ALTER TABLE `device_requests` ADD `uuid` MEDIUMTEXT NULL DEFAULT NULL AFTER `last_updated`, ADD `major` INT NULL DEFAULT NULL AFTER `uuid`, ADD `minor` INT NULL DEFAULT NULL AFTER `major`;
+
+ALTER TABLE `products` ADD `uuid` MEDIUMTEXT NULL DEFAULT NULL AFTER `rssi`;
