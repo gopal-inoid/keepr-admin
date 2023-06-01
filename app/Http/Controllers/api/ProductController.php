@@ -287,10 +287,13 @@ class ProductController extends Controller
     public function edit_device(Request $request){
         $name = $request->name;
         $mac_id = $request->mac_id;
+        $uuid = $request->uuid;
+        $major = $request->major;
+        $minor = $request->minor;
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
-            $check = ConnectedDevice::where(['mac_id'=>$mac_id,'user_id'=>$user_details->id])->update(['device_name'=>$name]);
+            $check = ConnectedDevice::where(['mac_id'=>$mac_id,'device_uuid'=>$uuid,'major'=>$major,'minor'=>$minor,'user_id'=>$user_details->id])->update(['device_name'=>$name]);
             if($check){
                 return response()->json(['status'=>200,'message'=>'Device name updated successfully'],200);
             }
@@ -301,10 +304,13 @@ class ProductController extends Controller
 
     public function delete_device(Request $request){
         $mac_id = $request->mac_id;
+        $uuid = $request->uuid;
+        $major = $request->major;
+        $minor = $request->minor;
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
-            $check = ConnectedDevice::where(['mac_id'=>$mac_id,'user_id'=>$user_details->id])->delete();
+            $check = ConnectedDevice::where(['mac_id'=>$mac_id,'uuid'=>$uuid,'major'=>$major,'minor'=>$minor,'user_id'=>$user_details->id])->delete();
             if($check){
                 return response()->json(['status'=>200,'message'=>'Device deleted successfully'],200);
             }
