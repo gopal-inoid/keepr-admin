@@ -60,18 +60,33 @@
                             </div>
                             <div class="row">
                                     <div class="col-md-12" id="mac_id_device_field">
-																			<div class="row mac_id-individual">
-																				<div class="col-md-5">
-																						<div class="form-group mb-0">
-																							<label class="title-color">{{ \App\CPU\translate('Device MAC ID') }}</label>
-																						</div>
-																				</div>
-																				<div class="col-md-2">
-																						<div class="form-group mb-0">
-																								<label class="title-color">{{ \App\CPU\translate('Color') }}</label>
-																						</div>
-																				</div>
-																			</div>
+                                        <div class="row mac_id-individual">
+                                            <div class="col-md-3">
+                                                <div class="form-group mb-0">
+                                                    <label class="title-color">{{ \App\CPU\translate('Device MAC ID') }}</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group mb-0">
+                                                    <label class="title-color">{{ \App\CPU\translate('UUID') }}</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <div class="form-group mb-0">
+                                                <label class="title-color">{{ \App\CPU\translate('major') }}</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <div class="form-group mb-0">
+                                                <label class="title-color">{{ \App\CPU\translate('minor') }}</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group mb-0">
+                                                    <label class="title-color">{{ \App\CPU\translate('Color') }}</label>
+                                                </div>
+                                            </div>
+                                        </div>
                                     <?php
                                         $product_stock_cnt = !empty($product_stock) ? count($product_stock) : 0;
                                         if(!empty($product_stock)){

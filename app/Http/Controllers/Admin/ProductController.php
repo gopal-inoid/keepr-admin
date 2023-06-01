@@ -708,6 +708,11 @@ class ProductController extends BaseController
             $data[] = [
                 'product_id' => $item->product_id,
                 'mac_id'        => $item->mac_id,
+                'color'        => $item->color,
+                'uuid'        => $item->uuid,
+                'major'        => $item->major,
+                'minor'        => $item->minor,
+                'purchased'        => (($item->is_purchased == 1) ? 'Yes':'No')
             ];
         }
 
@@ -858,7 +863,7 @@ class ProductController extends BaseController
         }
 
         $cnt = 0;
-        $col_key = ['product_id', 'mac_id'];
+        $col_key = ['product_id', 'mac_id','color','uuid','major','minor'];
         foreach ($collections as $collection) {
             foreach ($collection as $key => $value) {
                 if ($key!="" && !in_array($key, $col_key)) {
@@ -872,9 +877,9 @@ class ProductController extends BaseController
                 }
             }
             
-            $check = ProductStock::where(['product_id'=>$collection['product_id'],'mac_id'=>$collection['mac_id']])->count();
+            $check = ProductStock::where(['product_id'=>$collection['product_id'],'mac_id'=>$collection['mac_id'],'uuid'=>$collection['uuid'],'major'=>$collection['major'],'minor'=>$collection['minor']])->count();
             if($check == 0){ $cnt++;
-                ProductStock::insert(['product_id'=>$collection['product_id'],'mac_id'=>$collection['mac_id']]);
+                ProductStock::insert(['product_id'=>$collection['product_id'],'mac_id'=>$collection['mac_id'],'color'=>$collection['color'],'uuid'=>$collection['uuid'],'major'=>$collection['major'],'minor'=>$collection['minor']]);
             }
         }
         
