@@ -77,31 +77,45 @@
                                         if(!empty($product_stock)){
                                             foreach($product_stock as $k => $stocks){ ?>
                                             <div class="row mac_id-individual">
-                                                <div class="col-md-5">
+                                                <div class="col-md-3">
                                                     <div class="form-group">
                                                         <input type="text" name="device_id[{{$k}}]" class="form-control macAddress" value="{{ $stocks->mac_id }}" placeholder="{{ \App\CPU\translate('Device MAC ID') }}">
                                                     </div>
                                                 </div>
-																								
+												<div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <input type="text" name="uuid[{{$k}}]" class="form-control " value="{{ $stocks->uuid }}" placeholder="{{ \App\CPU\translate('UUID') }}" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <div class="form-group">
+                                                        <input type="number" name="major[{{$k}}]" class="form-control " value="{{ $stocks->major }}" placeholder="{{ \App\CPU\translate('major') }}" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <div class="form-group">
+                                                        <input type="number" name="minor[{{$k}}]" class="form-control " value="{{ $stocks->minor }}" placeholder="{{ \App\CPU\translate('minor') }}" required>
+                                                    </div>
+                                                </div>										
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <select name="colors[]" class="form-control">
                                                             @if(!empty($product['colors']) && !empty($colors))
-																															@php
-																															$productColors = explode(",", $product['colors']);
-                                                              @endphp
-																															@foreach($colors as $col)
-																																@if(in_array($col['id'], $productColors))
-																																	<option value="{{$col['id']}}" {{ $stocks->color == $col['id'] ? "selected='selected'" : "" }}>{{$col['name']}}</option>
-																																@endif
-																															@endforeach
+                                                                @php
+                                                                $productColors = explode(",", $product['colors']);
+                                                                @endphp
+                                                                @foreach($colors as $col)
+                                                                    @if(in_array($col['id'], $productColors))
+                                                                        <option value="{{$col['id']}}" {{ $stocks->color == $col['id'] ? "selected='selected'" : "" }}>{{$col['name']}}</option>
+                                                                    @endif
+                                                                @endforeach
                                                             @endif
                                                         </select>
                                                     </div>
                                                 </div>
-																								<div class="col-md-2 form-group mac_id-add-main-btn">
-																										<i class="tio-delete-outlined text-danger remove-mac_id-btn"></i>
-																								</div>
+                                                <div class="col-md-2 form-group mac_id-add-main-btn">
+                                                    <i class="tio-delete-outlined text-danger remove-mac_id-btn"></i>
+                                                </div>
                                             </div>
                                     <?php  } } ?>
                                     </div>
@@ -145,24 +159,39 @@
 					}
             $('#mac_id_device_field').append(
                 `<div class="row mac_id-individual">
-                    <div class="col-md-5">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <input type="text" name="device_id[`+(cnt+1)+`]" class="form-control" value="" placeholder="{{ \App\CPU\translate('Device MAC ID') }}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <input type="text" name="uuid[`+(cnt+1)+`]" class="form-control " value="" placeholder="{{ \App\CPU\translate('UUID') }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <input type="number" name="major[`+(cnt+1)+`]" class="form-control " value="" placeholder="{{ \App\CPU\translate('major') }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <input type="number" name="minor[`+(cnt+1)+`]" class="form-control " value="" placeholder="{{ \App\CPU\translate('minor') }}" required>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
                             <select name="colors[]" class="form-control">
                                 @if(!empty($product['colors']) && !empty($colors))
-																	@php
-																	$productColors = explode(",", $product['colors']);
-																	@endphp
-																	@foreach($colors as $col)
-																		@if(in_array($col['id'], $productColors))
-																			<option value="{{$col['id']}}">{{$col['name']}}</option>
-																		@endif
-																	@endforeach
-																@endif
+                                    @php
+                                    $productColors = explode(",", $product['colors']);
+                                    @endphp
+                                    @foreach($colors as $col)
+                                        @if(in_array($col['id'], $productColors))
+                                            <option value="{{$col['id']}}">{{$col['name']}}</option>
+                                        @endif
+                                    @endforeach
+                                @endif
                             </select>
                         </div>
                     </div>
