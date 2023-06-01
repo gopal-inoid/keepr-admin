@@ -64,10 +64,28 @@
                             <div class="row">
                                 <div class="col-md-12" id="mac_id_device_field">
                                     <div class="row">
-                                        <div class="col-md-5">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label class="title-color">{{ \App\CPU\translate('Device MAC ID') }}</label>
                                                 <input type="text" name="device_id[]" maxlength="17" class="form-control macAddress" value="{{ old('device_id') }}" placeholder="{{ \App\CPU\translate('Device MAC ID') }}" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="title-color">{{ \App\CPU\translate('UUID') }}</label>
+                                                <input type="text" name="uuid[]" class="form-control " value="{{ old('uuid') }}" placeholder="{{ \App\CPU\translate('UUID') }}" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <div class="form-group">
+                                                <label class="title-color">{{ \App\CPU\translate('major') }}</label>
+                                                <input type="number" name="major[]" class="form-control " value="{{ old('major') }}" placeholder="{{ \App\CPU\translate('major') }}" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <div class="form-group">
+                                                <label class="title-color">{{ \App\CPU\translate('minor') }}</label>
+                                                <input type="number" name="minor[]" class="form-control " value="{{ old('minor') }}" placeholder="{{ \App\CPU\translate('minor') }}" required>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
@@ -78,9 +96,11 @@
                                                         @php
                                                             $colors = json_decode($products[0]['colors'],true);
                                                         @endphp
-                                                        @foreach($colors as $color)
-                                                            <option value="{{$color['key']}}">{{$color['key']}}</option>
-                                                        @endforeach
+                                                        @if(!empty($colors))
+                                                            @foreach($colors as $color)
+                                                                <option value="{{$color['key']}}">{{$color['key']}}</option>
+                                                            @endforeach
+                                                        @endif
                                                     @endif
                                                 </select>
                                             </div>
@@ -122,9 +142,24 @@
             $('.add-mac_id-btn').on('click',function(){
                 $('#mac_id_device_field').append(
                     `<div class="row mac_id-individual">
-                        <div class="col-md-5">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <input type="text" name="device_id[]" class="form-control" value="" placeholder="{{ \App\CPU\translate('Device MAC ID') }}">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <input type="text" name="uuid[]" class="form-control " value="{{ old('uuid') }}" placeholder="{{ \App\CPU\translate('UUID') }}" required>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <input type="number" name="major[]" class="form-control " value="{{ old('major') }}" placeholder="{{ \App\CPU\translate('major') }}" required>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <input type="number" name="minor[]" class="form-control " value="{{ old('minor') }}" placeholder="{{ \App\CPU\translate('minor') }}" required>
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -134,9 +169,11 @@
                                         @php
                                             $colors = json_decode($products[0]['colors'],true);
                                         @endphp
-                                        @foreach($colors as $color)
-                                            <option value="{{$color['key']}}">{{$color['key']}}</option>
-                                        @endforeach
+                                        @if(!empty($colors))
+                                            @foreach($colors as $color)
+                                                <option value="{{$color['key']}}">{{$color['key']}}</option>
+                                            @endforeach
+                                        @endif
                                     @endif
                                 </select>
                             </div>
