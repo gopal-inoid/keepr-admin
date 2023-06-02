@@ -54,7 +54,7 @@
                                         <input type="hidden" name="lang[]" value="english">
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-2">
                                     <div class="form-group">
                                         <label class="title-color"
                                                for="exampleFormControlInput1">{{ \App\CPU\translate('product_code_sku') }}
@@ -74,6 +74,12 @@
                                     <label class="title-color">{{ \App\CPU\translate('RSSI') }}</label>
                                     <input type="text" placeholder="{{ \App\CPU\translate('RSSI') }}"
                                         value="{{ $product->rssi }}" name="rssi"
+                                        class="form-control" required>
+                                </div>
+                                <div class="col-md-2 form-group">
+                                    <label class="title-color">{{ \App\CPU\translate('UUID') }}</label>
+                                    <input type="text" placeholder="{{ \App\CPU\translate('UUID') }}"
+                                        value="{{ $product->uuid }}" name="uuid"
                                         class="form-control" required>
                                 </div>
                                 <div class="col-md-12">
