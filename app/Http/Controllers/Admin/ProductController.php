@@ -90,6 +90,7 @@ class ProductController extends BaseController
             'image'                => 'required',
             'code'                 => 'required|numeric|min:1|digits_between:6,20|unique:products',
             'rssi'                 => 'required|unique:products',
+            'uuid'                 => 'required|unique:products',
         ], [
             'images.required'                  => 'Product images is required!',
             'image.required'                   => 'Product thumbnail is required!',
@@ -128,6 +129,7 @@ class ProductController extends BaseController
         $p->name     = $request->name[array_search('en', $request->lang)];
         $p->code     = $request->code;
         $p->rssi                  = $request->rssi;
+        $p->uuid                  = $request->uuid;
         $p->slug     = Str::slug($request->name[array_search('en', $request->lang)], '-') . '-' . Str::random(6);
         $p->details              = $request['description'] ?? '';
         $p->purchase_price     = BackEndHelper::currency_to_usd($request->purchase_price);
@@ -609,6 +611,7 @@ class ProductController extends BaseController
             'image'                => 'required',
             'code'                 => 'required|numeric|min:1|digits_between:6,20|unique:products',
             'rssi'                 => 'required|unique:products',
+            'uuid'                 => 'required|unique:products',
         ], [
             'images.required'                  => 'Product images is required!',
             'image.required'                   => 'Product thumbnail is required!',
@@ -647,6 +650,7 @@ class ProductController extends BaseController
         $product->name = $request->name[array_search('en', $request->lang)];
         $product->code                  = $request->code;
         $product->rssi                  = $request->rssi;
+        $product->uuid                  = $request->uuid;
         $product_images                 = json_decode($product->images);
         $product->details              = $request['description'] ?? '';
         $product->purchase_price     = BackEndHelper::currency_to_usd($request->purchase_price);
