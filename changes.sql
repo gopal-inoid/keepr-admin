@@ -94,3 +94,5 @@ ALTER TABLE `device_trackings` ADD `uuid` MEDIUMTEXT NULL DEFAULT NULL AFTER `up
 ALTER TABLE `device_requests` ADD `uuid` MEDIUMTEXT NULL DEFAULT NULL AFTER `last_updated`, ADD `major` INT NULL DEFAULT NULL AFTER `uuid`, ADD `minor` INT NULL DEFAULT NULL AFTER `major`;
 
 ALTER TABLE `products` ADD `uuid` MEDIUMTEXT NULL DEFAULT NULL AFTER `rssi`;
+
+ALTER TABLE `orders` ADD `tax_amount` VARCHAR(10) NULL DEFAULT NULL AFTER `third_party_delivery_tracking_id`, ADD `tax_title` VARCHAR(50) NULL DEFAULT NULL AFTER `tax_amount`, ADD `shipping_rate_id` INT(10) NULL DEFAULT NULL AFTER `tax_title`, ADD `shipping_mode` VARCHAR(50) NULL DEFAULT NULL AFTER `shipping_rate_id`;
