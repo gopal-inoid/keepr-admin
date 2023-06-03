@@ -321,7 +321,10 @@ class ProductController extends Controller
                     foreach($get_all_devices as $k => $devices){
                         $device_info = ProductStock::select('products.thumbnail','products.rssi','products.id as product_id','products.name as device_type')
                                             ->join('products','products.id','product_stocks.product_id')
-                                            ->where('product_stocks.mac_id',$devices->mac_id)->first();
+                                            ->where('product_stocks.uuid',$devices->device_uuid)
+                                            ->where('product_stocks.major',$devices->major)
+                                            ->where('product_stocks.minor',$devices->minor)
+																						->first();
                         
                         $get_all_devices[$k]['rssi'] = $device_info->rssi ?? '';
                         $get_all_devices[$k]['device_id'] = $device_info->product_id ?? '';
