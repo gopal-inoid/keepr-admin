@@ -90,6 +90,7 @@ class ProductController extends BaseController
             'image'                => 'required',
             'code'                 => 'required|numeric|min:1|digits_between:6,20|unique:products',
             'rssi'                 => 'required|unique:products',
+            'uuid'                 => 'required|unique:products',
         ], [
             'images.required'                  => 'Product images is required!',
             'image.required'                   => 'Product thumbnail is required!',
@@ -128,6 +129,7 @@ class ProductController extends BaseController
         $p->name     = $request->name[array_search('en', $request->lang)];
         $p->code     = $request->code;
         $p->rssi                  = $request->rssi;
+        $p->uuid                  = $request->uuid;
         $p->slug     = Str::slug($request->name[array_search('en', $request->lang)], '-') . '-' . Str::random(6);
         $p->details              = $request['description'] ?? '';
         $p->purchase_price     = BackEndHelper::currency_to_usd($request->purchase_price);
@@ -189,6 +191,9 @@ class ProductController extends BaseController
         $validator = Validator::make($request->all(), [
             'product_id'                 => 'required',
             'device_id'                 => 'required',
+            'uuid'                 => 'required',
+            'major'                 => 'required',
+            'minor'                 => 'required'
         ]);
 
         if (is_null($request->product_id)) {
@@ -200,11 +205,14 @@ class ProductController extends BaseController
         }
         //echo "<pre>"; print_r($request->all()); die;
         $colors = $request->colors;
+        $uuid = $request->uuid;
+        $major = $request->major;
+        $minor = $request->minor;
         if(!empty($request->device_id)){
             foreach($request->device_id as $k => $mac_id){
-                $check = ProductStock::where(['product_id'=>$request->product_id,'mac_id'=>$mac_id])->count();
+                $check = ProductStock::where(['product_id'=>$request->product_id,'mac_id'=>$mac_id,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]])->count();
                 if($check == 0){
-                    ProductStock::insert(['product_id'=>$request->product_id,'mac_id'=>$mac_id,'color'=>$colors[$k] ?? NULL]);
+                    ProductStock::insert(['product_id'=>$request->product_id,'mac_id'=>$mac_id,'color'=>$colors[$k] ?? NULL,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]]);
                 }
             }
         }
@@ -218,6 +226,9 @@ class ProductController extends BaseController
         $validator = Validator::make($request->all(), [
             'product_id'                 => 'required',
             'device_id'                 => 'required',
+            'uuid'                 => 'required',
+            'major'                 => 'required',
+            'minor'                 => 'required'
         ]);
 
         if (is_null($request->product_id)) {
@@ -231,11 +242,14 @@ class ProductController extends BaseController
         $product_stock = $request->device_id;
         ProductStock::where(['product_id'=>$id])->delete();
         $colors = $request->colors;
+        $uuid = $request->uuid;
+        $major = $request->major;
+        $minor = $request->minor;
         if(!empty($product_stock)){
             foreach($product_stock as $k => $mac_id){
-                $check = ProductStock::where(['product_id'=>$id,'mac_id'=>$mac_id])->count();
+                $check = ProductStock::where(['product_id'=>$id,'mac_id'=>$mac_id,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]])->count();
                 if($check == 0){
-                    ProductStock::insert(['product_id'=>$id,'mac_id'=>$mac_id,'color'=>$colors[$k] ?? NULL]);
+                    ProductStock::insert(['product_id'=>$id,'mac_id'=>$mac_id,'color'=>$colors[$k] ?? NULL,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]]);
                 }
             }
         }
@@ -578,7 +592,7 @@ class ProductController extends BaseController
 									->where('status', 1)
 									->where('id', $id)
 									->get()[0];
-        $product_stock = Product::select('product_stocks.mac_id', 'product_stocks.color')
+        $product_stock = Product::select('product_stocks.mac_id', 'product_stocks.color','product_stocks.uuid','product_stocks.major','product_stocks.minor')
                         ->join('product_stocks','product_stocks.product_id','products.id')
                         ->where('product_stocks.product_id',$id)
                         ->get();
@@ -597,6 +611,7 @@ class ProductController extends BaseController
             'image'                => 'required',
             'code'                 => 'required|numeric|min:1|digits_between:6,20|unique:products',
             'rssi'                 => 'required|unique:products',
+            'uuid'                 => 'required|unique:products',
         ], [
             'images.required'                  => 'Product images is required!',
             'image.required'                   => 'Product thumbnail is required!',
@@ -635,6 +650,7 @@ class ProductController extends BaseController
         $product->name = $request->name[array_search('en', $request->lang)];
         $product->code                  = $request->code;
         $product->rssi                  = $request->rssi;
+        $product->uuid                  = $request->uuid;
         $product_images                 = json_decode($product->images);
         $product->details              = $request['description'] ?? '';
         $product->purchase_price     = BackEndHelper::currency_to_usd($request->purchase_price);
@@ -696,6 +712,11 @@ class ProductController extends BaseController
             $data[] = [
                 'product_id' => $item->product_id,
                 'mac_id'        => $item->mac_id,
+                'color'        => $item->color,
+                'uuid'        => $item->uuid,
+                'major'        => $item->major,
+                'minor'        => $item->minor,
+                'purchased'        => (($item->is_purchased == 1) ? 'Yes':'No')
             ];
         }
 
@@ -846,7 +867,7 @@ class ProductController extends BaseController
         }
 
         $cnt = 0;
-        $col_key = ['product_id', 'mac_id'];
+        $col_key = ['product_id', 'mac_id','color','uuid','major','minor'];
         foreach ($collections as $collection) {
             foreach ($collection as $key => $value) {
                 if ($key!="" && !in_array($key, $col_key)) {
@@ -860,9 +881,9 @@ class ProductController extends BaseController
                 }
             }
             
-            $check = ProductStock::where(['product_id'=>$collection['product_id'],'mac_id'=>$collection['mac_id']])->count();
+            $check = ProductStock::where(['product_id'=>$collection['product_id'],'mac_id'=>$collection['mac_id'],'uuid'=>$collection['uuid'],'major'=>$collection['major'],'minor'=>$collection['minor']])->count();
             if($check == 0){ $cnt++;
-                ProductStock::insert(['product_id'=>$collection['product_id'],'mac_id'=>$collection['mac_id']]);
+                ProductStock::insert(['product_id'=>$collection['product_id'],'mac_id'=>$collection['mac_id'],'color'=>$collection['color'],'uuid'=>$collection['uuid'],'major'=>$collection['major'],'minor'=>$collection['minor']]);
             }
         }
         

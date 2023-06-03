@@ -379,12 +379,19 @@ class CartController extends Controller
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         $order_id = $request->order_id;
         $transaction_id = $request->transaction_id;
+        //$tax_amount = $request->tax_amount;
+        $taxes = $request->tax;
+        $shipping_rate_id = $request->shipping_rate_id;
+        $shipping_mode = $request->shipping_mode;
         $update_order = Order::where(['id'=>$order_id])->first();
         if($update_order){
             
             $update_order->transaction_ref = $transaction_id;
             $update_order->payment_status = 'paid';
             $update_order->order_status = 'confirmed';
+            $update_order->taxes = $taxes;
+            $update_order->shipping_rate_id = $shipping_rate_id;
+            $update_order->shipping_mode = $shipping_mode;
             $update_order->save();
 
             $msg = "Your Order has been placed, Estimated Delivery on " . date('F j',strtotime($update_order->created_at . '+7 days'));

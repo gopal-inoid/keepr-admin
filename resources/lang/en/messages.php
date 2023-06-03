@@ -2419,4 +2419,7 @@
   'Edit Email Template' => 'Edit Email Template',
   'subject' => 'Subject',
   'Template Body' => 'Template Body',
+  'UUID' => 'UUID',
+  'major' => 'Major',
+  'minor' => 'Minor',
 );

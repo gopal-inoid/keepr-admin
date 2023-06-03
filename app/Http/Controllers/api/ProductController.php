@@ -260,17 +260,19 @@ class ProductController extends Controller
         $device_uuid = $request->uuid;
         $device_mac_id = $request->mac_id;
         $distance = $request->distance;
+        $major = $request->major;
+        $minor = $request->minor;
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
-            $check_connected = ConnectedDevice::select('id')->where(['mac_id'=>$device_mac_id,'user_id'=>$user_details->id])->first();
+            $check_connected = ConnectedDevice::select('id')->where(['device_uuid'=>$device_uuid,'major'=>$major,'minor'=>$minor,'user_id'=>$user_details->id])->first();
             if(!empty($check_connected->id)){
                 return response()->json(['status'=>400,'message'=>'Device already connected'],400);
             }
-            $device_info = ProductStock::select('products.name')->join('products','product_stocks.product_id','products.id')->where('product_stocks.mac_id',$device_mac_id)->first();
+            $device_info = ProductStock::select('products.name')->join('products','product_stocks.product_id','products.id')->where(['product_stocks.uuid'=>$device_uuid,'product_stocks.major'=>$major,'product_stocks.minor'=>$minor])->first();
             //$device_info = Product::select('name')->where('mac_id',$device_mac_id)->first();
             if(!empty($device_info->name)){
-                $check = ConnectedDevice::insert(['device_name'=>$device_info->name,'mac_id'=>$device_mac_id,'user_id'=>$user_details->id,'device_uuid'=>$device_uuid,'distance'=>$distance]);
+                $check = ConnectedDevice::insert(['device_name'=>$device_info->name,'mac_id'=>$device_mac_id,'user_id'=>$user_details->id,'device_uuid'=>$device_uuid,'distance'=>$distance,'major'=>$major,'minor'=>$minor]);
                 if($check){
                     return response()->json(['status'=>200,'message'=>'Device connected successfully'],200);
                 }
@@ -285,10 +287,13 @@ class ProductController extends Controller
     public function edit_device(Request $request){
         $name = $request->name;
         $mac_id = $request->mac_id;
+        $uuid = $request->uuid;
+        $major = $request->major;
+        $minor = $request->minor;
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
-            $check = ConnectedDevice::where(['mac_id'=>$mac_id,'user_id'=>$user_details->id])->update(['device_name'=>$name]);
+            $check = ConnectedDevice::where(['device_uuid'=>$uuid,'major'=>$major,'minor'=>$minor,'user_id'=>$user_details->id])->update(['device_name'=>$name]);
             if($check){
                 return response()->json(['status'=>200,'message'=>'Device name updated successfully'],200);
             }
@@ -299,10 +304,13 @@ class ProductController extends Controller
 
     public function delete_device(Request $request){
         $mac_id = $request->mac_id;
+        $uuid = $request->uuid;
+        $major = $request->major;
+        $minor = $request->minor;
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
-            $check = ConnectedDevice::where(['mac_id'=>$mac_id,'user_id'=>$user_details->id])->delete();
+            $check = ConnectedDevice::where(['device_uuid'=>$uuid,'major'=>$major,'minor'=>$minor,'user_id'=>$user_details->id])->delete();
             if($check){
                 return response()->json(['status'=>200,'message'=>'Device deleted successfully'],200);
             }
@@ -388,7 +396,7 @@ class ProductController extends Controller
     }
 
     public function devices_type_list(){
-        $devices_list = Product::select('id','device_id','name','thumbnail')->where(['status'=>1])->get();
+        $devices_list = Product::select('id','device_id','name','thumbnail','rssi','uuid')->where(['status'=>1])->get();
         if(!empty($devices_list)){
             foreach($devices_list as $k => $devices){
                 if(!empty($devices->thumbnail)){
@@ -478,27 +486,12 @@ class ProductController extends Controller
     }
 
     public function device_tracking(Request $request){
-        // $device_mac_id = $request->mac_id;
-        // $lat = $request->lat;
-        // $lan = $request->lan;
-
-        // $validator = Validator::make($request->all(), [
-        //     'mac_id' => 'required',
-        //     'lat' => 'required',
-        //     'lan' => 'required',
-        // ]);
-
-        // if ($validator->fails()) {
-        //     return response()->json(['errors' => Helpers::error_processor($validator)], 403);
-        // }
-
-        $data = $request->data ?? []; //$request->all();
+        $data = $request->data ?? [];
 
         $left = ltrim($data, "'");
         $right = rtrim($left, "'");
         $data = json_decode($right,true);
 
-        //echo "<pre>"; print_r($request->data); die;
         $success = 0;
         $already_added = 0;
         $not_found = 0;
@@ -509,14 +502,14 @@ class ProductController extends Controller
         if(!empty($user_details->id)){
             if(!empty($data)){
                 foreach($data as $k => $val){
-                    DB::table('device_tracking_log')->insert(['mac_id'=>$val['mac_id'],'lat'=>$val['lat'],'lan'=>$val['lan']]);
-                    $check_connected = DeviceTracking::select('id')->where(['mac_id'=>$val['mac_id'],'user_id'=>$user_details->id])->first();
+                    //DB::table('device_tracking_log')->insert(['mac_id'=>$val['mac_id'],'lat'=>$val['lat'],'lan'=>$val['lan']]);
+                    $check_connected = DeviceTracking::select('id')->where(['user_id'=>$user_details->id,'uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']])->first();
                     if(empty($check_connected->id)){
-                        $device_info = ProductStock::where('mac_id',$val['mac_id'])->first();
+                        $device_info = ProductStock::where(['uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']])->first();
                         if(!empty($device_info->mac_id)){
-                            $check = DeviceTracking::insert(['mac_id'=>$val['mac_id'],'user_id'=>$user_details->id,'lat'=>$val['lat'],'lan'=>$val['lan']]);
+                            $check = DeviceTracking::insert(['mac_id'=>$val['mac_id'],'user_id'=>$user_details->id,'lat'=>$val['lat'],'lan'=>$val['lan'],'uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']]);
                             if($check){
-                                $check_lost_device = DeviceRequest::select('user_id')->where('mac_id',$val['mac_id'])->where('status',0)->where('user_id',"<>",$user_details->id)->first();
+                                $check_lost_device = DeviceRequest::select('user_id')->where(['uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']])->where('status',0)->where('user_id',"<>",$user_details->id)->first();
                                 if(!empty($check_lost_device->user_id)){
                                     $tracking_user = User::where(['id'=>$check_lost_device->user_id])->first();
                                     if(!empty($tracking_user->id)){
@@ -532,7 +525,7 @@ class ProductController extends Controller
                         }
                     }else{
 
-                        $check_lost_device = DeviceRequest::select('user_id')->where('mac_id',$val['mac_id'])->where('status',0)->where('user_id',"<>",$user_details->id)->first();
+                        $check_lost_device = DeviceRequest::select('user_id')->where(['uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']])->where('status',0)->where('user_id',"<>",$user_details->id)->first();
                         if(!empty($check_lost_device->user_id)){
                             $tracking_user = User::where(['id'=>$check_lost_device->user_id])->first();
                             if(!empty($tracking_user->id)){
@@ -575,8 +568,13 @@ class ProductController extends Controller
 
     public function request_device(Request $request){
         $device_mac_id = $request->mac_id;
+        $uuid = $request->uuid;
+        $major = $request->major;
+        $minor = $request->minor;
         $validator = Validator::make($request->all(), [
-            'mac_id' => 'required',
+            'uuid' => 'required',
+            'major' => 'required',
+            'minor' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -586,9 +584,9 @@ class ProductController extends Controller
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
-            $device_info = ProductStock::where('mac_id',$device_mac_id)->first();
+            $device_info = ProductStock::where(['uuid'=>$uuid,'major'=>$major,'minor'=>$minor])->first();
             if(!empty($device_info->mac_id)){
-                $check_connected = DeviceRequest::select('id','status','last_updated')->where(['mac_id'=>$device_mac_id,'user_id'=>$user_details->id])->first();
+                $check_connected = DeviceRequest::select('id','status','last_updated')->where(['user_id'=>$user_details->id,'uuid'=>$uuid,'major'=>$major,'minor'=>$minor])->first();
                 if(!empty($check_connected->id)){
                     if($check_connected->status == 1){
                         $check_connected->status = 0;
@@ -601,7 +599,7 @@ class ProductController extends Controller
                     return response()->json(['status'=>200,'request_status'=>$check_connected->status,'message'=>'Device request updated successfully'],200);
 
                 }else{
-                    $check = DeviceRequest::insert(['mac_id'=>$device_mac_id,'user_id'=>$user_details->id]);
+                    $check = DeviceRequest::insert(['mac_id'=>$device_mac_id,'user_id'=>$user_details->id,'uuid'=>$uuid,'major'=>$major,'minor'=>$minor]);
                     if($check){
                         return response()->json(['status'=>200,'request_status'=>0,'message'=>'Device request added successfully'],200);
                     }
