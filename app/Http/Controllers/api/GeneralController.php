@@ -11,6 +11,7 @@ use App\Model\Product;
 use App\Model\Order;
 use App\Model\DeviceRequest;
 use App\User;
+use App\Common;
 use Illuminate\Support\Facades\Http;
 use App\Model\BusinessSetting;
 use Illuminate\Http\Request;
@@ -52,6 +53,7 @@ class GeneralController extends Controller
         $mobile = $request->mobile;
         $phone_code = $request->phone_code;
         $user = User::select('id','phone','is_active')->where(['phone_code'=>$phone_code,'phone'=>$mobile])->first();
+        Common::addLog([]);
         if(!empty($user->id)){
             if($user->is_active != 1){
                 return response()->json(['status'=>400,'message'=>'Not Activated'],200);
@@ -72,6 +74,7 @@ class GeneralController extends Controller
             //echo "<pre>"; print_r($auth); die;
             $verifiedIdToken = $auth->verifyIdToken($token);
         } catch (FailedToVerifyToken $e) {
+            Common::addLog([]);
             return response()->json(['status'=>400,'message'=>$e->getMessage()],400);
         }
         $auth_token = '';
@@ -103,6 +106,7 @@ class GeneralController extends Controller
                 $auth_token = $this->auth_token($user_check->id,$user_check->auth_access_token,$fcm_token);
             }
 
+            Common::addLog([]);
             if($auth_token != ''){
                 return response()->json(['status'=>200,'phone'=>$mobile_number,'phone_code'=>$phone_code,'auth_token'=>$auth_token,'message'=>'Success'],200);
             }else{
@@ -110,6 +114,7 @@ class GeneralController extends Controller
             }
 
         }else{
+            Common::addLog([]);
             return response()->json(['status'=>401,'message'=>'Token not Authorized'],401);
         }
 
@@ -172,15 +177,16 @@ class GeneralController extends Controller
             if(!empty($get_orders)){
                 $all_data['order_list'] = $get_orders;
             }
+            Common::addLog([]);
             return response()->json(['status'=>200,'message'=>'Success','data'=>$all_data],200);
         }else{
+            Common::addLog([]);
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
     }
 
     public function get_countries(Request $request)
     {
-
         $countries_list =  \DB::table('country')->select(['id', 'name'])->get();
         $countries = [];
         $auth_token   = $request->headers->get('X-Access-Token');
@@ -200,7 +206,6 @@ class GeneralController extends Controller
     }
     public function get_states(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'country_id' => 'required'
         ],);
@@ -339,9 +344,10 @@ class GeneralController extends Controller
                 }
                 $order_list[$k]['total_devices'] = count($mac_ids);
             }
-            
+            Common::addLog([]);
             return response()->json(['status'=>200,'message'=>'Success','data'=>$order_list],200);
         }else{
+            Common::addLog([]);
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
     }
@@ -404,12 +410,14 @@ class GeneralController extends Controller
                 }
 
                 //$get_orders->total_devices = count($mac_ids);
-
+                Common::addLog([]);
                 return response()->json(['status'=>200,'message'=>'Success','data'=>$get_orders],200);
             }else{
+                Common::addLog([]);
                 return response()->json(['status'=>400,'message'=>'Order not found'],400);
             }
         }else{
+            Common::addLog([]);
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
     }

@@ -21,6 +21,7 @@ use App\Model\DeviceRequest;
 use App\Model\ShippingMethod;
 use App\Model\Wishlist;
 use App\User;
+use App\Common;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -264,6 +265,7 @@ class ProductController extends Controller
         $minor = $request->minor;
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
+        Common::addLog([]);
         if(!empty($user_details->id)){
             $check_connected = ConnectedDevice::select('id')->where(['device_uuid'=>$device_uuid,'major'=>$major,'minor'=>$minor,'user_id'=>$user_details->id])->first();
             if(!empty($check_connected->id)){
@@ -292,6 +294,7 @@ class ProductController extends Controller
         $minor = $request->minor;
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
+        Common::addLog([]);
         if(!empty($user_details->id)){
             $check = ConnectedDevice::where(['device_uuid'=>$uuid,'major'=>$major,'minor'=>$minor,'user_id'=>$user_details->id])->update(['device_name'=>$name]);
             if($check){
@@ -309,6 +312,7 @@ class ProductController extends Controller
         $minor = $request->minor;
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
+        Common::addLog([]);
         if(!empty($user_details->id)){
             $check = ConnectedDevice::where(['device_uuid'=>$uuid,'major'=>$major,'minor'=>$minor,'user_id'=>$user_details->id])->delete();
             if($check){
@@ -354,12 +358,14 @@ class ProductController extends Controller
                         }
                     }
                 }
-                
+                Common::addLog([]);
                 return response()->json(['status'=>200,'message'=>'Success','data'=>$get_all_devices],200);
             }else{
+                Common::addLog([]);
                 return response()->json(['status'=>400,'message'=>'Devices not found'],400);
             }
         }else{
+            Common::addLog([]);
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
     }
@@ -396,8 +402,10 @@ class ProductController extends Controller
                 
             }
             $total_quantity = (int) Cart::where(['customer_id' => $user_details->id])->sum('quantity');
+            Common::addLog([]);
             return response()->json(['status'=>200,'message'=>'Success','total_quantity'=>$total_quantity,'data'=>$devices_list],200);
         }else{
+            Common::addLog([]);
             return response()->json(['status'=>400,'message'=>'Devices not found'],400);
         }
     }
@@ -412,8 +420,10 @@ class ProductController extends Controller
                     $devices->thumbnail = asset('public/assets/front-end/img/image-place-holder.png');
                 }
             }
+            Common::addLog([]);
             return response()->json(['status'=>200,'message'=>'Success','data'=>$devices_list],200);
         }else{
+            Common::addLog([]);
             return response()->json(['status'=>400,'message'=>'Devices not found'],400);
         }
     }
@@ -431,9 +441,10 @@ class ProductController extends Controller
                 $devices->price = number_format($devices->purchase_price,2);
                 unset($devices->purchase_price);
             }
-
+            Common::addLog([]);
             return response()->json(['status'=>200,'message'=>'Success','data'=>$devices_list],200);
         }else{
+            Common::addLog([]);
             return response()->json(['status'=>400,'message'=>'Devices not found'],400);
         }
     }
@@ -483,11 +494,14 @@ class ProductController extends Controller
                     if(!empty($devices_details->colors) && !empty($colorStocks)){
                         $devices_details_array['colors'] = $colorStocks;
                     }
+                    Common::addLog([]);
                     return response()->json(['status'=>200,'message'=>'Success','data'=>$devices_details_array],200);
                 }else{
+                    Common::addLog([]);
                     return response()->json(['status'=>400,'message'=>'Devices not found'],400);
                 }
         }else{
+            Common::addLog([]);
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
     }
@@ -562,6 +576,7 @@ class ProductController extends Controller
                 $message = $not_found . ' Device not found, ';
             }
 
+            Common::addLog([]);
             if(isset($response['status'])){
                 return response()->json(['status'=>200,'message'=> $message . ' in Tracking' ?? "Success"],200);
             }else{
@@ -569,6 +584,7 @@ class ProductController extends Controller
             }
 
         }else{
+            Common::addLog([]);
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
     }
@@ -585,6 +601,7 @@ class ProductController extends Controller
         ]);
 
         if ($validator->fails()) {
+            Common::addLog([]);
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
@@ -602,19 +619,22 @@ class ProductController extends Controller
                     }
                     $check_connected->last_updated = date('Y-m-d h:i:s');
                     $check_connected->save();
-
+                    Common::addLog([]);
                     return response()->json(['status'=>200,'request_status'=>$check_connected->status,'message'=>'Device request updated successfully'],200);
 
                 }else{
                     $check = DeviceRequest::insert(['mac_id'=>$device_mac_id,'user_id'=>$user_details->id,'uuid'=>$uuid,'major'=>$major,'minor'=>$minor]);
                     if($check){
+                        Common::addLog([]);
                         return response()->json(['status'=>200,'request_status'=>0,'message'=>'Device request added successfully'],200);
                     }
                 }
             }else{
+                Common::addLog([]);
                 return response()->json(['status'=>400,'message'=>'Device not found'],400);
             }
         }else{
+            Common::addLog([]);
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
     }
