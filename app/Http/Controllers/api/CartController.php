@@ -73,7 +73,7 @@ class CartController extends Controller
     {
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
-        $cart = Cart::select('id','quantity','product_id','quantity','name','thumbnail','color')->where(['customer_id' => $user_details->id])->get();
+        $cart = Cart::select('id','quantity','product_id','quantity','name','thumbnail','color')->where(['customer_id' => $user_details->id])->where('quantity', '>', 0)->get();
         $total_cart_price = 0;
         if($cart) {
             foreach($cart as $key => $value){
@@ -323,7 +323,7 @@ class CartController extends Controller
 
         if(!empty($user_details->id)){
 
-            $cart_info = Cart::select('id','customer_id','product_id','price','quantity')->whereIn('id',$cart_ids)->get();
+            $cart_info = Cart::select('id','customer_id','product_id','price','quantity')->where('quantity', '>', 0)->whereIn('id',$cart_ids)->get();
             //echo "<pre>"; print_r($cart_info); die;
             if(!empty($cart_info)){
                 foreach($cart_info as $cart){
