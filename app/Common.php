@@ -14,9 +14,9 @@ class Common extends Model
 		$reqData[0] = json_decode($post_body, true);
 		$appRequestData = addslashes(json_encode($reqData[0]));
 		$header = getallheaders();
-		$headerData['x-platform']         = !empty($header) ? $header['x-platform'] : '';
-		$headerData['x-app-version']             = !empty($header) ? $header['x-app-version'] : '';
-		$headerData['X-Access-Token']             = !empty($header) ? @$header['X-Access-Token'] : '';
+		$headerData['x-platform']         = !empty($header['x-platform']) ? $header['x-platform'] : '';
+		$headerData['x-app-version']             = !empty($header['x-app-version']) ? $header['x-app-version'] : '';
+		$headerData['X-Access-Token']             = !empty($header['X-Access-Token']) ? @$header['X-Access-Token'] : '';
 		if(!empty($headerData['X-Access-Token'])){
 			$user_data = \DB::table('users')->select('id')->where('auth_access_token',$headerData['X-Access-Token'])->first();
 		}
