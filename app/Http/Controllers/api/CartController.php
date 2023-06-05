@@ -16,6 +16,7 @@ use App\Model\Shop;
 use App\Model\Order;
 use App\Model\OrderDetail;
 use App\User;
+use App\Common;
 use Illuminate\Support\Str;
 use App\Model\ShippingType;
 use App\Model\CategoryShippingCost;
@@ -90,7 +91,7 @@ class CartController extends Controller
                 $total_cart_price += ($value['quantity'] * $price);
             }
         }
-
+        Common::addLog([]);
         return response()->json(['status'=>200,'message'=>'Success','total_price'=>number_format($total_cart_price,2),'data'=>$cart],200);
     }
 
@@ -150,10 +151,12 @@ class CartController extends Controller
         $cart['thumbnail'] = asset("/product/thumbnail/$product->thumbnail");
         $cart->save();
         //$cart = CartManager::add_to_cart($request);
+        Common::addLog([]);
         return response()->json([
             'status' => 1,
             'message' => translate('successfully_added!')
         ], 200);
+
     }
 
     public function remove_from_cart(Request $request)
@@ -172,8 +175,10 @@ class CartController extends Controller
         if(isset($cart['quantity']) && $cart['quantity'] > 0){
             $cart->quantity  = ($cart['quantity'] - 1);
             $cart->save();
+            Common::addLog([]);
             return response()->json(['status'=>1,'message'=>translate('successfully_removed')],200);
         }else{
+            Common::addLog([]);
             return response()->json(['status'=>0,'message'=>'Item should not be empty'],200);
         }
        
@@ -190,6 +195,7 @@ class CartController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
         Cart::find($request->id)->delete();
+        Common::addLog([]);
         return response()->json(['status'=>200,'message'=>translate('successfully_removed')],200);
     }
 
@@ -271,9 +277,10 @@ class CartController extends Controller
             $data['taxes'] = $tax_arr;
             //$data['total'] = number_format(($total_price), 2);
             //echo "<pre>"; print_r($mac_ids); die;
-
+            Common::addLog([]);
             return response()->json(['status'=>200,'message'=>'Success','data'=>$data],200);
         }else{
+            Common::addLog([]);
             return response()->json(['status'=>400,'message'=>'User not found'],400);
         }
     }
@@ -357,17 +364,17 @@ class CartController extends Controller
                         }
                     }
                 }
-
+                Common::addLog([]);
                 return response()->json(['status'=>200,'message'=>'Success','order_id'=>$order->id ?? NULL],200);
 
             }else{
-
+                Common::addLog([]);
                 return response()->json(['status'=>400,'message'=>'No device found in cart'],200);
                 
             }
 
         }else{
-
+            Common::addLog([]);
             return response()->json(['status'=>400,'message'=>'User not found'],200);
 
         }
@@ -397,9 +404,10 @@ class CartController extends Controller
             $msg = "Your Order has been placed, Estimated Delivery on " . date('F j',strtotime($update_order->created_at . '+7 days'));
             $payload['order_id'] = $update_order->id ?? NULL;
             $this->sendNotification($user_details->fcm_token,$msg,$payload);
-
+            Common::addLog([]);
             return response()->json(['status'=>200,'message'=>'Order Successfully Confirmed','order_id'=>(int)$order_id],200);
         }else{
+            Common::addLog([]);
             return response()->json(['status'=>400,'message'=>'Order not Confirmed,something went wrong'],200);
         }
     }
@@ -415,6 +423,7 @@ class CartController extends Controller
         $msg = "Your Order is ". $request->order_status;
         $payload['order_id'] = $request->order_id;
         $this->sendNotification1($user->fcm_token ?? "",$msg,$payload);
+        Common::addLog([]);
         return response()->json(['status'=>200,'message'=>'Success']);
     }
 

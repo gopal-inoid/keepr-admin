@@ -96,3 +96,7 @@ ALTER TABLE `device_requests` ADD `uuid` MEDIUMTEXT NULL DEFAULT NULL AFTER `las
 ALTER TABLE `products` ADD `uuid` MEDIUMTEXT NULL DEFAULT NULL AFTER `rssi`;
 
 ALTER TABLE `orders` ADD `tax_amount` VARCHAR(10) NULL DEFAULT NULL AFTER `third_party_delivery_tracking_id`, ADD `tax_title` VARCHAR(50) NULL DEFAULT NULL AFTER `tax_amount`, ADD `shipping_rate_id` INT(10) NULL DEFAULT NULL AFTER `tax_title`, ADD `shipping_mode` VARCHAR(50) NULL DEFAULT NULL AFTER `shipping_rate_id`;
+
+
+CREATE TABLE `keepr`.`api_logs` ( `log_id` INT NOT NULL AUTO_INCREMENT , `user_id` INT NULL DEFAULT NULL , `appRequestData` MEDIUMTEXT NULL DEFAULT NULL , `appDeviceData` MEDIUMTEXT NULL DEFAULT NULL , `appResponse` MEDIUMTEXT NULL DEFAULT NULL , `appService` MEDIUMTEXT NULL DEFAULT NULL , `appCreatedDate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`log_id`)) ENGINE = InnoDB;
+
