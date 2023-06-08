@@ -507,7 +507,7 @@ class ProductController extends Controller
     }
 
     public function device_tracking(Request $request){
-        $data = $request->tracked_data ?? [];
+        $data = $request->data ?? "";
 
         $left = ltrim($data, "'");
         $right = rtrim($left, "'");
