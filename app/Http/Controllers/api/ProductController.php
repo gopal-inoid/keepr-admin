@@ -511,22 +511,19 @@ class ProductController extends Controller
         $left = ltrim($data, "'");
         $right = rtrim($left, "'");
         $data = json_decode($right,true);
-        $success = 0;
-        $already_added = 0;
-        $not_found = 0;
-        $response = [];
-        $message = '';
+        $success = $already_added =  $not_found =  0;
+        $response = []; $message = '';
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
             if(!empty($data)){
                 foreach($data as $k => $val){
-                    DB::table('device_tracking_log')->insert(['mac_id'=>$val['mac_id'],'lat'=>$val['lat'],'lan'=>$val['lan'],'minor'=>$val['minor'],'major'=>$val['major'],'uuid'=>$val['uuid']]);
+                    DB::table('device_tracking_log')->insert(['mac_id'=>$val['mac_id'] ?? NULL,'lat'=>$val['lat'],'lan'=>$val['lan'],'minor'=>$val['minor'],'major'=>$val['major'],'uuid'=>$val['uuid']]);
                     $check_connected = DeviceTracking::select('id')->where(['user_id'=>$user_details->id,'uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']])->first();
                     if(empty($check_connected->id)){
                         $device_info = ProductStock::where(['uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']])->first();
-                        if(!empty($device_info->mac_id)){
-                            $check = DeviceTracking::insert(['mac_id'=>$val['mac_id'],'user_id'=>$user_details->id,'lat'=>$val['lat'],'lan'=>$val['lan'],'uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']]);
+                        if(!empty($device_info->uuid)){
+                            $check = DeviceTracking::insert(['mac_id'=>$val['mac_id'] ?? NULL,'user_id'=>$user_details->id,'lat'=>$val['lat'],'lan'=>$val['lan'],'uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']]);
                             if($check){
                                 $check_lost_device = DeviceRequest::select('user_id')->where(['uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']])->where('status',0)->where('user_id',"<>",$user_details->id)->first();
                                 if(!empty($check_lost_device->user_id)){
