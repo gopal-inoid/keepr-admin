@@ -508,8 +508,8 @@ class ProductController extends Controller
 
     public function device_tracking(Request $request){
         $data = $request->data ?? "";
-        $left = ltrim($data, "'");
-        $right = rtrim($left, "'");
+        $left = ltrim($data, '"');
+        $right = rtrim($left, '"');
         $data = json_decode($right,true);
         $success = $already_added =  $not_found =  0;
         $response = []; $message = '';
