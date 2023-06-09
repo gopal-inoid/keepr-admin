@@ -508,11 +508,9 @@ class ProductController extends Controller
 
     public function device_tracking(Request $request){
         $data = $request->data ?? "";
-
         $left = ltrim($data, "'");
         $right = rtrim($left, "'");
         $data = json_decode($right,true);
-
         $success = 0;
         $already_added = 0;
         $not_found = 0;
@@ -523,7 +521,7 @@ class ProductController extends Controller
         if(!empty($user_details->id)){
             if(!empty($data)){
                 foreach($data as $k => $val){
-                    //DB::table('device_tracking_log')->insert(['mac_id'=>$val['mac_id'],'lat'=>$val['lat'],'lan'=>$val['lan']]);
+                    DB::table('device_tracking_log')->insert(['mac_id'=>$val['mac_id'],'lat'=>$val['lat'],'lan'=>$val['lan'],'minor'=>$val['minor'],'major'=>$val['major'],'uuid'=>$val['uuid']]);
                     $check_connected = DeviceTracking::select('id')->where(['user_id'=>$user_details->id,'uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']])->first();
                     if(empty($check_connected->id)){
                         $device_info = ProductStock::where(['uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']])->first();
