@@ -303,23 +303,22 @@ class CartController extends Controller
             }
         }
 
-        $existed_mac_ids = [];
-        $mac_ids_array = [];
-        $total_price = 0;
-        $error = 0;
-        $check_mac_ids = Order::select('mac_ids')->get();
-        if(!empty($check_mac_ids)){
-            foreach($check_mac_ids as $mac_ids){
-                $mac_id_arr = json_decode($mac_ids['mac_ids'],true);
-                if(!empty($mac_id_arr)){
-                    foreach($mac_id_arr as $product_id => $mac_values){
-                        foreach($mac_values as $k => $mac_ids){
-                            array_push($existed_mac_ids,$mac_ids);
-                        }
-                    }
-                }
-            }
-        }
+        $existed_mac_ids =  $mac_ids_array = [];
+        $total_price = $error = 0;
+       
+        $check_mac_ids = Order::select('uuid','major','minor')->get();
+        // if(!empty($check_mac_ids)){
+        //     foreach($check_mac_ids as $mac_ids){
+        //         $mac_id_arr = json_decode($mac_ids['mac_ids'],true);
+        //         if(!empty($mac_id_arr)){
+        //             foreach($mac_id_arr as $product_id => $mac_values){
+        //                 foreach($mac_values as $k => $mac_ids){
+        //                     array_push($existed_mac_ids,$mac_ids);
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
         if(!empty($user_details->id)){
 

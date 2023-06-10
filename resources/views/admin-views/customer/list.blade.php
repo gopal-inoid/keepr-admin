@@ -67,7 +67,6 @@
                     <thead class="thead-light thead-50 text-capitalize">
                     <tr>
                         <th>{{\App\CPU\translate('SL')}}</th>
-                        <th>{{\App\CPU\translate('customer_name')}}</th>
                         <th>{{\App\CPU\translate('contact_info')}}</th>
                         <th>{{\App\CPU\translate('Total')}} {{\App\CPU\translate('Order')}} </th>
                         <th class="text-center">{{\App\CPU\translate('Action')}}</th>
@@ -81,20 +80,11 @@
                                 {{$customers->firstItem()+$key}}
                             </td>
                             <td>
-                                <a href="{{route('admin.customer.view',[$customer['id']])}}"
-                                   class="title-color hover-c1 d-flex align-items-center gap-10">
-                                    <img src="{{asset('storage/app/public/profile')}}/{{$customer->image}}"
-                                         onerror="this.src='{{asset('public/assets/back-end/img/160x160/img1.jpg')}}'"
-                                         class="rounded-circle" alt="" width="40">
-                                    {{\Illuminate\Support\Str::limit($customer['f_name']." ".$customer['l_name'],20)}}
-                                </a>
-                            </td>
-                            <td>
                                 <div class="mb-1">
-                                    <strong><a class="title-color hover-c1" href="mailto:{{$customer->email}}">{{$customer->email}}</a></strong>
+                                    <strong><a class="title-color hover-c1" href="javascript:void(0);">{{$customer->email}}</a></strong>
 
                                 </div>
-                                <a class="title-color hover-c1" href="tel:{{$customer->phone}}">{{$customer->phone}}</a>
+                                <a class="title-color hover-c1" href="javascript:void(0);">{{$customer->phone}}</a>
 
                             </td>
                             <td>
