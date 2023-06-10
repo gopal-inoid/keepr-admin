@@ -291,7 +291,7 @@ class CartController extends Controller
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         $cart_id = $request->cart_id;
 
-        $shipping_id = $request->shipping_id;
+        $shipping_id = $request->shipping_id ?? "";
         
         $left = ltrim($cart_id, "'");
         $right = rtrim($left, "'");
@@ -305,34 +305,43 @@ class CartController extends Controller
 
         $existed_mac_ids =  $mac_ids_array = [];
         $total_price = $error = 0;
-       
-        $check_mac_ids = Order::select('uuid','major','minor')->get();
-        // if(!empty($check_mac_ids)){
-        //     foreach($check_mac_ids as $mac_ids){
-        //         $mac_id_arr = json_decode($mac_ids['mac_ids'],true);
-        //         if(!empty($mac_id_arr)){
-        //             foreach($mac_id_arr as $product_id => $mac_values){
-        //                 foreach($mac_values as $k => $mac_ids){
-        //                     array_push($existed_mac_ids,$mac_ids);
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        $check_mac_ids = Order::select('mac_ids')->get();
+        if(!empty($check_mac_ids)){
+            foreach($check_mac_ids as $mac_ids){
+                $mac_id_arr = json_decode($mac_ids['mac_ids'],true);
+                if(!empty($mac_id_arr)){
+                    foreach($mac_id_arr as $product_id => $mac_values){
+                        foreach($mac_values as $k => $mac_ids){
+                            //array_push($existed_mac_ids,$mac_ids['uuid']);
+                            $existed_mac_ids[$k][] = $mac_ids;
+                        }
+                    }
+                }
+            }
+        }
+
+        //echo "<pre>"; print_r($existed_mac_ids); die;
 
         if(!empty($user_details->id)){
 
-            $cart_info = Cart::select('id','customer_id','product_id','price','quantity')->where('quantity', '>', 0)->whereIn('id',$cart_ids)->get();
+            $cart_info = Cart::select('id','customer_id','product_id','price','quantity')->where('quantity', '>',0)->whereIn('id',$cart_ids)->get();
             //echo "<pre>"; print_r($cart_info); die;
-            if(!empty($cart_info)){
+            if(!empty($cart_info[0])){
                 foreach($cart_info as $cart){
                     $price = Product::select('purchase_price as price')->where('id',$cart['product_id'])->first()->price ?? 0;
                     $total_price += ($price * $cart['quantity']);
-                    $get_random_stocks = ProductStock::select('mac_id','product_id')->where('is_purchased',0)->where('product_id',$cart['product_id'])->whereNotIn('mac_id',$existed_mac_ids)
-                                                        ->inRandomOrder()->limit($cart['quantity'])->get();
+                    $get_random_stocks = ProductStock::select('uuid','major','minor','product_id')->where('is_purchased',0)
+                                                      ->where('product_id',$cart['product_id'])
+                                                      //->whereNotIn('uuid',$existed_mac_ids['uuid'])
+                                                      ->inRandomOrder()->limit($cart['quantity'])->get();
                     if(!empty($get_random_stocks)){
                         foreach($get_random_stocks as $m => $macid){
-                            $mac_ids_array[$cart['product_id']][$m] = $macid['mac_id'];
+                            if(!empty($existed_mac_ids) && (in_array($macid['uuid'],$existed_mac_ids['uuid']) && in_array($macid['major'],$existed_mac_ids['major']) && in_array($macid['minor'],$existed_mac_ids['minor']))){
+                            }else{
+                                $mac_ids_array[$cart['product_id']]['uuid'][] = $macid['uuid'];
+                                $mac_ids_array[$cart['product_id']]['major'][] = $macid['major'];
+                                $mac_ids_array[$cart['product_id']]['minor'][] = $macid['minor'];
+                            }
                         }
                     }
 
@@ -344,6 +353,8 @@ class CartController extends Controller
                 if($error == 1){
                     return response()->json(['status'=>400,'message'=>'Device not available'],400);
                 }
+
+                //echo "<pre>"; print_r($mac_ids_array); die;
                 
                 //Insert into Order
                 $order = new Order();
@@ -356,11 +367,13 @@ class CartController extends Controller
 
                 if(!empty($order->mac_ids)){
                     $mac_ids = json_decode($order->mac_ids,true);
-                    foreach($mac_ids as $product_id => $macs){
-                        foreach($macs as $val){
-                            ProductStock::where('product_id',$product_id)->where('mac_id',$val)->update(['is_purchased'=>1]);
-                            Cart::where('customer_id',$user_details->id)->where('product_id',$product_id)->delete();
+                    foreach($mac_ids as $product_id => $mac_values){  
+                        foreach($mac_values as $k => $macss){
+                            foreach($macss as $m => $macs){
+                                ProductStock::where('product_id',$product_id)->where(['uuid'=>$mac_values['uuid'][$m],'major'=>$mac_values['major'][$m],'minor'=>$mac_values['minor'][$m]])->update(['is_purchased'=>1]);
+                            }
                         }
+                        Cart::where('customer_id',$user_details->id)->where('product_id',$product_id)->delete();
                     }
                 }
                 Common::addLog([]);
