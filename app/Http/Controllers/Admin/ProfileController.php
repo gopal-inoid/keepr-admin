@@ -27,6 +27,10 @@ class ProfileController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'phone' => 'required|numeric|digits:10'
+        ]);
+
         $admin = Admin::find($id);
         $admin->name = $request->name;
         $admin->phone = $request->phone;
@@ -42,8 +46,10 @@ class ProfileController extends Controller
     public function settings_password_update(Request $request)
     {
         $request->validate([
-            'password' => 'required|same:confirm_password|min:8',
+            'password' => 'required|same:confirm_password|min:8|regex:/[0-9]/|regex:/[A-Z]/',
             'confirm_password' => 'required',
+        ],[
+            'password.regex'=>"Must contain at least one digit and one uppercase letter",
         ]);
 
         $admin = Admin::find(auth('admin')->id());
