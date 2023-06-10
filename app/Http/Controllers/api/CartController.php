@@ -231,7 +231,7 @@ class CartController extends Controller
             
             $shipping_rates = ShippingMethodRates::select('normal_rate','express_rate','shipping_methods.title as shipping_company','shipping_methods.normal_duration','shipping_methods.express_duration','shipping_methods.id as shippingid')
                             ->join('shipping_methods','shipping_methods.id','shipping_method_rates.shipping_id')
-                            ->where('shipping_method_rates.status',1)->where('country_code',$country_name)->get();
+                            ->where('shipping_methods.status',1)->where('shipping_method_rates.status',1)->where('country_code',$country_name)->get();
 
             //$shipping = number_format(0,2);
             $shipping_cost_check = [];

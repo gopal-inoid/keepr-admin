@@ -55,7 +55,7 @@
                                         </td>
                                         <td>
                                             <label class="switcher mx-auto">
-                                                <input type="checkbox" class="switcher_input"
+                                                <input type="checkbox" class="switcher_input status"
                                                     id="{{$method['id']}}" {{$method->status == 1?'checked':''}}>
                                                 <span class="switcher_control"></span>
                                             </label>
@@ -210,35 +210,35 @@
             }
         });
     });
-    $(document).on('click', '.delete', function () {
-        var id = $(this).attr("id");
-        Swal.fire({
-            title: '{{\App\CPU\translate('Are you sure delete this')}} ?',
-            text: "{{\App\CPU\translate('You will not be able to revert this')}}!",
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: '{{\App\CPU\translate('Yes, delete it')}}!',
-            type: 'warning',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.value) {
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                    }
-                });
-                $.ajax({
-                    url: "{{route('admin.business-settings.shipping-method.delete')}}",
-                    method: 'POST',
-                    data: {id: id},
-                    success: function () {
-                        toastr.success('{{\App\CPU\translate('Order Wise Shipping Method deleted successfully')}}');
-                        location.reload();
-                    }
-                });
-            }
-        })
-    });
+    // $(document).on('click', '.delete', function () {
+    //     var id = $(this).attr("id");
+    //     Swal.fire({
+    //         title: '{{\App\CPU\translate('Are you sure delete this')}} ?',
+    //         text: "{{\App\CPU\translate('You will not be able to revert this')}}!",
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#3085d6',
+    //         cancelButtonColor: '#d33',
+    //         confirmButtonText: '{{\App\CPU\translate('Yes, delete it')}}!',
+    //         type: 'warning',
+    //         reverseButtons: true
+    //     }).then((result) => {
+    //         if (result.value) {
+    //             $.ajaxSetup({
+    //                 headers: {
+    //                     'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+    //                 }
+    //             });
+    //             $.ajax({
+    //                 url: "{{route('admin.business-settings.shipping-method.delete')}}",
+    //                 method: 'POST',
+    //                 data: {id: id},
+    //                 success: function () {
+    //                     toastr.success('{{\App\CPU\translate('Order Wise Shipping Method deleted successfully')}}');
+    //                     location.reload();
+    //                 }
+    //             });
+    //         }
+    //     })
+    // });
 </script>
 @endpush
