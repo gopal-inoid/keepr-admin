@@ -24,7 +24,7 @@
                     <div class="row align-items-center">
                         <div class="col-lg-4">
                             <!-- Search -->
-                            <form action="{{ url()->current() }}" method="GET">
+                            {{-- <form action="{{ url()->current() }}" method="GET">
                                 <div class="input-group input-group-custom input-group-merge">
                                     <div class="input-group-prepend">
                                         <div class="input-group-text">
@@ -36,7 +36,7 @@
                                            value="{{ $search }}" required>
                                     <button type="submit" class="btn btn--primary">{{\App\CPU\translate('search')}}</button>
                                 </div>
-                            </form>
+                            </form> --}}
                             <!-- End Search -->
                         </div>
                         <div class="col-lg-8 mt-3 mt-lg-0 d-flex flex-wrap gap-3 justify-content-lg-end">
