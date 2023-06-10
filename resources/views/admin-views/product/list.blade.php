@@ -81,7 +81,7 @@
                             <tr>
                                 <th scope="row">{{$pro->firstItem()+$k}}</th>
                                 <td>
-                                    <a href="{{route('admin.product.view',[$p['id']])}}" class="media align-items-center gap-2">
+                                    <a href="javascript:void(0);" class="media align-items-center gap-2">
                                         <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$p['thumbnail']}}"
                                              onerror="this.src='{{asset('/public/assets/back-end/img/brand-logo.png')}}'"class="avatar border" alt="">
                                         <span class="media-body title-color hover-c1">

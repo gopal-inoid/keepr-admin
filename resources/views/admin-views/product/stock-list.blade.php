@@ -82,7 +82,7 @@
                             <tr>
                                 <th scope="row">{{$pro->firstItem()+$k}}</th>
                                 <td>
-                                    <a href="{{route('admin.product.view',[$p['product_id']])}}" class="media align-items-center gap-2">
+                                    <a href="javascript:void(0);" class="media align-items-center gap-2">
                                         <span class="media-body title-color hover-c1">
                                             {{\Illuminate\Support\Str::limit($p['product_name'],20)}}
                                         </span>
