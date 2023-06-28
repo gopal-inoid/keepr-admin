@@ -15,7 +15,7 @@
 <body>
     <div>
         <div class="Navbar-Section">
-            <nav class="navbar container navbar-expand-lg navbar-light pt-0">
+            <nav class="navbar container navbar-expand-lg navbar-light p-0">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="#">
                         <img src="{{ asset('keepr_app_assets/assests/Keepe_logo.png')}}" alt="">
@@ -44,7 +44,7 @@
                                 <a class="nav-link" href="#Frequently_Questions">FAQ</a>
                             </li>
                         </ul>
-                        <form class="d-flex mt-3">
+                        <form class="d-flex m-3">
                             <a class="btn download_keeper_btn" href="#Download_keepr" type="submit">Download Keepr</a>
                         </form>
                     </div>
@@ -61,7 +61,7 @@
                     <div class="row">
                         <div class="leftKeeprPic col-xl-5 col-md-6" id="leftKeeprPic">
                             <div class="Main_Content">
-                                <span class="main_heading">Never Lose Your Valuables again!</span>
+                                <span class="main_heading">Keep your valuable stuff always with you</span>
                                 <p>Do you find yourself in a position where you go out a lot and sometimes lose or
                                     forget your valuables? keepr will help stop that by alerting you when you leave your
                                     things behind </p>
@@ -95,8 +95,7 @@
                     <div class="leftKeeprPic col-md-6">
                         <div class="ms-1 About_Content">About</div>
                         <div class="About_Main_Content">
-                            <span class="Ultimate_Bluetooth_Finder">Keepr's Solutions to Keeping your things
-                                safe</span>
+                            <span class="Ultimate_Bluetooth_Finder">Keepr Ultimate Bluetooth Finder</span>
                             <p>keepr was founded and designed with one goal in mind: Me wanted to make sure that when
                                 you go out that your valuables come back with you
                             </p>
@@ -218,7 +217,7 @@
         <div class="container-fluid Fifth_Section" id="Products">
             <div class="container">
                 <h1 class="text-center" style="font-weight: 600;">Our Products</h1>
-                <div class="row justify-content-center mt-5">
+                <div class="row justify-content-evenly mt-5">
                     <div class="col-md-12 col-lg-5 col-xl-5 Product-1 mx-1 my2">
 
                         <img src="{{ asset('keepr_app_assets/assests/KeeprDuoPhoto.png') }}" alt="">
@@ -254,7 +253,7 @@
                 </div>
                 <div class="container mt-lg-5 pt-lg-5 mt-md-5 pt-md-5 Frequently_Questions" id="Frequently_Questions">
                     <h1 class="text-center" style="font-weight: 600">Frequently Asked Questions</h1>
-                    <div class="row justify-content-center mt-5">
+                    <div class="row justify-content-center mt-5 pb-5">
                         <div class="col-md-6 Frequently_Asked_Questions" id="Frequently_Asked_Questions2">
                             <div class="">
                                 <h5>How to install Keepr?</h5>
@@ -304,10 +303,10 @@
                             </div>
                         </div>
                     </div>
-                    <h6 class="text-center mt-4 mb-5">
+                    <h4 class="text-center mt-5 mb-5">
                         <b>Haven't find suitable answer? </b><b class="tellUs"><a
-                                href="mailto:support@thekeeprapp.com">support@thekeeprapp.com</a></b>
-                    </h6>
+                                href="mailto:support@thekeeprapp.com">Tell us what you need</a></b>
+                    </h4>
                 </div>
             </div>
 
@@ -317,7 +316,7 @@
                         <div class="col-md-1"></div>
                         <div class="col-xl-6 col-md-6 rightSection">
                             <div>
-                                <h3 class="More_Questions">Have more questions? Don’t hesitate to get in touch!</h3>
+                                <h3 class="More_Questions">Have more questions? Don’t hesitate to reach us</h3>
                                 <div class="Seven_Section_Social">
                                     <div class="mail_section">
                                         <img src="{{ asset('keepr_app_assets/assests/E-mail_icon.svg') }}" alt="">
@@ -350,7 +349,8 @@
                         <div class="row" style="position: relative;">
                             <div class="col-md-12 footer-body">
 
-                                <img src="{{ asset('keepr_app_assets/assests/Footer_Log.svg') }}" alt="">
+                                <img src="{{ asset('keepr_app_assets/assests/Footer_Log.png') }}" class="footer-img"
+                                    alt="">
 
                             </div>
                             <div class="footer-body2">
