@@ -29,14 +29,14 @@ body {
 }
 
 .navbar-brand {
-    width: 164px;
-    height: 58px;
+    width: 212px;
+    height: 46px;
 }
 
 .Navbar-Section {
     position: fixed;
     top: 0;
-    background: #fff;
+    background: #1F1F1F;
     width: 100%;
     z-index: 99999;
     box-shadow: 0 3px 5px -3px #e9e4e4;
@@ -45,16 +45,16 @@ body {
 .nav-item {
     opacity: 1;
     font-size: 18px;
-    color: #283034;
+    color: #BCBCBC;
 }
 
 .navbar-light .navbar-nav .nav-link {
-    color: #283034 !important;
+    color: #BCBCBC !important;
     font-weight: 600;
 }
 
 .download_keeper_btn {
-    background-color: #31A4B7;
+    background-color: #52D1DC;
     color: #fff;
     border-radius: 10px;
     width: 166px;
@@ -75,11 +75,12 @@ body {
 
 .section_seocond {
     /* position: relative; */
-    background: transparent linear-gradient(118deg, #425CC2 0%, #369CC1 54%, #31A4B7 100%) 0% 0% no-repeat padding-box;
+    background: transparent linear-gradient(118deg, #52D1DC 0%, #369CC1 54%, #31A4B7 100%) 0% 0% no-repeat padding-box;
+    height: 45em;
 }
 
 .For_picture {
-    /* height: 100%; */
+    height: 100%;
     background: transparent url('./assests/bluetoothIcon.png') 0% 100% no-repeat padding-box;
     /* background-size: contain; */
     /* min-height: 100vh; */
@@ -91,9 +92,9 @@ body {
 
 .Main_Content {
     /* padding-top: 128px; */
-    padding-left: 50px;
+    /* padding-left: 50px; */
     color: #fff;
-    font-size: 50px;
+    font-size: 57px;
 }
 
 .Main_Content p {
@@ -118,8 +119,8 @@ body {
 
 .About_seocond {
     padding-top: 80px;
-    padding-left: 30px;
-    padding-right: 30px;
+    /* padding-left: 30px; */
+    /* padding-right: 30px; */
 }
 
 .rightMobileIcon img {
@@ -154,7 +155,7 @@ body {
 }
 
 .download_app_btn_About a {
-    background-color: #31A4B7;
+    background-color: #52D1DC;
     color: #fff;
     border-radius: 10px;
     width: 196px;
@@ -177,12 +178,13 @@ body {
 
 .About_Main_Content span {
     line-height: 55px;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 50px;
 }
 
 .step_section_row {
     /* background: transparent url('./assests/keepr.png') 100% 0% no-repeat padding-box; */
-    background: transparent linear-gradient(101deg, #4482DE 0%, #31A4B7 100%) 0% 0% no-repeat;
+    background: transparent linear-gradient(101deg, #52D1DC 0%, #31A4B7 100%) 0% 0% no-repeat;
     /* padding-top: 120px; */
     justify-content: center;
     border-radius: 20px;
@@ -358,7 +360,7 @@ body {
 .buy_now_btn {
     width: 156px;
     height: 56px;
-    background: #33A5B8 0% 0% no-repeat padding-box;
+    background: #52D1DC 0% 0% no-repeat padding-box;
     border-radius: 10px;
     opacity: 1;
     color: #fff;
@@ -380,14 +382,16 @@ body {
 }
 
 .tellUs a {
-    color: #33A5B8;
+    color: #52D1DC;
+    text-decoration: none;
 }
 
 .More_Questions {
     line-height: 40px;
     font-weight: 600;
-    font-size: 37px;
+    font-size: 40px;
     padding: 0px 100px 0px 0px;
+    width: 538px;
 }
 
 .Seven_Section {
@@ -397,15 +401,17 @@ body {
 
 .mail_section a,
 .mail_section span {
-    color: #33A5B8;
+    color: #52D1DC;
     text-decoration: none;
     font-weight: 600;
+    font-size: 20px;
 }
 
 .Seven_Section_Social {
     padding-top: 40px;
     display: inline-flex;
     justify-content: space-between;
+    width: 560px;
 }
 
 .mail_section img {
@@ -419,17 +425,22 @@ body {
 }
 
 .footer {
-    background: #1F1F39;
+    background: #1F1F1F;
 }
 
 .footer_content {
-    background: transparent url('./assests/footerBackground.svg') 0% 0% no-repeat padding-box;
+    background: transparent url('./assests/footerBackground.png') 0% 0% no-repeat padding-box;
 }
 
 .footer-body {
-    padding-top: 250px;
+    padding-top: 300px;
+    padding-bottom: 30px;
     display: flex;
     justify-content: center;
+}
+
+.footer-img {
+    height: 70px;
 }
 
 .footer_menu {
@@ -454,6 +465,7 @@ ul li {
 
 .footer-body2 {
     border-bottom: 1px solid #fff;
+    padding-bottom: 30px;
 }
 
 .CopyRight_Section {
@@ -513,8 +525,7 @@ ul li {
 
 .overlay-image {
     height: 550px;
-    background: transparent linear-gradient(105deg, hsla(228, 51%, 51%, 1) 0%, hsla(196, 56%, 48%, 1) 54%, hsla(189, 58%, 45%, 1) 100%) 0% 0% no-repeat padding-box;
-    ;
+    background: transparent linear-gradient(105deg, #52D1DC 0%, #369CC1 54%, #31A4B7 100%) 0% 0% no-repeat padding-box;
     background-size: cover;
     background-position: center center;
     opacity: 0.7;

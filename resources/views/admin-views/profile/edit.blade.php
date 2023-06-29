@@ -132,12 +132,10 @@
                                         class="input-label-secondary">({{\App\CPU\translate('Optional')}})</span></label>
 
                                 <div class="col-sm-9">
-                                    <input type="text" class="js-masked-input form-control" name="phone" id="phoneLabel"
-                                           placeholder="+x(xxx)xxx-xx-xx" aria-label="+(xxx)xx-xxx-xxxxx"
+                                    <input type="text" class="form-control" name="phone" id="phoneLabel"
+                                           placeholder="+x(xxx)xxx-xx-xx"
                                            value="{{$data->phone}}"
-                                           data-hs-mask-options='{
-                                           "template": "+(880)00-000-00000"
-                                         }'>
+                                            >
                                 </div>
                             </div>
                             <!-- End Form Group -->
@@ -257,6 +255,16 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
+
+        // function validatePhoneNumber(input_str) {
+        //     var re = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
+        //     //console.log(re.test(input_str));
+        //     if(re.test(input_str)){
+        //         toastr.success('Mobile is correct');
+        //     }else{
+        //         toastr.error('Wrong Mobile number format');
+        //     }
+        // }
 
         $("#customFileUpload").change(function () {
             readURL(this);

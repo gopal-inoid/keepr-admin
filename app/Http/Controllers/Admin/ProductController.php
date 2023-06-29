@@ -311,7 +311,9 @@ class ProductController extends BaseController
             $key = explode(' ', $request['search']);
             $pro = $pro->where(function ($q) use ($key) {
                 foreach ($key as $value) {
-                    $q->Where('mac_id', 'like', "%{$value}%");
+                    $q->orWhere('mac_id', 'like', "%{$value}%")
+                      ->orWhere('device_name', 'like', "%{$value}%")
+                      ->orWhere('device_uuid', 'like', "%{$value}%");
                 }
             });
             $query_param = ['search' => $request['search']];

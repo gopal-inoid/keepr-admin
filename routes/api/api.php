@@ -80,55 +80,6 @@ Route::group(['namespace' => 'api'], function () {
         Route::get('/', 'ConfigController@configuration');
     });
 
-    // Route::group(['prefix' => 'products'], function () {
-    //     Route::get('latest', 'ProductController@get_latest_products');
-    //     Route::get('featured', 'ProductController@get_featured_products');
-    //     Route::get('top-rated', 'ProductController@get_top_rated_products');
-    //     Route::any('search', 'ProductController@get_searched_products');
-    //     Route::get('details/{slug}', 'ProductController@get_product');
-    //     Route::get('related-products/{product_id}', 'ProductController@get_related_products');
-    //     Route::get('reviews/{product_id}', 'ProductController@get_product_reviews');
-    //     Route::get('rating/{product_id}', 'ProductController@get_product_rating');
-    //     Route::get('counter/{product_id}', 'ProductController@counter');
-    //     Route::get('shipping-methods', 'ProductController@get_shipping_methods');
-    //     Route::get('social-share-link/{product_id}', 'ProductController@social_share_link');
-    //     Route::post('reviews/submit', 'ProductController@submit_product_review')->middleware('auth:api');
-    //     Route::get('best-sellings', 'ProductController@get_best_sellings');
-    //     Route::get('home-categories', 'ProductController@get_home_categories');
-    //     ROute::get('discounted-product', 'ProductController@get_discounted_product');
-    // });
-
-    // Route::group(['prefix' => 'notifications'], function () {
-    //     Route::get('/', 'NotificationController@get_notifications');
-    // });
-
-    // Route::group(['prefix' => 'brands'], function () {
-    //     Route::get('/', 'BrandController@get_brands');
-    //     Route::get('products/{brand_id}', 'BrandController@get_products');
-    // });
-
-    // Route::group(['prefix' => 'attributes'], function () {
-    //     Route::get('/', 'AttributeController@get_attributes');
-    // });
-
-    // Route::group(['prefix' => 'flash-deals'], function () {
-    //     Route::get('/', 'FlashDealController@get_flash_deal');
-    //     Route::get('products/{deal_id}', 'FlashDealController@get_products');
-    // });
-
-    // Route::group(['prefix' => 'deals'], function () {
-    //     Route::get('featured', 'DealController@get_featured_deal');
-    // });
-
-    // Route::group(['prefix' => 'dealsoftheday'], function () {
-    //     Route::get('deal-of-the-day', 'DealOfTheDayController@get_deal_of_the_day_product');
-    // });
-
-    // Route::group(['prefix' => 'categories'], function () {
-    //     Route::get('/', 'CategoryController@get_categories');
-    //     Route::get('products/{category_id}', 'CategoryController@get_products');
-    // });
-
     Route::group(['prefix' => 'customer', 'middleware' => 'auth:api'], function () {
         Route::get('info', 'CustomerController@info');
         Route::put('update-profile', 'CustomerController@update_profile');

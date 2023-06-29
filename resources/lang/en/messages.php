@@ -2422,4 +2422,5 @@
   'UUID' => 'UUID',
   'major' => 'Major',
   'minor' => 'Minor',
+  'Color is required!' => 'Color is required!',
 );
