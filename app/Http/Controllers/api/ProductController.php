@@ -343,6 +343,7 @@ class ProductController extends Controller
                         $get_all_devices[$k]['rssi'] = $device_info->rssi ?? '';
                         $get_all_devices[$k]['device_id'] = $device_info->product_id ?? '';
                         $get_all_devices[$k]['device_type'] = $device_info->device_type ?? '';
+												$get_all_devices[$k]['distance'] = "-1";
 
                         $device_request = DeviceRequest::select('status')->where([
 													'uuid' => $devices->device_uuid,
