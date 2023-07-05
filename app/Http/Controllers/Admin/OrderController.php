@@ -375,6 +375,9 @@ class OrderController extends Controller
         if ($request->status) {
             Order::where('id',$request->id)->update(['order_status'=>$request->status]);
             $order = Order::where('id',$request->id)->first();
+
+            echo "<pre>"; print_r($order); die;
+
             $data = $request->order_status;
             $user = User::select('fcm_token')->where('id',$order->customer_id)->first();
             $msg = "Your Order is ". $request->order_status;
