@@ -373,7 +373,7 @@ class OrderController extends Controller
     public function change_order_status(Request $request)
     {
         if ($request->status) {
-            $order = Order::find($request->id);
+            $order = Order::where('id',$request->id)->first();
             $order->order_status = $request->status;
             $order->save();
             $data = $request->order_status;
