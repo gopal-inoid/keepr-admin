@@ -373,10 +373,11 @@ class OrderController extends Controller
     public function change_order_status(Request $request)
     {
         if ($request->status) {
+
+            echo "<pre>"; print_r($request->all()); die;
+
             Order::where('id',$request->id)->update(['order_status'=>$request->status]);
             $order = Order::where('id',$request->id)->first();
-
-            echo "<pre>"; print_r($order); die;
 
             $data = $request->order_status;
             $user = User::select('fcm_token')->where('id',$order->customer_id)->first();
