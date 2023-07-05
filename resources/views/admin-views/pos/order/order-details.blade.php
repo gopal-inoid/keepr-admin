@@ -108,7 +108,7 @@
                                     <tr>
                                         <th>{{\App\CPU\translate('SL')}}</th>
                                         <th>{{\App\CPU\translate('Item_Details')}}</th>
-                                        <th>MAC ID</th>
+                                        <th>UUID</th>
                                     </tr>
                                 </thead>
 
@@ -128,9 +128,9 @@
                                         </td>
                                         <td>
                                             
-                                            @if(!empty($detail['mac_ids']))
-                                                @foreach($detail['mac_ids'] as $k => $val)
-                                                    {{$val}}<br>
+                                            @if(!empty($detail['mac_ids']['uuid']))
+                                                @foreach($detail['mac_ids']['uuid'] as $k => $val)
+                                                  {{$val}}<br>
                                                 @endforeach
                                             @endif
                                             
