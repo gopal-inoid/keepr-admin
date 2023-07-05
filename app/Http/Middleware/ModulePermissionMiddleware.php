@@ -26,6 +26,8 @@ class ModulePermissionMiddleware
                         $request->merge(['page' => $val]);
                     }elseif(!empty($pages[1]) && $pages[1] == 'search'){
                         $request->merge(['search' => $val]);
+                    }elseif(!empty($pages[1]) && $pages[1] == 'id'){
+                        $request->merge(['id' => $val]);
                     }
                 }
             }
