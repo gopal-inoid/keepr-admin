@@ -26,6 +26,8 @@ Route::group(['namespace' => 'api'], function () {
     //PAGES
     Route::post('get-pages', 'GeneralController@get_pages');
 
+    Route::post('force_update', 'GeneralController@force_update');
+
     Route::group(['middleware' => ['api_auth']], function () {
 
         //BANNERS
