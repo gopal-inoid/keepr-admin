@@ -37,6 +37,30 @@ class GeneralController extends Controller
         }
     }
 
+    public function force_update(Request $request){
+        if (empty($request->platform) && $request->api_version) {
+            return response()->json(array(
+                    'code' => 400,
+                    'errors' => array(
+                        'error_id' => '1',
+                        'error_text' => 'platform and api_version is required'
+                    )
+                ), 400);
+        }
+        $check = \DB::table('api_versions')->where('platform', $request->platform)->first();
+        if(!empty($check->id)){
+            if($check->status == 1 && $request->api_version > $check->version){
+                return response()->json(['code'=>400,'status'=>1,'message'=>'need Force Update!']);
+            }elseif($check->status == 0 && $request->api_version > $check->version){
+                return response()->json(['code'=>400,'status'=>0,'message'=>'need normal Update!']);
+            }else{
+                return response()->json(['code'=>200,'message'=>'Success!']);
+            }
+        }else{
+            return response()->json(['code'=>200,'message'=>'Success!']);
+        }
+    }
+
     public function get_banners(){
         $banners_list = Banner::where(['published'=>1])->get();
         if(!empty($banners_list)){
