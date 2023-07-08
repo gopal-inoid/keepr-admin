@@ -41,23 +41,18 @@ class GeneralController extends Controller
         if (empty($request->platform) && $request->api_version) {
             return response()->json(array(
                     'code' => 400,
-                    'errors' => array(
-                        'error_id' => '1',
-                        'error_text' => 'platform and api_version is required'
-                    )
+                    'message' => 'platform and api_version is required'
                 ), 400);
         }
         $check = \DB::table('api_versions')->where('platform', $request->platform)->first();
         if(!empty($check->id)){
             if($check->status == 1 && $request->api_version > $check->version){
-                return response()->json(['code'=>400,'status'=>1,'message'=>'need Force Update!']);
+                return response()->json(['code'=>400,'data'=>['new_version'=>$check->version,'force_update'=>1],'message'=>'need Force Update!']);
             }elseif($check->status == 0 && $request->api_version > $check->version){
-                return response()->json(['code'=>400,'status'=>0,'message'=>'need normal Update!']);
+                return response()->json(['code'=>400,'data'=>['new_version'=>$check->version,'force_update'=>0],'message'=>'need normal Update!']);
             }else{
-                return response()->json(['code'=>200,'message'=>'Success!']);
+                return response()->json(['code'=>400,'data'=>['new_version'=>$check->version,'force_update'=>0],'message'=>'need normal Update!']);
             }
-        }else{
-            return response()->json(['code'=>200,'message'=>'Success!']);
         }
     }
 

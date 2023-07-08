@@ -24,11 +24,11 @@ class APIMiddleware
         if(empty($api_version)){
             return response()->json(['status'=>406,'message'=>'Need to Pass App Version.'],406);
         }
-        $check = $this->check_force_update($platform,$api_version);
-        if(isset($check['status']) && $check['status'] == 406)
-        {
-            return response()->json(['status'=>406,'force_update'=>"1",'message'=> !empty($check['message']) ? $check['message'] : "Need to Update" ],406);
-        }
+        // $check = $this->check_force_update($platform,$api_version);
+        // if(isset($check['status']) && $check['status'] == 406)
+        // {
+        //     return response()->json(['status'=>406,'force_update'=>"1",'message'=> !empty($check['message']) ? $check['message'] : "Need to Update" ],406);
+        // }
         if(empty($auth_token)){
             return response()->json(['status'=>401,'message'=>'Not Authorized.'],401);
         }
