@@ -38,10 +38,10 @@ class GeneralController extends Controller
     }
 
     public function force_update(Request $request){
-        if (empty($request->platform) && $request->api_version) {
+        if (empty($request->platform)) {
             return response()->json(array(
                     'code' => 400,
-                    'message' => 'platform and api_version is required'
+                    'message' => 'platform is required'
                 ), 400);
         }
         $check = \DB::table('api_versions')->where('platform', $request->platform)->first();
