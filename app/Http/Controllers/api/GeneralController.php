@@ -45,15 +45,7 @@ class GeneralController extends Controller
                 ), 400);
         }
         $check = \DB::table('api_versions')->where('platform', $request->platform)->first();
-        if(!empty($check->id)){
-            if($check->status == 1 && $request->api_version > $check->version){
-                return response()->json(['code'=>400,'data'=>['new_version'=>$check->version,'force_update'=>1],'message'=>'need Force Update!']);
-            }elseif($check->status == 0 && $request->api_version > $check->version){
-                return response()->json(['code'=>400,'data'=>['new_version'=>$check->version,'force_update'=>0],'message'=>'need normal Update!']);
-            }else{
-                return response()->json(['code'=>400,'data'=>['new_version'=>$check->version,'force_update'=>0],'message'=>'need normal Update!']);
-            }
-        }
+        return response()->json(['code'=>200,'data'=>['new_version'=>$check->version ?? 1,'force_update'=> $check->status ?? 1],'message'=>'need Force Update!'],200);
     }
 
     public function get_banners(){
