@@ -378,7 +378,6 @@ class ProductController extends Controller
         $devices_list = Product::select('products.colors','products.id','name','details','purchase_price','thumbnail',DB::raw('COUNT(product_stocks.id) as total_stocks'))
                         ->Join('product_stocks','product_stocks.product_id','products.id')
                         ->where('products.status',1)
-                        ->where('product_stocks.is_purchased',0)
                         ->groupBy('products.id')->get();
         
         if(!empty($devices_list)){
