@@ -455,12 +455,13 @@ class OrderController extends Controller
         if(!empty($order->mac_ids)){
             $mac_ids = json_decode($order->mac_ids,true);
             if(!empty($mac_ids)){
+                //echo "<pre>"; print_r($mac_ids); die;
                 foreach($mac_ids as $k => $val){
                     $total_orders += count($val);
                     $prod = Product::select('name','thumbnail')->find($k);
                     $products[$k]['name'] = $prod->name ?? "";
                     $products[$k]['thumbnail'] = $prod->thumbnail ?? "";
-                    $products[$k]['mac_ids'] = $val;
+                    $products[$k]['mac_ids'] = $mac_ids[$k]['uuid'];
                 }
             }
         }
