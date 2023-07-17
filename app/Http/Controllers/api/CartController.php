@@ -438,7 +438,7 @@ class CartController extends Controller
 
     public function getPaymentIntent(Request $request){
 
-        $order_data = Order::select('order_amount')->where('id',$request->order_id)->where('customer_id',$request->user_id)->first();
+        $order_data = Order::select('order_amount')->where('id',$request->order_id)->first();
         if(!empty($order_data->order_amount)){
            return $this->CreateCheckout($order_data->order_amount);
         }else{
