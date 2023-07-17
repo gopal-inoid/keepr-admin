@@ -465,11 +465,14 @@ class ProductController extends Controller
                                         $query->selectRaw('COUNT(product_stocks.color) AS total_stocks')
                                         ->from('product_stocks')
                                         ->whereColumn('product_stocks.color', 'colors.id')
-                                        ->where("product_stocks.product_id", $devices_details->id);
+                                        ->where("product_stocks.product_id", $devices_details->id)
+                                        ->where("product_stocks.is_purchased", 0);
                                     }, 'total_stocks')
                                     ->whereRaw("FIND_IN_SET(colors.id, '". $devices_details->colors."')")
                                     ->groupBy('colors.id')
                                     ->get();
+
+                    //echo "<pre>"; print_r($colorStocks); die;
 
                     $devices_details_array['total_quantity'] = (int) Cart::where(['customer_id' => $user_details->id])->sum('quantity');
                     $devices_details_array['id'] = $devices_details->id;
