@@ -44,7 +44,7 @@
                         </div>
                         <div class="col-3">
                             <div class="form-group">
-                                <label for="title">{{\App\CPU\translate('normal delivery days')}}</label>
+                                <label for="title">{{\App\CPU\translate('regular delivery days')}}</label>
                                 <input type="text" name="normal_duration" value="{{$method['normal_duration'] ?? ''}}" class="form-control" placeholder="Ex (5-6 days)">
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                                 <thead class="thead-light thead-50 text-capitalize">
                                     <tr>
                                         <th>Country</th>
-                                        <th>Normal Rate</th>
+                                        <th>Regular Rate</th>
                                         <th>Express Rate</th>
                                         <th>Status</th>
                                     </tr>
