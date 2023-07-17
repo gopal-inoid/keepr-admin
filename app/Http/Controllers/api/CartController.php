@@ -242,10 +242,12 @@ class CartController extends Controller
                     if($val['normal_rate'] < $val['express_rate']){
                         $shipping_cost_check[$k]['shipping_rate'] = $val['normal_rate'];
                         $shipping_cost_check[$k]['mode'] = "normal_rate";
+                        $shipping_cost_check[$k]['text'] = "Regular Rate";
                         $shipping_cost_check[$k]['delivery_days'] = $val['normal_duration'];
                     }else{
                         $shipping_cost_check[$k]['shipping_rate'] = $val['express_rate'];
                         $shipping_cost_check[$k]['mode'] = "express_rate";
+                        $shipping_cost_check[$k]['text'] = "Express Rate";
                         $shipping_cost_check[$k]['delivery_days'] = $val['express_duration'];
                     }
                 }
