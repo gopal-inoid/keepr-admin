@@ -869,7 +869,7 @@ class ProductController extends BaseController
         }
 
         $cnt = 0;
-        $col_key = ['product_id', 'mac_id','color','uuid','major','minor'];
+        $col_key = ['product_uuid', 'device_id','color','major','minor'];
         foreach ($collections as $collection) {
             foreach ($collection as $key => $value) {
                 if ($key!="" && !in_array($key, $col_key)) {
@@ -882,10 +882,14 @@ class ProductController extends BaseController
                     return back();
                 }
             }
-            
-            $check = ProductStock::where(['product_id'=>$collection['product_id'],'mac_id'=>$collection['mac_id'],'uuid'=>$collection['uuid'],'major'=>$collection['major'],'minor'=>$collection['minor']])->count();
-            if($check == 0){ $cnt++;
-                ProductStock::insert(['product_id'=>$collection['product_id'],'mac_id'=>$collection['mac_id'],'color'=>$collection['color'],'uuid'=>$collection['uuid'],'major'=>$collection['major'],'minor'=>$collection['minor']]);
+
+            $color = Color::select('id')->where('name',ucfirst($collection['color']))->first();
+            $product = Product::where('uuid',$collection['product_uuid'])->first();
+            if(!empty($product)){
+                $check = ProductStock::where(['product_id'=>$product['id'],'mac_id'=>$collection['device_id'],'uuid'=>$collection['product_uuid'],'major'=>$collection['major'],'minor'=>$collection['minor']])->count();
+                if($check == 0){ $cnt++;
+                    ProductStock::insert(['product_id'=>$product['id'],'mac_id'=>$collection['device_id'],'color'=>$color->id ?? 117,'uuid'=>$collection['product_uuid'],'major'=>$collection['major'],'minor'=>$collection['minor']]);
+                }
             }
         }
         
