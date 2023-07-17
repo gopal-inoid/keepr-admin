@@ -21,9 +21,9 @@ class APIMiddleware
         $auth_token   = $request->headers->get('X-Access-Token');
         $platform   = $request->headers->get('x-platform');
         $api_version   = $request->headers->get('x-app-version');
-        if(empty($api_version)){
-            return response()->json(['status'=>406,'message'=>'Need to Pass App Version.'],406);
-        }
+        // if(empty($api_version)){
+        //     return response()->json(['status'=>406,'message'=>'Need to Pass App Version.'],406);
+        // }
         // $check = $this->check_force_update($platform,$api_version);
         // if(isset($check['status']) && $check['status'] == 406)
         // {
