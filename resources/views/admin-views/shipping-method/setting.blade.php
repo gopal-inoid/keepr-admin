@@ -36,7 +36,7 @@
                                     <tr>
                                         <th>{{\App\CPU\translate('sl')}}</th>
                                         <th>{{\App\CPU\translate('title')}}</th>
-                                        <th>{{\App\CPU\translate('Regular duration')}}</th>
+                                        <th>Regular duration</th>
                                         <th>{{\App\CPU\translate('express duration')}}</th>
                                         <th class="text-center">{{\App\CPU\translate('status')}}</th>
                                         <th class="text-center">{{\App\CPU\translate('action')}}</th>
