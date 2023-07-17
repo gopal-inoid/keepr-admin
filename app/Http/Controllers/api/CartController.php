@@ -425,29 +425,6 @@ class CartController extends Controller
 
 
     public function CreateCheckout($amount){
-
-        //$amount = 2000;
-        //Stripe::setApiKey('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
-        //header('Content-Type: application/json');
-        //$YOUR_DOMAIN = url('/');
-        // $checkout_session = \Stripe\Checkout\Session::create([
-        //     'payment_method_types' => ['card'],
-        //     'line_items' => [[
-        //         'price_data' => [
-        //             'currency' => 'USD',
-        //             'unit_amount' => round($amount, 2) * 100,
-        //             'product_data' => [
-        //                 'name' => 'Keepr',
-        //                 'images' => [asset('storage/app/public/company') . '/' . Helpers::get_business_settings('company_web_logo')],
-        //             ],
-        //         ],
-        //         'quantity' => 1,
-        //     ]],
-        //     'mode' => 'payment',
-        //     'success_url' =>  $YOUR_DOMAIN . '/pay-stripe/success',
-        //     'cancel_url' => url()->previous(),
-        // ]);
-
         $stripe = new \Stripe\StripeClient('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
         $paymentIntents = $stripe->paymentIntents->create([
             'amount' => round($amount, 2) * 100,
@@ -456,9 +433,17 @@ class CartController extends Controller
                 'enabled' => true,
             ],
         ]);
-
        return $paymentIntents;
+    }
 
+    public function getPaymentIntent(Request $request){
+
+        $order_data = Order::select('order_amount')->where('id',$request->order_id)->where('customer_id',$request->user_id)->first();
+        if(!empty($order_data->order_amount)){
+           return $this->CreateCheckout($order_data->order_amount);
+        }else{
+           return response()->json(['status'=>400,'message'=>'Order not found'],200);
+        }
     }
     
     public function changeOrderStatus(Request $request){
