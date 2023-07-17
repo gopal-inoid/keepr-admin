@@ -326,9 +326,6 @@ class CartController extends Controller
                 }
             }
         }
-
-        //echo "<pre>"; print_r($existed_mac_ids); die;
-
         if(!empty($user_details->id)){
 
             $cart_info = Cart::select('id','customer_id','product_id','price','quantity')->where('quantity', '>',0)->whereIn('id',$cart_ids)->get();
@@ -361,9 +358,7 @@ class CartController extends Controller
                     return response()->json(['status'=>400,'message'=>'Device not available'],400);
                 }
 
-                //echo "<pre>"; print_r($mac_ids_array); die;
-                
-                //Insert into Order
+                $stripe_payment_create = $this->CreateCheckout($total_price);
                 $order = new Order();
                 $order->customer_id = $user_details->id;
                 $order->payment_method = 'Stripe';
@@ -386,8 +381,9 @@ class CartController extends Controller
                         Cart::where('customer_id',$user_details->id)->where('product_id',$product_id)->delete();
                     }
                 }
+
                 Common::addLog([]);
-                return response()->json(['status'=>200,'message'=>'Success','order_id'=>$order->id ?? NULL],200);
+                return response()->json(['status'=>200,'message'=>'Success','stripe_intent'=>$stripe_payment_create,'order_id'=>$order->id ?? NULL],200);
 
             }else{
                 Common::addLog([]);
@@ -427,6 +423,32 @@ class CartController extends Controller
         }
     }
 
+
+    public function CreateCheckout($amount){
+
+        Stripe::setApiKey('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
+        header('Content-Type: application/json');
+        $YOUR_DOMAIN = url('/');
+        $checkout_session = \Stripe\Checkout\Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'USD',
+                    'unit_amount' => round($amount, 2) * 100,
+                    'product_data' => [
+                        'name' => 'Keepr',
+                        'images' => [asset('storage/app/public/company') . '/' . Helpers::get_business_settings('company_web_logo')],
+                    ],
+                ]
+            ]],
+            'mode' => 'payment',
+            'success_url' =>  $YOUR_DOMAIN . '/pay-stripe/success',
+            'cancel_url' => url()->previous(),
+        ]);
+
+       return $checkout_session;
+
+    }
     
     public function changeOrderStatus(Request $request){
         $order = Order::find($request->order_id);
