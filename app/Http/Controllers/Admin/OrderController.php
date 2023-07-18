@@ -206,6 +206,9 @@ class OrderController extends Controller
         $user_id = $request->user_id;
         if(!empty($order_id)){
             if(!empty($user_id)){
+
+                $user_details = User::select('fcm_token')->where(['id'=>$user_id])->first();
+
                 $user_data['name'] = $request->billing_name;
                 $user_data['email'] = $request->email;
                 $user_data['street_address'] = $request->street_address;
@@ -238,6 +241,13 @@ class OrderController extends Controller
             $order_data['transaction_ref'] = $request->transaction_ref;
             $order_data['payment_method'] = $request->payment_method;
             $order_data['payment_status'] = $request->payment_status;
+            $order_data['tracking_id'] = $request->tracking_id;
+
+            //SEND PUSH NOTIFICATION
+            $msg = "Your Order has been " . $request->change_order_status . ", Order ID #" . $order_id;
+            $payload['order_id'] = $order_id;
+            $this->sendNotification($user_details->fcm_token,$msg,$payload);
+            //
             
             Order::where('id',$order_id)->update($order_data);
             return redirect()->back()->with('success','Order Details Updated Successfully');

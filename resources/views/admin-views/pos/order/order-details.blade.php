@@ -252,7 +252,13 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="title-color">Tracking ID</label>
+                                                <input type="text" name="tracking_id" class="form-control" value="{{$order['tracking_id']}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label class="title-color">Estimated Delivery Date</label>
                                                 <input type="date" name="expected_delivery_date" class="form-control" value="{{date('Y-m-d',strtotime($order['expected_delivery_date']))}}">
