@@ -577,11 +577,11 @@ class ProductController extends BaseController
 
     public function edit_stock($id)
     {
-				$colors = Color::get();
+		$colors = Color::get();
         $product = Product::select('id','name','colors')
 									->where('status', 1)
 									->where('id', $id)
-									->get()[0];
+									->get()[0] ?? [];
         $product_stock = Product::select('product_stocks.*')
                         ->join('product_stocks','product_stocks.product_id','products.id')
                         ->where('product_stocks.product_id',$id)
