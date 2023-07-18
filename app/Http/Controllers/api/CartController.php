@@ -294,10 +294,10 @@ class CartController extends Controller
         $cart_id = $request->cart_id;
 
         $shipping_id = $request->shipping_id ?? "";
-				$taxes = $request->tax;
-				//$tax_amount = $request->tax_amount;
-				$shipping_rate_id = $request->shipping_rate_id;
-				$shipping_mode = $request->shipping_mode;
+		$taxes = $request->tax;
+		//$tax_amount = $request->tax_amount;
+		$shipping_rate_id = $request->shipping_rate_id;
+		$shipping_mode = $request->shipping_mode;
 
         
         $left = ltrim($cart_id, "'");
@@ -369,9 +369,9 @@ class CartController extends Controller
                 $order->customer_id = $user_details->id;
                 $order->payment_method = 'Stripe';
                 $order->shipping_method_id = $shipping_id;
-								$order->taxes = $taxes;
-								$order->shipping_rate_id = $shipping_rate_id;
-								$order->shipping_mode = $shipping_mode;
+                $order->taxes = $taxes;
+                $order->shipping_rate_id = $shipping_rate_id;
+				$order->shipping_mode = $shipping_mode;
                 $order->mac_ids = json_encode($mac_ids_array);
                 $order->order_amount = number_format($total_price,2);
                 $order->save();

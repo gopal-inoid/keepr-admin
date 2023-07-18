@@ -2435,4 +2435,9 @@
   'Payment Detail' => 'Payment Detail',
   'Product Detail' => 'Product Detail',
   'Update Information' => 'Update Information',
+  'tax info' => 'Tax info',
+  'shipping info' => 'Shipping info',
+  'Other info' => 'Other info',
+  'Tax info' => 'Tax info',
+  'Shipping info' => 'Shipping info',
 );

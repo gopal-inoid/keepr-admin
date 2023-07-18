@@ -13,6 +13,8 @@ use App\Model\DeliveryManTransaction;
 use App\Model\DeliverymanWallet;
 use App\Model\Order;
 use App\Model\Product;
+use App\Model\ShippingMethod;
+use App\Model\ShippingMethodRates;
 use App\Model\Country;
 use App\Model\State;
 use App\Model\OrderDetail;
@@ -142,21 +144,58 @@ class OrderController extends Controller
         $states = \DB::table('states')->select('name','id')->get();
 
         $products = [];
+        $tax_info = [];
+        $shipping_info = [];
         $total_orders = 0;
-        if(!empty($order->mac_ids)){
+        $total_order_amount = $order->order_amount ?? 0;
+        if(!empty($order->mac_ids)){ // stocks
             $mac_ids = json_decode($order->mac_ids,true);
             if(!empty($mac_ids)){
                 foreach($mac_ids as $k => $val){
-                    $total_orders += count($val);
-                    $prod = Product::select('name','thumbnail')->find($k);
+                    $total_orders += count($mac_ids[$k]['uuid']);
+                    $prod = Product::select('name','thumbnail','purchase_price')->find($k);
                     $products[$k]['name'] = $prod->name ?? "";
                     $products[$k]['thumbnail'] = $prod->thumbnail ?? "";
-                    $products[$k]['mac_ids'] = $val;
+                    $products[$k]['price'] = $prod->purchase_price ?? 0;
+                    if(!empty($val)){
+                        foreach($val['uuid'] as $k1 => $val1){ 
+                            $products[$k]['mac_ids'][$k1]['uuid'] = $val1;
+                            $products[$k]['mac_ids'][$k1]['major'] = $val['major'][$k1];
+                            $products[$k]['mac_ids'][$k1]['minor'] = $val['minor'][$k1];
+                        }
+                    }
+
+                    if(!empty($order->taxes)){
+                        $taxes = json_decode($order->taxes,true);
+                        if(!empty($taxes)){
+                            $tax_info[$k] = $taxes;
+                        }
+                    }
+
+                    if(!empty($order->shipping_method_id) && !empty($order->shipping_mode)){
+                        $shipping = ShippingMethod::where(['id' => $order->shipping_method_id])->first();
+                        $shipping_method_rates = ShippingMethodRates::select('normal_rate','express_rate')->where('shipping_id',$order->shipping_method_id)->where('country_code',$this->getCountryName($order->customer->country))->first();
+                        $shipping_info[$k]['title'] = $shipping->title ?? "";
+                        if($order->shipping_mode == 'normal_rate'){
+                            $shipping_info[$k]['duration'] = $shipping->normal_duration ?? "";
+                            $shipping_info[$k]['mode'] = 'Regular Rate';
+                            $shipping_info[$k]['amount'] = $shipping_method_rates->normal_rate ?? 0;
+                        }elseif($order->shipping_mode == 'express_rate'){
+                            $shipping_info[$k]['duration'] = $shipping->express_duration ?? "";
+                            $shipping_info[$k]['mode'] = 'Express Rate';
+                            $shipping_info[$k]['amount'] = $shipping_method_rates->express_rate ?? 0;
+                        }
+
+                        if(!empty($shipping_info[$k]['amount'])){
+                            $total_order_amount += $shipping_info[$k]['amount'];
+                        }
+                    }
                 }
             }
         }
-        //echo "<pre>"; print_r($order); die;
-        return view('admin-views.pos.order.order-details', compact('order','total_orders','products', 'company_name', 'company_web_logo','countries','states'));
+       
+        //echo "<pre>"; print_r($tax_info); die;
+        return view('admin-views.pos.order.order-details', compact('order','total_orders','products', 'company_name', 'company_web_logo','countries','states','shipping_info','tax_info','total_order_amount'));
     }
 
     public function update_order_details(Request $request)
