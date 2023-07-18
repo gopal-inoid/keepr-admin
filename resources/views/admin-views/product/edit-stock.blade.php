@@ -94,27 +94,27 @@
                                             <div class="row mac_id-individual">
                                                 <div class="col-md-3">
                                                     <div class="form-group">
-                                                        <input type="text" name="device_id[{{$k}}]" class="form-control macAddress" value="{{ $stocks->mac_id }}" placeholder="{{ \App\CPU\translate('Device ID') }}">
+                                                        <input type="text" @if(!empty($stocks->is_purchased)) disabled="disabled" @endif name="device_id[{{$k}}]" class="form-control macAddress" value="{{ $stocks->mac_id }}" placeholder="{{ \App\CPU\translate('Device ID') }}">
                                                     </div>
                                                 </div>
 												<div class="col-md-3">
                                                     <div class="form-group">
-                                                        <input type="text" name="uuid[{{$k}}]" class="form-control " value="{{ $stocks->uuid }}" placeholder="{{ \App\CPU\translate('UUID') }}" required>
+                                                        <input type="text" @if(!empty($stocks->is_purchased)) disabled="disabled" @endif name="uuid[{{$k}}]" class="form-control " value="{{ $stocks->uuid }}" placeholder="{{ \App\CPU\translate('UUID') }}" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-1">
                                                     <div class="form-group">
-                                                        <input type="number" name="major[{{$k}}]" class="form-control " value="{{ $stocks->major }}" placeholder="{{ \App\CPU\translate('major') }}" required>
+                                                        <input type="number" @if(!empty($stocks->is_purchased)) disabled="disabled" @endif name="major[{{$k}}]" class="form-control " value="{{ $stocks->major }}" placeholder="{{ \App\CPU\translate('major') }}" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-1">
                                                     <div class="form-group">
-                                                        <input type="number" name="minor[{{$k}}]" class="form-control " value="{{ $stocks->minor }}" placeholder="{{ \App\CPU\translate('minor') }}" required>
+                                                        <input type="number" @if(!empty($stocks->is_purchased)) disabled="disabled" @endif name="minor[{{$k}}]" class="form-control " value="{{ $stocks->minor }}" placeholder="{{ \App\CPU\translate('minor') }}" required>
                                                     </div>
-                                                </div>										
+                                                </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
-                                                        <select name="colors[]" class="form-control">
+                                                        <select name="colors[]" @if(!empty($stocks->is_purchased)) disabled="disabled" @endif class="form-control">
                                                             @if(!empty($product['colors']) && !empty($colors))
                                                                 @php
                                                                 $productColors = explode(",", $product['colors']);
