@@ -582,12 +582,16 @@ class ProductController extends BaseController
 									->where('status', 1)
 									->where('id', $id)
 									->get()[0] ?? [];
-        $product_stock = Product::select('product_stocks.*')
-                        ->join('product_stocks','product_stocks.product_id','products.id')
-                        ->where('product_stocks.product_id',$id)
-                        ->get();
-        
-        return view('admin-views.product.edit-stock', compact('product','product_stock', 'colors','id'));
+        if(!empty($product)){
+            $product_stock = Product::select('product_stocks.*')
+            ->join('product_stocks','product_stocks.product_id','products.id')
+            ->where('product_stocks.product_id',$id)
+            ->get();
+
+            return view('admin-views.product.edit-stock', compact('product','product_stock', 'colors','id'));
+        }else{
+            return redirect()->back()->with('error','Product is Disabled!');
+        }
     }
 
     public function update(Request $request, $id)
