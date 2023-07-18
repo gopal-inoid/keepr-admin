@@ -74,8 +74,7 @@
                                             </div>
                                         </div>
                                         <input id="datatableSearch_" type="search" name="search" class="form-control"
-                                            placeholder="{{\App\CPU\translate('Search by Order ID')}}" aria-label="Search by Order ID" value="{{ $search }}"
-                                            required>
+                                            placeholder="{{\App\CPU\translate('Search by Order ID')}}" aria-label="Search by Order ID" value="{{ $search }}">
                                         <button type="submit" class="btn btn--primary input-group-text">{{\App\CPU\translate('search')}}</button>
                                     </div>
                                     <!-- End Search -->
@@ -147,12 +146,12 @@
                                     <td class="text-capitalize">
                                         @if($order['order_status']=='pending')
                                             <span class="badge badge-soft-info fz-12">
-                                                    {{$order['order_status']}}
+                                                {{$order['order_status']}}
                                             </span>
-
                                         @elseif($order['order_status']=='processing' || $order['order_status']=='out_for_delivery')
                                             <span class="badge badge-soft-warning fz-12">
-                                                {{str_replace('_',' ',$order['order_status'] == 'processing' ? 'packaging':$order['order_status'])}}
+                                                {{-- str_replace('_',' ',$order['order_status'] == 'processing' ? 'packaging':$order['order_status']) --}}
+                                                {{$order['order_status']}}
                                             </span>
                                         @elseif($order['order_status']=='confirmed')
                                             <span class="badge badge-soft-success fz-12">
@@ -176,9 +175,12 @@
                                         <div class="d-flex gap-2">
                                             <select class="form-control js-select2-custom" id="change_order_status" order_id="{{$order['id']}}" name="change_order_status">
                                                 <option {{($order['order_status'] == 'pending' ? 'selected' : '')}} value="pending">Pending</option>
-                                                <option {{($order['order_status'] == 'confirmed' ? 'selected' : '')}} value="confirmed">Confirmed</option>
-                                                <option {{($order['order_status'] == 'failed' ? 'selected' : '')}} value="failed">Failed To Deliver</option>
+                                                <option {{($order['order_status'] == 'processing' ? 'selected' : '')}} value="processing">Processing</option>
+                                                <option {{($order['order_status'] == 'shipped' ? 'selected' : '')}} value="shipped">Shipped</option>
                                                 <option {{($order['order_status'] == 'delivered' ? 'selected' : '')}} value="delivered">Delivered</option>
+                                                <option {{($order['order_status'] == 'cancelled' ? 'selected' : '')}} value="cancelled">Cancelled</option>
+                                                <option {{($order['order_status'] == 'refunded' ? 'selected' : '')}} value="refunded">Refunded</option>
+                                                <option {{($order['order_status'] == 'failed' ? 'selected' : '')}} value="failed">Failed</option>
                                             </select>
                                         </div>
                                     </td>
