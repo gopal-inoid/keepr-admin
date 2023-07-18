@@ -13,6 +13,8 @@ use App\Model\DeliveryManTransaction;
 use App\Model\DeliverymanWallet;
 use App\Model\Order;
 use App\Model\Product;
+use App\Model\Country;
+use App\Model\State;
 use App\Model\OrderDetail;
 use App\Model\OrderTransaction;
 use App\Model\Seller;
@@ -135,6 +137,10 @@ class OrderController extends Controller
         $physical_product = false;
         $total_delivered = Order::where(['order_status' => 'delivered'])->count();
         $shipping_method = Helpers::get_business_settings('shipping_method');
+
+        $countries = \DB::table('country')->select('name','id')->get();
+        $states = \DB::table('states')->select('name','id')->get();
+
         $products = [];
         $total_orders = 0;
         if(!empty($order->mac_ids)){
@@ -149,11 +155,56 @@ class OrderController extends Controller
                 }
             }
         }
-
         //echo "<pre>"; print_r($order); die;
+        return view('admin-views.pos.order.order-details', compact('order','total_orders','products', 'company_name', 'company_web_logo','countries','states'));
+    }
 
-        return view('admin-views.pos.order.order-details', compact('order','total_orders','products', 'company_name', 'company_web_logo'));
+    public function update_order_details(Request $request)
+    {
+        //echo "<pre>"; print_r($request->all()); die;
 
+        $order_id = $request->order_id;
+        $user_id = $request->user_id;
+        if(!empty($order_id)){
+            if(!empty($user_id)){
+                $user_data['name'] = $request->billing_name;
+                $user_data['email'] = $request->email;
+                $user_data['street_address'] = $request->street_address;
+                $user_data['city'] = $request->billing_city;
+                $user_data['state'] = $request->billing_state;
+                $user_data['country'] = $request->billing_country;
+                $user_data['zip'] = $request->billing_zip;
+                $user_data['phone'] = $request->billing_phone;
+                $user_data['shipping_name'] = $request->shipping_name;
+                $user_data['shipping_email'] = $request->shipping_email;
+                $user_data['add_shipping_address'] = $request->add_shipping_address;
+                $user_data['shipping_city'] = $request->shipping_city;
+                $user_data['shipping_state'] = $request->shipping_state;
+                $user_data['shipping_country'] = $request->shipping_country;
+                $user_data['shipping_zip'] = $request->shipping_zip;
+                $user_data['shipping_phone'] = $request->shipping_phone;
+
+                if(!empty($request->is_billing_address_same) && $request->is_billing_address_same == 'on'){
+                    $user_data['is_billing_address_same'] =  1;
+                }
+
+                User::where('id',$user_id)->update($user_data);
+            }
+
+            $order_data['order_status'] = $request->change_order_status;
+            $order_data['created_at'] = date('Y-m-d h:i:s',strtotime($request->order_date));
+            $order_data['order_note'] = $request->order_note;
+            $order_data['expected_delivery_date'] = date('Y-m-d h:i:s',strtotime($request->expected_delivery_date));
+            $order_data['shipment_info'] = $request->shipment_info;
+            $order_data['transaction_ref'] = $request->transaction_ref;
+            $order_data['payment_method'] = $request->payment_method;
+            $order_data['payment_status'] = $request->payment_status;
+            
+            Order::where('id',$order_id)->update($order_data);
+            return redirect()->back()->with('success','Order Details Updated Successfully');
+        }else{
+            return redirect()->back()->with('error','Order not found');
+        }
     }
 
     public function add_delivery_man($order_id, $delivery_man_id)

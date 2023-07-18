@@ -536,6 +536,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
             Route::get('add-delivery-man/{order_id}/{d_man_id}', 'OrderController@add_delivery_man')->name('add-delivery-man');
             Route::get('export-order-data/{status}', 'OrderController@bulk_export_data')->name('order-bulk-export');
             Route::get('change-order-status', 'OrderController@change_order_status')->name('change-order-status');
+            Route::post('update-order-details', 'OrderController@update_order_details')->name('update-order-details');
         });
 
         //pos management
