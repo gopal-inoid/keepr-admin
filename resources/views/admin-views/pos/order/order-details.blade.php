@@ -319,12 +319,14 @@
                                     <thead class="thead-light thead-50 text-capitalize">
                                         <tr>
                                             <th>{{\App\CPU\translate('SL')}}</th>
-                                            <th>{{\App\CPU\translate('Item_Details')}}</th>
-                                            <th>UUID</th>
+                                            <th>{{\App\CPU\translate('Product Name')}}</th>
+                                            <th>Device Info</th>
+                                            <th>Qty</th>
+                                            <th>Price</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php($i=0)
+                                    @php($i=0)
                                     @foreach($products as $key => $detail)
                                     @php($i++)
                                         <tr>
@@ -338,39 +340,69 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                
-                                                @if(!empty($detail['mac_ids']['uuid']))
-                                                    @foreach($detail['mac_ids']['uuid'] as $k => $val)
-                                                        {{$val}}<br>
+                                                @if(!empty($detail['mac_ids']))
+                                                    @foreach($detail['mac_ids'] as $k => $val)
+                                                        <strong>UUID: </strong>{{$val['uuid']}}<br />
+                                                        <strong>Major: </strong>{{$val['major']}}<br />
+                                                        <strong>Minor: </strong>{{$val['minor']}}<br />
+                                                        <hr />
                                                     @endforeach
                                                 @endif
-                                                
                                             </td>
+                                            <td>{{count($detail['mac_ids'])}}</td>
+                                            <td>${{$detail['price'] ?? ''}}</td>
                                         </tr>
                                     @endforeach
                                     </tbody>
                                 </table>
                             </div>
                             <div class="row justify-content-md-end mb-3">
-                                <div class="col-md-9 col-lg-8">
-                                    <dl class="row text-sm-right">
-                                        <dt class="col-sm-6">{{\App\CPU\translate('tax')}}</dt>
-                                        <dd class="col-sm-6 title-color">
-                                            <strong>- {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency(0))}}</strong>
-                                        </dd>
-                                        <dt class="col-sm-6">{{\App\CPU\translate('shipping')}}</dt>
-                                        <dd class="col-sm-6 title-color">
-                                            <strong>- {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency(0))}}</strong>
-                                        </dd>
-                                        <dt class="col-sm-6">{{\App\CPU\translate('discount')}}</dt>
-                                        <dd class="col-sm-6 title-color">
-                                            <strong>- {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency(0))}}</strong>
-                                        </dd>
-                                        <dt class="col-sm-6">{{\App\CPU\translate('Total Amount')}}</dt>
-                                        <dd class="col-sm-6 title-color">
-                                            <strong>{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order['order_amount']))}}</strong>
-                                        </dd>
-                                    </dl>
+                                <div class="col-md-12 col-lg-12">
+
+                                    <table class="table fz-12 table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
+                                        <thead class="thead-light thead-50 text-capitalize">
+                                            <tr>
+                                                <th>{{\App\CPU\translate('Other info')}}</th>
+                                                <th class="text-right">{{\App\CPU\translate('Total Amount')}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <label><strong>{{\App\CPU\translate('Tax info')}}</strong>: </label>
+                                                    @php($tx_amt = $ship_amt = 0)
+                                                    @foreach($tax_info as $product_id => $taxes)
+                                                        @foreach($taxes as $k1 => $tax)
+                                                            @php($tx_amt += $tax['amount'])
+                                                            @php($total_order_amount += $tax['amount'])
+                                                                <strong>{{$tax['title']}}</strong><br />
+                                                        @endforeach
+                                                    @endforeach
+                                                </td>
+                                                <td class="text-right"><strong>${{number_format($tx_amt,2)}}</strong></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label><strong>{{\App\CPU\translate('Shipping info')}}</strong>: </label><br />
+                                                    @foreach($shipping_info as $product_id => $shipping)
+                                                            @php($ship_amt += $shipping['amount'])
+                                                            <strong>Shipping Co.: {{$shipping['title']}}</strong><br />
+                                                            <strong>Duration: {{$shipping['duration']}}</strong><br />
+                                                            <strong>Shipping Mode: {{$shipping['mode']}}</strong>
+                                                    @endforeach
+                                                </td>
+                                                <td class="text-right">
+                                                    <strong>${{number_format($ship_amt,2)}}</strong>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Grand Total</strong></td>
+                                                <td class="text-right">
+                                                    <strong>${{$total_order_amount}}</strong>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
