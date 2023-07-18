@@ -133,7 +133,7 @@ class OrderController extends Controller
         $company_web_logo =BusinessSetting::where('type', 'company_web_logo')->first()->value;
         $order = Order::where(['id' => $id])->first();
         $physical_product = false;
-        $total_delivered = Order::where(['order_status' => 'delivered', 'order_type' => 'default_type'])->count();
+        $total_delivered = Order::where(['order_status' => 'delivered'])->count();
         $shipping_method = Helpers::get_business_settings('shipping_method');
         $products = [];
         $total_orders = 0;
@@ -378,10 +378,9 @@ class OrderController extends Controller
             $order->save();
             $data = $request->order_status;
             $user = User::select('fcm_token')->where('id',$order->customer_id)->first();
-            $msg = "Your Order is ". $request->order_status;
+            $msg = "Your Order with order id #$request->id has been $request->order_status";
             $payload['order_id'] = $request->id;
             $this->sendNotification($user->fcm_token ?? "",$msg,$payload);
-
             return response()->json($data);
         }
     }

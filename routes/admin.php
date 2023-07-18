@@ -532,14 +532,10 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
             Route::get('generate-invoice/{id}', 'OrderController@generate_invoice')->name('generate-invoice')->withoutMiddleware(['module:order_management']);
             Route::get('inhouse-order-filter', 'OrderController@inhouse_order_filter')->name('inhouse-order-filter');
             Route::post('digital-file-upload-after-sell', 'OrderController@digital_file_upload_after_sell')->name('digital-file-upload-after-sell');
-
             Route::post('update-deliver-info','OrderController@update_deliver_info')->name('update-deliver-info');
             Route::get('add-delivery-man/{order_id}/{d_man_id}', 'OrderController@add_delivery_man')->name('add-delivery-man');
-
             Route::get('export-order-data/{status}', 'OrderController@bulk_export_data')->name('order-bulk-export');
-
             Route::get('change-order-status', 'OrderController@change_order_status')->name('change-order-status');
-
         });
 
         //pos management
