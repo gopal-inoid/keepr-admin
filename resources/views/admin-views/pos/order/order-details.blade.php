@@ -18,7 +18,7 @@
             <div class="col-lg-12 col-xl-12">
                 <div class="card h-100">
                     <div class="card-header">
-                        <h3 class="h3 mb-0">{{ \App\CPU\translate('Order_info') }}</h3>
+                        <h3 class="h4 mb-0">{{ \App\CPU\translate('Order_info') }}</h3>
                         <div class="d-flex flex-wrap gap-10 justify-content-sm-end">
                             <a class="btn btn--primary px-4" target="_blank"
                             href="{{route('admin.orders.generate-invoice',[$order['id']])}}">
@@ -54,6 +54,129 @@
                                         <div class="form-group">
                                             <label class="title-color">Order Note</label>
                                             <textarea class="form-control" placeholder="{{ \App\CPU\translate('Order Note') }}"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-xl-12">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h3 class="h4 mb-0">{{ \App\CPU\translate('Customer Billing Detail') }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="title-color">Name</label>
+                                            <input type="text" name="billing_name" class="form-control" value="" placeholder="{{ \App\CPU\translate('Name') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="title-color">Address</label>
+                                            <input type="text" name="billing_address" class="form-control" value="" placeholder="{{ \App\CPU\translate('Address') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="title-color">City</label>
+                                            <input type="text" name="billing_city" class="form-control" value="" placeholder="{{ \App\CPU\translate('City') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="title-color">State</label>
+                                            <input type="text" name="billing_state" class="form-control" value="" placeholder="{{ \App\CPU\translate('State') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="title-color">Country</label>
+                                            <input type="text" name="billing_country" class="form-control" value="" placeholder="{{ \App\CPU\translate('Country') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="title-color">zipcode</label>
+                                            <input type="text" name="billing_zip" class="form-control" value="" placeholder="{{ \App\CPU\translate('Name') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="title-color">Phone</label>
+                                            <input type="text" name="billing_phone" class="form-control" value="" placeholder="{{ \App\CPU\translate('Phone') }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-xl-12">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h3 class="h4 mb-0">{{ \App\CPU\translate('Customer Shipping Detail') }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="">same billing adress</label>
+                                            <label class="switcher">
+                                                <input type="checkbox" onchange="" data-id="country_area" class="status switcher_input" {{ isset($country_restriction_status->value) && $country_restriction_status->value  == 1 ? 'checked' : '' }}>
+                                                <span class="switcher_control"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="title-color">Name</label>
+                                            <input type="text" name="shipping_name" class="form-control" value="" placeholder="{{ \App\CPU\translate('Name') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="title-color">Address</label>
+                                            <input type="text" name="shipping_address" class="form-control" value="" placeholder="{{ \App\CPU\translate('Address') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="title-color">City</label>
+                                            <input type="text" name="shipping_city" class="form-control" value="" placeholder="{{ \App\CPU\translate('City') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="title-color">State</label>
+                                            <input type="text" name="shipping_state" class="form-control" value="" placeholder="{{ \App\CPU\translate('State') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="title-color">Country</label>
+                                            <input type="text" name="shipping_country" class="form-control" value="" placeholder="{{ \App\CPU\translate('Country') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="title-color">Zipcode</label>
+                                            <input type="text" name="shipping_zip" class="form-control" value="" placeholder="{{ \App\CPU\translate('Zipcode') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="title-color">Phone</label>
+                                            <input type="text" name="shipping_phone" class="form-control" value="" placeholder="{{ \App\CPU\translate('Phone') }}">
                                         </div>
                                     </div>
                                 </div>
