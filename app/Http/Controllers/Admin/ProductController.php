@@ -283,18 +283,6 @@ class ProductController extends BaseController
         $query_param = [];
         $search = $request['search'];
         $pro = Product::select('products.name as product_name','products.id as product_id')->join('product_stocks','product_stocks.product_id','products.id');
-        
-        //ProductStock::select('product_stocks.*','products.name as product_name')
-        // if ($request->has('search')) {
-        //     $key = explode(' ', $request['search']);
-        //     $pro = $pro->where(function ($q) use ($key) {
-        //         foreach ($key as $value) {
-        //             $q->Where('name', 'like', "%{$value}%");
-        //         }
-        //     });
-        //     $query_param = ['search' => $request['search']];
-        // }
-        
         $pro = $pro->groupBy('product_id')->orderBy('product_stocks.id', 'DESC')->paginate(Helpers::pagination_limit())->appends($query_param);
 
         //echo "<pre>"; print_r($pro); die;
@@ -594,7 +582,7 @@ class ProductController extends BaseController
 									->where('status', 1)
 									->where('id', $id)
 									->get()[0];
-        $product_stock = Product::select('product_stocks.mac_id', 'product_stocks.color','product_stocks.uuid','product_stocks.major','product_stocks.minor')
+        $product_stock = Product::select('product_stocks.*')
                         ->join('product_stocks','product_stocks.product_id','products.id')
                         ->where('product_stocks.product_id',$id)
                         ->get();

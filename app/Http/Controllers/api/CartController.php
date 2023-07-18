@@ -404,6 +404,7 @@ class CartController extends Controller
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         $order_id = $request->order_id;
         $transaction_id = $request->transaction_id;
+        $payment_id = $request->payment_id;
         $update_order = Order::where(['id'=>$order_id])->first();
         if($update_order){
             
@@ -437,10 +438,17 @@ class CartController extends Controller
     }
 
     public function getPaymentIntent(Request $request){
-
         $order_data = Order::select('order_amount')->where('id',$request->order_id)->first();
         if(!empty($order_data->order_amount)){
-           return $this->CreateCheckout($order_data->order_amount);
+           $payment_intent = $this->CreateCheckout($order_data->order_amount);
+           if(!empty($payment_intent['id'])){
+                $intent_data['id'] = $payment_intent['id'];
+                $intent_data['client_secret'] = $payment_intent['client_secret'];
+                $intent_data['amount'] = $payment_intent['amount'];
+                return response()->json(['status'=>200,'message'=>'Success','data'=>$intent_data],200);
+            }else{
+                return response()->json(['status'=>400,'message'=>'Intent error got from stripe'],200);
+            }
         }else{
            return response()->json(['status'=>400,'message'=>'Order not found'],200);
         }

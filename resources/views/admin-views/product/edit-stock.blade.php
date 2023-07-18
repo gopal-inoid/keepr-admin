@@ -63,7 +63,7 @@
                                         <div class="row mac_id-individual">
                                             <div class="col-md-3">
                                                 <div class="form-group mb-0">
-                                                    <label class="title-color">{{ \App\CPU\translate('Device MAC ID') }}</label>
+                                                    <label class="title-color">{{ \App\CPU\translate('Device ID') }}</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
@@ -94,7 +94,7 @@
                                             <div class="row mac_id-individual">
                                                 <div class="col-md-3">
                                                     <div class="form-group">
-                                                        <input type="text" name="device_id[{{$k}}]" class="form-control macAddress" value="{{ $stocks->mac_id }}" placeholder="{{ \App\CPU\translate('Device MAC ID') }}">
+                                                        <input type="text" name="device_id[{{$k}}]" class="form-control macAddress" value="{{ $stocks->mac_id }}" placeholder="{{ \App\CPU\translate('Device ID') }}">
                                                     </div>
                                                 </div>
 												<div class="col-md-3">
@@ -128,9 +128,15 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-2 form-group mac_id-add-main-btn">
-                                                    <i class="tio-delete-outlined text-danger remove-mac_id-btn"></i>
-                                                </div>
+                                                @if(!empty($stocks->is_purchased))
+                                                    <div class="col-md-2 form-group">
+                                                        <span class="badge text-success fz-12 px-0 mt-2">Purchased</span>
+                                                    </div>
+                                                @else
+                                                    <div class="col-md-2 form-group mac_id-add-main-btn">
+                                                        <i class="tio-delete-outlined text-danger remove-mac_id-btn"></i>
+                                                    </div>
+                                                @endif
                                             </div>
                                     <?php  } } ?>
                                     </div>
@@ -176,7 +182,7 @@
                 `<div class="row mac_id-individual">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <input type="text" name="device_id[`+(cnt+1)+`]" class="form-control" value="" placeholder="{{ \App\CPU\translate('Device MAC ID') }}">
+                            <input type="text" name="device_id[`+(cnt+1)+`]" class="form-control" value="" placeholder="{{ \App\CPU\translate('Device ID') }}">
                         </div>
                     </div>
                     <div class="col-md-3">

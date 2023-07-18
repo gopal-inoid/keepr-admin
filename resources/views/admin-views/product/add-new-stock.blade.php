@@ -66,7 +66,7 @@
                                     <div class="row">
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label class="title-color">{{ \App\CPU\translate('Device MAC ID') }}</label>
+                                                <label class="title-color">{{ \App\CPU\translate('Device ID') }}</label>
                                                 <input type="text" name="device_id[]" maxlength="17" class="form-control macAddress" value="{{ old('device_id') }}" placeholder="{{ \App\CPU\translate('Device MAC ID') }}" required>
                                             </div>
                                         </div>
@@ -144,7 +144,7 @@
                     `<div class="row mac_id-individual">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <input type="text" name="device_id[]" class="form-control" value="" placeholder="{{ \App\CPU\translate('Device MAC ID') }}">
+                                <input type="text" name="device_id[]" class="form-control" value="" placeholder="{{ \App\CPU\translate('Device ID') }}">
                             </div>
                         </div>
                         <div class="col-md-3">
