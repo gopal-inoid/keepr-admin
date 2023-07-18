@@ -2423,4 +2423,9 @@
   'major' => 'Major',
   'minor' => 'Minor',
   'Color is required!' => 'Color is required!',
+  'Device ID' => 'Device ID',
+  'Total purchased stocks' => 'Total purchased stocks',
+  'Order_info' => 'Order info',
+  'Order Date' => 'Order Date',
+  'Order Note' => 'Order Note',
 );
