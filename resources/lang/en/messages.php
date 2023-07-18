@@ -2431,4 +2431,8 @@
   'Customer Billing Detail' => 'Customer Billing Detail',
   'Customer Shipping Detail' => 'Customer Shipping Detail',
   'Zipcode' => 'Zipcode',
+  'Shipment Detail' => 'Shipment Detail',
+  'Payment Detail' => 'Payment Detail',
+  'Product Detail' => 'Product Detail',
+  'Update Information' => 'Update Information',
 );

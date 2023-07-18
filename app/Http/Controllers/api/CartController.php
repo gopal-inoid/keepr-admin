@@ -410,7 +410,6 @@ class CartController extends Controller
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         $order_id = $request->order_id;
         $transaction_id = $request->transaction_id;
-        $payment_id = $request->payment_id;
         $update_order = Order::where(['id'=>$order_id])->first();
         if($update_order){
             

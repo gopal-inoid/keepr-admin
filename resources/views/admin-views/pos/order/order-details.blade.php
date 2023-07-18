@@ -4,6 +4,28 @@
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <style>
+    .phone_code > .form-group {
+        border: 1px solid #ced4da !important;
+        border-radius: 6px !important;
+        width: auto !important;
+    }
+    .phone_code > .form-group:focus {
+        color: #212529;
+        background-color: #fff;
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
+    }
+    .phone_code > .form-group input {
+        display: inline-block !important;
+        width: auto !important;
+        border: none !important;
+    }
+    .phone_code > .form-group input:focus {
+        box-shadow: none !important;
+    }
+</style>
 @endpush
 
 @section('content')
@@ -15,45 +37,50 @@
             </h2>
         </div>
         <div class="row gx-2 gy-3" id="printableArea">
-            <div class="col-lg-12 col-xl-12">
-                <div class="card h-100">
-                    <div class="card-header">
-                        <h3 class="h4 mb-0">{{ \App\CPU\translate('Order_info') }}</h3>
-                        <div class="d-flex flex-wrap gap-10 justify-content-sm-end">
-                            <a class="btn btn--primary px-4" target="_blank"
-                            href="{{route('admin.orders.generate-invoice',[$order['id']])}}">
-                                <i class="tio-print mr-1"></i> {{\App\CPU\translate('Print')}} {{\App\CPU\translate('invoice')}}
-                            </a>
+            <form class="" action="{{ route('admin.orders.update-order-details') }}" method="POST" id="order_detail_form">
+                @csrf
+                <input type="hidden" name="order_id" value="{{$order['id']}}">
+                <input type="hidden" name="user_id" value="{{$order->customer->id}}">
+                <div class="col-lg-12 col-xl-12 mb-3">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h3 class="h4 mb-0">{{ \App\CPU\translate('Order_info') }}</h3>
+                            <div class="d-flex flex-wrap gap-10 justify-content-sm-end">
+                                <a class="btn btn--primary px-4" target="_blank"
+                                href="{{route('admin.orders.generate-invoice',[$order['id']])}}">
+                                    <i class="tio-print mr-1"></i> {{\App\CPU\translate('Print')}} {{\App\CPU\translate('invoice')}}
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="title-color">Order Status</label>
-                                            <select class="form-control js-select2-custom" id="change_order_status" order_id="{{$order['id']}}" name="change_order_status">
-                                                <option {{($order['order_status'] == 'pending' ? 'selected' : '')}} value="pending">Pending</option>
-                                                <option {{($order['order_status'] == 'processing' ? 'selected' : '')}} value="processing">Processing</option>
-                                                <option {{($order['order_status'] == 'shipped' ? 'selected' : '')}} value="shipped">Shipped</option>
-                                                <option {{($order['order_status'] == 'delivered' ? 'selected' : '')}} value="delivered">Delivered</option>
-                                                <option {{($order['order_status'] == 'cancelled' ? 'selected' : '')}} value="cancelled">Cancelled</option>
-                                                <option {{($order['order_status'] == 'refunded' ? 'selected' : '')}} value="refunded">Refunded</option>
-                                                <option {{($order['order_status'] == 'failed' ? 'selected' : '')}} value="failed">Failed</option>
-                                            </select>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="title-color">Order Status</label>
+                                                <select class="form-control js-select2-custom" id="change_order_status" order_id="{{$order['id']}}" name="change_order_status">
+                                                    <option {{($order['order_status'] == 'pending' ? 'selected' : '')}} value="pending">Pending</option>
+                                                    <option {{($order['order_status'] == 'processing' ? 'selected' : '')}} value="processing">Processing</option>
+                                                    <option {{($order['order_status'] == 'shipped' ? 'selected' : '')}} value="shipped">Shipped</option>
+                                                    <option {{($order['order_status'] == 'delivered' ? 'selected' : '')}} value="delivered">Delivered</option>
+                                                    <option {{($order['order_status'] == 'cancelled' ? 'selected' : '')}} value="cancelled">Cancelled</option>
+                                                    <option {{($order['order_status'] == 'refunded' ? 'selected' : '')}} value="refunded">Refunded</option>
+                                                    <option {{($order['order_status'] == 'failed' ? 'selected' : '')}} value="failed">Failed</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="title-color">Order Date</label>
-                                            <input type="date" name="order_date" class="form-control" value="" placeholder="{{ \App\CPU\translate('Order Date') }}">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="title-color">Order Date</label>
+                                                <input type="date" name="order_date" class="form-control" value="{{date('Y-m-d',strtotime($order['created_at']))}}" placeholder="{{ \App\CPU\translate('Order Date') }}">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="title-color">Order Note</label>
-                                            <textarea class="form-control" placeholder="{{ \App\CPU\translate('Order Note') }}"></textarea>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="title-color">Order Note</label>
+                                                <textarea class="form-control" name="order_note" placeholder="{{ \App\CPU\translate('Order Note') }}">{{$order['order_note'] ?? '' }}</textarea>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -61,122 +88,181 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-12 col-xl-12">
-                <div class="card h-100">
-                    <div class="card-header">
-                        <h3 class="h4 mb-0">{{ \App\CPU\translate('Customer Billing Detail') }}</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="title-color">Name</label>
-                                            <input type="text" name="billing_name" class="form-control" value="" placeholder="{{ \App\CPU\translate('Name') }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="title-color">Address</label>
-                                            <input type="text" name="billing_address" class="form-control" value="" placeholder="{{ \App\CPU\translate('Address') }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="title-color">City</label>
-                                            <input type="text" name="billing_city" class="form-control" value="" placeholder="{{ \App\CPU\translate('City') }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="title-color">State</label>
-                                            <input type="text" name="billing_state" class="form-control" value="" placeholder="{{ \App\CPU\translate('State') }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="title-color">Country</label>
-                                            <input type="text" name="billing_country" class="form-control" value="" placeholder="{{ \App\CPU\translate('Country') }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="title-color">zipcode</label>
-                                            <input type="text" name="billing_zip" class="form-control" value="" placeholder="{{ \App\CPU\translate('Name') }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="title-color">Phone</label>
-                                            <input type="text" name="billing_phone" class="form-control" value="" placeholder="{{ \App\CPU\translate('Phone') }}">
-                                        </div>
-                                    </div>
-                                </div>
+                @if($order->customer)
+                    <div class="col-lg-12 col-xl-12 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h3 class="h4 mb-0">{{ \App\CPU\translate('Customer Billing Detail') }}</h3>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-12 col-xl-12">
-                <div class="card h-100">
-                    <div class="card-header">
-                        <h3 class="h4 mb-0">{{ \App\CPU\translate('Customer Shipping Detail') }}</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
+                            <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="">same billing adress</label>
-                                            <label class="switcher">
-                                                <input type="checkbox" onchange="" data-id="country_area" class="status switcher_input" {{ isset($country_restriction_status->value) && $country_restriction_status->value  == 1 ? 'checked' : '' }}>
-                                                <span class="switcher_control"></span>
-                                            </label>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">Name</label>
+                                                    <input type="text" name="billing_name" class="form-control" value="{{$order->customer['name']}}" placeholder="{{ \App\CPU\translate('Name') }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">Email</label>
+                                                    <input type="text" name="email" class="form-control" value="{{$order->customer['email'] ?? ''}}" placeholder="{{ \App\CPU\translate('Email') }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">Address</label>
+                                                    <input type="text" name="street_address" class="form-control" value="{{$order->customer['street_address']}}" placeholder="{{ \App\CPU\translate('Address') }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">City</label>
+                                                    <input type="text" name="billing_city" class="form-control" value="{{$order->customer['city']}}" placeholder="{{ \App\CPU\translate('City') }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">State</label>
+                                                    <select class="form-control js-select2-custom" id="billing_state" name="billing_state">
+                                                        @foreach($states as $k => $val)
+                                                            <option {{($order->customer['state'] == $val->id ? 'selected' : '')}} value="{{$val->id}}">{{$val->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">Country</label>
+                                                    <select class="form-control js-select2-custom" id="billing_country" name="billing_country">
+                                                        @foreach($countries as $k => $val)
+                                                            <option {{($order->customer['country'] == $val->id ? 'selected' : '')}} value="{{$val->id}}">{{$val->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">zipcode</label>
+                                                    <input type="text" name="billing_zip" class="form-control" value="{{$order->customer['zip']}}" placeholder="{{ \App\CPU\translate('Name') }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 phone_code">
+                                                <label class="title-color">Phone</label>
+                                                <div class="form-group">
+                                                    <span class="border-end country-code px-2">{{$order->customer['phone_code']}}</span>
+                                                    <input type="number" class="form-control" value="{{$order->customer['phone'] ?? ''}}" name="billing_phone" placeholder="{{ \App\CPU\translate('Phone') }}" />
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="title-color">Name</label>
-                                            <input type="text" name="shipping_name" class="form-control" value="" placeholder="{{ \App\CPU\translate('Name') }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-xl-12 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h3 class="h4 mb-0">{{ \App\CPU\translate('Customer Shipping Detail') }}</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="">same billing adress</label>
+                                                    <label class="switcher">
+                                                        <input type="checkbox" name="is_billing_address_same" class="switcher_input" {{ isset($order->customer['is_billing_address_same']) && $order->customer['is_billing_address_same']  == 1 ? 'checked' : '' }}>
+                                                        <span class="switcher_control"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">Name</label>
+                                                    <input type="text" name="shipping_name" class="form-control" value="{{$order->customer['shipping_name'] ?? ''}}" placeholder="{{ \App\CPU\translate('Name') }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">Email</label>
+                                                    <input type="text" name="shipping_email" class="form-control" value="{{$order->customer['shipping_email'] ?? ''}}" placeholder="{{ \App\CPU\translate('Email') }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">Address</label>
+                                                    <input type="text" name="add_shipping_address" class="form-control" value="{{$order->customer['add_shipping_address'] ?? ''}}" placeholder="{{ \App\CPU\translate('Address') }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">City</label>
+                                                    <input type="text" name="shipping_city" class="form-control" value="{{$order->customer['shipping_city'] ?? ''}}" placeholder="{{ \App\CPU\translate('City') }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">State</label>
+                                                    <select class="form-control js-select2-custom" id="shipping_state" name="shipping_state">
+                                                        @foreach($states as $k => $val)
+                                                            <option {{($order->customer['state'] == $val->id ? 'selected' : '')}} value="{{$val->id}}">{{$val->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">Country</label>
+                                                    <select class="form-control js-select2-custom" id="shipping_country" name="shipping_country">
+                                                        @foreach($countries as $k => $val)
+                                                            <option {{($order->customer['country'] == $val->id ? 'selected' : '')}} value="{{$val->id}}">{{$val->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">Zip</label>
+                                                    <input type="text" name="shipping_zip" class="form-control" value="{{$order->customer['shipping_zip'] ?? ''}}" placeholder="{{ \App\CPU\translate('Zipcode') }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 phone_code">
+                                                <label class="title-color">Phone</label>
+                                                <div class="form-group">
+                                                    <span class="border-end country-code px-2">{{$order->customer['shipping_phone_code']}}</span>
+                                                    <input type="number" class="form-control" name="shipping_phone" value="{{$order->customer['shipping_phone'] ?? ''}}" placeholder="{{ \App\CPU\translate('Phone') }}" />
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="title-color">Address</label>
-                                            <input type="text" name="shipping_address" class="form-control" value="" placeholder="{{ \App\CPU\translate('Address') }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+                <div class="col-lg-12 col-xl-12 mb-3">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h3 class="h4 mb-0">{{ \App\CPU\translate('Shipment Detail') }}</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="title-color">Estimated Delivery Date</label>
+                                                <input type="date" name="expected_delivery_date" class="form-control" value="{{date('Y-m-d',strtotime($order['expected_delivery_date']))}}">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="title-color">City</label>
-                                            <input type="text" name="shipping_city" class="form-control" value="" placeholder="{{ \App\CPU\translate('City') }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="title-color">State</label>
-                                            <input type="text" name="shipping_state" class="form-control" value="" placeholder="{{ \App\CPU\translate('State') }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="title-color">Country</label>
-                                            <input type="text" name="shipping_country" class="form-control" value="" placeholder="{{ \App\CPU\translate('Country') }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="title-color">Zipcode</label>
-                                            <input type="text" name="shipping_zip" class="form-control" value="" placeholder="{{ \App\CPU\translate('Zipcode') }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="title-color">Phone</label>
-                                            <input type="text" name="shipping_phone" class="form-control" value="" placeholder="{{ \App\CPU\translate('Phone') }}">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="">Shipment information</label>
+                                                <textarea name="shipment_info" class="form-control">{{ $order['shipment_info'] ?? "" }}</textarea>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -184,7 +270,118 @@
                         </div>
                     </div>
                 </div>
-            </div>
+                <div class="col-lg-12 col-xl-12 mb-3">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h3 class="h4 mb-0">{{ \App\CPU\translate('Payment Detail') }}</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="title-color">Payment Transaction ID</label>
+                                                <input type="text" name="transaction_ref" class="form-control" value="{{$order['transaction_ref'] ?? ''}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="">Payment Method</label>
+                                                <select class="form-control" id="payment_method" name="payment_method">
+                                                    <option {{($order['payment_method'] == 'Stripe' ? 'selected' : '')}} value="Stripe">Stripe</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="title-color">Payment Status</label>
+                                                <select class="form-control js-select2-custom" id="payment_status" name="payment_status">
+                                                    <option {{($order['payment_status'] == 'paid' ? 'selected' : '')}} value="paid">Paid</option>
+                                                    <option {{($order['payment_status'] == 'unpaid' ? 'selected' : '')}} value="unpaid">Unpaid</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-xl-12 mb-3">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h3 class="h4 mb-0">{{ \App\CPU\translate('Product Detail') }}</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive datatable-custom">
+                                <table class="table fz-12 table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
+                                    <thead class="thead-light thead-50 text-capitalize">
+                                        <tr>
+                                            <th>{{\App\CPU\translate('SL')}}</th>
+                                            <th>{{\App\CPU\translate('Item_Details')}}</th>
+                                            <th>UUID</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php($i=0)
+                                    @foreach($products as $key => $detail)
+                                    @php($i++)
+                                        <tr>
+                                            <td>{{$i}}</td>
+                                            <td>
+                                                <div class="media align-items-center gap-10">
+                                                    <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$detail['thumbnail']}}" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt="">
+                                                    <div>
+                                                        <a href="#" class="title-color hover-c1"><h6>{{substr($detail['name'],0,30)}}{{strlen($detail['name'])>10?'...':''}}</h6></a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                
+                                                @if(!empty($detail['mac_ids']['uuid']))
+                                                    @foreach($detail['mac_ids']['uuid'] as $k => $val)
+                                                        {{$val}}<br>
+                                                    @endforeach
+                                                @endif
+                                                
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row justify-content-md-end mb-3">
+                                <div class="col-md-9 col-lg-8">
+                                    <dl class="row text-sm-right">
+                                        <dt class="col-sm-6">{{\App\CPU\translate('tax')}}</dt>
+                                        <dd class="col-sm-6 title-color">
+                                            <strong>- {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency(0))}}</strong>
+                                        </dd>
+                                        <dt class="col-sm-6">{{\App\CPU\translate('shipping')}}</dt>
+                                        <dd class="col-sm-6 title-color">
+                                            <strong>- {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency(0))}}</strong>
+                                        </dd>
+                                        <dt class="col-sm-6">{{\App\CPU\translate('discount')}}</dt>
+                                        <dd class="col-sm-6 title-color">
+                                            <strong>- {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency(0))}}</strong>
+                                        </dd>
+                                        <dt class="col-sm-6">{{\App\CPU\translate('Total Amount')}}</dt>
+                                        <dd class="col-sm-6 title-color">
+                                            <strong>{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order['order_amount']))}}</strong>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-xl-12">
+                    <div class="float-right gap-3 mt-3">
+                        <button type="submit" class="btn btn--primary">{{ \App\CPU\translate('Update Information') }}</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
     <!--Show locations on map Modal -->
