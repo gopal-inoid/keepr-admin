@@ -359,6 +359,12 @@ class CartController extends Controller
                 }
 
                 $stripe_payment_create = $this->CreateCheckout($total_price);
+                if(!empty($stripe_payment_create['id'])){
+                    $intent_data['id'] = $stripe_payment_create['id'];
+                    $intent_data['client_secret'] = $stripe_payment_create['client_secret'];
+                    $intent_data['amount'] = $stripe_payment_create['amount'];
+                }
+
                 $order = new Order();
                 $order->customer_id = $user_details->id;
                 $order->payment_method = 'Stripe';
@@ -383,7 +389,7 @@ class CartController extends Controller
                 }
 
                 Common::addLog([]);
-                return response()->json(['status'=>200,'message'=>'Success','stripe_intent'=>$stripe_payment_create,'order_id'=>$order->id ?? NULL],200);
+                return response()->json(['status'=>200,'message'=>'Success','stripe_intent'=>$intent_data,'order_id'=>$order->id ?? NULL],200);
 
             }else{
                 Common::addLog([]);

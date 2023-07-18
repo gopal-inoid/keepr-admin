@@ -2428,4 +2428,7 @@
   'Order_info' => 'Order info',
   'Order Date' => 'Order Date',
   'Order Note' => 'Order Note',
+  'Customer Billing Detail' => 'Customer Billing Detail',
+  'Customer Shipping Detail' => 'Customer Shipping Detail',
+  'Zipcode' => 'Zipcode',
 );
