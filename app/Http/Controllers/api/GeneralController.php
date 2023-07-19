@@ -350,7 +350,7 @@ class GeneralController extends Controller
                 }elseif(time() > strtotime($order['expected_delivery_date']) && $order['order_status'] == 'delivered'){
                     $order_list[$k]['delivery_message']  = 'Delivered on '.  date('F j',strtotime($order['expected_delivery_date']));
                 }else{
-                    $order_list[$k]['delivery_message']  = $order['order_status'];
+                    $order_list[$k]['delivery_message']  = null;
                 }
                 
                 $mac_ids = 0;
@@ -389,7 +389,7 @@ class GeneralController extends Controller
                 }elseif(time() > strtotime($get_orders->expected_delivery_date) && $get_orders->order_status == 'delivered'){
                     $get_orders->delivery_message  = 'Delivered on '.  date('F j',strtotime($get_orders->expected_delivery_date));
                 }else{
-                    $get_orders->delivery_message  = $get_orders->order_status;
+                    $get_orders->delivery_message  = null;
                 }
 
                 $get_orders->shipping = [
