@@ -337,7 +337,7 @@ class GeneralController extends Controller
         if(!empty($user_details->id)){
 
             $order_list = [];
-            $get_orders = Order::select('id as order_id','order_status','customer_id','mac_ids','order_amount','created_at')
+            $get_orders = Order::select('id as order_id','order_status','expected_delivery_date','customer_id','mac_ids','order_amount','created_at')
                                ->where(['customer_id'=>$user_details->id])->get();
             foreach($get_orders as $k => $order){
                 $order_list[$k]['order_id'] = $order['order_id'];
@@ -345,10 +345,10 @@ class GeneralController extends Controller
                 $order_list[$k]['order_amount'] = number_format($order['order_amount'],2);
                 $order_list[$k]['order_date'] = date('F j,Y, h:i A',strtotime($order['created_at']));
                 
-                if(time() < strtotime($order['created_at'] . '+7 days') && ($order['customer_id'] == 'processing' || $order['customer_id'] == 'shipped')){
-                    $order_list[$k]['delivery_message'] = 'Estimated Delivery on '. date('F j',strtotime($order['created_at'] . '+7 days'));
-                }elseif(time() > strtotime($order['created_at'] . '+7 days') && $order['customer_id'] == 'delivered'){
-                    $order_list[$k]['delivery_message']  = 'Delivered on '.  date('F j',strtotime($order['created_at'] . '+7 days'));
+                if(time() < strtotime($order['expected_delivery_date']) && ($order['customer_id'] == 'processing' || $order['customer_id'] == 'shipped')){
+                    $order_list[$k]['delivery_message'] = 'Estimated Delivery on '. date('F j',strtotime($order['expected_delivery_date']));
+                }elseif(time() > strtotime($order['expected_delivery_date']) && $order['customer_id'] == 'delivered'){
+                    $order_list[$k]['delivery_message']  = 'Delivered on '.  date('F j',strtotime($order['expected_delivery_date']));
                 }
                 
                 $mac_ids = 0;
@@ -370,7 +370,7 @@ class GeneralController extends Controller
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
-            $get_orders = Order::select('id','customer_id','mac_ids','payment_status','order_status','order_amount','shipping_address','created_at')
+            $get_orders = Order::select('id','customer_id','mac_ids','payment_status','expected_delivery_date','order_status','order_amount','shipping_address','created_at')
                                 ->where(['id'=>$order_id])->first();
             $total_mac_ids = [];
             if(!empty($get_orders->id)){
@@ -382,10 +382,10 @@ class GeneralController extends Controller
                 $shipping_address = User::select('add_shipping_address','shipping_name','shipping_email','shipping_phone','shipping_country','shipping_city','shipping_state','shipping_zip')
                                             ->where(['id'=>$get_orders->customer_id])->first();
 
-                if(time() < strtotime($get_orders->created_at . '+7 days') && ($get_orders->order_status == 'processing' || $get_orders->order_status == 'shipped')){
-                    $get_orders->delivery_message = 'Estimated Delivery on '. date('F j',strtotime($get_orders->created_at . '+7 days'));
-                }elseif(time() > strtotime($get_orders->created_at . '+7 days') && $get_orders->order_status == 'delivered'){
-                    $get_orders->delivery_message  = 'Delivered on '.  date('F j',strtotime($get_orders->created_at . '+7 days'));
+                if(time() < strtotime($get_orders->expected_delivery_date) && ($get_orders->order_status == 'processing' || $get_orders->order_status == 'shipped')){
+                    $get_orders->delivery_message = 'Estimated Delivery on '. date('F j',strtotime($get_orders->expected_delivery_date));
+                }elseif(time() > strtotime($get_orders->expected_delivery_date) && $get_orders->order_status == 'delivered'){
+                    $get_orders->delivery_message  = 'Delivered on '.  date('F j',strtotime($get_orders->expected_delivery_date));
                 }
 
                 $get_orders->shipping = [
