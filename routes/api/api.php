@@ -75,6 +75,7 @@ Route::group(['namespace' => 'api'], function () {
         Route::post('create-checkout', 'CartController@CreateCheckout');
         Route::post('confirm-order', 'CartController@confirm_order');
         Route::post('get-paymentIntent', 'CartController@getPaymentIntent');
+        Route::post('get-confirmed_payment_intent', 'CartController@confirmed_payment_intent');
         
     });
 

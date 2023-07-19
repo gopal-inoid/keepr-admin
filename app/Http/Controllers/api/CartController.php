@@ -252,33 +252,15 @@ class CartController extends Controller
                     }
                 }
             }
-
             //TAX calculation
-            //$tax_arr = $this->getTaxCalculation(20,"Canada","Quebec");
             $tax_arr = $this->getTaxCalculation($total_price,$country_name,$state_name);
             //END Tax calculation
-
-            //echo "<pre>"; print_r($tax_arr); die;
-
-            //$tax = "";
-            // $taxes = [];
-            // $tax_amt = $tax_arr['tax_amt'] ?? "0";
-            // if(!empty($tax_arr['tax_percent']) && !empty($tax_arr['tax_name'])){
-            //     $tax = "Total Tax " . $tax_arr['tax_percent'] . "% " . $tax_arr['tax_name'];
-            // }
-            
             $data['cart_info'] = $cart_info;
             $data['shipping_rates'] = $shipping_cost_check;
             $data['customer_id'] = $user_details->id;
             $data['total_order'] = $total_order;
             $data['sub_total'] = number_format($total_price, 2);
-            //$data['shipping'] = $shipping;
-            //$data['total_tax_percent'] = number_format($tax_arr['tax_percent'],3) ?? "0";
-            //$data['total_tax_amount'] = number_format($tax_amt,2);
-            //$data['tax_desc'] = $tax;
             $data['taxes'] = $tax_arr;
-            //$data['total'] = number_format(($total_price), 2);
-            //echo "<pre>"; print_r($mac_ids); die;
             Common::addLog([]);
             return response()->json(['status'=>200,'message'=>'Success','data'=>$data],200);
         }else{
@@ -292,14 +274,10 @@ class CartController extends Controller
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         $cart_id = $request->cart_id;
-
         $shipping_id = $request->shipping_id ?? "";
 		$taxes = $request->tax;
-		//$tax_amount = $request->tax_amount;
 		$shipping_rate_id = $request->shipping_rate_id;
 		$shipping_mode = $request->shipping_mode;
-
-        
         $left = ltrim($cart_id, "'");
         $right = rtrim($left, "'");
         $data = json_decode($right,true);
@@ -309,7 +287,6 @@ class CartController extends Controller
                 array_push($cart_ids,$val['id']);
             }
         }
-
         $existed_mac_ids =  $mac_ids_array = [];
         $total_price = $error = 0;
         $check_mac_ids = Order::select('mac_ids')->get();
@@ -336,7 +313,6 @@ class CartController extends Controller
                     $total_price += ($price * $cart['quantity']);
                     $get_random_stocks = ProductStock::select('uuid','major','minor','product_id')->where('is_purchased',0)
                                                       ->where('product_id',$cart['product_id'])
-                                                      //->whereNotIn('uuid',$existed_mac_ids['uuid'])
                                                       ->inRandomOrder()->limit($cart['quantity'])->get();
                     if(!empty($get_random_stocks)){
                         foreach($get_random_stocks as $m => $macid){
@@ -348,7 +324,6 @@ class CartController extends Controller
                             }
                         }
                     }
-
                     if(!in_array($cart['product_id'],array_keys($mac_ids_array))){
                         $error = 1;
                     }
@@ -375,10 +350,9 @@ class CartController extends Controller
                 $order->mac_ids = json_encode($mac_ids_array);
                 $order->order_amount = number_format($total_price,2);
                 $order->save();
-
                 if(!empty($order->mac_ids)){
                     $mac_ids = json_decode($order->mac_ids,true);
-                    foreach($mac_ids as $product_id => $mac_values){  
+                    foreach($mac_ids as $product_id => $mac_values){
                         foreach($mac_values as $k => $macss){
                             foreach($macss as $m => $macs){
                                 ProductStock::where('product_id',$product_id)->where(['uuid'=>$mac_values['uuid'][$m],'major'=>$mac_values['major'][$m],'minor'=>$mac_values['minor'][$m]])->update(['is_purchased'=>1]);
@@ -404,6 +378,15 @@ class CartController extends Controller
         }
     }
 
+    public function confirmed_payment_intent(Request $request){
+
+        $trans_id = $request->trans_id;
+        $stripe = new \Stripe\StripeClient('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
+        $data = $stripe->paymentIntents->confirm($trans_id);
+        echo "<pre>"; print_r($data); die;
+
+    }
+
     public function confirm_order(Request $request)
     {
         $auth_token   = $request->headers->get('X-Access-Token');
@@ -415,10 +398,10 @@ class CartController extends Controller
             
             $update_order->transaction_ref = $transaction_id;
             $update_order->payment_status = 'paid';
-            $update_order->order_status = 'confirmed';
+            $update_order->order_status = 'processing';
             $update_order->save();
 
-            $msg = "Your Order has been placed, Estimated Delivery on " . date('F j',strtotime($update_order->created_at . '+7 days'));
+            $msg = "Your Order has been confirmed, Estimated Delivery on " . date('F j',strtotime($update_order->created_at . '+7 days'));
             $payload['order_id'] = $update_order->id ?? NULL;
             $this->sendNotification($user_details->fcm_token,$msg,$payload);
             Common::addLog([]);
