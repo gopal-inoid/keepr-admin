@@ -380,7 +380,7 @@ class GeneralController extends Controller
                 $shipping_address = User::select('add_shipping_address','shipping_name','shipping_email','shipping_phone','shipping_country','shipping_city','shipping_state','shipping_zip')
                                             ->where(['id'=>$get_orders->customer_id])->first();
 
-                if(time() < strtotime($get_orders->created_at . '+7 days') && $get_orders->order_status != 'delivered'){
+                if(time() < strtotime($get_orders->created_at . '+7 days') && ($get_orders->order_status == 'processing' || $get_orders->order_status == 'shipped')){
                     $get_orders->delivery_message = 'Estimated Delivery on '. date('F j',strtotime($get_orders->created_at . '+7 days'));
                 }elseif(time() > strtotime($get_orders->created_at . '+7 days') && $get_orders->order_status == 'delivered'){
                     $get_orders->delivery_message  = 'Delivered on '.  date('F j',strtotime($get_orders->created_at . '+7 days'));
