@@ -345,10 +345,12 @@ class GeneralController extends Controller
                 $order_list[$k]['order_amount'] = number_format($order['order_amount'],2);
                 $order_list[$k]['order_date'] = date('F j,Y, h:i A',strtotime($order['created_at']));
                 
-                if(time() < strtotime($order['expected_delivery_date']) && ($order['customer_id'] == 'processing' || $order['customer_id'] == 'shipped')){
+                if(time() < strtotime($order['expected_delivery_date']) && ($order['order_status'] == 'processing' || $order['order_status'] == 'shipped')){
                     $order_list[$k]['delivery_message'] = 'Estimated Delivery on '. date('F j',strtotime($order['expected_delivery_date']));
-                }elseif(time() > strtotime($order['expected_delivery_date']) && $order['customer_id'] == 'delivered'){
+                }elseif(time() > strtotime($order['expected_delivery_date']) && $order['order_status'] == 'delivered'){
                     $order_list[$k]['delivery_message']  = 'Delivered on '.  date('F j',strtotime($order['expected_delivery_date']));
+                }else{
+                    $order_list[$k]['delivery_message']  = $order['order_status'];
                 }
                 
                 $mac_ids = 0;
@@ -386,6 +388,8 @@ class GeneralController extends Controller
                     $get_orders->delivery_message = 'Estimated Delivery on '. date('F j',strtotime($get_orders->expected_delivery_date));
                 }elseif(time() > strtotime($get_orders->expected_delivery_date) && $get_orders->order_status == 'delivered'){
                     $get_orders->delivery_message  = 'Delivered on '.  date('F j',strtotime($get_orders->expected_delivery_date));
+                }else{
+                    $get_orders->delivery_message  = $get_orders->order_status;
                 }
 
                 $get_orders->shipping = [
