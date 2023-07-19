@@ -387,20 +387,33 @@ class CartController extends Controller
 
     }
 
+    public function verify_payment_intent($trans_id){
+        $stripe = new \Stripe\StripeClient('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
+        $data = $stripe->paymentIntents->retrieve($trans_id);
+        if(!empty($data->status) && $data->status == 'succeeded'){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public function confirm_order(Request $request)
     {
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         $order_id = $request->order_id;
         $transaction_id = $request->transaction_id;
+        $is_verified = $this->verify_payment_intent($transaction_id);
+        if(empty($is_verified)){
+            return response()->json(['status'=>400,'message'=>'Payment failed'],200);
+        }
+
         $update_order = Order::where(['id'=>$order_id])->first();
         if($update_order){
-            
             $update_order->transaction_ref = $transaction_id;
             $update_order->payment_status = 'paid';
             $update_order->order_status = 'processing';
             $update_order->save();
-
             $msg = "Your Order has been confirmed, Estimated Delivery on " . date('F j',strtotime($update_order->created_at . '+7 days'));
             $payload['order_id'] = $update_order->id ?? NULL;
             $this->sendNotification($user_details->fcm_token,$msg,$payload);
@@ -411,7 +424,6 @@ class CartController extends Controller
             return response()->json(['status'=>400,'message'=>'Order not Confirmed,something went wrong'],200);
         }
     }
-
 
     public function CreateCheckout($amount){
         $stripe = new \Stripe\StripeClient('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
