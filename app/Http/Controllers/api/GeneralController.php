@@ -337,18 +337,20 @@ class GeneralController extends Controller
         if(!empty($user_details->id)){
 
             $order_list = [];
-            $get_orders = Order::select('id as order_id','customer_id','mac_ids','order_amount','created_at')
+            $get_orders = Order::select('id as order_id','order_status','customer_id','mac_ids','order_amount','created_at')
                                ->where(['customer_id'=>$user_details->id])->get();
             foreach($get_orders as $k => $order){
                 $order_list[$k]['order_id'] = $order['order_id'];
                 $order_list[$k]['customer_id'] = $order['customer_id'];
                 $order_list[$k]['order_amount'] = number_format($order['order_amount'],2);
                 $order_list[$k]['order_date'] = date('F j,Y, h:i A',strtotime($order['created_at']));
-                if($k == 0){
-                    $order_list[$k]['delivery_message']  = 'Estimated Delivery on February 25';
-                }else{
-                    $order_list[$k]['delivery_message']  = 'Delivered on February 25';
+                
+                if(time() < strtotime($order['created_at'] . '+7 days') && ($order['customer_id'] == 'processing' || $order['customer_id'] == 'shipped')){
+                    $order_list[$k]['delivery_message'] = 'Estimated Delivery on '. date('F j',strtotime($order['created_at'] . '+7 days'));
+                }elseif(time() > strtotime($order['created_at'] . '+7 days') && $order['customer_id'] == 'delivered'){
+                    $order_list[$k]['delivery_message']  = 'Delivered on '.  date('F j',strtotime($order['created_at'] . '+7 days'));
                 }
+                
                 $mac_ids = 0;
                 if(!empty($order['mac_ids'])){
                     $mac_ids = json_decode($order['mac_ids'],true);
