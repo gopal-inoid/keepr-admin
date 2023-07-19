@@ -73,7 +73,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="title-color">Order Date</label>
-                                                <input type="date" name="order_date" class="form-control" value="{{date('Y-m-d',strtotime($order['created_at']))}}" placeholder="{{ \App\CPU\translate('Order Date') }}">
+                                                <input type="date" name="order_date" class="form-control" value="{{date('Y-m-d',strtotime($order['created_at']))}}" placeholder="{{ \App\CPU\translate('Order Date') }}" required>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -255,13 +255,13 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label class="title-color">Tracking ID</label>
-                                                <input type="text" name="tracking_id" class="form-control" value="{{$order['tracking_id']}}">
+                                                <input type="text" name="tracking_id" class="form-control" value="{{$order['tracking_id']}}" required>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label class="title-color">Estimated Delivery Date</label>
-                                                <input type="date" name="expected_delivery_date" class="form-control" value="{{date('Y-m-d',strtotime($order['expected_delivery_date']))}}">
+                                                <input type="date" name="expected_delivery_date" class="form-control" value="{{date('Y-m-d',strtotime($order['expected_delivery_date']))}}" required>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -288,7 +288,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label class="title-color">Payment Transaction ID</label>
-                                                <input type="text" name="transaction_ref" class="form-control" value="{{$order['transaction_ref'] ?? ''}}">
+                                                <input type="text" name="transaction_ref" class="form-control" value="{{$order['transaction_ref'] ?? ''}}" required>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
