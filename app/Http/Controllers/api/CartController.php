@@ -273,6 +273,7 @@ class CartController extends Controller
     {
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
+        $email_templates = $this->getEmailTemplate('order-placed');
         $cart_id = $request->cart_id;
         $shipping_id = $request->shipping_id ?? "";
 		$taxes = $request->tax;
@@ -350,6 +351,7 @@ class CartController extends Controller
                 $order->mac_ids = json_encode($mac_ids_array);
                 $order->order_amount = number_format($total_price,2);
                 $order->save();
+                $this->sendEmail($user_details->email, $email_templates->subject ?? "Order Placed", $email_templates->body ?? "Order has been Placed");
                 if(!empty($order->mac_ids)){
                     $mac_ids = json_decode($order->mac_ids,true);
                     foreach($mac_ids as $product_id => $mac_values){
@@ -401,19 +403,20 @@ class CartController extends Controller
     {
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
+        $email_templates = $this->getEmailTemplate('order-confirmed');
         $order_id = $request->order_id;
         $transaction_id = $request->transaction_id;
         $is_verified = $this->verify_payment_intent($transaction_id);
         if(empty($is_verified)){
             return response()->json(['status'=>400,'message'=>'Payment failed'],200);
         }
-
         $update_order = Order::where(['id'=>$order_id])->first();
         if($update_order){
             $update_order->transaction_ref = $transaction_id;
             $update_order->payment_status = 'paid';
             $update_order->order_status = 'processing';
             $update_order->save();
+            $this->sendEmail($user_details->email, $email_templates->subject ?? "Order Confirmed", $email_templates->body ?? "Order has been Confirmed");
             $payload['order_id'] = $update_order->id ?? NULL;
             $msg = "Your Order has been confirmed with Order ID #" . $payload['order_id'];
             $this->sendNotification($user_details->fcm_token,$msg,$payload);
