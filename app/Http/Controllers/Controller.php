@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\CPU\Helpers;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Facades\Mail;
+use App\Model\EmailTemplates;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -29,6 +31,39 @@ class Controller extends BaseController
     public function getStateName($id){
         $state_names = \DB::table('states')->select('name')->where('id',$id)->first();
         return $state_names->name ?? "";
+    }
+
+    public function getEmailTemplate($key){
+        $get_email = EmailTemplates::select('id','subject','body')->where('status',1)->where('keys',$key)->first();
+        if(!empty($get_email->id)){
+            return $get_email;
+        }else{
+            return false;
+        }
+    }
+
+    public function sendEmail($to,$subject,$body){
+        $emailServices_smtp = Helpers::get_business_settings('mail_config');
+        if ($emailServices_smtp['status'] == 1) {
+            try{
+                Mail::to($to)->send(new \App\Mail\TestEmailSender($subject, $body));
+            }catch(\Exception $e){
+                $error = $e->getMessage();
+            }
+            if(isset($error)){
+                return ['status'=>2,'error'=>$error];
+            }else{
+                return ['status'=>1];
+            }
+        }
+        return false;
+    }
+
+    public function replacedEmailVariables($status,$body){
+        $notif_keys = ["{status}"];
+        $notif_values   = [$status];
+        $body = str_replace($notif_keys, $notif_values, $body);
+        return $body;
     }
 
     public function getTaxCalculation($amount,$country_name,$state_name){

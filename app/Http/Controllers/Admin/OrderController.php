@@ -201,10 +201,11 @@ class OrderController extends Controller
 
         $order_id = $request->order_id;
         $user_id = $request->user_id;
+        $email_templates = $this->getEmailTemplate('order-status-change');
         if(!empty($order_id)){
             if(!empty($user_id)){
 
-                $user_details = User::select('fcm_token')->where(['id'=>$user_id])->first();
+                $user_details = User::select('fcm_token','email')->where(['id'=>$user_id])->first();
 
                 $user_data['name'] = $request->billing_name;
                 $user_data['email'] = $request->email;
@@ -245,6 +246,11 @@ class OrderController extends Controller
             $payload['order_id'] = $order_id;
             $this->sendNotification($user_details->fcm_token,$msg,$payload);
             //
+
+            //SEND ORDER EMAIL
+            $subject = $this->replacedEmailVariables($request->change_order_status,$email_templates->subject ?? "Order");
+            $body = $this->replacedEmailVariables($request->change_order_status,$email_templates->body ?? "Order status has been changed");
+            $this->sendEmail($user_details->email ?? "", $subject, $body); 
             
             Order::where('id',$order_id)->update($order_data);
             return redirect()->back()->with('success','Order Details Updated Successfully');
@@ -471,6 +477,7 @@ class OrderController extends Controller
     {
         if ($request->status) {
             $order = Order::find($request->id);
+            $email_templates = $this->getEmailTemplate('order-status-change');
             $order->order_status = $request->status;
             $order->save();
             $data = $request->order_status;
@@ -478,6 +485,9 @@ class OrderController extends Controller
             $msg = "Your Order with order id #$request->id has been $request->order_status";
             $payload['order_id'] = $request->id;
             $this->sendNotification($user->fcm_token ?? "",$msg,$payload);
+            $subject = $this->replacedEmailVariables($request->status,$email_templates->subject ?? "Order");
+            $body = $this->replacedEmailVariables($request->status,$email_templates->body ?? "Order status has been changed");
+            $this->sendEmail($order->customer->email ?? "", $subject, $body);
             return response()->json($data);
         }
     }

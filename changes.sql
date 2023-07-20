@@ -107,3 +107,5 @@ ALTER TABLE `device_trackings` CHANGE `mac_id` `mac_id` VARCHAR(200) CHARACTER S
 ALTER TABLE `orders` ADD `shipment_info` TEXT NULL DEFAULT NULL AFTER `shipping_mode`;
 
 ALTER TABLE `orders` ADD `tracking_id` VARCHAR(250) NULL DEFAULT NULL AFTER `shipment_info`;
+
+ALTER TABLE `email_templates` ADD `keys` VARCHAR(200) NULL DEFAULT NULL AFTER `name`;
