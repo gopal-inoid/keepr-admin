@@ -54,6 +54,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
         Route::get('search-function', 'SystemController@search_function')->name('search-function');
         Route::get('maintenance-mode', 'SystemController@maintenance_mode')->name('maintenance-mode');
         Route::get('/get-order-data', 'SystemController@order_data')->name('get-order-data');
+        Route::get('/update-place-order-status', 'SystemController@update_place_order_status')->name('update-place-order-status');
 
         Route::group(['prefix' => 'custom-role', 'as' => 'custom-role.','middleware'=>['module:user_section']], function () {
             Route::get('create', 'CustomRoleController@create')->name('create');

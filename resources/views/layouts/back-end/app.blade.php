@@ -301,22 +301,37 @@
 <script src="{{asset('public/assets/back-end')}}/js/bootstrap.min.js"></script>
 {{-- light box --}}
 <script src="{{asset('public/js/lightbox.min.js')}}"></script>
-<audio id="myAudio">
+<!-- <audio id="myAudio">
     <source src="{{asset('public/assets/back-end/sound/notification.mp3')}}" type="audio/mpeg">
-</audio>
+</audio> -->
 <script>
-    var audio = document.getElementById("myAudio");
-
-    function playAudio() {
-        audio.play();
-    }
-
-    function pauseAudio() {
-        audio.pause();
-    }
+    // var audio = document.getElementById("myAudio");
+    // function playAudio() {
+    //     audio.play();
+    // }
+    // function pauseAudio() {
+    //     audio.pause();
+    // }
 </script>
 <script>
-    @if(\App\CPU\Helpers::module_permission_check('order_management'))
+    //@if(\App\CPU\Helpers::module_permission_check('order_management'))
+
+        function check_place_order_status(){
+            $.get({
+                url: "{{route('admin.update-place-order-status')}}",
+                dataType: 'json',
+                success: function (response) {
+                    let data = response.total_updated;
+                    if (data > 0) {
+                        //$('#popup-modal').appendTo("body").modal('show');
+                        console.log('..........order_status_changed.......... ',data.total_updated);
+                    }
+                },
+            });
+        }
+
+        check_place_order_status();
+
         // setInterval(function () {
         //     $.get({
         //         url: '{{route('admin.get-order-data')}}',
@@ -330,7 +345,7 @@
         //         },
         //     });
         // }, 10000);
-    @endif
+    //@endif
 
     function check_order() {
         location.href = '{{route('admin.orders.list',['status'=>'all'])}}';
