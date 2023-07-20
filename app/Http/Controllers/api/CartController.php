@@ -414,8 +414,8 @@ class CartController extends Controller
             $update_order->payment_status = 'paid';
             $update_order->order_status = 'processing';
             $update_order->save();
-            $msg = "Your Order has been confirmed, Estimated Delivery on " . date('F j',strtotime($update_order->created_at . '+7 days'));
             $payload['order_id'] = $update_order->id ?? NULL;
+            $msg = "Your Order has been confirmed with Order ID #" . $payload['order_id'];
             $this->sendNotification($user_details->fcm_token,$msg,$payload);
             Common::addLog([]);
             return response()->json(['status'=>200,'message'=>'Order Successfully Confirmed','order_id'=>(int)$order_id],200);

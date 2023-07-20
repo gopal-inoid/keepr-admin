@@ -139,13 +139,10 @@ class OrderController extends Controller
         $physical_product = false;
         $total_delivered = Order::where(['order_status' => 'delivered'])->count();
         $shipping_method = Helpers::get_business_settings('shipping_method');
-
         $countries = \DB::table('country')->select('name','id')->get();
         $states = \DB::table('states')->select('name','id')->get();
 
-        $products = [];
-        $tax_info = [];
-        $shipping_info = [];
+        $products = $tax_info = $shipping_info = [];
         $total_orders = 0;
         $total_order_amount = $order->order_amount ?? 0;
         if(!empty($order->mac_ids)){ // stocks

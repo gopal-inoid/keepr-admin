@@ -148,18 +148,25 @@
                                             <span class="badge badge-soft-info fz-12">
                                                 {{$order['order_status']}}
                                             </span>
-                                        @elseif($order['order_status']=='processing' || $order['order_status']=='out_for_delivery')
+                                        @elseif($order['order_status']=='processing')
                                             <span class="badge badge-soft-warning fz-12">
-                                                {{-- str_replace('_',' ',$order['order_status'] == 'processing' ? 'packaging':$order['order_status']) --}}
                                                 {{$order['order_status']}}
                                             </span>
-                                        @elseif($order['order_status']=='confirmed')
-                                            <span class="badge badge-soft-success fz-12">
+                                        @elseif($order['order_status']=='refunded')
+                                            <span class="badge badge-soft-warning fz-12">
+                                                {{$order['order_status']}}
+                                            </span>
+                                        @elseif($order['order_status']=='shipped')
+                                            <span class="badge badge-soft-warning fz-12">
                                                 {{$order['order_status']}}
                                             </span>
                                         @elseif($order['order_status']=='failed')
                                             <span class="badge badge-danger fz-12">
-                                                {{$order['order_status'] == 'failed' ? 'Failed To Deliver' : ''}}
+                                                {{$order['order_status']}}
+                                            </span>
+                                        @elseif($order['order_status']=='cancelled')
+                                            <span class="badge badge-danger fz-12">
+                                                {{$order['order_status']}}
                                             </span>
                                         @elseif($order['order_status']=='delivered')
                                             <span class="badge badge-soft-success fz-12">
