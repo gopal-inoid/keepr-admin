@@ -16,8 +16,12 @@ class TestEmailSender extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public $subject;
+    public $mailbody;
+    public function __construct($subject,$mailbody)
     {
+        $this->subject=$subject;
+        $this->mailbody=$mailbody;
         //
     }
 
@@ -28,6 +32,9 @@ class TestEmailSender extends Mailable
      */
     public function build()
     {
-        return $this->view('email-templates.mail-tester');
+        $subject=$this->subject;
+        $mailbody=$this->mailbody;
+        //return $this->view('email-templates.mail-tester');
+        return $this->view('email-templates.mail-tester')->subject($subject)->with('mailbody',$mailbody);
     }
 }

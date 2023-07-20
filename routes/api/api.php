@@ -27,6 +27,7 @@ Route::group(['namespace' => 'api'], function () {
     Route::post('get-pages', 'GeneralController@get_pages');
 
     Route::post('force_update', 'GeneralController@force_update');
+    Route::post('send-test-email', 'GeneralController@send_test_email');
 
     Route::group(['middleware' => ['api_auth']], function () {
 
