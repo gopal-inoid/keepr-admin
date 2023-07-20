@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Http;
 use App\Model\BusinessSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
 use Kreait\Laravel\Firebase\Facades\Firebase;
 use Kreait\Firebase\Exception\Auth\FailedToVerifyToken;
 class GeneralController extends Controller
@@ -501,6 +502,37 @@ class GeneralController extends Controller
         echo "<pre>"; print_r($result); die;
 
 		//return $result;
+    }
+
+    public function send_test_email(Request $request){
+        $to = $request->to;
+        $subject = $request->subject;
+        $body = $request->body;
+        $test = $this->sendEmail($to, $subject, $body);
+        if(isset($test['status']) && $test['status'] == 2){
+            return response()->json(['status'=>400,'message'=>$test['error']],200);
+        }elseif(isset($test['status']) && $test['status'] == 1){
+            return response()->json(['status'=>200,'message'=>'Mail send successfully'],200);
+        }else{
+            return response()->json(['status'=>400,'message'=>'failed'],200);
+        }
+    }
+
+    public function sendEmail($to,$subject,$body){
+        $emailServices_smtp = Helpers::get_business_settings('mail_config');
+        if ($emailServices_smtp['status'] == 1) {
+            try{
+                Mail::to($to)->send(new \App\Mail\TestEmailSender($subject, $body));
+            }catch(\Exception $e){
+                $error = $e->getMessage();
+            }
+            if(isset($error)){
+                return ['status'=>2,'error'=>$error];
+            }else{
+                return ['status'=>1];
+            }
+        }
+        return false;
     }
 
 }
