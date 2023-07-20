@@ -2440,4 +2440,5 @@
   'Other info' => 'Other info',
   'Tax info' => 'Tax info',
   'Shipping info' => 'Shipping info',
+  'Device Info' => 'Device Info',
 );
