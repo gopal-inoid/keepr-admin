@@ -600,7 +600,7 @@ class OrderController extends Controller
             }
         }
 
-        $mpdf_view = View::make('admin-views.order.invoice',
+        return View::make('admin-views.order.invoice',
             compact('order', 'company_phone','total_orders','products', 'company_name', 'company_email', 'company_web_logo','total_order_amount','shipping_info','tax_info')
         );
 
