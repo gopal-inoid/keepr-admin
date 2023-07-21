@@ -2441,4 +2441,8 @@
   'Tax info' => 'Tax info',
   'Shipping info' => 'Shipping info',
   'Device Info' => 'Device Info',
+  'DEVICE ID' => 'DEVICE ID',
+  'Minor' => 'Minor',
+  'Major' => 'Major',
+  'Distance' => 'Distance',
 );

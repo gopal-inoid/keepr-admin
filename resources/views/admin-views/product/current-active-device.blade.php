@@ -1,6 +1,6 @@
 @extends('layouts.back-end.app')
 
-@section('title', \App\CPU\translate('Current Active Devices'))
+@section('title', \App\CPU\translate('Connected Devices'))
 
 @push('css_or_js')
 
@@ -12,7 +12,7 @@
     <div class="mb-3">
         <h2 class="h1 mb-0 text-capitalize d-flex gap-2">
             <img src="{{asset('/public/assets/back-end/img/inhouse-product-list.png')}}" alt="">
-            Current Active Devices
+            Connected Devices
             <span class="badge badge-soft-dark radius-50 fz-14 ml-1">{{ $pro->total() }}</span>
         </h2>
     </div>
@@ -51,8 +51,11 @@
                                 <th>{{\App\CPU\translate('SL')}}</th>
                                 <th>{{\App\CPU\translate('User Phone')}}</th>
                                 <th>{{\App\CPU\translate('Device Name')}}</th>
-                                <th>{{\App\CPU\translate('MAC ID')}}</th>
+                                <th>{{\App\CPU\translate('DEVICE ID')}}</th>
                                 <th>{{\App\CPU\translate('Device UUID')}}</th>
+                                <th>{{\App\CPU\translate('Distance')}}</th>
+                                <th>{{\App\CPU\translate('Major')}}</th>
+                                <th>{{\App\CPU\translate('Minor')}}</th>
                                 <th>{{\App\CPU\translate('Date')}}</th>
                             </tr>
                         </thead>
@@ -60,7 +63,6 @@
                         @foreach($pro as $k=>$p)
                             <tr>
                                 <th scope="row">{{$pro->firstItem()+$k}}</th>
-                                
                                 <td>
                                     {{ $p->user->phone }}
                                 </td>
@@ -77,6 +79,15 @@
                                 </td>
                                 <td>
                                     {{ $p['device_uuid'] }}
+                                </td>
+                                <td>
+                                    {{ $p['distance'] }} Miter
+                                </td>
+                                <td>
+                                    {{ $p['major'] }}
+                                </td>
+                                <td>
+                                    {{ $p['minor'] }}
                                 </td>
                                 <td>
                                     {{ date('Y-m-d',strtotime($p['updated_at'])) }}
