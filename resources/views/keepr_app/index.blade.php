@@ -96,14 +96,15 @@
                         <div class="ms-1 About_Content">About</div>
                         <div class="About_Main_Content">
                             <span class="Ultimate_Bluetooth_Finder">Keepr Ultimate Bluetooth Finder</span>
-                            <p>keepr was founded and designed with one goal in mind: Me wanted to make sure that when
+                            <!-- <p>keepr was founded and designed with one goal in mind: Me wanted to make sure that when
                                 you go out that your valuables come back with you
                             </p>
                             <p>Let’s say you went out for lunch and have keys or a purse that you mistakenly forgot. by
                                 attahing our mini fob to the keys or leaving it inside the purse and pairing it with our
                                 application. the minute you attempt to have without it our application will alert you so
                                 that you can retrieve the item before leaving
-                            </p>
+                            </p> -->
+                            {!! $about_us !!}
                             <div class="download_app_btn_About">
                                 <a href="#Download_keepr" class="btn" type="button ">Download keepr</a>
                             </div>
@@ -212,30 +213,29 @@
                 </div>
             </div>
         </div>
-
-
         <div class="container-fluid Fifth_Section" id="Products">
             <div class="container">
                 <h1 class="text-center" style="font-weight: 600;">Our Products</h1>
                 <div class="row justify-content-evenly mt-5">
-                    <div class="col-md-12 col-lg-5 col-xl-5 Product-1 mx-1 my2">
-
-                        <img src="{{ asset('keepr_app_assets/assests/KeeprDuoPhoto.png') }}" alt="">
-
-                        <div>
-                            <h4 class="ibeacon-headline">Keepr Duo </h4>
-                            <div><span class="Price_Count">$19.99</span> <br><small>Does not include
-                                    shopping/taxes</small>
+                    @if(!empty($Products))
+                        @foreach($Products as $k => $val)
+                            <div class="col-md-12 col-lg-5 col-xl-5 Product-1 mx-1 my2">
+                                <img width="470px;" height="303px;" src="{{ asset('/product/thumbnail/'.$val["thumbnail"])}}" alt="">
+                                <div>
+                                    <h4 class="ibeacon-headline"> {{$val['name']}} </h4>
+                                    <div><span class="Price_Count">${{$val['purchase_price']}} </span> <br><small>Does not include shopping/taxes</small>
+                                    </div>
+                                    <!-- <p class="ibeacon_peragraph">The Keepr duo is smaller fob and has a 1 year battery life. the
+                                        application will alert you when the battery needs replacing. it also comes with adhesive
+                                        to
+                                        stick it on objects as well</p> -->
+                                    <p>{!!$val['details']!!}</p>
+                                    <a href="" class="btn buy_now_btn" type="button">Buy Now</a>
+                                </div>
                             </div>
-                            <p class="ibeacon_peragraph">The Keepr duo is smaller fob and has a 1 year battery life. the
-                                application will alert you when the battery needs replacing. it also comes with adhesive
-                                to
-                                stick it on objects as well</p>
-                            <a href="" class="btn buy_now_btn" type="button">Buy Now</a>
-                        </div>
-                    </div>
+                        @endforeach
+                    @endif
                     <div class="col-md-12 col-lg-5 col-xl-5 mt-md-4 mt-sm-4 mt-lg-0 Product-2 mx-1 my-2">
-
                         <img src="{{ asset('keepr_app_assets/assests/KeeprTriPhoto.jpeg') }}" alt="">
                         <div>
                             <h4 class="ibeacon-headline_2">Keepr Tri</h4>
@@ -254,16 +254,20 @@
                 <div class="container mt-lg-5 pt-lg-5 mt-md-5 pt-md-5 Frequently_Questions" id="Frequently_Questions">
                     <h1 class="text-center" style="font-weight: 600">Frequently Asked Questions</h1>
                     <div class="row justify-content-center mt-5 pb-5">
-                        <div class="col-md-6 Frequently_Asked_Questions" id="Frequently_Asked_Questions2">
-                            <div class="">
+                            @if(!empty($faqs))
+                                @foreach($faqs as $k => $val)
+                                <div class="col-md-6 Frequently_Asked_Questions" id="Frequently_Asked_Questions2">
+                                    <div class="pt-3">
+                                        <h5>{{$val['question']}}</h5>
+                                        <p>{{$val['answer']}}</p>
+                                    </div>
+                                </div>
+                                @endforeach
+                            @endif
+                            <!-- <div class="">
                                 <h5>How to install Keepr?</h5>
                                 <p>You can find and download the Application form the Apple Store or the Google Play
                                     Store. </p>
-                            </div>
-                            <div class="pt-3">
-                                <h5>How can I edit my personal information?</h5>
-                                <p>Once You register and login. you can find and edit you user details at the bottom on
-                                    the application under the users tab.</p>
                             </div>
                             <div class="pt-3">
                                 <h5>Do you have a free trial?</h5>
@@ -276,9 +280,9 @@
                                 <h5>Why do have to pay import fees?</h5>
                                 <p>Some countries require that when a product is shopping from another country a fee is
                                     required to be paid.</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6 Frequently_Asked_Questions mt-lg-0 mt-md-3"
+                            </div> -->
+                        
+                        <!-- <div class="col-md-6 Frequently_Asked_Questions mt-lg-0 mt-md-3"
                             id="Frequently_Asked_Questions1">
                             <div>
                                 <h5>How long does shipping take?</h5>
@@ -301,11 +305,10 @@
                                 <p> We currently only accept the payment methods accepted by Stripe (Visa, Mastercard,
                                     American Express)</p>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <h4 class="text-center mt-5 mb-5">
-                        <b>Haven't find suitable answer? </b><b class="tellUs"><a
-                                href="mailto:support@thekeeprapp.com">Tell us what you need</a></b>
+                        <b>Haven't find suitable answer? </b><b class="tellUs"><a href="mailto:support@thekeeprapp.com">Tell us what you need</a></b>
                     </h4>
                 </div>
             </div>
