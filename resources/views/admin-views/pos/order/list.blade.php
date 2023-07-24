@@ -157,7 +157,7 @@
                                     </span>
                                 @endif
                             </td>
-                            <td> {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order->order_amount))}}</td>
+                            <td>${{$order->order_amount}}</td>
                             <td class="text-capitalize">
                                 @if($order['order_status']=='pending')
                                     <span class="badge badge-soft-info">{{$order['order_status']}}</span>
