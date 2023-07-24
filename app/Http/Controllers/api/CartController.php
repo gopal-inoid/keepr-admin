@@ -418,8 +418,8 @@ class CartController extends Controller
             $update_order->payment_status = 'paid';
             $update_order->order_status = 'processing';
             $update_order->save();
-            $this->save_invoice($update_order->id);
-            $invoice_file_path = public_path('public/assets/orders/order_invoice_'.$update_order->id.'.pdf');
+            $this->save_invoice($order_id);
+            $invoice_file_path = public_path('public/assets/orders/order_invoice_'.$order_id.'.pdf');
             $this->sendEmail($user_details->email, $email_templates->subject ?? "Order Confirmed", $email_templates->body ?? "Order has been Confirmed",$invoice_file_path);
             $payload['order_id'] = $update_order->id ?? NULL;
             $msg = "Your Order has been confirmed with Order ID #" . $payload['order_id'];
