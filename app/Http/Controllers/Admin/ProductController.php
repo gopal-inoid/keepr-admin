@@ -240,14 +240,14 @@ class ProductController extends BaseController
         }
 
         $product_stock = $request->device_id;
-        ProductStock::where(['product_id'=>$id])->delete();
+        ProductStock::where(['is_purchased'=>0,'product_id'=>$id])->delete();
         $colors = $request->colors;
         $uuid = $request->uuid;
         $major = $request->major;
         $minor = $request->minor;
         if(!empty($product_stock)){
             foreach($product_stock as $k => $mac_id){
-                $check = ProductStock::where(['product_id'=>$id,'mac_id'=>$mac_id,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]])->count();
+                $check = ProductStock::where(['is_purchased'=>0,'product_id'=>$id,'mac_id'=>$mac_id,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]])->count();
                 if($check == 0){
                     ProductStock::insert(['product_id'=>$id,'mac_id'=>$mac_id,'color'=>$colors[$k] ?? NULL,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]]);
                 }
