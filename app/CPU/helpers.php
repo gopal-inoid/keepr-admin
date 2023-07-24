@@ -689,6 +689,20 @@ class Helpers
         $mpdf->WriteHTML($mpdf_view);
         $mpdf->Output($file_prefix . $file_postfix . '.pdf', 'D');
     }
+
+    public static function save_mpdf($view, $file_prefix, $file_postfix)
+    {   
+        $save_path = public_path('public/assets/orders');
+        $mpdf = new \Mpdf\Mpdf(['default_font' => 'FreeSerif', 'mode' => 'utf-8', 'format' => [190, 250]]);
+        /* $mpdf->AddPage('XL', '', '', '', '', 10, 10, 10, '10', '270', '');*/
+        $mpdf->autoScriptToLang = true;
+        $mpdf->autoLangToFont = true;
+
+        $mpdf_view = $view;
+        $mpdf_view = $mpdf_view->render();
+        $mpdf->WriteHTML($mpdf_view);
+        $mpdf->Output($save_path . '/' . $file_prefix . $file_postfix . '.pdf', 'F'); //F - save, D - download
+    }
 }
 
 
