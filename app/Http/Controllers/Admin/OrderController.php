@@ -250,7 +250,7 @@ class OrderController extends Controller
             //SEND ORDER EMAIL
             $subject = $this->replacedEmailVariables($request->change_order_status,$email_templates->subject ?? "Order");
             $body = $this->replacedEmailVariables($request->change_order_status,$email_templates->body ?? "Order status has been changed");
-            $this->save_invoice($request->id);
+            //$this->save_invoice($request->id);
             $invoice_file_path = public_path('public/assets/orders/order_invoice_'.$request->id.'.pdf');
             $this->sendEmail($user_details->email ?? "", $subject, $body,$invoice_file_path); 
             
@@ -486,7 +486,7 @@ class OrderController extends Controller
             $user = User::select('fcm_token')->where('id',$order->customer_id)->first();
             $msg = "Your Order with order id #$request->id has been $request->order_status";
             $payload['order_id'] = $request->id;
-            $this->save_invoice($request->id);
+            //$this->save_invoice($request->id);
             $invoice_file_path = public_path('public/assets/orders/order_invoice_'.$request->id.'.pdf');
             $this->sendNotification($user->fcm_token ?? "",$msg,$payload);
             $subject = $this->replacedEmailVariables($request->status,$email_templates->subject ?? "Order");
@@ -611,7 +611,7 @@ class OrderController extends Controller
             }
         }
 
-        $mpdf_view = View::make('admin-views.order.invoice',
+        return $mpdf_view = View::make('admin-views.order.invoice',
             compact('order', 'company_phone','total_orders','products', 'company_name', 'company_email', 'company_web_logo','total_order_amount','shipping_info','tax_info')
         );
 
