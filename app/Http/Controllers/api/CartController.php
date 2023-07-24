@@ -351,7 +351,9 @@ class CartController extends Controller
                 $order->mac_ids = json_encode($mac_ids_array);
                 $order->order_amount = number_format($total_price,2);
                 $order->save();
-                $this->sendEmail($user_details->email, $email_templates->subject ?? "Order Placed", $email_templates->body ?? "Order has been Placed");
+                $this->save_invoice($order->id);
+                $invoice_file_path = public_path('public/assets/orders/order_invoice_'.$order->id.'.pdf');
+                $this->sendEmail($user_details->email, $email_templates->subject ?? "Order Placed", $email_templates->body ?? "Order has been Placed",$invoice_file_path);
                 if(!empty($order->mac_ids)){
                     $mac_ids = json_decode($order->mac_ids,true);
                     foreach($mac_ids as $product_id => $mac_values){
@@ -416,7 +418,9 @@ class CartController extends Controller
             $update_order->payment_status = 'paid';
             $update_order->order_status = 'processing';
             $update_order->save();
-            $this->sendEmail($user_details->email, $email_templates->subject ?? "Order Confirmed", $email_templates->body ?? "Order has been Confirmed");
+            $this->save_invoice($update_order->id);
+            $invoice_file_path = public_path('public/assets/orders/order_invoice_'.$update_order->id.'.pdf');
+            $this->sendEmail($user_details->email, $email_templates->subject ?? "Order Confirmed", $email_templates->body ?? "Order has been Confirmed",$invoice_file_path);
             $payload['order_id'] = $update_order->id ?? NULL;
             $msg = "Your Order has been confirmed with Order ID #" . $payload['order_id'];
             $this->sendNotification($user_details->fcm_token,$msg,$payload);

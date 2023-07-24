@@ -106,7 +106,7 @@
     <div class="card-header">
      </div>
     <div class="card-body">
-    {!!$mailbody!!}
+    {!!$body!!}
     </div>
     <div>
    
