@@ -481,16 +481,43 @@ class OrderController extends Controller
             $order = Order::find($request->id);
             $email_templates = $this->getEmailTemplate('order-status-change');
             $order->order_status = $request->status;
-            $order->save();
+            //$order->save();
             $data = $request->order_status;
-            $user = User::select('fcm_token')->where('id',$order->customer_id)->first();
+            $user = User::where('id',$order->customer_id)->first();
             $msg = "Your Order with order id #$request->id has been $request->order_status";
             $payload['order_id'] = $request->id;
             //$this->save_invoice($request->id);
             $invoice_file_path = public_path('public/assets/orders/order_invoice_'.$request->id.'.pdf');
             $this->sendNotification($user->fcm_token ?? "",$msg,$payload);
+
+            // $total_orders = 0;
+            // $products = [];
+            // if(!empty($order->mac_ids)){
+            //     $mac_ids = json_decode($order->mac_ids,true);
+            //     if(!empty($mac_ids)){
+            //         foreach($mac_ids as $k => $val){
+            //             $total_orders += count($mac_ids[$k]['uuid']);
+            //             $prod = Product::select('name')->find($k);
+            //             $products[$k]['name'] = $prod->name ?? "";
+            //             if(!empty($val)){
+            //                 foreach($val['uuid'] as $k1 => $val1){ 
+            //                     $products[$k]['mac_ids'][$k1]['uuid'] = $val1;
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
+            // echo "<pre>"; print_r($products); die;
+
+            $userData['username'] = $user->name ?? "Keepr User";
+            $userData['order_id'] = $request->id;
+            // $userData['product_name'] = '';
+            // $userData['device_id'] = '';
+            //$userData['qty'] = $total_orders;
+            $userData['total_price'] = $order->order_amount ?? "";
+            $userData['company_name'] = 'Keepr';
             $subject = $this->replacedEmailVariables($request->status,$email_templates->subject ?? "Order");
-            $body = $this->replacedEmailVariables($request->status,$email_templates->body ?? "Order status has been changed");
+            $body = $this->replacedEmailVariables($request->status,$email_templates->body ?? "Order status has been changed",$userData);
             $this->sendEmail($order->customer->email ?? "", $subject, $body,$invoice_file_path);
             return response()->json($data);
         }
