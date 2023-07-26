@@ -705,7 +705,7 @@ class ProductController extends BaseController
         foreach ($products as $item) {
             $data[] = [
                 'product_id' => $item->product_id,
-                'mac_id'        => $item->mac_id,
+                'device_id'        => $item->mac_id,
                 'color'        => $item->color,
                 'uuid'        => $item->uuid,
                 'major'        => $item->major,

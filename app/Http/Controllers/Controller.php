@@ -148,9 +148,14 @@ class Controller extends BaseController
         return false;
     }
 
-    public function replacedEmailVariables($status,$body){
-        $notif_keys = ["{status}"];
-        $notif_values   = [$status];
+    public function replacedEmailVariables($status,$body,$userData = null){
+        if($userData != null){
+            $notif_keys = ["{status}","{USERNAME}","{ORDER_ID}","{PRODUCT_NAME}","{DEVICE_UUID}","{QTY}","{TOTAL_PRICE}","{COMPANY_NAME}"];
+            $notif_values   = [$status,$userData['username'],$userData['order_id'],$userData['product_name'],$userData['device_id'],$userData['qty'],$userData['total_price'],$userData['company_name']];
+        }else{
+            $notif_keys = ["{status}"];
+            $notif_values   = [$status];
+        }
         $body = str_replace($notif_keys, $notif_values, $body);
         return $body;
     }

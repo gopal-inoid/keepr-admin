@@ -6,6 +6,11 @@
     <link href="{{ asset('public/assets/back-end/css/tags-input.min.css') }}" rel="stylesheet">
     <link href="{{ asset('public/assets/select2/css/select2.min.css') }}" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <style>
+       .variable-style{
+        font-size: 16px;padding: 5px;font-weight: bold;
+       }
+    </style>
 @endpush
 
 @section('content')
@@ -57,17 +62,29 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-8">
                                     <div class="form-group">
                                         <label class="title-color" for="body">{{ \App\CPU\translate('Template Body') }}</label>
                                         <textarea name="body" id="body" class="textarea editor-textarea">{{$email_templates->body}}</textarea>
                                     </div>
                                 </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="title-color">Templates Variables</label>
+                                        <div class="variable-style">{USERNAME}</div>
+                                        <div class="variable-style">{ORDER_ID}</div>
+                                        <div class="variable-style">{PRODUCT_NAME}</div>
+                                        <div class="variable-style">{DEVICE_UUID}</div>
+                                        <div class="variable-style">{QTY}</div>
+                                        <div class="variable-style">{TOTAL_PRICE}</div>
+                                        <div class="variable-style">{COMPANY_NAME}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-end m-2">
+                                <button type="submit" class="btn btn--primary">{{ \App\CPU\translate('Update') }}</button>
                             </div>
                         </div>
-                    </div>
-                    <div class="row justify-content-end gap-3 mt-3">
-                        <button type="submit" class="btn btn--primary">{{ \App\CPU\translate('Update') }}</button>
                     </div>
                 </form>
             </div>
