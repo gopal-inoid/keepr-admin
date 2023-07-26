@@ -305,7 +305,7 @@
                 },
                 success: function (data) {
                     toastr.success('{{\App\CPU\translate('Order status change successfully')}}');
-                    //location.reload();
+                    location.reload();
                 },
                 complete: function () {
                     $('#loading').hide();

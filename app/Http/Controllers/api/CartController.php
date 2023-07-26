@@ -351,8 +351,7 @@ class CartController extends Controller
                 $order->mac_ids = json_encode($mac_ids_array);
                 $order->order_amount = number_format($total_price,2);
                 $order->save();
-                //$this->save_invoice($order->id);
-                //$invoice_file_path = public_path('public/assets/orders/order_invoice_'.$order->id.'.pdf');
+                
                 $this->sendEmail($user_details->email, $email_templates->subject ?? "Order Placed", $email_templates->body ?? "Order has been Placed");
                 if(!empty($order->mac_ids)){
                     $mac_ids = json_decode($order->mac_ids,true);
