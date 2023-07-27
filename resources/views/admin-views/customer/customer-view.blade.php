@@ -125,13 +125,6 @@
                             </h4>
 
                             <div class="media">
-                                <div class="mr-3">
-                                    <img
-                                        class="avatar rounded-circle avatar-70" style="width: 75px;height: 42px"
-                                        onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
-                                        src="{{asset('storage/app/public/profile/'.$customer->image??'')}}"
-                                        alt="Image">
-                                </div>
                                 <div class="media-body d-flex flex-column gap-1">
                                     <span class="title-color hover-c1"><strong>{{$customer['f_name'].' '.$customer['l_name']}}</strong></span>
                                     <span class="title-color">
