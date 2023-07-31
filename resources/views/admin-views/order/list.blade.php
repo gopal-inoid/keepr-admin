@@ -345,7 +345,7 @@
                     location.reload();
                 },
                 complete: function () {
-                    $("##loader-overlay").fadeOut(300);
+                    $("#loader-overlay").fadeOut(300);
                 },
             });
         });
