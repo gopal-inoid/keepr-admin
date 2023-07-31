@@ -69,15 +69,48 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
+                                    <label class="title-color">Templates Variables</label>
                                     <div class="form-group">
-                                        <label class="title-color">Templates Variables</label>
-                                        <div class="variable-style">{USERNAME}</div>
-                                        <div class="variable-style">{ORDER_ID}</div>
-                                        <div class="variable-style">{PRODUCT_NAME}</div>
-                                        <div class="variable-style">{DEVICE_UUID}</div>
-                                        <div class="variable-style">{QTY}</div>
-                                        <div class="variable-style">{TOTAL_PRICE}</div>
-                                        <div class="variable-style">{COMPANY_NAME}</div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{STATUS}">
+                                                {STATUS}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{USERNAME}">
+                                                {USERNAME}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{ORDER_ID}">
+                                                {ORDER_ID}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{PRODUCT_NAME}">
+                                                {PRODUCT_NAME}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{DEVICE_UUID}">
+                                                {DEVICE_UUID}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{QTY}">
+                                                {QTY}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{TOTAL_PRICE}">
+                                                {TOTAL_PRICE}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{COMPANY_NAME}">
+                                                {COMPANY_NAME}
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -95,11 +128,41 @@
 @push('script')
 
     {{-- ck editor --}}
-    <script src="{{ asset('/') }}vendor/ckeditor/ckeditor/ckeditor.js"></script>
-    <script src="{{ asset('/') }}vendor/ckeditor/ckeditor/adapters/jquery.js"></script>
+    {{-- <script src="{{ asset('/') }}vendor/ckeditor/ckeditor/ckeditor.js"></script>
+    <script src="{{ asset('/') }}vendor/ckeditor/ckeditor/adapters/jquery.js"></script> --}}
+
+    <link type="text/css" rel="stylesheet" href="{{ asset('jodit/jodit.min.css') }}" />
+	<script src="{{ asset('jodit/jodit.min.js') }}" type="text/javascript"></script>
+       
     <script>
-        $('.textarea').ckeditor({
-            contentsLangDirection: '{{ Session::get('direction') }}',
+        // $('.textarea').ckeditor({
+        //     contentsLangDirection: '{{ Session::get('direction') }}',
+        // });
+
+        var editor = new Jodit("#body", {
+                "spellcheck": false,
+                "defaultMode": "1",
+                "toolbarAdaptive": false,
+                "showXPathInStatusbar": false,
+                "height": 500,
+                "buttons": "source,|,bold,strikethrough,underline,italic,|,superscript,subscript,|,ul,ol,|,outdent,indent,|,font,fontsize,brush,paragraph,|,image,link,hr,|,undo,redo,selectall,fullsize"
+            });
+
+        var common = document.querySelectorAll('.var-common');
+
+        common.forEach(box => {
+            box.addEventListener('click', function handleClick(e) {
+                e.preventDefault();
+                //console.log('box clicked', event);
+                var value = box.getAttribute('data-value');
+                //console.log(document);
+                // if (document.getElementById('subject') === document.activeElement) {
+                //     console.log(value);
+                // }
+                
+                editor.selection.insertHTML(value);
+                
+            });
         });
     </script>
 

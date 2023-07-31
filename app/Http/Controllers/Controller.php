@@ -29,6 +29,40 @@ class Controller extends BaseController
         }
     }
 
+    public function print_r($str){
+        echo "<pre>"; print_r($str); die;
+    }
+
+    public function getOrderAttr($mac_ids){
+        $attr = [];
+        $total_orders = 0;
+        if(!empty($mac_ids)){
+            $macids = json_decode($mac_ids,true);
+            if(!empty($macids)){
+                foreach($macids as $k => $val){
+                    $total_orders += count($val['uuid']);
+                    $product_name = $this->getProductAttr($k,'name');
+                    $attr['product_name'][] = $product_name ?? "";
+                    if(!empty($val)){
+                        foreach($val['uuid'] as $k1 => $val1){ 
+                            $attr['uuid'][] = $val1;
+                        }
+                    }
+                }
+
+                $attr['total_orders'] = $total_orders;
+                return $attr;
+            }
+        }
+
+        return [];
+    }
+
+    public function getProductAttr($product_id,$type){
+        $products_attr = Product::select($type)->where('id',$product_id)->first();
+        return $products_attr->$type ?? "";
+    }
+
     public function getCountryName($id){
         $country_names = \DB::table('country')->select('name')->where('id',$id)->first();
         return $country_names->name ?? "";
@@ -150,10 +184,10 @@ class Controller extends BaseController
 
     public function replacedEmailVariables($status,$body,$userData = null){
         if($userData != null){
-            $notif_keys = ["{status}","{USERNAME}","{ORDER_ID}","{PRODUCT_NAME}","{DEVICE_UUID}","{QTY}","{TOTAL_PRICE}","{COMPANY_NAME}"];
-            $notif_values   = [$status,$userData['username'],$userData['order_id'],$userData['product_name'],$userData['device_id'],$userData['qty'],$userData['total_price'],$userData['company_name']];
+            $notif_keys = ["{STATUS}","{USERNAME}","{ORDER_ID}","{PRODUCT_NAME}","{DEVICE_UUID}","{QTY}","{TOTAL_PRICE}","{COMPANY_NAME}","{COMPANY_LOGO}"];
+            $notif_values   = [$status,$userData['username'],$userData['order_id'],$userData['product_name'],$userData['device_id'],$userData['qty'],$userData['total_price'],$userData['company_name'],$userData['company_logo']];
         }else{
-            $notif_keys = ["{status}"];
+            $notif_keys = ["{STATUS}"];
             $notif_values   = [$status];
         }
         $body = str_replace($notif_keys, $notif_values, $body);

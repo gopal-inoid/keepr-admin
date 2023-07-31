@@ -249,48 +249,28 @@ class OrderController extends Controller
             $order_data['tracking_id'] = $request->tracking_id;
 
             $get_order = Order::where('id',$order_id)->first();
-
-            $total_orders = 0;
-            $products = [];
-            $product_names = $product_uuid = '';
-            if(!empty($get_order->mac_ids)){
-                $mac_ids = json_decode($get_order->mac_ids,true);
-                if(!empty($mac_ids)){
-                    foreach($mac_ids as $k => $val){
-                        $total_orders += count($mac_ids[$k]['uuid']);
-                        $prod = Product::select('name')->find($k);
-                        $products['name'][$k] = $prod->name ?? "";
-                        if(!empty($val)){
-                            foreach($val['uuid'] as $k1 => $val1){ 
-                                $products['uuid'][$k1] = $val1;
-                            }
-                        }
-                    }
-                }
+            $order_attribute = $this->getOrderAttr($get_order->mac_ids);
+            //$this->print_r($a);
+            if(!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])){
+                $product_names = implode(',',$order_attribute['product_name']);
             }
-
+            if(!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])){
+                $product_uuid = implode(',',$order_attribute['uuid']);
+            }
             $userData['username'] = $user_data['name'] ?? "Keepr User";
             $userData['order_id'] = $order_id;
-            if(!empty($products['name'])){
-              $product_names = explode(',',$products['name']);
-            }
-            if(!empty($products['uuid'])){
-                $product_uuid = explode(',',$products['uuid']);
-            }
-
             $userData['product_name'] = $product_names;
             $userData['device_id'] = $product_uuid;
-            $userData['qty'] = $total_orders;
+            $userData['qty'] = $order_attribute['total_orders'] ?? 0;
             $userData['total_price'] = $get_order->order_amount ?? "";
             $userData['company_name'] = 'Keepr';
-
+            $userData['company_logo'] = '<img height="70px;" src="'.url('/public/public/company/Keepr-logo-black.png').'" />';
             //SEND ORDER EMAIL
             $subject = $this->replacedEmailVariables($request->change_order_status,$email_templates->subject ?? "Order");
             $body = $this->replacedEmailVariables($request->change_order_status,$email_templates->body ?? "Order status has been changed",$userData);
             //$this->save_invoice($request->id);
-            $invoice_file_path = public_path('public/assets/orders/order_invoice_'.$request->id.'.pdf');
-            $this->sendEmail($user_details->email ?? "", $subject, $body,$invoice_file_path); 
-            
+            //$invoice_file_path = public_path('public/assets/orders/order_invoice_'.$request->id.'.pdf');
+            $this->sendEmail($user_details->email ?? "", $subject, $body);
             Order::where('id',$order_id)->update($order_data);
             return redirect()->back()->with('success','Order Details Updated Successfully');
         }else{
@@ -515,6 +495,7 @@ class OrderController extends Controller
     public function change_order_status(Request $request)
     {
         if ($request->status) {
+            $product_names = $product_uuid = '';
             $order = Order::find($request->id);
             $email_templates = $this->getEmailTemplate('order-status-change');
             $order->order_status = $request->status;
@@ -524,45 +505,27 @@ class OrderController extends Controller
             $msg = "Your Order with order id #$request->id has been $request->order_status";
             $payload['order_id'] = $request->id;
             //$this->save_invoice($request->id);
-            $invoice_file_path = public_path('public/assets/orders/order_invoice_'.$request->id.'.pdf');
+            //$invoice_file_path = public_path('public/assets/orders/order_invoice_'.$request->id.'.pdf');
             $this->sendNotification($user->fcm_token ?? "",$msg,$payload);
-
-            $total_orders = 0;
-            $products = [];
-            $product_names = $product_uuid = '';
-            if(!empty($order->mac_ids)){
-                $mac_ids = json_decode($order->mac_ids,true);
-                if(!empty($mac_ids)){
-                    foreach($mac_ids as $k => $val){
-                        $total_orders += count($mac_ids[$k]['uuid']);
-                        $prod = Product::select('name')->find($k);
-                        $products['name'][$k] = $prod->name ?? "";
-                        if(!empty($val)){
-                            foreach($val['uuid'] as $k1 => $val1){ 
-                                $products['uuid'][$k1] = $val1;
-                            }
-                        }
-                    }
-                }
+            $order_attribute = $this->getOrderAttr($order->mac_ids);
+            //$this->print_r($order_attribute);
+            if(!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])){
+                $product_names = implode(',',$order_attribute['product_name']);
             }
-
+            if(!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])){
+                $product_uuid = implode(',',$order_attribute['uuid']);
+            }
             $userData['username'] = $user->name ?? "Keepr User";
             $userData['order_id'] = $request->id;
-            if(!empty($products['name'])){
-              $product_names = explode(',',$products['name']);
-            }
-            if(!empty($products['uuid'])){
-                $product_uuid = explode(',',$products['uuid']);
-            }
-
             $userData['product_name'] = $product_names;
             $userData['device_id'] = $product_uuid;
-            $userData['qty'] = $total_orders;
+            $userData['qty'] = $order_attribute['total_orders'] ?? 0;
             $userData['total_price'] = $order->order_amount ?? "";
             $userData['company_name'] = 'Keepr';
+            $userData['company_logo'] = '<img height="70px;" src="'.url('/public/public/company/Keepr-logo-black.png').'" />';
             $subject = $this->replacedEmailVariables($request->status,$email_templates->subject ?? "Order");
             $body = $this->replacedEmailVariables($request->status,$email_templates->body ?? "Order status has been changed",$userData);
-            $this->sendEmail($order->customer->email ?? "", $subject, $body,$invoice_file_path);
+            $this->sendEmail($order->customer->email ?? "", $subject, $body);
             return response()->json($data);
         }
     }
