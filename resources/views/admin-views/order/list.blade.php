@@ -3,7 +3,44 @@
 @section('title', \App\CPU\translate('Order List'))
 
 @push('css_or_js')
-
+<style>
+#loader-overlay{
+  position: fixed;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  height:100%;
+  display: none;
+  background: rgba(0,0,0,0.6);
+}
+.cv-loader-spinner {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+}
+.order-loader-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px #ddd solid;
+  border-top: 4px #2e93e6 solid;
+  border-radius: 50%;
+  animation: sp-anime 0.8s infinite linear;
+}
+@keyframes sp-anime {
+  100% { 
+    transform: rotate(360deg); 
+  }
+}
+.is-hide{
+  display:none;
+}
+</style>
+<div id="loader-overlay">
+    <div class="cv-loader-spinner">
+        <span class="order-loader-spinner"></span>
+    </div>
+</div>
 @endpush
 
 @section('content')
@@ -292,7 +329,7 @@
             }
 
         });
-       
+
         $(document).on('change','#change_order_status',function () {
             
             var value = $(this).val();
@@ -301,14 +338,14 @@
                 url: '{{route('admin.orders.change-order-status')}}',
                 data:{id:id,status:value},
                 beforeSend: function () {
-                    $('#loading').show();
+                    $("#loader-overlay").fadeIn(300);
                 },
                 success: function (data) {
                     toastr.success('{{\App\CPU\translate('Order status change successfully')}}');
                     location.reload();
                 },
                 complete: function () {
-                    $('#loading').hide();
+                    $("##loader-overlay").fadeOut(300);
                 },
             });
         });
