@@ -264,7 +264,7 @@ class OrderController extends Controller
             $userData['qty'] = $order_attribute['total_orders'] ?? 0;
             $userData['total_price'] = $get_order->order_amount ?? "";
             $userData['company_name'] = 'Keepr';
-            $userData['company_logo'] = '<img height="70px;" src="'.url('/public/public/company/Keepr-logo-black.png').'" />';
+            $userData['company_logo'] = '<img height="70px;" src="'.url('/public/public/company/Keepe_logo.png').'" />';
             //SEND ORDER EMAIL
             $subject = $this->replacedEmailVariables($request->change_order_status,$email_templates->subject ?? "Order");
             $body = $this->replacedEmailVariables($request->change_order_status,$email_templates->body ?? "Order status has been changed",$userData);
@@ -522,7 +522,7 @@ class OrderController extends Controller
             $userData['qty'] = $order_attribute['total_orders'] ?? 0;
             $userData['total_price'] = $order->order_amount ?? "";
             $userData['company_name'] = 'Keepr';
-            $userData['company_logo'] = '<img height="70px;" src="'.url('/public/public/company/Keepr-logo-black.png').'" />';
+            $userData['company_logo'] = '<img src="'.url('/public/public/company/Keepe_logo.png').'" />';
             $subject = $this->replacedEmailVariables($request->status,$email_templates->subject ?? "Order");
             $body = $this->replacedEmailVariables($request->status,$email_templates->body ?? "Order status has been changed",$userData);
             $this->sendEmail($order->customer->email ?? "", $subject, $body);
