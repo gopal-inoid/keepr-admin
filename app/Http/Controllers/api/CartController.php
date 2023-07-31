@@ -351,8 +351,26 @@ class CartController extends Controller
                 $order->mac_ids = json_encode($mac_ids_array);
                 $order->order_amount = number_format($total_price,2);
                 $order->save();
-                
-                $this->sendEmail($user_details->email, $email_templates->subject ?? "Order Placed", $email_templates->body ?? "Order has been Placed");
+
+                $order_attribute = $this->getOrderAttr($order->mac_ids);
+                //$this->print_r($a);
+                if(!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])){
+                    $product_names = implode(',',$order_attribute['product_name']);
+                }
+                if(!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])){
+                    $product_uuid = implode(',',$order_attribute['uuid']);
+                }
+                $userData['username'] = $user_data['name'] ?? "Keepr User";
+                $userData['order_id'] = $order->id;
+                $userData['product_name'] = $product_names;
+                $userData['device_id'] = $product_uuid;
+                $userData['qty'] = $order_attribute['total_orders'] ?? 0;
+                $userData['total_price'] = $order->order_amount ?? "";
+                $userData['company_name'] = 'Keepr';
+                $userData['company_logo'] = '<img height="70px;" src="'.url('/public/public/company/Keepr-logo-black.png').'" />';
+                //SEND ORDER EMAIL
+                $body = $this->replacedEmailVariables("Placed",$email_templates->body ?? "Order status has been changed",$userData);
+                $this->sendEmail($user_details->email, $email_templates->subject ?? "Order Placed", $body ?? "Order has been Placed");
                 if(!empty($order->mac_ids)){
                     $mac_ids = json_decode($order->mac_ids,true);
                     foreach($mac_ids as $product_id => $mac_values){
@@ -419,7 +437,26 @@ class CartController extends Controller
             $update_order->save();
             $this->save_invoice($order_id);
             $invoice_file_path = public_path('public/assets/orders/order_invoice_'.$order_id.'.pdf');
-            $this->sendEmail($user_details->email, $email_templates->subject ?? "Order Confirmed", $email_templates->body ?? "Order has been Confirmed",$invoice_file_path);
+
+            $order_attribute = $this->getOrderAttr($update_order->mac_ids);
+            //$this->print_r($a);
+            if(!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])){
+                $product_names = implode(',',$order_attribute['product_name']);
+            }
+            if(!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])){
+                $product_uuid = implode(',',$order_attribute['uuid']);
+            }
+
+            $userData['username'] = $user_details['name'] ?? "Keepr User";
+            $userData['order_id'] = $order_id;
+            $userData['product_name'] = $product_names;
+            $userData['device_id'] = $product_uuid;
+            $userData['qty'] = $order_attribute['total_orders'] ?? 0;
+            $userData['total_price'] = $update_order->order_amount ?? "";
+            $userData['company_name'] = 'Keepr';
+            $userData['company_logo'] = '<img height="70px;" src="'.url('/public/public/company/Keepr-logo-black.png').'" />';
+            $body = $this->replacedEmailVariables("Confirmed",$email_templates->body ?? "Order status has been changed",$userData);
+            $this->sendEmail($user_details->email, $email_templates->subject ?? "Order Confirmed", $body ?? "Order has been Confirmed",$invoice_file_path);
             $payload['order_id'] = $update_order->id ?? NULL;
             $msg = "Your Order has been confirmed with Order ID #" . $payload['order_id'];
             $this->sendNotification($user_details->fcm_token,$msg,$payload);
