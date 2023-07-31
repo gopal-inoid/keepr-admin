@@ -367,7 +367,7 @@ class CartController extends Controller
                 $userData['qty'] = $order_attribute['total_orders'] ?? 0;
                 $userData['total_price'] = $order->order_amount ?? "";
                 $userData['company_name'] = 'Keepr';
-                $userData['company_logo'] = '<img height="70px;" src="'.url('/public/public/company/Keepe_logo.png').'" />';
+                $userData['company_logo'] = '<img src="'.url('/public/public/company/Keepe_logo.png').'" />';
                 //SEND ORDER EMAIL
                 $body = $this->replacedEmailVariables("Placed",$email_templates->body ?? "Order status has been changed",$userData);
                 $this->sendEmail($user_details->email, $email_templates->subject ?? "Order Placed", $body ?? "Order has been Placed");
@@ -454,7 +454,7 @@ class CartController extends Controller
             $userData['qty'] = $order_attribute['total_orders'] ?? 0;
             $userData['total_price'] = $update_order->order_amount ?? "";
             $userData['company_name'] = 'Keepr';
-            $userData['company_logo'] = '<img height="70px;" src="'.url('/public/public/company/Keepe_logo.png').'" />';
+            $userData['company_logo'] = '<img src="'.url('/public/public/company/Keepe_logo.png').'" />';
             $body = $this->replacedEmailVariables("Confirmed",$email_templates->body ?? "Order status has been changed",$userData);
             $this->sendEmail($user_details->email, $email_templates->subject ?? "Order Confirmed", $body ?? "Order has been Confirmed",$invoice_file_path);
             $payload['order_id'] = $update_order->id ?? NULL;
