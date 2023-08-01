@@ -43,7 +43,8 @@ class ProductController extends BaseController
     public function add_new_stock()
     {
         $products = Product::select('id','name','colors')->where('status', 1)->get();
-        return view('admin-views.product.add-new-stock', compact('products'));
+        $colors = Color::get();
+        return view('admin-views.product.add-new-stock', compact('products','colors'));
     }
 
     public function featured_status(Request $request)

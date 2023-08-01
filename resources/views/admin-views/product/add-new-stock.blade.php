@@ -92,15 +92,16 @@
                                             <div class="form-group">
                                                 <label class="title-color">{{ \App\CPU\translate('Color') }}</label>
                                                 <select name="colors[]" class="form-control">
-                                                    @if(!empty($products[0]['colors']))
+                                                    @if(!empty($products[0]['colors'])) 
                                                         @php
-                                                            $colors = json_decode($products[0]['colors'],true);
+                                                            $productcolors=explode(",",$products[0]['colors']);
                                                         @endphp
-                                                        @if(!empty($colors))
-                                                            @foreach($colors as $color)
-                                                                <option value="{{$color['key']}}">{{$color['key']}}</option>
-                                                            @endforeach
-                                                        @endif
+                                                        @foreach($colors as $col)
+                                                                    @if(in_array($col['id'], $productcolors))
+                                                                        <option value="{{$col['id']}}">{{$col['name']}}</option>
+                                                                    @endif
+                                                        @endforeach
+                                                        
                                                     @endif
                                                 </select>
                                             </div>
