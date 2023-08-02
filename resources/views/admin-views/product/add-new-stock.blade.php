@@ -21,6 +21,8 @@
 @endpush
 
 @section('content')
+
+
     <div class="content container-fluid">
         <!-- Page Title -->
         <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
@@ -48,8 +50,14 @@
                                         <select name="product_id" class="form-control">
                                             @if(!empty($products))
                                                 @foreach($products as $pro)
-                                                    <option value="{{$pro->id}}">{{$pro->name}}</option>
+                                                @php 
+                                                   $stockcount = App\Model\productStock::where('product_id',$pro->id)->count();
+                                                @endphp
+                                                @if($stockcount < 0)
+                                                      <option value="{{$pro->id}}">{{$pro->name}}</option>  
+                                                @endif
                                                 @endforeach
+                                                
                                             @endif
                                         </select>
                                     </div>

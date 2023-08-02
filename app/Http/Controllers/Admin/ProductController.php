@@ -83,7 +83,10 @@ class ProductController extends BaseController
     }
 
     public function store(Request $request)
-    {
+    {   echo "<pre>";
+            print_r($request->all());
+        echo "</pre>";
+        exit;
         $validator = Validator::make($request->all(), [
             'name'                 => 'required',
             'purchase_price'       => 'required|numeric|min:1',
@@ -286,7 +289,7 @@ class ProductController extends BaseController
         $pro = Product::select('products.name as product_name','products.id as product_id')->join('product_stocks','product_stocks.product_id','products.id');
         $pro = $pro->groupBy('product_id')->orderBy('product_stocks.id', 'DESC')->paginate(Helpers::pagination_limit())->appends($query_param);
 
-        //echo "<pre>"; print_r($pro); die;
+        // echo "<pre>"; print_r($pro); die;
 
         return view('admin-views.product.stock-list', compact('pro', 'search'));
     }

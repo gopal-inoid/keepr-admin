@@ -47,6 +47,7 @@
                                             <label class="title-color" for="english_name">{{ \App\CPU\translate('Device Name') }}
                                             </label>
                                             <input type="text" required name="name[]" id="english_name" class="form-control" placeholder="New Product">
+                                            <span class="name_notice v_notice text-danger" id="name_notice"></span>
                                         </div>
                                         <input type="hidden" name="lang[]" value="english">
                                     </div>
@@ -55,10 +56,11 @@
                                     <div class="form-group">
                                         <label class="title-color"
                                             for="exampleFormControlInput1">{{ \App\CPU\translate('product_code_sku') }}
-                                            <span class="text-danger">*</span></label>
+                                            <span class="text-danger v_notice">*</span></label>
                                         <input type="text" minlength="6" id="generate_number" name="code"
                                             class="form-control" value="{{ old('code') }}"
                                             placeholder="{{ \App\CPU\translate('code') }}" required>
+                                            <span class="code_notice v_notice text-danger" id="code_notice"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-2 form-group">
@@ -67,18 +69,21 @@
                                         placeholder="{{ \App\CPU\translate('Purchase price') }}"
                                         value="{{ old('purchase_price') }}" name="purchase_price"
                                         class="form-control" required>
+                                        <span class="price_notice v_notice text-danger" id="price_notice"></span>
                                 </div>
                                 <div class="col-md-2 form-group">
                                     <label class="title-color">{{ \App\CPU\translate('RSSI') }}</label>
                                     <input type="text" placeholder="{{ \App\CPU\translate('RSSI') }}"
                                         value="{{ old('rssi') }}" name="rssi"
                                         class="form-control" required>
+                                        <span class="rssi_notice v_notice text-danger" id="rssi_notice"></span>
                                 </div>
                                 <div class="col-md-2 form-group">
                                     <label class="title-color">{{ \App\CPU\translate('UUID') }}</label>
                                     <input type="text" placeholder="{{ \App\CPU\translate('UUID') }}"
                                         value="{{ old('uuid') }}" name="uuid"
                                         class="form-control" required>
+                                        <span class="uuid_notice v_notice text-danger" id="uuid_notice"></span>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -147,7 +152,7 @@
                                 <div class="col-md-12 form-group" id="parent-colors-div">
                                     <div class="row colors-individual">
                                         <div class="col-md-6 form-group">
-                                            <select name="colors[]" class="form-control color-select" multiple>
+                                            <select name="colors[]" class="form-control color-select" multiple required>
                                                 @if(!empty($colors))
                                                     @foreach($colors as $col)
                                                         <option value="{{$col['id']}}">{{$col['name']}}</option>
@@ -203,6 +208,60 @@
     <script src="{{ asset('public/assets/back-end/js/spartan-multi-image-picker.js') }}"></script>
     <script>
         $(function() {
+            var isValidated=true;
+            $(".product-form").submit(function(e){
+                $(".v_notice").each(function(){
+                    $(this).html("");
+                });
+
+             let deviceName=$("#english_name").val();
+             let val1 = $.trim(deviceName);
+             if(val1.length<=0){ 
+                $(".name_notice").html("");
+                $(".name_notice").html("Empty field alert");
+                $(deviceName).val("");
+                isValidated = false;
+              }
+
+             let code=$("#english_name").val();
+             let val2 = $.trim(code);
+             if(val2.length<=0){        
+                $(".code_notice").html("");
+                $(".code_notice").html("Empty field alert");
+                $(code).val("");
+                isValidated = false;
+              }
+
+              let price=$("input[name=purchase_price]");
+              if($(price).val()==0||$(price).val()==" "){ 
+                $(".price_notice").html("");
+                $(".price_notice").html("Invalid value");
+                $(price).val("");
+                isValidated = false;
+              }
+
+              let rssi=$("input[name=rssi]");
+              if($(rssi).val()<=0||$(rssi).val()==" "){ 
+                $(".rssi_notice").html("");
+                $(".rssi_notice").html("Invalid value");
+                $(rssi).val("");
+                 isValidated = false;
+                }
+
+              let uuid=$("input[name=uuid]");
+              if($(uuid).val()<=0||$(uuid).val()==" "){
+                   $(".uuid_notice").html("");
+                $(".uuid_notice").html("Invalid value");
+                $(uuid).val("");
+                 isValidated = false;
+               }
+                // console.log(isValidated);
+               if(isValidated){
+                $(this).submit();
+               }else{
+                 e.preventDefault();  
+               }
+            });
 
             $('.color-select').select2({
                 placeholder:"Select colors"
