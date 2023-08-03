@@ -46,7 +46,7 @@
                                         <div class="form-group">
                                             <label class="title-color" for="english_name">{{ \App\CPU\translate('Device Name') }}
                                             </label>
-                                            <input type="text" required name="name[]" id="english_name" class="form-control" placeholder="New Product">
+                                            <input type="text" required name="name[]" autocomplete="off" id="english_name" class="form-control" placeholder="New Product">
                                             <span class="name_notice v_notice text-danger" id="name_notice"></span>
                                         </div>
                                         <input type="hidden" name="lang[]" value="english">
@@ -57,7 +57,7 @@
                                         <label class="title-color"
                                             for="exampleFormControlInput1">{{ \App\CPU\translate('product_code_sku') }}
                                             <span class="text-danger v_notice">*</span></label>
-                                        <input type="text" minlength="6" id="generate_number" name="code"
+                                        <input type="text" minlength="6" id="generate_number" autocomplete="off" name="code"
                                             class="form-control" value="{{ old('code') }}"
                                             placeholder="{{ \App\CPU\translate('code') }}" required>
                                             <span class="code_notice v_notice text-danger" id="code_notice"></span>
@@ -68,27 +68,27 @@
                                     <input type="number" min="0" step="0.01"
                                         placeholder="{{ \App\CPU\translate('Purchase price') }}"
                                         value="{{ old('purchase_price') }}" name="purchase_price"
-                                        class="form-control" required>
+                                        class="form-control" required autocomplete="off">
                                         <span class="price_notice v_notice text-danger" id="price_notice"></span>
                                 </div>
                                 <div class="col-md-2 form-group">
                                     <label class="title-color">{{ \App\CPU\translate('RSSI') }}</label>
                                     <input type="text" placeholder="{{ \App\CPU\translate('RSSI') }}"
                                         value="{{ old('rssi') }}" name="rssi"
-                                        class="form-control" required>
+                                        class="form-control" required autocomplete="off">
                                         <span class="rssi_notice v_notice text-danger" id="rssi_notice"></span>
                                 </div>
                                 <div class="col-md-2 form-group">
                                     <label class="title-color">{{ \App\CPU\translate('UUID') }}</label>
                                     <input type="text" placeholder="{{ \App\CPU\translate('UUID') }}"
                                         value="{{ old('uuid') }}" name="uuid"
-                                        class="form-control" required>
+                                        class="form-control" required autocomplete="off">
                                         <span class="uuid_notice v_notice text-danger" id="uuid_notice"></span>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="title-color" for="product-desc">{{ \App\CPU\translate('description') }}</label>
-                                        <textarea name="description" id="product-desc" class="textarea editor-textarea">{{ old('description') }}</textarea>
+                                        <textarea name="description" id="product-desc" class="textarea editor-textarea" autocomplete="timezone_offset_get">{{ old('description') }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -208,6 +208,7 @@
     <script src="{{ asset('public/assets/back-end/js/spartan-multi-image-picker.js') }}"></script>
     <script>
         $(function() {
+            // Price, Rssi, Uuid is made mandatory non-zero & non negative 
             var isValidated=true;
             $(".product-form").submit(function(e){
                 $(".v_notice").each(function(){
@@ -219,17 +220,21 @@
              if(val1.length<=0){ 
                 $(".name_notice").html("");
                 $(".name_notice").html("Empty field alert");
-                $(deviceName).val("");
+                $("#english_name").val("");
                 isValidated = false;
+              }else{
+                isValidated = true;
               }
 
-             let code=$("#english_name").val();
+             let code=$("#generate_number").val();
              let val2 = $.trim(code);
              if(val2.length<=0){        
                 $(".code_notice").html("");
                 $(".code_notice").html("Empty field alert");
-                $(code).val("");
+                $("#generate_number").val("");
                 isValidated = false;
+              }else{
+                isValidated = true;
               }
 
               let price=$("input[name=purchase_price]");
@@ -238,6 +243,8 @@
                 $(".price_notice").html("Invalid value");
                 $(price).val("");
                 isValidated = false;
+              }else{
+                isValidated = true;
               }
 
               let rssi=$("input[name=rssi]");
@@ -246,7 +253,9 @@
                 $(".rssi_notice").html("Invalid value");
                 $(rssi).val("");
                  isValidated = false;
-                }
+                }else{
+                isValidated = true;
+              }
 
               let uuid=$("input[name=uuid]");
               if($(uuid).val()<=0||$(uuid).val()==" "){
@@ -254,14 +263,17 @@
                 $(".uuid_notice").html("Invalid value");
                 $(uuid).val("");
                  isValidated = false;
-               }
-                // console.log(isValidated);
+               }else{
+                isValidated = true;
+              }
+                console.log(isValidated);
                if(isValidated){
                 $(this).submit();
                }else{
                  e.preventDefault();  
                }
             });
+            // Front-End validation for Price, Rssi & UUid is right above
 
             $('.color-select').select2({
                 placeholder:"Select colors"
