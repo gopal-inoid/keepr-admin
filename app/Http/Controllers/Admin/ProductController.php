@@ -83,10 +83,7 @@ class ProductController extends BaseController
     }
 
     public function store(Request $request)
-    {   echo "<pre>";
-            print_r($request->all());
-        echo "</pre>";
-        exit;
+    { 
         $validator = Validator::make($request->all(), [
             'name'                 => 'required',
             'purchase_price'       => 'required|numeric|min:1',

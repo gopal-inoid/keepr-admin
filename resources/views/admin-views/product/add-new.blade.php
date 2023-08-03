@@ -266,11 +266,11 @@
                }else{
                 isValidated = true;
               }
-                console.log(isValidated);
                if(isValidated){
                 $(this).submit();
                }else{
-                 e.preventDefault();  
+                 e.preventDefault();
+                 window.scrollTo(0, 0);
                }
             });
             // Front-End validation for Price, Rssi & UUid is right above
