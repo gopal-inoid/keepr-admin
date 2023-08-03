@@ -36,7 +36,7 @@
             <div class="col-md-12">
                 <form class="product-form" action="{{ route('admin.product.store') }}" method="POST"
                     style="text-align: {{ Session::get('direction') === 'rtl' ? 'right' : 'left' }};"
-                    enctype="multipart/form-data" id="product_form">
+                    enctype="multipart/form-data" id="product_form" autocomplete="off">
                     @csrf
                     <div class="card">
                         <div class="card-body">
@@ -56,7 +56,7 @@
                                     <div class="form-group">
                                         <label class="title-color"
                                             for="exampleFormControlInput1">{{ \App\CPU\translate('product_code_sku') }}
-                                            <span class="text-danger v_notice">*</span></label>
+                                            <span class="text-danger">*</span></label>
                                         <input type="text" minlength="6" id="generate_number" autocomplete="off" name="code"
                                             class="form-control" value="{{ old('code') }}"
                                             placeholder="{{ \App\CPU\translate('code') }}" required>
@@ -64,24 +64,24 @@
                                     </div>
                                 </div>
                                 <div class="col-md-2 form-group">
-                                    <label class="title-color">{{ \App\CPU\translate('Price') }}</label>
+                                    <label class="title-color">{{ \App\CPU\translate('Price') }}<span class="text-danger">*</span></label>
                                     <input type="number" min="0" step="0.01"
                                         placeholder="{{ \App\CPU\translate('Purchase price') }}"
-                                        value="{{ old('purchase_price') }}" name="purchase_price"
+                                        value="{{ old('purchase_price') }}" name="purchase_price" id="purchase_price"
                                         class="form-control" required autocomplete="off">
                                         <span class="price_notice v_notice text-danger" id="price_notice"></span>
                                 </div>
                                 <div class="col-md-2 form-group">
-                                    <label class="title-color">{{ \App\CPU\translate('RSSI') }}</label>
+                                    <label class="title-color">{{ \App\CPU\translate('RSSI') }}<span class="text-danger">*</span></label>
                                     <input type="text" placeholder="{{ \App\CPU\translate('RSSI') }}"
-                                        value="{{ old('rssi') }}" name="rssi"
+                                        value="{{ old('rssi') }}" name="rssi" id="rssi"
                                         class="form-control" required autocomplete="off">
                                         <span class="rssi_notice v_notice text-danger" id="rssi_notice"></span>
                                 </div>
                                 <div class="col-md-2 form-group">
-                                    <label class="title-color">{{ \App\CPU\translate('UUID') }}</label>
+                                    <label class="title-color">{{ \App\CPU\translate('UUID') }}<span class="text-danger">*</span></label>
                                     <input type="text" placeholder="{{ \App\CPU\translate('UUID') }}"
-                                        value="{{ old('uuid') }}" name="uuid"
+                                        value="{{ old('uuid') }}" name="uuid" id="uuid"
                                         class="form-control" required autocomplete="off">
                                         <span class="uuid_notice v_notice text-danger" id="uuid_notice"></span>
                                 </div>
@@ -208,12 +208,13 @@
     <script src="{{ asset('public/assets/back-end/js/spartan-multi-image-picker.js') }}"></script>
     <script>
         $(function() {
+
             // Price, Rssi, Uuid is made mandatory non-zero & non negative 
-            var isValidated=true;
             $(".product-form").submit(function(e){
-                $(".v_notice").each(function(){
-                    $(this).html("");
-                });
+            var isValidated=true;
+            $(".v_notice").each(function(){
+                $(this).html("");
+            });
 
              let deviceName=$("#english_name").val();
              let val1 = $.trim(deviceName);
@@ -222,9 +223,7 @@
                 $(".name_notice").html("Empty field alert");
                 $("#english_name").val("");
                 isValidated = false;
-              }else{
-                isValidated = true;
-              }
+             }
 
              let code=$("#generate_number").val();
              let val2 = $.trim(code);
@@ -233,45 +232,37 @@
                 $(".code_notice").html("Empty field alert");
                 $("#generate_number").val("");
                 isValidated = false;
-              }else{
-                isValidated = true;
               }
 
-              let price=$("input[name=purchase_price]");
-              if($(price).val()==0||$(price).val()==" "){ 
+              let price=$("#purchase_price").val();
+              if(price <= 0 || price == ""){ 
                 $(".price_notice").html("");
                 $(".price_notice").html("Invalid value");
-                $(price).val("");
+                $("#purchase_price").val("");
                 isValidated = false;
-              }else{
-                isValidated = true;
               }
 
-              let rssi=$("input[name=rssi]");
-              if($(rssi).val()<=0||$(rssi).val()==" "){ 
+              let rssi=$("#rssi").val().trim();
+              if(rssi <= 0 || rssi.length <=0){ 
                 $(".rssi_notice").html("");
                 $(".rssi_notice").html("Invalid value");
-                $(rssi).val("");
+                $("#rssi").val("");
                  isValidated = false;
-                }else{
-                isValidated = true;
+                }
+
+              let uuid=$("#uuid").val().trim();
+              if(uuid <= 0 || uuid.length == 0){
+                    $(".uuid_notice").html("");
+                    $(".uuid_notice").html("Invalid value");
+                    $("#uuid").val("");
+                    isValidated = false;
               }
 
-              let uuid=$("input[name=uuid]");
-              if($(uuid).val()<=0||$(uuid).val()==" "){
-                   $(".uuid_notice").html("");
-                $(".uuid_notice").html("Invalid value");
-                $(uuid).val("");
-                 isValidated = false;
-               }else{
-                isValidated = true;
-              }
-               if(isValidated){
-                $(this).submit();
-               }else{
-                 e.preventDefault();
-                 window.scrollTo(0, 0);
-               }
+            if(!isValidated){
+            e.preventDefault();
+            window.scrollTo(0, 0);
+            }
+            
             });
             // Front-End validation for Price, Rssi & UUid is right above
 
