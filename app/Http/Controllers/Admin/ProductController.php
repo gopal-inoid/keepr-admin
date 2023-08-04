@@ -566,6 +566,7 @@ class ProductController extends BaseController
     {
         $product = Product::withoutGlobalScopes()->with('translations')->find($id);
         $product_category = json_decode($product->category_ids);
+      
         //$product->colors = json_decode($product->colors);
         $categories = Category::where(['parent_id' => 0])->get();
         $br = Brand::orderBY('name', 'ASC')->get();
@@ -597,7 +598,6 @@ class ProductController extends BaseController
 
     public function update(Request $request, $id)
     {
-
         $product = Product::find($id);
         $validator = Validator::make($request->all(), [
             'name'                 => 'required',
@@ -720,29 +720,27 @@ class ProductController extends BaseController
 
     public function remove_image($id,$name)
     {
-        ImageManager::delete('/product/' . $name);
         $product = Product::find($id);
         $array = [];
-
-        if (count(json_decode($product['images'])) < 1) {
+        if (count(json_decode($product['images'])) == 1) {
             Toastr::warning('You cannot delete all images!');
             return back();
-        }
-
-        $images = json_decode($product['images']);
-        if(count($images) > 0){
-            foreach ($images as $image) {
-                if ($image != $name) {
+        }else{
+            ImageManager::delete('/product/' . $name);
+            $images = json_decode($product['images']);
+            if(count($images) > 0){
+                foreach ($images as $image) {
+                    if ($image != $name) {
                     array_push($array, $image);
+                    }
                 }
             }
-        }
-       
-        Product::where('id', $id)->update([
+            Product::where('id', $id)->update([
             'images' => json_encode($array),
-        ]);
-        Toastr::success('Product image removed successfully!');
-        return back();
+            ]);
+            Toastr::success('Product image removed successfully!');
+            return back();
+        }
     }
 
     public function delete($id)

@@ -351,6 +351,8 @@
 								}
             });
 
+
+          
             $("#coba").spartanMultiImagePicker({
                 fieldName: 'images[]',
                 maxCount: 10,
@@ -363,13 +365,10 @@
                 },
                 dropFileLabel: "Drop Here",
                 onAddRow: function(index, file) {
-
                 },
                 onRenderedPreview: function(index) {
-
                 },
                 onRemoveRow: function(index) {
-
                 },
                 onExtensionErr: function(index, file) {
                     toastr.error(
@@ -456,6 +455,10 @@
                 }
             });
         });
+
+
+
+
 
         function readURL(input) {
             if (input.files && input.files[0]) {
