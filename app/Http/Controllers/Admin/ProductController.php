@@ -594,6 +594,7 @@ class ProductController extends BaseController
 
             return view('admin-views.product.edit-stock', compact('product','product_stock', 'colors','id'));
         }else{
+            
             return redirect()->back()->with('error','Product is Disabled!');
         }
     }
