@@ -80,7 +80,7 @@
                                 //echo "<pre>"; print_r($p->stocks); die;
                                 $total_stocks = \App\Model\ProductStock::where('product_id',$p['product_id'])->count();
                                 $total_purchased_stocks = \App\Model\ProductStock::where('product_id',$p['product_id'])->where('is_purchased',1)->count();
-                             ?>
+                            ?>
                             <tr>
                                 <th scope="row">{{$pro->firstItem()+$k}}</th>
                                 <td class="text-center">

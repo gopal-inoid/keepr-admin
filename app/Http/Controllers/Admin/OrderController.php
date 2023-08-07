@@ -588,7 +588,6 @@ class OrderController extends Controller
         $company_email =BusinessSetting::where('type', 'company_email')->first()->value;
         $company_name =BusinessSetting::where('type', 'company_name')->first()->value;
         $company_web_logo =BusinessSetting::where('type', 'company_web_logo')->first()->value;
-
         $order = Order::where('id', $id)->first();
         $data["email"] = $order->customer !=null?$order->customer["email"]:\App\CPU\translate('email_not_found');
         $data["client_name"] = $order->customer !=null? $order->customer["f_name"] . ' ' . $order->customer["l_name"]:\App\CPU\translate('customer_not_found');

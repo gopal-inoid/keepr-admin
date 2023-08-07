@@ -43,7 +43,8 @@ class ProductController extends BaseController
     public function add_new_stock()
     {
         $products = Product::select('id','name','colors')->where('status', 1)->get();
-        return view('admin-views.product.add-new-stock', compact('products'));
+        $colors = Color::get();
+        return view('admin-views.product.add-new-stock', compact('products','colors'));
     }
 
     public function featured_status(Request $request)
@@ -82,7 +83,7 @@ class ProductController extends BaseController
     }
 
     public function store(Request $request)
-    {
+    { 
         $validator = Validator::make($request->all(), [
             'name'                 => 'required',
             'purchase_price'       => 'required|numeric|min:1',
@@ -203,19 +204,22 @@ class ProductController extends BaseController
                 );
             });
         }
-        //echo "<pre>"; print_r($request->all()); die;
+        // echo "<pre>"; print_r($request->all()); die;
         $colors = $request->colors;
         $uuid = $request->uuid;
         $major = $request->major;
         $minor = $request->minor;
         if(!empty($request->device_id)){
             foreach($request->device_id as $k => $mac_id){
+              
                 $check = ProductStock::where(['product_id'=>$request->product_id,'mac_id'=>$mac_id,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]])->count();
+             
                 if($check == 0){
                     ProductStock::insert(['product_id'=>$request->product_id,'mac_id'=>$mac_id,'color'=>$colors[$k] ?? NULL,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]]);
                 }
             }
         }
+    
 
         Toastr::success(translate('Product Stocks added successfully!'));
         return redirect()->route('admin.product.stocks.list');
@@ -285,7 +289,7 @@ class ProductController extends BaseController
         $pro = Product::select('products.name as product_name','products.id as product_id')->join('product_stocks','product_stocks.product_id','products.id');
         $pro = $pro->groupBy('product_id')->orderBy('product_stocks.id', 'DESC')->paginate(Helpers::pagination_limit())->appends($query_param);
 
-        //echo "<pre>"; print_r($pro); die;
+        // echo "<pre>"; print_r($pro); die;
 
         return view('admin-views.product.stock-list', compact('pro', 'search'));
     }
@@ -308,7 +312,6 @@ class ProductController extends BaseController
         }
         $request_status = $request['status'];
         $pro = $pro->orderBy('id', 'DESC')->paginate(Helpers::pagination_limit())->appends(['status' => $request['status']])->appends($query_param);
-
         return view('admin-views.product.current-active-device', compact('pro', 'search', 'request_status'));
 
     }
@@ -565,6 +568,7 @@ class ProductController extends BaseController
     {
         $product = Product::withoutGlobalScopes()->with('translations')->find($id);
         $product_category = json_decode($product->category_ids);
+      
         //$product->colors = json_decode($product->colors);
         $categories = Category::where(['parent_id' => 0])->get();
         $br = Brand::orderBY('name', 'ASC')->get();
@@ -596,7 +600,6 @@ class ProductController extends BaseController
 
     public function update(Request $request, $id)
     {
-
         $product = Product::find($id);
         $validator = Validator::make($request->all(), [
             'name'                 => 'required',
@@ -719,29 +722,27 @@ class ProductController extends BaseController
 
     public function remove_image($id,$name)
     {
-        ImageManager::delete('/product/' . $name);
         $product = Product::find($id);
         $array = [];
-
-        if (count(json_decode($product['images'])) < 1) {
+        if (count(json_decode($product['images'])) == 1) {
             Toastr::warning('You cannot delete all images!');
             return back();
-        }
-
-        $images = json_decode($product['images']);
-        if(count($images) > 0){
-            foreach ($images as $image) {
-                if ($image != $name) {
+        }else{
+            ImageManager::delete('/product/' . $name);
+            $images = json_decode($product['images']);
+            if(count($images) > 0){
+                foreach ($images as $image) {
+                    if ($image != $name) {
                     array_push($array, $image);
+                    }
                 }
             }
-        }
-       
-        Product::where('id', $id)->update([
+            Product::where('id', $id)->update([
             'images' => json_encode($array),
-        ]);
-        Toastr::success('Product image removed successfully!');
-        return back();
+            ]);
+            Toastr::success('Product image removed successfully!');
+            return back();
+        }
     }
 
     public function delete($id)
