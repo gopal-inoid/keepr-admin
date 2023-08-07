@@ -15,6 +15,7 @@
             <tr>
                 <td class="" width="30%">
                     <span class="text-end">
+                        {{$company_web_logo}}
                         {{-- <img height="80" src="{{asset("/public/company/$company_web_logo")}}" alt=""> --}}
                         <img height="80" src="{{asset("/public/company/Keepr-logo-black.png")}}" alt="">
                     </span>

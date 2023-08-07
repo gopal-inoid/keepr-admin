@@ -47,17 +47,16 @@
                                             for="exampleFormControlInput1">{{ \App\CPU\translate('Products') }}
                                             <span class="text-danger">*</span>
                                         </label>
-                                        <select name="product_id" class="form-control">
+                                        <select name="product_id" class="form-control new_stock_product">
                                             @if(!empty($products))
                                                 @foreach($products as $pro)
-                                                @php 
-                                                   $stockcount = App\Model\productStock::where('product_id',$pro->id)->count();
-                                                @endphp
-                                                @if($stockcount < 0)
-                                                      <option value="{{$pro->id}}">{{$pro->name}}</option>  
-                                                @endif
+                                                        @php 
+                                                            $stockcount = App\Model\productStock::where('product_id',$pro->id)->count();
+                                                        @endphp
+                                                    @if($stockcount == 0)
+                                                         <option value="{{$pro->id}}">{{$pro->name}}</option>  
+                                                    @endif
                                                 @endforeach
-                                                
                                             @endif
                                         </select>
                                     </div>
@@ -75,7 +74,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label class="title-color">{{ \App\CPU\translate('Device ID') }}</label>
-                                                <input type="text" name="device_id[]" maxlength="17" class="form-control macAddress" value="{{ old('device_id') }}" placeholder="{{ \App\CPU\translate('Device MAC ID') }}" required>
+                                                <input type="text" name="device_id[]" maxlength="17" class="form-control" value="{{ old('device_id') }}" placeholder="{{ \App\CPU\translate('Device MAC ID') }}" required>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
@@ -121,7 +120,7 @@
                     </div>
                     <div class="row justify-content-end gap-3 mt-3">
                         <button type="reset" class="btn btn-secondary">{{ \App\CPU\translate('reset') }}</button>
-                        <button type="submit" class="btn btn--primary">{{ \App\CPU\translate('Submit') }}</button>
+                        <button type="submit" class="btn btn--primary submit-btn">{{ \App\CPU\translate('Submit') }}</button>
                     </div>
                 </form>
             </div>
@@ -134,18 +133,24 @@
     <script src="{{ asset('public/assets/back-end/js/spartan-multi-image-picker.js') }}"></script>
     <script>
 
-    function formatMAC(e) {
-        var r = /([a-f0-9]{2})([a-f0-9]{2})/i,
-            str = e.target.value.replace(/[^a-f0-9]/ig, "");
+let new_stock_select=document.querySelector(".new_stock_product");
+let option=new_stock_select.querySelectorAll("OPTION");
+if(option.length==0){
+document.querySelector(".submit-btn").setAttribute("disabled","disabled");
+}
+
+    // function formatMAC(e) {
+    //     var r = /([a-f0-9]{2})([a-f0-9]{2})/i,
+    //         str = e.target.value.replace(/[^a-f0-9]/ig, "");
         
-        while (r.test(str)) {
-            str = str.replace(r, '$1' + ':' + '$2');
-        }
+    //     while (r.test(str)) {
+    //         str = str.replace(r, '$1' + ':' + '$2');
+    //     }
 
-        e.target.value = str.slice(0, 17);
-    };
+    //     e.target.value = str.slice(0, 17);
+    // };
 
-    $(document).on('keyup','.macAddress',formatMAC);
+    // $(document).on('keyup','.macAddress',formatMAC);
 
         $(function() {
             $('.add-mac_id-btn').on('click',function(){
@@ -174,16 +179,16 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <select name="colors[]" class="form-control">
-                                    @if(!empty($products[0]['colors']))
+                                    @if(!empty($products[0]['colors'])) 
                                         @php
-                                            $colors = json_decode($products[0]['colors'],true);
+                                            $productcolors=explode(",",$products[0]['colors']);
                                         @endphp
-                                        @if(!empty($colors))
-                                            @foreach($colors as $color)
-                                                <option value="{{$color['key']}}">{{$color['key']}}</option>
-                                            @endforeach
-                                        @endif
-                                    @endif
+                                        @foreach($colors as $col)
+                                            @if(in_array($col['id'], $productcolors))
+                                                <option value="{{$col['id']}}">{{$col['name']}}</option>
+                                            @endif
+                                        @endforeach                
+                                     @endif
                                 </select>
                             </div>
                         </div>
