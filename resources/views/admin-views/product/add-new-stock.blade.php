@@ -51,7 +51,7 @@
                                             @if(!empty($products))
                                                 @foreach($products as $pro)
                                                         @php 
-                                                            $stockcount = \App\Model\productStock::where('product_id',$pro->id)->count();
+                                                            $stockcount = \App\Model\ProductStock::where('product_id',$pro->id)->count();
                                                         @endphp
                                                     @if($stockcount == 0)
                                                          <option value="{{$pro->id}}">{{$pro->name}}</option>  
