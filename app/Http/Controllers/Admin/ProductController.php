@@ -312,7 +312,6 @@ class ProductController extends BaseController
         }
         $request_status = $request['status'];
         $pro = $pro->orderBy('id', 'DESC')->paginate(Helpers::pagination_limit())->appends(['status' => $request['status']])->appends($query_param);
-
         return view('admin-views.product.current-active-device', compact('pro', 'search', 'request_status'));
 
     }
