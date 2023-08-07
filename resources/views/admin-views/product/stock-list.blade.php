@@ -7,7 +7,9 @@
 @endpush
 
 @section('content')
+
 <div class="content container-fluid">
+    {{$pro}}
     <!-- Page Title -->
     <div class="mb-3">
         <h2 class="h1 mb-0 text-capitalize d-flex gap-2">
@@ -62,7 +64,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="table-responsive">
                     <table id="datatable" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
                         <thead class="thead-light thead-50 text-capitalize">
@@ -76,6 +77,7 @@
                         </thead>
                         <tbody>
                         @foreach($pro as $k=>$p)
+
                              <?php 
                                 //echo "<pre>"; print_r($p->stocks); die;
                                 $total_stocks = \App\Model\ProductStock::where('product_id',$p['product_id'])->count();
