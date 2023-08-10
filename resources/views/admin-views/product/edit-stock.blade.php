@@ -63,7 +63,7 @@
                                         <div class="row mac_id-individual">
                                             <div class="col-md-3">
                                                 <div class="form-group mb-0">
-                                                    <label class="title-color">{{ \App\CPU\translate('Device MAC ID') }}</label>
+                                                    <label class="title-color">{{ \App\CPU\translate('Device ID') }}</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
@@ -94,27 +94,27 @@
                                             <div class="row mac_id-individual">
                                                 <div class="col-md-3">
                                                     <div class="form-group">
-                                                        <input type="text" name="device_id[{{$k}}]" class="form-control macAddress" value="{{ $stocks->mac_id }}" placeholder="{{ \App\CPU\translate('Device MAC ID') }}">
+                                                        <input type="text" @if(!empty($stocks->is_purchased)) disabled="disabled" @endif name="device_id[{{$k}}]" class="form-control macAddress" value="{{ $stocks->mac_id }}" placeholder="{{ \App\CPU\translate('Device ID') }}">
                                                     </div>
                                                 </div>
 												<div class="col-md-3">
                                                     <div class="form-group">
-                                                        <input type="text" name="uuid[{{$k}}]" class="form-control " value="{{ $stocks->uuid }}" placeholder="{{ \App\CPU\translate('UUID') }}" required>
+                                                        <input type="text" @if(!empty($stocks->is_purchased)) disabled="disabled" @endif name="uuid[{{$k}}]" class="form-control " value="{{ $stocks->uuid }}" placeholder="{{ \App\CPU\translate('UUID') }}" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-1">
                                                     <div class="form-group">
-                                                        <input type="number" name="major[{{$k}}]" class="form-control " value="{{ $stocks->major }}" placeholder="{{ \App\CPU\translate('major') }}" required>
+                                                        <input type="number" @if(!empty($stocks->is_purchased)) disabled="disabled" @endif name="major[{{$k}}]" class="form-control " value="{{ $stocks->major }}" placeholder="{{ \App\CPU\translate('major') }}" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-1">
                                                     <div class="form-group">
-                                                        <input type="number" name="minor[{{$k}}]" class="form-control " value="{{ $stocks->minor }}" placeholder="{{ \App\CPU\translate('minor') }}" required>
+                                                        <input type="number" @if(!empty($stocks->is_purchased)) disabled="disabled" @endif name="minor[{{$k}}]" class="form-control " value="{{ $stocks->minor }}" placeholder="{{ \App\CPU\translate('minor') }}" required>
                                                     </div>
-                                                </div>										
+                                                </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
-                                                        <select name="colors[]" class="form-control">
+                                                        <select name="colors[]" @if(!empty($stocks->is_purchased)) disabled="disabled" @endif class="form-control">
                                                             @if(!empty($product['colors']) && !empty($colors))
                                                                 @php
                                                                 $productColors = explode(",", $product['colors']);
@@ -128,9 +128,15 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-2 form-group mac_id-add-main-btn">
-                                                    <i class="tio-delete-outlined text-danger remove-mac_id-btn"></i>
-                                                </div>
+                                                @if(!empty($stocks->is_purchased))
+                                                    <div class="col-md-2 form-group">
+                                                        <span class="badge text-success fz-12 px-0 mt-2">Purchased</span>
+                                                    </div>
+                                                @else
+                                                    <div class="col-md-2 form-group mac_id-add-main-btn">
+                                                        <i class="tio-delete-outlined text-danger remove-mac_id-btn"></i>
+                                                    </div>
+                                                @endif
                                             </div>
                                     <?php  } } ?>
                                     </div>
@@ -176,7 +182,7 @@
                 `<div class="row mac_id-individual">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <input type="text" name="device_id[`+(cnt+1)+`]" class="form-control" value="" placeholder="{{ \App\CPU\translate('Device MAC ID') }}">
+                            <input type="text" name="device_id[`+(cnt+1)+`]" class="form-control" value="" placeholder="{{ \App\CPU\translate('Device ID') }}">
                         </div>
                     </div>
                     <div class="col-md-3">

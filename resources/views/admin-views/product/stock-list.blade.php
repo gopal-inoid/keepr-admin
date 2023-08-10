@@ -7,7 +7,9 @@
 @endpush
 
 @section('content')
+
 <div class="content container-fluid">
+    {{$pro}}
     <!-- Page Title -->
     <div class="mb-3">
         <h2 class="h1 mb-0 text-capitalize d-flex gap-2">
@@ -62,34 +64,39 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="table-responsive">
                     <table id="datatable" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
                         <thead class="thead-light thead-50 text-capitalize">
                             <tr>
                                 <th>{{\App\CPU\translate('SL')}}</th>
-                                <th>{{\App\CPU\translate('Product Name')}}</th>
-                                <th class="text-right">{{\App\CPU\translate('Total stocks')}}</th>
+                                <th class="text-center">{{\App\CPU\translate('Product Name')}}</th>
+                                <th class="text-center">{{\App\CPU\translate('Total stocks')}}</th>
+                                <th class="text-center">{{\App\CPU\translate('Total purchased stocks')}}</th>
                                 <th class="text-center">{{\App\CPU\translate('Action')}}</th>
                             </tr>
                         </thead>
                         <tbody>
                         @foreach($pro as $k=>$p)
+
                              <?php 
                                 //echo "<pre>"; print_r($p->stocks); die;
                                 $total_stocks = \App\Model\ProductStock::where('product_id',$p['product_id'])->count();
-                             ?>
+                                $total_purchased_stocks = \App\Model\ProductStock::where('product_id',$p['product_id'])->where('is_purchased',1)->count();
+                            ?>
                             <tr>
                                 <th scope="row">{{$pro->firstItem()+$k}}</th>
-                                <td>
+                                <td class="text-center">
                                     <a href="javascript:void(0);" class="media align-items-center gap-2">
                                         <span class="media-body title-color hover-c1">
                                             {{\Illuminate\Support\Str::limit($p['product_name'],20)}}
                                         </span>
                                     </a>
                                 </td>
-                                <td class="text-right">
+                                <td class="text-center">
                                     {{$total_stocks}}
+                                </td>
+                                <td class="text-center">
+                                    {{$total_purchased_stocks}}
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center gap-2">

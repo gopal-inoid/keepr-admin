@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>{{\App\CPU\translate('Email Verification')}}</title>
+    <title>{{\App\CPU\translate('Email')}}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style type="text/css">
         /**
@@ -104,10 +104,14 @@
 <!-- end preheader -->
 <div class="card">
     <div class="card-header">
-        {{\App\CPU\translate('mail_received_successfully')}}.
+     </div>
+    <div class="card-body">
+    {!!$body!!}
+    </div>
+    <div>
+   
     </div>
 </div>
-
 </body>
 </html>
 

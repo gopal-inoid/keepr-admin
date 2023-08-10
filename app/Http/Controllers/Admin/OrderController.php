@@ -13,6 +13,10 @@ use App\Model\DeliveryManTransaction;
 use App\Model\DeliverymanWallet;
 use App\Model\Order;
 use App\Model\Product;
+use App\Model\ShippingMethod;
+use App\Model\ShippingMethodRates;
+use App\Model\Country;
+use App\Model\State;
 use App\Model\OrderDetail;
 use App\Model\OrderTransaction;
 use App\Model\Seller;
@@ -133,27 +137,145 @@ class OrderController extends Controller
         $company_web_logo =BusinessSetting::where('type', 'company_web_logo')->first()->value;
         $order = Order::where(['id' => $id])->first();
         $physical_product = false;
-        $total_delivered = Order::where(['order_status' => 'delivered', 'order_type' => 'default_type'])->count();
+        $total_delivered = Order::where(['order_status' => 'delivered'])->count();
         $shipping_method = Helpers::get_business_settings('shipping_method');
-        $products = [];
+        $countries = \DB::table('country')->select('name','id')->get();
+        $states = \DB::table('states')->select('name','id')->get();
+
+        $products = $tax_info = $shipping_info = [];
         $total_orders = 0;
-        if(!empty($order->mac_ids)){
+        $total_order_amount = $order->order_amount ?? 0;
+        if(!empty($order->mac_ids)){ // stocks
             $mac_ids = json_decode($order->mac_ids,true);
             if(!empty($mac_ids)){
                 foreach($mac_ids as $k => $val){
-                    $total_orders += count($val);
-                    $prod = Product::select('name','thumbnail')->find($k);
+                    $total_orders += count($mac_ids[$k]['uuid']);
+                    $prod = Product::select('name','thumbnail','purchase_price')->find($k);
                     $products[$k]['name'] = $prod->name ?? "";
                     $products[$k]['thumbnail'] = $prod->thumbnail ?? "";
-                    $products[$k]['mac_ids'] = $val;
+                    $products[$k]['price'] = $prod->purchase_price ?? 0;
+                    if(!empty($val)){
+                        foreach($val['uuid'] as $k1 => $val1){ 
+                            $products[$k]['mac_ids'][$k1]['uuid'] = $val1;
+                            $products[$k]['mac_ids'][$k1]['major'] = $val['major'][$k1];
+                            $products[$k]['mac_ids'][$k1]['minor'] = $val['minor'][$k1];
+                        }
+                    }
+
+                    if(!empty($order->taxes)){
+                        $taxes = json_decode($order->taxes,true);
+                        if(!empty($taxes)){
+                            $tax_info[$k] = $taxes;
+                        }
+                    }
+
+                    if(!empty($order->shipping_method_id) && !empty($order->shipping_mode)){
+                        $shipping = ShippingMethod::where(['id' => $order->shipping_method_id])->first();
+                        $shipping_method_rates = ShippingMethodRates::select('normal_rate','express_rate')->where('shipping_id',$order->shipping_method_id)->where('country_code',$this->getCountryName($order->customer->country))->first();
+                        $shipping_info[$k]['title'] = $shipping->title ?? "";
+                        if($order->shipping_mode == 'normal_rate'){
+                            $shipping_info[$k]['duration'] = $shipping->normal_duration ?? "";
+                            $shipping_info[$k]['mode'] = 'Regular Rate';
+                            $shipping_info[$k]['amount'] = $shipping_method_rates->normal_rate ?? 0;
+                        }elseif($order->shipping_mode == 'express_rate'){
+                            $shipping_info[$k]['duration'] = $shipping->express_duration ?? "";
+                            $shipping_info[$k]['mode'] = 'Express Rate';
+                            $shipping_info[$k]['amount'] = $shipping_method_rates->express_rate ?? 0;
+                        }
+
+                        if(!empty($shipping_info[$k]['amount'])){
+                            $total_order_amount += $shipping_info[$k]['amount'];
+                        }
+                    }
                 }
             }
         }
+       
+        //echo "<pre>"; print_r($tax_info); die;
+        return view('admin-views.pos.order.order-details', compact('order','total_orders','products', 'company_name', 'company_web_logo','countries','states','shipping_info','tax_info','total_order_amount'));
+    }
 
-        //echo "<pre>"; print_r($order); die;
+    public function update_order_details(Request $request)
+    {
+        //echo "<pre>"; print_r($request->all()); die;
 
-        return view('admin-views.pos.order.order-details', compact('order','total_orders','products', 'company_name', 'company_web_logo'));
+        $order_id = $request->order_id;
+        $user_id = $request->user_id;
+        $email_templates = $this->getEmailTemplate('order-status-change');
+        if(!empty($order_id)){
+            if(!empty($user_id)){
 
+                $user_details = User::select('fcm_token','email')->where(['id'=>$user_id])->first();
+
+                $user_data['name'] = $request->billing_name;
+                $user_data['email'] = $request->email;
+                $user_data['street_address'] = $request->street_address;
+                $user_data['city'] = $request->billing_city;
+                $user_data['state'] = $request->billing_state;
+                $user_data['country'] = $request->billing_country;
+                $user_data['zip'] = $request->billing_zip;
+                $user_data['phone'] = $request->billing_phone;
+                $user_data['shipping_name'] = $request->shipping_name;
+                $user_data['shipping_email'] = $request->shipping_email;
+                $user_data['add_shipping_address'] = $request->add_shipping_address;
+                $user_data['shipping_city'] = $request->shipping_city;
+                $user_data['shipping_state'] = $request->shipping_state;
+                $user_data['shipping_country'] = $request->shipping_country;
+                $user_data['shipping_zip'] = $request->shipping_zip;
+                $user_data['shipping_phone'] = $request->shipping_phone;
+
+                if(!empty($request->is_billing_address_same) && $request->is_billing_address_same == 'on'){
+                    $user_data['is_billing_address_same'] =  1;
+                }
+
+                User::where('id',$user_id)->update($user_data);
+
+                //SEND PUSH NOTIFICATION
+                $msg = "Your Order has been " . $request->change_order_status . ", Order ID #" . $order_id;
+                $payload['order_id'] = $order_id;
+                $this->sendNotification($user_details->fcm_token,$msg,$payload);
+                //
+
+            }
+
+            $order_data['order_status'] = $request->change_order_status;
+            $order_data['created_at'] = date('Y-m-d h:i:s',strtotime($request->order_date));
+            $order_data['order_note'] = $request->order_note;
+            $order_data['expected_delivery_date'] = date('Y-m-d h:i:s',strtotime($request->expected_delivery_date));
+            $order_data['shipment_info'] = $request->shipment_info;
+            $order_data['transaction_ref'] = $request->transaction_ref;
+            $order_data['payment_method'] = $request->payment_method;
+            $order_data['payment_status'] = $request->payment_status;
+            $order_data['tracking_id'] = $request->tracking_id;
+
+            $get_order = Order::where('id',$order_id)->first();
+            $order_attribute = $this->getOrderAttr($get_order->mac_ids);
+            //$this->print_r($a);
+            if(!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])){
+                $product_names = implode(',',$order_attribute['product_name']);
+            }
+            if(!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])){
+                $product_uuid = implode(',',$order_attribute['uuid']);
+            }
+            $userData['username'] = $user_data['name'] ?? "Keepr User";
+            $userData['order_id'] = $order_id;
+            $userData['product_name'] = $product_names;
+            $userData['device_id'] = $product_uuid;
+            $userData['qty'] = $order_attribute['total_orders'] ?? 0;
+            $userData['total_price'] = $get_order->order_amount ?? "";
+            $userData['company_name'] = 'Keepr';
+            $userData['company_logo'] = '<img src="'.url('/public/public/company/Keepe_logo.png').'" />';
+            //SEND ORDER EMAIL
+            $subject = $this->replacedEmailVariables($request->change_order_status,$email_templates->subject ?? "Order");
+            $body = $this->replacedEmailVariables($request->change_order_status,$email_templates->body ?? "Order status has been changed",$userData);
+            //$this->save_invoice($request->id);
+            //$invoice_file_path = public_path('public/assets/orders/order_invoice_'.$request->id.'.pdf');
+            $this->sendEmail($user_details->email ?? "", $subject, $body);
+            Order::where('id',$order_id)->update($order_data);
+            return redirect()->back()->with('success','Order Details Updated Successfully');
+        }else{
+            return redirect()->back()->with('error','Order not found');
+        }
     }
 
     public function add_delivery_man($order_id, $delivery_man_id)
@@ -373,16 +495,37 @@ class OrderController extends Controller
     public function change_order_status(Request $request)
     {
         if ($request->status) {
+            $product_names = $product_uuid = '';
             $order = Order::find($request->id);
+            $email_templates = $this->getEmailTemplate('order-status-change');
             $order->order_status = $request->status;
             $order->save();
             $data = $request->order_status;
-
-            $user = User::select('fcm_token')->where('id',$order->customer_id)->first();
-            $msg = "Your Order is ". $request->order_status;
+            $user = User::where('id',$order->customer_id)->first();
+            $msg = "Your Order with order id #$request->id has been $request->order_status";
             $payload['order_id'] = $request->id;
+            //$this->save_invoice($request->id);
+            //$invoice_file_path = public_path('public/assets/orders/order_invoice_'.$request->id.'.pdf');
             $this->sendNotification($user->fcm_token ?? "",$msg,$payload);
-
+            $order_attribute = $this->getOrderAttr($order->mac_ids);
+            //$this->print_r($order_attribute);
+            if(!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])){
+                $product_names = implode(',',$order_attribute['product_name']);
+            }
+            if(!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])){
+                $product_uuid = implode(',',$order_attribute['uuid']);
+            }
+            $userData['username'] = $user->name ?? "Keepr User";
+            $userData['order_id'] = $request->id;
+            $userData['product_name'] = $product_names;
+            $userData['device_id'] = $product_uuid;
+            $userData['qty'] = $order_attribute['total_orders'] ?? 0;
+            $userData['total_price'] = $order->order_amount ?? "";
+            $userData['company_name'] = 'Keepr';
+            $userData['company_logo'] = '<img src="'.url('/public/public/company/Keepe_logo.png').'" />';
+            $subject = $this->replacedEmailVariables($request->status,$email_templates->subject ?? "Order");
+            $body = $this->replacedEmailVariables($request->status,$email_templates->body ?? "Order status has been changed",$userData);
+            $this->sendEmail($order->customer->email ?? "", $subject, $body);
             return response()->json($data);
         }
     }
@@ -445,29 +588,64 @@ class OrderController extends Controller
         $company_email =BusinessSetting::where('type', 'company_email')->first()->value;
         $company_name =BusinessSetting::where('type', 'company_name')->first()->value;
         $company_web_logo =BusinessSetting::where('type', 'company_web_logo')->first()->value;
-
         $order = Order::where('id', $id)->first();
         $data["email"] = $order->customer !=null?$order->customer["email"]:\App\CPU\translate('email_not_found');
         $data["client_name"] = $order->customer !=null? $order->customer["f_name"] . ' ' . $order->customer["l_name"]:\App\CPU\translate('customer_not_found');
         $data["order"] = $order;
 
         $products = [];
+        $tax_info = [];
+        $shipping_info = [];
         $total_orders = 0;
-        if(!empty($order->mac_ids)){
+        $total_order_amount = $order->order_amount ?? 0;
+        if(!empty($order->mac_ids)){ // stocks
             $mac_ids = json_decode($order->mac_ids,true);
             if(!empty($mac_ids)){
                 foreach($mac_ids as $k => $val){
-                    $total_orders += count($val);
-                    $prod = Product::select('name','thumbnail')->find($k);
+                    $total_orders += count($mac_ids[$k]['uuid']);
+                    $prod = Product::select('name','thumbnail','purchase_price')->find($k);
                     $products[$k]['name'] = $prod->name ?? "";
                     $products[$k]['thumbnail'] = $prod->thumbnail ?? "";
-                    $products[$k]['mac_ids'] = $val;
+                    $products[$k]['price'] = $prod->purchase_price ?? 0;
+                    if(!empty($val)){
+                        foreach($val['uuid'] as $k1 => $val1){ 
+                            $products[$k]['mac_ids'][$k1]['uuid'] = $val1;
+                            $products[$k]['mac_ids'][$k1]['major'] = $val['major'][$k1];
+                            $products[$k]['mac_ids'][$k1]['minor'] = $val['minor'][$k1];
+                        }
+                    }
+
+                    if(!empty($order->taxes)){
+                        $taxes = json_decode($order->taxes,true);
+                        if(!empty($taxes)){
+                            $tax_info[$k] = $taxes;
+                        }
+                    }
+
+                    if(!empty($order->shipping_method_id) && !empty($order->shipping_mode)){
+                        $shipping = ShippingMethod::where(['id' => $order->shipping_method_id])->first();
+                        $shipping_method_rates = ShippingMethodRates::select('normal_rate','express_rate')->where('shipping_id',$order->shipping_method_id)->where('country_code',$this->getCountryName($order->customer->country))->first();
+                        $shipping_info[$k]['title'] = $shipping->title ?? "";
+                        if($order->shipping_mode == 'normal_rate'){
+                            $shipping_info[$k]['duration'] = $shipping->normal_duration ?? "";
+                            $shipping_info[$k]['mode'] = 'Regular Rate';
+                            $shipping_info[$k]['amount'] = $shipping_method_rates->normal_rate ?? 0;
+                        }elseif($order->shipping_mode == 'express_rate'){
+                            $shipping_info[$k]['duration'] = $shipping->express_duration ?? "";
+                            $shipping_info[$k]['mode'] = 'Express Rate';
+                            $shipping_info[$k]['amount'] = $shipping_method_rates->express_rate ?? 0;
+                        }
+
+                        if(!empty($shipping_info[$k]['amount'])){
+                            $total_order_amount += $shipping_info[$k]['amount'];
+                        }
+                    }
                 }
             }
         }
 
         $mpdf_view = View::make('admin-views.order.invoice',
-            compact('order', 'company_phone','total_orders','products', 'company_name', 'company_email', 'company_web_logo')
+            compact('order', 'company_phone','total_orders','products', 'company_name', 'company_email', 'company_web_logo','total_order_amount','shipping_info','tax_info')
         );
 
         //echo "<pre>"; print_r($mpdf_view); die;

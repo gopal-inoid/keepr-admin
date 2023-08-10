@@ -242,41 +242,25 @@ class CartController extends Controller
                     if($val['normal_rate'] < $val['express_rate']){
                         $shipping_cost_check[$k]['shipping_rate'] = $val['normal_rate'];
                         $shipping_cost_check[$k]['mode'] = "normal_rate";
+                        $shipping_cost_check[$k]['text'] = "Regular Rate";
                         $shipping_cost_check[$k]['delivery_days'] = $val['normal_duration'];
                     }else{
                         $shipping_cost_check[$k]['shipping_rate'] = $val['express_rate'];
                         $shipping_cost_check[$k]['mode'] = "express_rate";
+                        $shipping_cost_check[$k]['text'] = "Express Rate";
                         $shipping_cost_check[$k]['delivery_days'] = $val['express_duration'];
                     }
                 }
             }
-
             //TAX calculation
-            //$tax_arr = $this->getTaxCalculation(20,"Canada","Quebec");
             $tax_arr = $this->getTaxCalculation($total_price,$country_name,$state_name);
             //END Tax calculation
-
-            //echo "<pre>"; print_r($tax_arr); die;
-
-            //$tax = "";
-            // $taxes = [];
-            // $tax_amt = $tax_arr['tax_amt'] ?? "0";
-            // if(!empty($tax_arr['tax_percent']) && !empty($tax_arr['tax_name'])){
-            //     $tax = "Total Tax " . $tax_arr['tax_percent'] . "% " . $tax_arr['tax_name'];
-            // }
-            
             $data['cart_info'] = $cart_info;
             $data['shipping_rates'] = $shipping_cost_check;
             $data['customer_id'] = $user_details->id;
             $data['total_order'] = $total_order;
             $data['sub_total'] = number_format($total_price, 2);
-            //$data['shipping'] = $shipping;
-            //$data['total_tax_percent'] = number_format($tax_arr['tax_percent'],3) ?? "0";
-            //$data['total_tax_amount'] = number_format($tax_amt,2);
-            //$data['tax_desc'] = $tax;
             $data['taxes'] = $tax_arr;
-            //$data['total'] = number_format(($total_price), 2);
-            //echo "<pre>"; print_r($mac_ids); die;
             Common::addLog([]);
             return response()->json(['status'=>200,'message'=>'Success','data'=>$data],200);
         }else{
@@ -289,10 +273,12 @@ class CartController extends Controller
     {
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
+        $email_templates = $this->getEmailTemplate('order-placed');
         $cart_id = $request->cart_id;
-
         $shipping_id = $request->shipping_id ?? "";
-        
+		$taxes = $request->tax;
+		$shipping_rate_id = $request->shipping_rate_id;
+		$shipping_mode = $request->shipping_mode;
         $left = ltrim($cart_id, "'");
         $right = rtrim($left, "'");
         $data = json_decode($right,true);
@@ -302,7 +288,6 @@ class CartController extends Controller
                 array_push($cart_ids,$val['id']);
             }
         }
-
         $existed_mac_ids =  $mac_ids_array = [];
         $total_price = $error = 0;
         $check_mac_ids = Order::select('mac_ids')->get();
@@ -319,9 +304,6 @@ class CartController extends Controller
                 }
             }
         }
-
-        //echo "<pre>"; print_r($existed_mac_ids); die;
-
         if(!empty($user_details->id)){
 
             $cart_info = Cart::select('id','customer_id','product_id','price','quantity')->where('quantity', '>',0)->whereIn('id',$cart_ids)->get();
@@ -332,7 +314,6 @@ class CartController extends Controller
                     $total_price += ($price * $cart['quantity']);
                     $get_random_stocks = ProductStock::select('uuid','major','minor','product_id')->where('is_purchased',0)
                                                       ->where('product_id',$cart['product_id'])
-                                                      //->whereNotIn('uuid',$existed_mac_ids['uuid'])
                                                       ->inRandomOrder()->limit($cart['quantity'])->get();
                     if(!empty($get_random_stocks)){
                         foreach($get_random_stocks as $m => $macid){
@@ -344,7 +325,6 @@ class CartController extends Controller
                             }
                         }
                     }
-
                     if(!in_array($cart['product_id'],array_keys($mac_ids_array))){
                         $error = 1;
                     }
@@ -354,20 +334,46 @@ class CartController extends Controller
                     return response()->json(['status'=>400,'message'=>'Device not available'],400);
                 }
 
-                //echo "<pre>"; print_r($mac_ids_array); die;
-                
-                //Insert into Order
+                $stripe_payment_create = $this->CreateCheckout($total_price);
+                if(!empty($stripe_payment_create['id'])){
+                    $intent_data['id'] = $stripe_payment_create['id'];
+                    $intent_data['client_secret'] = $stripe_payment_create['client_secret'];
+                    $intent_data['amount'] = $stripe_payment_create['amount'];
+                }
+
                 $order = new Order();
                 $order->customer_id = $user_details->id;
                 $order->payment_method = 'Stripe';
                 $order->shipping_method_id = $shipping_id;
+                $order->taxes = $taxes;
+                $order->shipping_rate_id = $shipping_rate_id;
+				$order->shipping_mode = $shipping_mode;
                 $order->mac_ids = json_encode($mac_ids_array);
                 $order->order_amount = number_format($total_price,2);
                 $order->save();
 
+                $order_attribute = $this->getOrderAttr($order->mac_ids);
+                //$this->print_r($a);
+                if(!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])){
+                    $product_names = implode(',',$order_attribute['product_name']);
+                }
+                if(!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])){
+                    $product_uuid = implode(',',$order_attribute['uuid']);
+                }
+                $userData['username'] = $user_data['name'] ?? "Keepr User";
+                $userData['order_id'] = $order->id;
+                $userData['product_name'] = $product_names;
+                $userData['device_id'] = $product_uuid;
+                $userData['qty'] = $order_attribute['total_orders'] ?? 0;
+                $userData['total_price'] = $order->order_amount ?? "";
+                $userData['company_name'] = 'Keepr';
+                $userData['company_logo'] = '<img src="'.url('/public/public/company/Keepe_logo.png').'" />';
+                //SEND ORDER EMAIL
+                $body = $this->replacedEmailVariables("Placed",$email_templates->body ?? "Order status has been changed",$userData);
+                $this->sendEmail($user_details->email, $email_templates->subject ?? "Order Placed", $body ?? "Order has been Placed");
                 if(!empty($order->mac_ids)){
                     $mac_ids = json_decode($order->mac_ids,true);
-                    foreach($mac_ids as $product_id => $mac_values){  
+                    foreach($mac_ids as $product_id => $mac_values){
                         foreach($mac_values as $k => $macss){
                             foreach($macss as $m => $macs){
                                 ProductStock::where('product_id',$product_id)->where(['uuid'=>$mac_values['uuid'][$m],'major'=>$mac_values['major'][$m],'minor'=>$mac_values['minor'][$m]])->update(['is_purchased'=>1]);
@@ -376,8 +382,9 @@ class CartController extends Controller
                         Cart::where('customer_id',$user_details->id)->where('product_id',$product_id)->delete();
                     }
                 }
+
                 Common::addLog([]);
-                return response()->json(['status'=>200,'message'=>'Success','order_id'=>$order->id ?? NULL],200);
+                return response()->json(['status'=>200,'message'=>'Success','stripe_intent'=>$intent_data,'order_id'=>$order->id ?? NULL],200);
 
             }else{
                 Common::addLog([]);
@@ -392,29 +399,66 @@ class CartController extends Controller
         }
     }
 
+    public function confirmed_payment_intent(Request $request){
+
+        $trans_id = $request->trans_id;
+        $stripe = new \Stripe\StripeClient('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
+        $data = $stripe->paymentIntents->retrieve($trans_id);
+        echo "<pre>"; print_r($data); die;
+
+    }
+
+    public function verify_payment_intent($trans_id){
+        $stripe = new \Stripe\StripeClient('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
+        $data = $stripe->paymentIntents->retrieve($trans_id);
+        if(!empty($data->status) && $data->status == 'succeeded'){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public function confirm_order(Request $request)
     {
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
+        $email_templates = $this->getEmailTemplate('order-confirmed');
         $order_id = $request->order_id;
         $transaction_id = $request->transaction_id;
-        //$tax_amount = $request->tax_amount;
-        $taxes = $request->tax;
-        $shipping_rate_id = $request->shipping_rate_id;
-        $shipping_mode = $request->shipping_mode;
+        $is_verified = $this->verify_payment_intent($transaction_id);
+        if(empty($is_verified)){
+            return response()->json(['status'=>400,'message'=>'Payment failed'],200);
+        }
         $update_order = Order::where(['id'=>$order_id])->first();
         if($update_order){
-            
             $update_order->transaction_ref = $transaction_id;
             $update_order->payment_status = 'paid';
-            $update_order->order_status = 'confirmed';
-            $update_order->taxes = $taxes;
-            $update_order->shipping_rate_id = $shipping_rate_id;
-            $update_order->shipping_mode = $shipping_mode;
+            $update_order->order_status = 'processing';
             $update_order->save();
+            $this->save_invoice($order_id);
+            $invoice_file_path = public_path('public/assets/orders/order_invoice_'.$order_id.'.pdf');
 
-            $msg = "Your Order has been placed, Estimated Delivery on " . date('F j',strtotime($update_order->created_at . '+7 days'));
+            $order_attribute = $this->getOrderAttr($update_order->mac_ids);
+            //$this->print_r($a);
+            if(!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])){
+                $product_names = implode(',',$order_attribute['product_name']);
+            }
+            if(!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])){
+                $product_uuid = implode(',',$order_attribute['uuid']);
+            }
+
+            $userData['username'] = $user_details['name'] ?? "Keepr User";
+            $userData['order_id'] = $order_id;
+            $userData['product_name'] = $product_names;
+            $userData['device_id'] = $product_uuid;
+            $userData['qty'] = $order_attribute['total_orders'] ?? 0;
+            $userData['total_price'] = $update_order->order_amount ?? "";
+            $userData['company_name'] = 'Keepr';
+            $userData['company_logo'] = '<img src="'.url('/public/public/company/Keepe_logo.png').'" />';
+            $body = $this->replacedEmailVariables("Confirmed",$email_templates->body ?? "Order status has been changed",$userData);
+            $this->sendEmail($user_details->email, $email_templates->subject ?? "Order Confirmed", $body ?? "Order has been Confirmed",$invoice_file_path);
             $payload['order_id'] = $update_order->id ?? NULL;
+            $msg = "Your Order has been confirmed with Order ID #" . $payload['order_id'];
             $this->sendNotification($user_details->fcm_token,$msg,$payload);
             Common::addLog([]);
             return response()->json(['status'=>200,'message'=>'Order Successfully Confirmed','order_id'=>(int)$order_id],200);
@@ -424,6 +468,34 @@ class CartController extends Controller
         }
     }
 
+    public function CreateCheckout($amount){
+        $stripe = new \Stripe\StripeClient('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
+        $paymentIntents = $stripe->paymentIntents->create([
+            'amount' => round($amount, 2) * 100,
+            'currency' => 'usd',
+            'automatic_payment_methods' => [
+                'enabled' => true,
+            ],
+        ]);
+       return $paymentIntents;
+    }
+
+    public function getPaymentIntent(Request $request){
+        $order_data = Order::select('order_amount')->where('id',$request->order_id)->first();
+        if(!empty($order_data->order_amount)){
+           $payment_intent = $this->CreateCheckout($order_data->order_amount);
+           if(!empty($payment_intent['id'])){
+                $intent_data['id'] = $payment_intent['id'];
+                $intent_data['client_secret'] = $payment_intent['client_secret'];
+                $intent_data['amount'] = $payment_intent['amount'];
+                return response()->json(['status'=>200,'message'=>'Success','data'=>$intent_data],200);
+            }else{
+                return response()->json(['status'=>400,'message'=>'Intent error got from stripe'],200);
+            }
+        }else{
+           return response()->json(['status'=>400,'message'=>'Order not found'],200);
+        }
+    }
     
     public function changeOrderStatus(Request $request){
         $order = Order::find($request->order_id);

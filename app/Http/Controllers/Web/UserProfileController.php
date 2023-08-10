@@ -19,6 +19,7 @@ use App\Traits\CommonTrait;
 use App\User;
 use App\Model\BusinessSetting;
 use App\Model\Product;
+use App\Model\HelpTopic;
 use Barryvdh\DomPDF\Facade as PDF;
 use Brian2694\Toastr\Facades\Toastr;
 use Carbon\Carbon;
@@ -42,6 +43,15 @@ class UserProfileController extends Controller
         } else {
             return redirect()->route('home');
         }
+    }
+
+    public function keepr_home_page()
+    {
+        $data['about_us'] =BusinessSetting::where('type', 'about_us')->first()->value ?? "";
+        $data['faqs'] = HelpTopic::where('status',1)->get();
+        $data['Products'] = Product::where('status',1)->get();
+        //echo "<pre>"; print_r($data['Products']); die;
+        return view('keepr_app.index',$data);
     }
 
     public function user_update(Request $request)

@@ -21,6 +21,7 @@
 @endpush
 
 @section('content')
+
     <!-- Page Heading -->
     <div class="content container-fluid">
         <!-- Page Title -->
@@ -220,8 +221,8 @@
                                                         <div class="card">
                                                             <div class="card-body">
                                                                 <img class="w-100" height="auto"
-                                                                    onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                                                                     src="{{asset("/product/$photo")}}"
+                                                                    onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                                                                     alt="Product image">
                                                                 <a href="{{route('admin.product.remove-image',['id'=>$product['id'],'name'=>$photo])}}"
                                                                 class="btn btn-danger btn-block">{{\App\CPU\translate('Remove')}}</a>

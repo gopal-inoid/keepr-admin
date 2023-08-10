@@ -460,6 +460,7 @@ label {
   border-radius: 50%;
 }
 
+
 @media only screen and (min-width: 768px) {
   .view-web-site-info {
     display: none;
@@ -1259,8 +1260,9 @@ input.qty {
 }
 #update-quantity .card-body {
   padding: 0;
-  padding-left: 10px;
-  padding-right: 10px;
+  width:100%;
+  /* padding-left: 10px;
+  padding-right: 10px; */
 }
 @media only screen and (max-width: 767px) {
   #update-quantity form > .modal-body {

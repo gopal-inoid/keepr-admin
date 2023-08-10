@@ -4,284 +4,423 @@
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <style>
+    .phone_code > .form-group {
+        border: 1px solid #ced4da !important;
+        border-radius: 6px !important;
+        width: auto !important;
+    }
+    .phone_code > .form-group:focus {
+        color: #212529;
+        background-color: #fff;
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
+    }
+    .phone_code > .form-group input {
+        display: inline-block !important;
+        width: auto !important;
+        border: none !important;
+    }
+    .phone_code > .form-group input:focus {
+        box-shadow: none !important;
+    }
+</style>
 @endpush
 
 @section('content')
     <div class="content container-fluid">
-
         <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
             <h2 class="h1 mb-0">
                 <img src="{{asset('/public/assets/back-end/img/all-orders.png')}}" alt="">
-                {{ \App\CPU\translate('Order_Details') }}
+                {{ \App\CPU\translate('Order_Details') }} For {{\App\CPU\translate('Order_ID')}} #{{$order['id']}}
             </h2>
         </div>
-
-        <!-- End Page Header -->
-
         <div class="row gx-2 gy-3" id="printableArea">
-            <div class="col-lg-8 col-xl-9">
-                <!-- Card -->
-                <div class="card h-100">
-                    <!-- Body -->
-                    <div class="card-body">
-                        <div class="d-flex flex-wrap gap-10 justify-content-between mb-4">
-                            <div class="d-flex flex-column gap-10">
-                                <h4 class="text-capitalize">{{\App\CPU\translate('Order_ID')}} #{{$order['id']}}</h4>
-                                <div class="">
-                                    <i class="tio-date-range"></i> {{date('d M Y H:i:s',strtotime($order['created_at']))}}
-                                </div>
+            <form class="" action="{{ route('admin.orders.update-order-details') }}" method="POST" id="order_detail_form">
+                @csrf
+                <input type="hidden" name="order_id" value="{{$order['id']}}">
+                <input type="hidden" name="user_id" value="{{$order->customer->id}}">
+                <div class="col-lg-12 col-xl-12 mb-3">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h3 class="h4 mb-0">{{ \App\CPU\translate('Order_info') }}</h3>
+                            <div class="d-flex flex-wrap gap-10 justify-content-sm-end">
+                                <a class="btn btn--primary px-4" target="_blank"
+                                href="{{route('admin.orders.generate-invoice',[$order['id']])}}">
+                                    <i class="tio-print mr-1"></i> {{\App\CPU\translate('Print')}} {{\App\CPU\translate('invoice')}}
+                                </a>
                             </div>
-                            <div class="text-sm-right">
-                                <div class="d-flex flex-wrap gap-10 justify-content-sm-end">
-                                    <a class="btn btn--primary px-4" target="_blank"
-                                    href="{{route('admin.orders.generate-invoice',[$order['id']])}}">
-                                        <i class="tio-print mr-1"></i> {{\App\CPU\translate('Print')}} {{\App\CPU\translate('invoice')}}
-                                    </a>
-                                </div>
-                                <div class="d-flex flex-column gap-2 mt-3">
-                                    <!-- Order status -->
-                                    <div class="order-status d-flex justify-content-sm-end gap-10 text-capitalize">
-                                        <span class="title-color">Status: </span>
-                                        @if($order['order_status']=='pending')
-                                            <span class="badge badge-soft-info font-weight-bold radius-50 d-flex align-items-center py-1 px-2">
-                                                {{\App\CPU\translate(str_replace('_',' ',$order['order_status']))}}
-                                            </span>
-                                        @elseif($order['order_status']=='failed')
-                                            <span class="badge badge-soft-danger font-weight-bold radius-50 d-flex align-items-center py-1 px-2">
-                                                {{\App\CPU\translate(str_replace('_',' ',$order['order_status']))}}
-                                            </span>
-                                        @elseif($order['order_status']=='processing' || $order['order_status']=='out_for_delivery')
-                                            <span class="badge badge-soft-warning font-weight-bold radius-50 d-flex align-items-center py-1 px-2">
-                                                {{\App\CPU\translate(str_replace('_',' ',$order['order_status']))}}
-                                            </span>
-                                        @elseif($order['order_status']=='delivered' || $order['order_status']=='confirmed')
-                                            <span class="badge badge-soft-success font-weight-bold radius-50 d-flex align-items-center py-1 px-2">
-                                                {{\App\CPU\translate(str_replace('_',' ',$order['order_status']))}}
-                                            </span>
-                                        @else
-                                            <span class="badge badge-soft-danger font-weight-bold radius-50 d-flex align-items-center py-1 px-2">
-                                                {{\App\CPU\translate(str_replace('_',' ',$order['order_status']))}}
-                                            </span>
-                                        @endif
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="title-color">Order Status</label>
+                                                <select class="form-control js-select2-custom" id="change_order_status" order_id="{{$order['id']}}" name="change_order_status">
+                                                    <option {{($order['order_status'] == 'pending' ? 'selected' : '')}} value="pending">Pending</option>
+                                                    <option {{($order['order_status'] == 'processing' ? 'selected' : '')}} value="processing">Processing</option>
+                                                    <option {{($order['order_status'] == 'shipped' ? 'selected' : '')}} value="shipped">Shipped</option>
+                                                    <option {{($order['order_status'] == 'delivered' ? 'selected' : '')}} value="delivered">Delivered</option>
+                                                    <option {{($order['order_status'] == 'cancelled' ? 'selected' : '')}} value="cancelled">Cancelled</option>
+                                                    <option {{($order['order_status'] == 'refunded' ? 'selected' : '')}} value="refunded">Refunded</option>
+                                                    <option {{($order['order_status'] == 'failed' ? 'selected' : '')}} value="failed">Failed</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="title-color">Order Date</label>
+                                                <input type="date" name="order_date" class="form-control" value="{{date('Y-m-d',strtotime($order['created_at']))}}" placeholder="{{ \App\CPU\translate('Order Date') }}" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="title-color">Order Note</label>
+                                                <textarea class="form-control" name="order_note" placeholder="{{ \App\CPU\translate('Order Note') }}">{{$order['order_note'] ?? '' }}</textarea>
+                                            </div>
+                                        </div>
                                     </div>
-
-                                    <!-- Payment Method -->
-                                    <div class="payment-method d-flex justify-content-sm-end gap-10 text-capitalize">
-                                        <span class="title-color">{{\App\CPU\translate('Payment')}} {{\App\CPU\translate('Method')}} :</span>
-                                        <strong> {{str_replace('_',' ',$order['payment_method'])}}</strong>
-                                    </div>
-
-                                    <!-- reference-code -->
-                                    <div class="reference-code d-flex justify-content-sm-end gap-10 text-capitalize">
-                                        <span class="title-color">{{\App\CPU\translate('Reference')}} {{\App\CPU\translate('Code')}} :</span>
-                                        <strong>{{str_replace('_',' ',$order['transaction_ref'])}}</strong>
-                                    </div>
-
-                                    <!-- Payment Status -->
-                                    <div class="payment-status d-flex justify-content-sm-end gap-10">
-                                        <span class="title-color">Payment Status:</span>
-                                        @if($order['payment_status']=='paid')
-                                            <span class="text-success font-weight-bold">
-                                                {{\App\CPU\translate('Paid')}}
-                                            </span>
-                                        @else
-                                            <span class="text-danger font-weight-bold">
-                                                {{\App\CPU\translate('Unpaid')}}
-                                            </span>
-                                        @endif
-                                    </div>
-
-                                    @if(\App\CPU\Helpers::get_business_settings('order_verification'))
-                                        <span class="ml-2 ml-sm-3">
-                                            <b>
-                                                {{\App\CPU\translate('order_verification_code')}} : {{$order['verification_code']}}
-                                            </b>
-                                        </span>
-                                    @endif
                                 </div>
                             </div>
                         </div>
-
-                        <div class="table-responsive datatable-custom">
-                            <table class="table fz-12 table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
-                                <thead class="thead-light thead-50 text-capitalize">
-                                    <tr>
-                                        <th>{{\App\CPU\translate('SL')}}</th>
-                                        <th>{{\App\CPU\translate('Item_Details')}}</th>
-                                        <th>MAC ID</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                 @php($i=0)
-                                @foreach($products as $key => $detail)
-                                @php($i++)
-                                    <tr>
-                                        <td>{{$i}}</td>
-                                        <td>
-                                            <div class="media align-items-center gap-10">
-                                                <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$detail['thumbnail']}}" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt="">
-                                                <div>
-                                                    <a href="#" class="title-color hover-c1"><h6>{{substr($detail['name'],0,30)}}{{strlen($detail['name'])>10?'...':''}}</h6></a>
+                    </div>
+                </div>
+                @if($order->customer)
+                    <div class="col-lg-12 col-xl-12 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h3 class="h4 mb-0">{{ \App\CPU\translate('Customer Billing Detail') }}</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">Name</label>
+                                                    <input type="text" name="billing_name" class="form-control" value="{{$order->customer['name']}}" placeholder="{{ \App\CPU\translate('Name') }}">
                                                 </div>
                                             </div>
-                                        </td>
-                                        <td>
-                                            
-                                            @if(!empty($detail['mac_ids']))
-                                                @foreach($detail['mac_ids'] as $k => $val)
-                                                    {{$val}}<br>
-                                                @endforeach
-                                            @endif
-                                            
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        <hr>
-                        <?php
-                            if ($order['extra_discount_type'] == 'percent') {
-                                $extra_discount = 0; //($total_product_price / 100) * $order['extra_discount'];
-                            } else {
-                                $extra_discount = $order['extra_discount'];
-                            }
-                            if(isset($order['discount_amount'])){
-                                $coupon_discount =$order['discount_amount'];
-                            }
-                        ?>
-                        <div class="row justify-content-md-end mb-3">
-                            <div class="col-md-9 col-lg-8">
-                                <dl class="row text-sm-right">
-
-                                    {{-- <dt class="col-sm-6">{{\App\CPU\translate('extra_discount')}}</dt>
-                                    <dd class="col-sm-6 title-color">
-                                        <strong>- {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($extra_discount))}}</strong>
-                                    </dd>
-
-                                    <dt class="col-sm-6">{{\App\CPU\translate('coupon_discount')}}</dt>
-                                    <dd class="col-sm-6 title-color">
-                                        <strong>- {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($coupon_discount))}}</strong>
-                                    </dd> --}}
-
-                                    <dt class="col-sm-6">{{\App\CPU\translate('Total Amount')}}</dt>
-                                    <dd class="col-sm-6 title-color">
-                                        <strong>{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order['order_amount']))}}</strong>
-                                    </dd>
-                                </dl>
-                                <!-- End Row -->
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">Email</label>
+                                                    <input type="text" name="email" class="form-control" value="{{$order->customer['email'] ?? ''}}" placeholder="{{ \App\CPU\translate('Email') }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">Address</label>
+                                                    <input type="text" name="street_address" class="form-control" value="{{$order->customer['street_address']}}" placeholder="{{ \App\CPU\translate('Address') }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">City</label>
+                                                    <input type="text" name="billing_city" class="form-control" value="{{$order->customer['city']}}" placeholder="{{ \App\CPU\translate('City') }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">State</label>
+                                                    <select class="form-control js-select2-custom" id="billing_state" name="billing_state">
+                                                        @foreach($states as $k => $val)
+                                                            <option {{($order->customer['state'] == $val->id ? 'selected' : '')}} value="{{$val->id}}">{{$val->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">Country</label>
+                                                    <select class="form-control js-select2-custom" id="billing_country" name="billing_country">
+                                                        @foreach($countries as $k => $val)
+                                                            <option {{($order->customer['country'] == $val->id ? 'selected' : '')}} value="{{$val->id}}">{{$val->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">zipcode</label>
+                                                    <input type="text" name="billing_zip" class="form-control" value="{{$order->customer['zip']}}" placeholder="{{ \App\CPU\translate('Name') }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 phone_code">
+                                                <label class="title-color">Phone</label>
+                                                <div class="form-group">
+                                                    <span class="border-end country-code px-2">{{$order->customer['phone_code']}}</span>
+                                                    <input type="number" class="form-control" value="{{$order->customer['phone'] ?? ''}}" name="billing_phone" placeholder="{{ \App\CPU\translate('Phone') }}" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <!-- End Row -->
                     </div>
-                    <!-- End Body -->
+                    <div class="col-lg-12 col-xl-12 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h3 class="h4 mb-0">{{ \App\CPU\translate('Customer Shipping Detail') }}</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="">same billing adress</label>
+                                                    <label class="switcher">
+                                                        <input type="checkbox" name="is_billing_address_same" class="switcher_input" {{ isset($order->customer['is_billing_address_same']) && $order->customer['is_billing_address_same']  == 1 ? 'checked' : '' }}>
+                                                        <span class="switcher_control"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">Name</label>
+                                                    <input type="text" name="shipping_name" class="form-control" value="{{$order->customer['shipping_name'] ?? ''}}" placeholder="{{ \App\CPU\translate('Name') }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">Email</label>
+                                                    <input type="text" name="shipping_email" class="form-control" value="{{$order->customer['shipping_email'] ?? ''}}" placeholder="{{ \App\CPU\translate('Email') }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">Address</label>
+                                                    <input type="text" name="add_shipping_address" class="form-control" value="{{$order->customer['add_shipping_address'] ?? ''}}" placeholder="{{ \App\CPU\translate('Address') }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">City</label>
+                                                    <input type="text" name="shipping_city" class="form-control" value="{{$order->customer['shipping_city'] ?? ''}}" placeholder="{{ \App\CPU\translate('City') }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">State</label>
+                                                    <select class="form-control js-select2-custom" id="shipping_state" name="shipping_state">
+                                                        @foreach($states as $k => $val)
+                                                            <option {{($order->customer['state'] == $val->id ? 'selected' : '')}} value="{{$val->id}}">{{$val->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">Country</label>
+                                                    <select class="form-control js-select2-custom" id="shipping_country" name="shipping_country">
+                                                        @foreach($countries as $k => $val)
+                                                            <option {{($order->customer['country'] == $val->id ? 'selected' : '')}} value="{{$val->id}}">{{$val->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="title-color">Zip</label>
+                                                    <input type="text" name="shipping_zip" class="form-control" value="{{$order->customer['shipping_zip'] ?? ''}}" placeholder="{{ \App\CPU\translate('Zipcode') }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 phone_code">
+                                                <label class="title-color">Phone</label>
+                                                <div class="form-group">
+                                                    <span class="border-end country-code px-2">{{$order->customer['shipping_phone_code']}}</span>
+                                                    <input type="number" class="form-control" name="shipping_phone" value="{{$order->customer['shipping_phone'] ?? ''}}" placeholder="{{ \App\CPU\translate('Phone') }}" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+                <div class="col-lg-12 col-xl-12 mb-3">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h3 class="h4 mb-0">{{ \App\CPU\translate('Shipment Detail') }}</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="title-color">Tracking ID</label>
+                                                <input type="text" name="tracking_id" class="form-control" value="{{$order['tracking_id']}}" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="title-color">Estimated Delivery Date</label>
+                                                <input type="date" name="expected_delivery_date" class="form-control" value="{{date('Y-m-d',strtotime($order['expected_delivery_date']))}}" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="">Shipment information</label>
+                                                <textarea name="shipment_info" class="form-control">{{ $order['shipment_info'] ?? "" }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <!-- End Card -->
-            </div>
-
-            <div class="col-lg-4 col-xl-3">
-                <!-- Card -->
-                <div class="card">
-                    <!-- Body -->
-                    @if($order->customer)
+                <div class="col-lg-12 col-xl-12 mb-3">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h3 class="h4 mb-0">{{ \App\CPU\translate('Payment Detail') }}</h3>
+                        </div>
                         <div class="card-body">
-                            <h4 class="mb-4 d-flex align-items-center gap-2">
-                                <img src="{{asset('/public/assets/back-end/img/seller-information.png')}}" alt="">
-                                {{\App\CPU\translate('Customer_information')}}
-                            </h4>
-
-                            <div class="media flex-wrap gap-3">
-                                <div class="">
-                                    <img
-                                        class="avatar rounded-circle avatar-70" style="width: 75px;height: 42px"
-                                        onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
-                                        src="{{asset('storage/app/public/profile/'.$order->customer->image)}}"
-                                        alt="Image">
-                                </div>
-                                <div class="media-body d-flex flex-column gap-1">
-                                    <span class="title-color hover-c1"><strong>{{$order->customer['f_name'].' '.$order->customer['l_name']}}</strong></span>
-                                    <span class="title-color">
-                                        <strong>{{$total_orders}} </strong>{{\App\CPU\translate('Device')}}
-                                    </span>
-                                    <span class="title-color break-all"><strong>{{$order->customer['phone']}}</strong></span>
-                                    <span class="title-color break-all">{{$order->customer['email']}}</span>
-                                </div>
-                                <div class="media-body text-right">
-                                    {{--<i class="tio-chevron-right text-body"></i>--}}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="title-color">Payment Transaction ID</label>
+                                                <input type="text" name="transaction_ref" class="form-control" value="{{$order['transaction_ref'] ?? ''}}" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="">Payment Method</label>
+                                                <select class="form-control" id="payment_method" name="payment_method">
+                                                    <option {{($order['payment_method'] == 'Stripe' ? 'selected' : '')}} value="Stripe">Stripe</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="title-color">Payment Status</label>
+                                                <select class="form-control js-select2-custom" id="payment_status" name="payment_status">
+                                                    <option {{($order['payment_status'] == 'paid' ? 'selected' : '')}} value="paid">Paid</option>
+                                                    <option {{($order['payment_status'] == 'unpaid' ? 'selected' : '')}} value="unpaid">Unpaid</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <h4 class="mb-4 d-flex gap-2">
-                                <img src="{{asset('/public/assets/back-end/img/seller-information.png')}}" alt="">
-                                {{\App\CPU\translate('shipping_address')}}
-                            </h4>
-                               
-                            <div class="d-flex flex-column gap-2">
-                                <div>
-                                    <span>{{\App\CPU\translate('Name')}} :</span>
-                                    <strong>{{$order->customer->shipping_name ? $order->customer->shipping_name : ''}}</strong>
-                                </div>
-                                <div>
-                                    <span>{{\App\CPU\translate('Contact')}}:</span>
-                                    <strong>{{$order->customer->shipping_phone ? $order->customer->shipping_phone  : ''}}</strong>
-                                </div>
-                                <div>
-                                    <span>{{\App\CPU\translate('City')}}:</span>
-                                    <strong>{{$order->customer->shipping_city ? $order->customer->shipping_city : ''}}</strong>
-                                </div>
-                                <div>
-                                    <span>{{\App\CPU\translate('zip_code')}} :</span>
-                                    <strong>{{$order->customer->shipping_zip ? $order->customer->shipping_zip  : ''}}</strong>
-                                </div>
-                                <div class="d-flex align-items-start gap-2">
-                                    <img src="{{asset('/public/assets/back-end/img/location.png')}}" alt="">
-                                    {{$order->customer->shipping_city ? $order->customer->shipping_city  : \App\CPU\translate('empty')}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <h4 class="mb-4 d-flex gap-2">
-                                <img src="{{asset('/public/assets/back-end/img/seller-information.png')}}" alt="">
-                                {{\App\CPU\translate('billing_address')}}
-                            </h4>
-                            <div class="d-flex flex-column gap-2">
-                                <div>
-                                    <span>{{\App\CPU\translate('Name')}} :</span>
-                                    <strong>{{$order->customer->name ? $order->customer->name : ''}}</strong>
-                                </div>
-                                <div>
-                                    <span>{{\App\CPU\translate('Contact')}}:</span>
-                                    <strong>{{$order->customer->phone ? $order->customer->phone_code . " " . $order->customer->phone  : ''}}</strong>
-                                </div>
-                                <div>
-                                    <span>{{\App\CPU\translate('City')}}:</span>
-                                    <strong>{{$order->customer->city ? $order->customer->city : ''}}</strong>
-                                </div>
-                                <div>
-                                    <span>{{\App\CPU\translate('zip_code')}} :</span>
-                                    <strong>{{$order->customer->zip ? $order->customer->zip  : ''}}</strong>
-                                </div>
-                                <div class="d-flex align-items-start gap-2">
-                                    <img src="{{asset('/public/assets/back-end/img/location.png')}}" alt="">
-                                    {{$order->customer->city ? $order->customer->city  : ''}}
-                                </div>
-                            </div>
-                        </div>
-                    @else
-                        <div class="card-body">
-                            <div class="media align-items-center">
-                                <span>{{\App\CPU\translate('no_customer_found')}}</span>
-                            </div>
-                        </div>
-                    @endif
-                <!-- End Body -->
+                    </div>
                 </div>
-                <!-- End Card -->
-            </div>
+                <div class="col-lg-12 col-xl-12 mb-3">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h3 class="h4 mb-0">{{ \App\CPU\translate('Product Detail') }}</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive datatable-custom">
+                                <table class="table fz-12 table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
+                                    <thead class="thead-light thead-50 text-capitalize">
+                                        <tr>
+                                            <th>{{\App\CPU\translate('SL')}}</th>
+                                            <th>{{\App\CPU\translate('Product Name')}}</th>
+                                            <th>Device Info</th>
+                                            <th>Qty</th>
+                                            <th>Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @php($i=0)
+                                    @foreach($products as $key => $detail)
+                                    @php($i++)
+                                        <tr>
+                                            <td>{{$i}}</td>
+                                            <td>
+                                                <div class="media align-items-center gap-10">
+                                                    <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$detail['thumbnail']}}" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt="">
+                                                    <div>
+                                                        <a href="#" class="title-color hover-c1"><h6>{{substr($detail['name'],0,30)}}{{strlen($detail['name'])>10?'...':''}}</h6></a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @if(!empty($detail['mac_ids']))
+                                                    @foreach($detail['mac_ids'] as $k => $val)
+                                                        <strong>UUID: </strong>{{$val['uuid']}}<br />
+                                                        <strong>Major: </strong>{{$val['major']}}<br />
+                                                        <strong>Minor: </strong>{{$val['minor']}}<br />
+                                                        <hr />
+                                                    @endforeach
+                                                @endif
+                                            </td>
+                                            <td>{{count($detail['mac_ids'])}}</td>
+                                            <td>${{$detail['price'] ?? ''}}</td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row justify-content-md-end mb-3">
+                                <div class="col-md-12 col-lg-12">
+
+                                    <table class="table fz-12 table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
+                                        <thead class="thead-light thead-50 text-capitalize">
+                                            <tr>
+                                                <th>{{\App\CPU\translate('Other info')}}</th>
+                                                <th class="text-right">{{\App\CPU\translate('Total Amount')}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <label><strong>{{\App\CPU\translate('Tax info')}}</strong>: </label>
+                                                    @php($tx_amt = $ship_amt = 0)
+                                                    @foreach($tax_info as $product_id => $taxes)
+                                                        @foreach($taxes as $k1 => $tax)
+                                                            @php($tx_amt += $tax['amount'])
+                                                            @php($total_order_amount += $tax['amount'])
+                                                                <strong>{{$tax['title']}}</strong><br />
+                                                        @endforeach
+                                                    @endforeach
+                                                </td>
+                                                <td class="text-right"><strong>${{number_format($tx_amt,2)}}</strong></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label><strong>{{\App\CPU\translate('Shipping info')}}</strong>: </label><br />
+                                                    @foreach($shipping_info as $product_id => $shipping)
+                                                            @php($ship_amt += $shipping['amount'])
+                                                            <strong>Shipping Co.: {{$shipping['title']}}</strong><br />
+                                                            <strong>Duration: {{$shipping['duration']}}</strong><br />
+                                                            <strong>Shipping Mode: {{$shipping['mode']}}</strong>
+                                                    @endforeach
+                                                </td>
+                                                <td class="text-right">
+                                                    <strong>${{number_format($ship_amt,2)}}</strong>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Grand Total</strong></td>
+                                                <td class="text-right">
+                                                    <strong>${{$total_order_amount}}</strong>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-xl-12">
+                    <div class="float-right gap-3 mt-3">
+                        <button type="submit" class="btn btn--primary">{{ \App\CPU\translate('Update Information') }}</button>
+                    </div>
+                </div>
+            </form>
         </div>
-        <!-- End Row -->
     </div>
     <!--Show locations on map Modal -->
     <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="locationModalLabel">

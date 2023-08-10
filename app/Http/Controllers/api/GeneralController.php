@@ -37,6 +37,17 @@ class GeneralController extends Controller
         }
     }
 
+    public function force_update(Request $request){
+        if (empty($request->platform)) {
+            return response()->json(array(
+                    'code' => 400,
+                    'message' => 'platform is required'
+                ), 400);
+        }
+        $check = \DB::table('api_versions')->where('platform', $request->platform)->first();
+        return response()->json(['code'=>200,'data'=>['new_version'=>$check->version ?? 1,'force_update'=> $check->status ?? 1],'message'=>'need Force Update!'],200);
+    }
+
     public function get_banners(){
         $banners_list = Banner::where(['published'=>1])->get();
         if(!empty($banners_list)){
@@ -326,18 +337,22 @@ class GeneralController extends Controller
         if(!empty($user_details->id)){
 
             $order_list = [];
-            $get_orders = Order::select('id as order_id','customer_id','mac_ids','order_amount','created_at')
+            $get_orders = Order::select('id as order_id','order_status','expected_delivery_date','customer_id','mac_ids','order_amount','created_at')
                                ->where(['customer_id'=>$user_details->id])->get();
             foreach($get_orders as $k => $order){
                 $order_list[$k]['order_id'] = $order['order_id'];
                 $order_list[$k]['customer_id'] = $order['customer_id'];
                 $order_list[$k]['order_amount'] = number_format($order['order_amount'],2);
                 $order_list[$k]['order_date'] = date('F j,Y, h:i A',strtotime($order['created_at']));
-                if($k == 0){
-                    $order_list[$k]['delivery_message']  = 'Estimated Delivery on February 25';
+                
+                if(time() < strtotime($order['expected_delivery_date']) && ($order['order_status'] == 'processing' || $order['order_status'] == 'shipped')){
+                    $order_list[$k]['delivery_message'] = 'Estimated Delivery on '. date('F j',strtotime($order['expected_delivery_date']));
+                }elseif(time() > strtotime($order['expected_delivery_date']) && $order['order_status'] == 'delivered'){
+                    $order_list[$k]['delivery_message']  = 'Delivered on '.  date('F j',strtotime($order['expected_delivery_date']));
                 }else{
-                    $order_list[$k]['delivery_message']  = 'Delivered on February 25';
+                    $order_list[$k]['delivery_message']  = "";
                 }
+                
                 $mac_ids = 0;
                 if(!empty($order['mac_ids'])){
                     $mac_ids = json_decode($order['mac_ids'],true);
@@ -357,7 +372,7 @@ class GeneralController extends Controller
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
-            $get_orders = Order::select('id','customer_id','mac_ids','payment_status','order_status','order_amount','shipping_address','created_at')
+            $get_orders = Order::select('id','customer_id','mac_ids','payment_status','expected_delivery_date','order_status','order_amount','shipping_address','created_at')
                                 ->where(['id'=>$order_id])->first();
             $total_mac_ids = [];
             if(!empty($get_orders->id)){
@@ -369,10 +384,12 @@ class GeneralController extends Controller
                 $shipping_address = User::select('add_shipping_address','shipping_name','shipping_email','shipping_phone','shipping_country','shipping_city','shipping_state','shipping_zip')
                                             ->where(['id'=>$get_orders->customer_id])->first();
 
-                if(time() < strtotime($get_orders->created_at . '+7 days') && $get_orders->order_status != 'delivered'){
-                    $get_orders->delivery_message = 'Estimated Delivery on '. date('F j',strtotime($get_orders->created_at . '+7 days'));
-                }elseif(time() > strtotime($get_orders->created_at . '+7 days') && $get_orders->order_status == 'delivered'){
-                    $get_orders->delivery_message  = 'Delivered on '.  date('F j',strtotime($get_orders->created_at . '+7 days'));
+                if(time() < strtotime($get_orders->expected_delivery_date) && ($get_orders->order_status == 'processing' || $get_orders->order_status == 'shipped')){
+                    $get_orders->delivery_message = 'Estimated Delivery on '. date('F j',strtotime($get_orders->expected_delivery_date));
+                }elseif(time() > strtotime($get_orders->expected_delivery_date) && $get_orders->order_status == 'delivered'){
+                    $get_orders->delivery_message  = 'Delivered on '.  date('F j',strtotime($get_orders->expected_delivery_date));
+                }else{
+                    $get_orders->delivery_message  = "";
                 }
 
                 $get_orders->shipping = [
@@ -484,6 +501,20 @@ class GeneralController extends Controller
         echo "<pre>"; print_r($result); die;
 
 		//return $result;
+    }
+
+    public function send_test_email(Request $request){
+        $to = $request->to;
+        $subject = $request->subject;
+        $body = $request->body;
+        $test = $this->sendEmail($to, $subject, $body);
+        if(isset($test['status']) && $test['status'] == 2){
+            return response()->json(['status'=>400,'message'=>$test['error']],200);
+        }elseif(isset($test['status']) && $test['status'] == 1){
+            return response()->json(['status'=>200,'message'=>'Mail send successfully'],200);
+        }else{
+            return response()->json(['status'=>400,'message'=>'failed'],200);
+        }
     }
 
 }

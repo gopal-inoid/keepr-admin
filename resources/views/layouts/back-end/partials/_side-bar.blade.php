@@ -85,9 +85,9 @@
                             </li>
                             <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/product/current-active-device')?'active':''}}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link"
-                                href="{{route('admin.product.current-active-device')}}" title="{{ \App\CPU\translate('Current Active Devices') }}">
+                                href="{{route('admin.product.current-active-device')}}" title="{{ \App\CPU\translate('Connected Devices') }}">
                                     <i class="tio-globe nav-icon"></i>
-                                    <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ \App\CPU\translate('Current Active Devices') }}</span>
+                                    <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ \App\CPU\translate('Connected Devices') }}</span>
                                 </a>
                             </li>
                         @endif
@@ -153,13 +153,13 @@
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Tax Calcucation</span>
                             </a>
                         </li>
-                        <li class="navbar-vertical-aside-has-menu {{Request::is('admin/coupon*')?'active':''}}">
+                        {{-- <li class="navbar-vertical-aside-has-menu {{Request::is('admin/coupon*')?'active':''}}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                href="{{route('admin.coupon.add-new')}}" title="{{\App\CPU\translate('coupon')}}">
                                 <i class="tio-users-switch nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{\App\CPU\translate('coupon')}}</span>
                             </a>
-                        </li>
+                        </li> --}}
                         <li class="navbar-vertical-aside-has-menu {{(Request::is('admin/business-settings/mail') || Request::is('admin/business-settings/sms-module') || Request::is('admin/business-settings/captcha') || Request::is('admin/social-login/view') || Request::is('admin/business-settings/map-api') || Request::is('admin/business-settings/payment-method') || Request::is('admin/business-settings/fcm-index'))?'active':''}}">
                             <a class="nav-link " href="{{route('admin.business-settings.mail.index')}}"
                                title="{{\App\CPU\translate('3rd_party')}}">

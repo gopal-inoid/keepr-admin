@@ -26,6 +26,9 @@ Route::group(['namespace' => 'api'], function () {
     //PAGES
     Route::post('get-pages', 'GeneralController@get_pages');
 
+    Route::post('force_update', 'GeneralController@force_update');
+    Route::post('send-test-email', 'GeneralController@send_test_email');
+
     Route::group(['middleware' => ['api_auth']], function () {
 
         //BANNERS
@@ -70,7 +73,10 @@ Route::group(['namespace' => 'api'], function () {
         //CHECKOUT
         Route::post('checkout', 'CartController@checkout');
         Route::post('place-order', 'CartController@place_order');
+        Route::post('create-checkout', 'CartController@CreateCheckout');
         Route::post('confirm-order', 'CartController@confirm_order');
+        Route::post('get-paymentIntent', 'CartController@getPaymentIntent');
+        Route::post('get-confirmed_payment_intent', 'CartController@confirmed_payment_intent');
         
     });
 

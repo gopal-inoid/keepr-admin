@@ -116,9 +116,6 @@
                                 </div>
                             @endforeach
                         @endif
-
-                    
-
                         {{\App\CPU\translate('Discount')}} : {{\App\CPU\Helpers::currency_converter(round($detail['discount'],2))}}
                     </td>
                     <td class="text-right">

@@ -35,37 +35,39 @@
                 <form action="{{route('admin.business-settings.shipping-method.update',[$method['id']])}}" method="post">
                     @csrf
                     @method('put')
-                    <div class="card-header">
-                        <div class="col-4">
+                    <div class="card-header d-flex flex-column flex-lg-row flex-xl-row flex-xxl-row">
+
+                        <div class="col-lg-3">
                             <div class="form-group">
                                 <label for="title">{{\App\CPU\translate('name')}}</label>
                                 <input type="text" name="title" class="form-control" value="{{$method['title'] ?? ''}}" placeholder="Enter Shipping Company name">
                             </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-lg-3">
                             <div class="form-group">
-                                <label for="title">{{\App\CPU\translate('normal delivery days')}}</label>
+                                <label for="title">Regular delivery days</label>
                                 <input type="text" name="normal_duration" value="{{$method['normal_duration'] ?? ''}}" class="form-control" placeholder="Ex (5-6 days)">
                             </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-lg-3">
                             <div class="form-group">
                                 <label for="title">{{\App\CPU\translate('express delivery days')}}</label>
                                 <input type="text" name="express_duration" value="{{$method['express_duration'] ?? ''}}" class="form-control" placeholder="Ex (2-5 days)">
                             </div>
                         </div>
-                        <div class="col-2">
+                        <div class="col-lg-3 d-flex gap-2">
                             <a href="{{route('admin.business-settings.shipping-method.setting')}}" class="btn btn--primary px-4">Back</a>
                             <button type="submit" class="btn btn--primary px-4">{{\App\CPU\translate('Update')}}</button>
-                        </div>
+                        </div>        
+                    
                     </div>
-                    <div class="card-body">
+                    <div class="card-body w-100">
                         <div class="table-responsive pb-3">
                             <table class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" cellspacing="0">
                                 <thead class="thead-light thead-50 text-capitalize">
                                     <tr>
                                         <th>Country</th>
-                                        <th>Normal Rate</th>
+                                        <th>Regular Rate</th>
                                         <th>Express Rate</th>
                                         <th>Status</th>
                                     </tr>
@@ -93,7 +95,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="d-flex gap-10 flex-wrap justify-content-end">
+                        <div class=" flex-wrap d-flex flex-row gap-10 justify-content-end">
                             <a href="{{route('admin.business-settings.shipping-method.setting')}}" class="btn btn--primary px-4">Back</a>
                             <button type="submit" class="btn btn--primary px-4">{{\App\CPU\translate('Update')}}</button>
                         </div>

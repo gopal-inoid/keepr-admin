@@ -22,11 +22,10 @@ Route::get('maintenance-mode', 'Web\WebController@maintenance_mode')->name('main
 
 
 Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function () {
-
-    Route::get('/', function (){
-        //return redirect()->route('admin.auth.login');
-        return view('keepr_app.index');
-    })->name('home');
+    Route::get('/', 'UserProfileController@keepr_home_page')->name('home');
+    // Route::get('/', function (){
+    //     //return view('keepr_app.index');
+    // })->name('home');
 
     Route::get('/terms-condition', function (){
         //return redirect()->route('admin.auth.login');

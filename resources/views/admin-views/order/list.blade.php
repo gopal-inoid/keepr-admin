@@ -3,7 +3,44 @@
 @section('title', \App\CPU\translate('Order List'))
 
 @push('css_or_js')
-
+<style>
+#loader-overlay{
+  position: fixed;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  height:100%;
+  display: none;
+  background: rgba(0,0,0,0.6);
+}
+.cv-loader-spinner {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+}
+.order-loader-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px #ddd solid;
+  border-top: 4px #2e93e6 solid;
+  border-radius: 50%;
+  animation: sp-anime 0.8s infinite linear;
+}
+@keyframes sp-anime {
+  100% { 
+    transform: rotate(360deg); 
+  }
+}
+.is-hide{
+  display:none;
+}
+</style>
+<div id="loader-overlay">
+    <div class="cv-loader-spinner">
+        <span class="order-loader-spinner"></span>
+    </div>
+</div>
 @endpush
 
 @section('content')
@@ -74,8 +111,7 @@
                                             </div>
                                         </div>
                                         <input id="datatableSearch_" type="search" name="search" class="form-control"
-                                            placeholder="{{\App\CPU\translate('Search by Order ID')}}" aria-label="Search by Order ID" value="{{ $search }}"
-                                            required>
+                                            placeholder="{{\App\CPU\translate('Search by Order ID')}}" aria-label="Search by Order ID" value="{{ $search }}">
                                         <button type="submit" class="btn btn--primary input-group-text">{{\App\CPU\translate('search')}}</button>
                                     </div>
                                     <!-- End Search -->
@@ -147,20 +183,27 @@
                                     <td class="text-capitalize">
                                         @if($order['order_status']=='pending')
                                             <span class="badge badge-soft-info fz-12">
-                                                    {{$order['order_status']}}
+                                                {{$order['order_status']}}
                                             </span>
-
-                                        @elseif($order['order_status']=='processing' || $order['order_status']=='out_for_delivery')
+                                        @elseif($order['order_status']=='processing')
                                             <span class="badge badge-soft-warning fz-12">
-                                                {{str_replace('_',' ',$order['order_status'] == 'processing' ? 'packaging':$order['order_status'])}}
+                                                {{$order['order_status']}}
                                             </span>
-                                        @elseif($order['order_status']=='confirmed')
-                                            <span class="badge badge-soft-success fz-12">
+                                        @elseif($order['order_status']=='refunded')
+                                            <span class="badge badge-soft-warning fz-12">
+                                                {{$order['order_status']}}
+                                            </span>
+                                        @elseif($order['order_status']=='shipped')
+                                            <span class="badge badge-soft-warning fz-12">
                                                 {{$order['order_status']}}
                                             </span>
                                         @elseif($order['order_status']=='failed')
                                             <span class="badge badge-danger fz-12">
-                                                {{$order['order_status'] == 'failed' ? 'Failed To Deliver' : ''}}
+                                                {{$order['order_status']}}
+                                            </span>
+                                        @elseif($order['order_status']=='cancelled')
+                                            <span class="badge badge-danger fz-12">
+                                                {{$order['order_status']}}
                                             </span>
                                         @elseif($order['order_status']=='delivered')
                                             <span class="badge badge-soft-success fz-12">
@@ -176,9 +219,12 @@
                                         <div class="d-flex gap-2">
                                             <select class="form-control js-select2-custom" id="change_order_status" order_id="{{$order['id']}}" name="change_order_status">
                                                 <option {{($order['order_status'] == 'pending' ? 'selected' : '')}} value="pending">Pending</option>
-                                                <option {{($order['order_status'] == 'confirmed' ? 'selected' : '')}} value="confirmed">Confirmed</option>
-                                                <option {{($order['order_status'] == 'failed' ? 'selected' : '')}} value="failed">Failed To Deliver</option>
+                                                <option {{($order['order_status'] == 'processing' ? 'selected' : '')}} value="processing">Processing</option>
+                                                <option {{($order['order_status'] == 'shipped' ? 'selected' : '')}} value="shipped">Shipped</option>
                                                 <option {{($order['order_status'] == 'delivered' ? 'selected' : '')}} value="delivered">Delivered</option>
+                                                <option {{($order['order_status'] == 'cancelled' ? 'selected' : '')}} value="cancelled">Cancelled</option>
+                                                <option {{($order['order_status'] == 'refunded' ? 'selected' : '')}} value="refunded">Refunded</option>
+                                                <option {{($order['order_status'] == 'failed' ? 'selected' : '')}} value="failed">Failed</option>
                                             </select>
                                         </div>
                                     </td>
@@ -283,7 +329,7 @@
             }
 
         });
-       
+
         $(document).on('change','#change_order_status',function () {
             
             var value = $(this).val();
@@ -292,14 +338,14 @@
                 url: '{{route('admin.orders.change-order-status')}}',
                 data:{id:id,status:value},
                 beforeSend: function () {
-                    $('#loading').show();
+                    $("#loader-overlay").fadeIn(300);
                 },
                 success: function (data) {
                     toastr.success('{{\App\CPU\translate('Order status change successfully')}}');
                     location.reload();
                 },
                 complete: function () {
-                    $('#loading').hide();
+                    $("#loader-overlay").fadeOut(300);
                 },
             });
         });

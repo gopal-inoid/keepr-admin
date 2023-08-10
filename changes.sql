@@ -103,3 +103,9 @@ CREATE TABLE `keepr`.`api_logs` ( `log_id` INT NOT NULL AUTO_INCREMENT , `user_i
 ALTER TABLE `device_tracking_log` ADD `minor` VARCHAR(20) NULL DEFAULT NULL AFTER `lan`, ADD `major` VARCHAR(20) NULL DEFAULT NULL AFTER `minor`, ADD `uuid` VARCHAR(250) NULL DEFAULT NULL AFTER `major`;
 
 ALTER TABLE `device_trackings` CHANGE `mac_id` `mac_id` VARCHAR(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;
+
+ALTER TABLE `orders` ADD `shipment_info` TEXT NULL DEFAULT NULL AFTER `shipping_mode`;
+
+ALTER TABLE `orders` ADD `tracking_id` VARCHAR(250) NULL DEFAULT NULL AFTER `shipment_info`;
+
+ALTER TABLE `email_templates` ADD `keys` VARCHAR(200) NULL DEFAULT NULL AFTER `name`;
