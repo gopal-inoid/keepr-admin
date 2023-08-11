@@ -29,23 +29,23 @@
                     <ul class="navbar-nav me-auto m-auto my-2 my-lg-0 navbar-nav-scroll"
                         style="--bs-scroll-height: 100px;">
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="#Home">Home</a>
+                            <a class="nav-link" aria-current="page" href="#home">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#About">About</a>
+                            <a class="nav-link" href="#about">About</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#Features">Features</a>
+                            <a class="nav-link" href="#features">Features</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#Products">Products</a>
+                            <a class="nav-link" href="#products">Products</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#Frequently_Questions">FAQ</a>
+                            <a class="nav-link" href="#faq">FAQ</a>
                         </li>
                     </ul>
                     <form class="d-flex m-3">
-                        <a class="btn download_keeper_btn" href="#Download_keepr" type="submit">Download Keepr</a>
+                        <a class="btn download_keeper_btn" href="#downloads" type="submit">Download Keepr</a>
                     </form>
                 </div>
             </div>
@@ -55,7 +55,7 @@
 
 
     <div class="container-fluid" style="padding-top: 74px;">
-        <div class="section_seocond" id="Home">
+        <div class="section_seocond" id="home">
             <div class="For_picture">
                 <div class="container" id="Valuables_again">
                     <div class="row">
@@ -83,7 +83,7 @@
             </div>
 
         </div>
-        <div class="container-fluid section_three" id="About">
+        <div class="container-fluid section_three" id="about">
             <div class="container">
                 <div class="About_seocond row">
                     <div class="col-md-6">
@@ -167,7 +167,7 @@
             </div>
         </div>
 
-        <div class="container-fluid Four_Section" id="Features">
+        <div class="container-fluid Four_Section" id="features">
             <div class="container">
                 <div class="Unlock_Next_Level mb-4"> Unlock Next-Level Amazing Features!</div>
                 <div class="row">
@@ -210,7 +210,7 @@
         </div>
 
 
-        <div class="container-fluid Fifth_Section" id="Products">
+        <div class="container-fluid Fifth_Section" id="products">
             <div class="container">
                 <h1 class="text-center" style="font-weight: 600;">Our Products</h1>
                 <div class="row justify-content-evenly mt-5">
@@ -222,7 +222,7 @@
                             <h4 class="ibeacon-headline">{{$val['name']}}</h4>
                             <div><span class="Price_Count">${{$val['purchase_price']}}</span> <br><small>Does not
                                     include
-                                    shopping/taxes</small>
+                                    shipping/taxes</small>
                             </div>
                             <!-- <p class="ibeacon_peragraph">The Keepr duo is smaller fob and has a 1 year battery life. the
                                     application will alert you when the battery needs replacing. it also comes with adhesive
@@ -235,7 +235,7 @@
                     @endforeach
                     @endif
                 </div>
-                <div class="container mt-lg-5 pt-lg-5 mt-md-5 pt-md-5 Frequently_Questions" id="Frequently_Questions"
+                <div class="container mt-lg-5 pt-lg-5 mt-md-5 pt-md-5 Frequently_Questions" id="faq"
                     style="padding-top: 6rem !important;">
                     <h1 class="text-center" style="font-weight: 600">Frequently Asked Questions</h1>
                     <div class="row justify-content-center mt-5 pb-5">
@@ -345,19 +345,19 @@
                                 <div class="text-center">
                                     <ul class="footer_menu justify-content-center">
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" aria-current="page" href="#Home">Home</a>
+                                            <a class="nav-link" aria-current="page" href="#home">Home</a>
                                         </li>
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" href="#About">About</a>
+                                            <a class="nav-link" href="#about">About</a>
                                         </li>
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" href="#Features">Features</a>
+                                            <a class="nav-link" href="#features">Features</a>
                                         </li>
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" href="#Products">Products</a>
+                                            <a class="nav-link" href="#products">Products</a>
                                         </li>
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" href="#Frequently_Questions">FAQ</a>
+                                            <a class="nav-link" href="#faq">FAQ</a>
                                         </li>
                                         <li class="nav-item mx-3">
                                             <a class="nav-link" href="{{route('terms-condition')}}">Terms and
@@ -367,7 +367,7 @@
                                 </div>
                             </div>
 
-                            <div class="container overlaping_div" id="Download_keepr">
+                            <div class="container overlaping_div pt-5" id="downloads">
                                 <div class="row" id="Overlap-content">
                                     <div class="col-lg-5 col-md-5 col-sm-12 overlaping_div_content">
                                         <h1 class="abs_div_content">
@@ -375,9 +375,16 @@
                                         </h1>
                                         <p class="mt-4">Leave us a rating and review!</p>
                                         <div class="app_download_btn">
-                                            <img src="{{ asset('keepr_app_assets/assests/PlayStore_Icon.svg') }}"
-                                                alt="">
-                                            <img src="{{ asset('keepr_app_assets/assests/AppStore_Icon.svg') }}" alt="">
+                                            <a href="https://play.google.com/store/apps/details?id=com.keepr.android"
+                                                target="_blank">
+                                                <img src="{{ asset('keepr_app_assets/assests/PlayStore_Icon.svg') }}"
+                                                    alt="">
+                                            </a>
+                                            <a href="https://apps.apple.com/us/app/keepr-app/id6449671498"
+                                                target="_blank">
+                                                <img src="{{ asset('keepr_app_assets/assests/AppStore_Icon.svg') }}"
+                                                    alt="">
+                                            </a>
                                         </div>
                                     </div>
                                     <div class="col-lg-7 col-md-7 col-sm-12 text-end">
