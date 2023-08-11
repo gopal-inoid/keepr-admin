@@ -411,7 +411,7 @@ body {
     padding-top: 40px;
     display: inline-flex;
     justify-content: space-between;
-    width: 560px;
+    width: 100%;
 }
 
 .mail_section img {
@@ -765,6 +765,7 @@ ul li {
         font-weight: 600;
         font-size: 35px;
         padding: 0px 0px 0px 0px;
+        width: auto;
     }
 
     .mail_section img {
