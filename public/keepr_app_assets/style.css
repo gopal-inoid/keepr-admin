@@ -126,7 +126,7 @@ body {
 .rightMobileIcon img {
     padding-top: 115px;
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
     object-fit: contain;
     /* padding-bottom: 60px; */
 }
@@ -148,7 +148,7 @@ body {
 
 .rightMobileIcon2 img {
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
     object-fit: contain;
     padding: 0px 70px 0px 0px;
     margin: auto;
@@ -311,8 +311,8 @@ body {
     /* margin-top: 30px;
     margin-left: -220px; */
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    /* height: 100%; */
+    object-fit: contain;
 }
 
 .Fifth_Section {
@@ -488,7 +488,7 @@ ul li {
 
 .overlaping_div img {
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
     object-fit: contain;
     max-height: 500px;
 }
@@ -537,7 +537,7 @@ ul li {
 
 .HeadPhone_image img {
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
     object-fit: contain;
 }
 
