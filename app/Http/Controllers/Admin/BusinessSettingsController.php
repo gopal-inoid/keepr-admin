@@ -504,6 +504,13 @@ class BusinessSettingsController extends Controller
             $request['email_verification'] = 0;
         }
 
+        if(!empty($request->android_version)){
+            DB::table('api_versions')->where(['platform' => 'android'])->update(['version'=>$request->android_version]);
+        }
+        if(!empty($request->ios_version)){
+            DB::table('api_versions')->where(['platform' => 'ios'])->update(['version'=>$request->ios_version]);
+        }
+
         //comapy shop banner
         $imgBanner = BusinessSetting::where(['type' => 'shop_banner'])->first();
         if ($request->has('shop_banner')) {
