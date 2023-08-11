@@ -337,6 +337,7 @@ body {
     background: #F8F8F8;
     text-align: center;
     border-radius: 14px;
+    margin: 40px;
 }
 
 .Product-1 img,
@@ -862,7 +863,7 @@ ul li {
     }
 
     .Fifth_Section {
-        padding-top: 70px;
+        padding-top: 80px;
     }
 
     .More_Questions {
@@ -906,10 +907,6 @@ ul li {
 
     .Seven_Section {
         padding-bottom: 330px;
-    }
-
-    .Frequently_Questions {
-        padding: 50px;
     }
 
     .step_section {
