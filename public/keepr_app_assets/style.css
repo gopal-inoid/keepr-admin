@@ -633,7 +633,7 @@ ul li {
     }
 
     #Frequently_Asked_Questions2 {
-        padding: 0 !important;
+        padding-left: 30 !important;
     }
 
     #Frequently_Asked_Questions1 {
@@ -697,8 +697,8 @@ ul li {
 
     .step_section {
         /* padding: 25px; */
-        padding: 69px 0px;
-        background-size: 450px;
+        padding: 40px 0px;
+        background-size: 300px;
     }
 
     .Steps_Content {
@@ -1108,4 +1108,22 @@ dl {
 .navbar-collapse > ul > li{
     padding-top: 6px;
     padding-bottom: 6px;
+}
+
+@media (min-width: 768px) and (max-width: 1399px) {
+    .section_seocond {
+        height: 30em;
+    }
+    .rightMobileIcon img {
+        height: 100%;
+    }
+    .rightMobileIcon2 img {
+        height: 100%;
+    }
+    .mobile-icon img {
+        height: 100%;
+    }
+    .app_download_btn img {
+        width: 130px;
+    }
 }

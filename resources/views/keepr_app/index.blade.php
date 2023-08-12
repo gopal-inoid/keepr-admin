@@ -65,7 +65,7 @@
                                 <p>Do you always lose or forget your stuff before you go out? Keeper can help with that
                                     by alerting you when you leave your things behind!</p>
                                 <div class="download_app_btn">
-                                    <a href="#Download_keepr" class="btn" type="button ">Download Keepr</a>
+                                    <a href="#downloads" class="btn" type="button ">Download Keepr</a>
                                 </div>
                             </div>
 
@@ -103,7 +103,7 @@
                                 so that you can retrieve your valuable(s) before leaving.</p> -->
                             {!! $about_us !!}
                             <div class="download_app_btn_About">
-                                <a href="#Download_keepr" class="btn" type="button ">Download Keepr</a>
+                                <a href="#downloads" class="btn" type="button ">Download Keepr</a>
                             </div>
                         </div>
                     </div>
@@ -112,7 +112,7 @@
                 <div class="container step_section_row mt-5">
                     <div class="step_section row">
                         <div class="col-md-4 col-sm-12 steps row ms-2">
-                            <div id="_block_1" class="col-lg-12 col-xl-9 col-sm-12 col-md-12">
+                            <div id="_block_1" class="col-lg-12 col-xl-9 col-sm-12 col-md-12 p-md-0">
                                 <div class="d-flex row">
                                     <div class="step-circle col-md-2 col-sm-2">
                                         1
@@ -130,7 +130,7 @@
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-12 steps row ms-2">
-                            <div id="_block_1" class="col-lg-12 col-xl-9 col-sm-12 col-md-12">
+                            <div id="_block_1" class="col-lg-12 col-xl-9 col-sm-12 col-md-12 p-md-0">
                                 <div class="d-flex row">
                                     <div class="step-circle col-md-2 col-sm-2">
                                         2
@@ -147,7 +147,7 @@
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-12 steps row ms-2">
-                            <div id="_block_1" class="col-lg-12 col-xl-9 col-sm-12 col-md-12">
+                            <div id="_block_1" class="col-lg-12 col-xl-9 col-sm-12 col-md-12 p-md-0">
                                 <div class="d-flex row">
                                     <div class="step-circle col-md-2 col-sm-2">
                                         3
@@ -376,12 +376,12 @@
                                         <p class="mt-4">Leave us a rating and review!</p>
                                         <div class="app_download_btn">
                                             <a href="https://play.google.com/store/apps/details?id=com.keepr.android"
-                                                target="_blank">
+                                                target="_blank" class="m-md-1">
                                                 <img src="{{ asset('keepr_app_assets/assests/PlayStore_Icon.svg') }}"
                                                     alt="">
                                             </a>
                                             <a href="https://apps.apple.com/us/app/keepr-app/id6449671498"
-                                                target="_blank">
+                                                target="_blank" class="m-md-1">
                                                 <img src="{{ asset('keepr_app_assets/assests/AppStore_Icon.svg') }}"
                                                     alt="">
                                             </a>
