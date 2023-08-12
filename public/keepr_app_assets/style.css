@@ -1117,4 +1117,7 @@ dl {
     .app_download_btn img {
         width: 130px;
     }
+    .main_heading {
+        font-size: 36px;
+    }
 }
