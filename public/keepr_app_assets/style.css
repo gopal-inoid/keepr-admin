@@ -361,7 +361,7 @@ body {
 .buy_now_btn {
     width: 156px;
     height: 56px;
-    background: #52D1DC 0% 0% no-repeat padding-box;
+    background-color: #52D1DC;
     border-radius: 10px;
     opacity: 1;
     color: #fff;
