@@ -641,7 +641,7 @@ ul li {
     }
 
     .rightMobileIcon img {
-        padding-top: 50px;
+        padding-top: 130px;
     }
 
 
@@ -656,7 +656,7 @@ ul li {
     }
 
     .Main_Content {
-        padding-top: 100px;
+        padding-top: 90px;
         padding-left: 0px;
         color: #fff;
         font-size: 40px;
@@ -1113,15 +1113,6 @@ dl {
 @media (min-width: 768px) and (max-width: 1399px) {
     .section_seocond {
         height: 30em;
-    }
-    .rightMobileIcon img {
-        height: 100%;
-    }
-    .rightMobileIcon2 img {
-        height: 100%;
-    }
-    .mobile-icon img {
-        height: 100%;
     }
     .app_download_btn img {
         width: 130px;
