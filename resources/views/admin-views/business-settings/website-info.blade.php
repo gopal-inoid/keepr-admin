@@ -743,6 +743,29 @@
                                     placeholder="{{\App\CPU\translate('Minimum distance to fire alarm')}}">
                             </div>
                         </div>
+
+                        <div class="col-md-4">
+                            @php($android_version = DB::table('api_versions')->where(['platform' => 'android'])->first())
+                            <div class="form-group">
+                                <label
+                                    class="title-color d-flex">{{\App\CPU\translate('android_version')}}</label>
+                                <input class="form-control" type="text" name="android_version"
+                                    value="{{$android_version->version ?? ''}}"
+                                    placeholder="{{\App\CPU\translate('android_version')}}">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            @php($ios_version = DB::table('api_versions')->where(['platform' => 'ios'])->first())
+                            <div class="form-group">
+                                <label
+                                    class="title-color d-flex">{{\App\CPU\translate('ios_version')}}</label>
+                                <input class="form-control" type="text" name="ios_version"
+                                    value="{{$ios_version->version ?? ''}}"
+                                    placeholder="{{\App\CPU\translate('ios_version')}}">
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
