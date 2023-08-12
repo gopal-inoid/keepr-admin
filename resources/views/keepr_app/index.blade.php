@@ -41,7 +41,7 @@
                         </li>
                     </ul>
                     <form class="d-flex m-3">
-                        <a class="btn download_keeper_btn" href="#downloads" type="button">Download Keepr</a>
+                        <a class="btn download_keeper_btn" href="#downloads">Download Keepr</a>
                     </form>
                 </div>
             </div>
@@ -61,7 +61,7 @@
                                 <p>Do you always lose or forget your stuff before you go out? Keeper can help with that
                                     by alerting you when you leave your things behind!</p>
                                 <div class="download_app_btn">
-                                    <a href="#downloads" class="btn" type="button">Download Keepr</a>
+                                    <a href="#downloads" class="btn">Download Keepr</a>
                                 </div>
                             </div>
 
@@ -224,7 +224,7 @@
                                     to
                                     stick it on objects as well</p> -->
                             {!!$val['details']!!}
-                            <a href="" class="btn buy_now_btn" type="button">Buy Now</a>
+                            <a href="" class="btn buy_now_btn">Buy Now</a>
                         </div>
                     </div>
                     @endforeach
