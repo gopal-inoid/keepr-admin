@@ -50,7 +50,7 @@
     <!-- </div> -->
 
 
-    <div class="container-fluid" style="padding-top: 74px;">
+    <div class="container-fluid">
         <div class="section_seocond" id="home">
             <div class="For_picture">
                 <div class="container" id="Valuables_again">
