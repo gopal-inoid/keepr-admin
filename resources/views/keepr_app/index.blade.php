@@ -165,7 +165,7 @@
 
         <div class="container-fluid Four_Section" id="features">
             <div class="container">
-                <div class="Unlock_Next_Level mb-4"> Unlock Next-Level Amazing Features!</div>
+                <div class="Unlock_Next_Level mb-4">Why Keepr?</div>
                 <div class="row">
                     <!-- <div class="col-md-12 col-lg-1 col-xl-1"></div> -->
                     <!-- <div class="col-md-1"></div> -->
@@ -198,7 +198,7 @@
         <div class="container-fluid pt-5">
             <div class="overlay">
                 <div class="overlay-image">
-                    <img src="{{ asset('keepr_app_assets/assests/PlayButtonIcon.png') }}" data-toggle="modal" data-target="#exampleModalCenter" class="video_Play_Button" alt="video_Play_Button">
+                    <img src="{{ asset('keepr_app_assets/assests/PlayButtonIcon.png') }}" id="overlay-img" class="video_Play_Button" alt="video_Play_Button">
 
                 </div>
             </div>
@@ -401,7 +401,7 @@
 
 
         <!-- Modal -->
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal fade" id="exampleModalCenter" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -411,21 +411,14 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <iframe class="Youtube_Video" width="560" height="315" src="https://www.youtube.com/embed/D0UnqGm_miA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        <iframe id="keeprVideo" class="Youtube_Video" width="560" height="315" src="{{ asset('keepr_app_assets/assests/Keepr_Intro_Video.mp4') }}" title="Video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
         </div>
 </body>
-
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
 </script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
-</script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
-</script>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-
 <script>
     $(document).ready(function() {
         $(".desc-1").hover(function() {
@@ -446,7 +439,28 @@
             $(".desc-1").removeClass("active");
             $(".desc-4").removeClass("active");
         });
-    });
+
+        var url = $("#keeprVideo").attr('src');
+        $("#exampleModalCenter").on('hide.bs.modal', function() {
+            $("#keeprVideo").attr('src', '');
+        });
+        $("#exampleModalCenter").on('show.bs.modal', function() {
+            $("#keeprVideo").attr('src', url);
+        });
+
+        $("#overlay-img").click(function() {
+            $('#exampleModalCenter').modal("show");
+        })
+    })
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+</script>
+<!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous">
+</script> -->
+
+
 
 </html>
