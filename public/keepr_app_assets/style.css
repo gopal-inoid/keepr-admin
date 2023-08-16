@@ -1084,6 +1084,7 @@ dl {
 .Youtube_Video {
     width: 100%;
     height: 450px;
+    pointer-events: none;
 }
 
 .modal-header {
