@@ -2445,4 +2445,6 @@
   'Minor' => 'Minor',
   'Major' => 'Major',
   'Distance' => 'Distance',
+  'android_version' => 'Android version',
+  'ios_version' => 'Ios version',
 );
