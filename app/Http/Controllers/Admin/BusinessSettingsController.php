@@ -567,9 +567,11 @@ class BusinessSettingsController extends Controller
             'value' => $request['shop_address']
         ]);
 
-        DB::table('business_settings')->updateOrInsert(['type' => 'minimum_distance_fire_alarm'], [
-            'value' => $request['minimum_distance_fire_alarm']
-        ]);
+        if(!empty($request['minimum_distance_fire_alarm'])){
+            DB::table('business_settings')->updateOrInsert(['type' => 'minimum_distance_fire_alarm'], [
+                'value' => $request['minimum_distance_fire_alarm']
+            ]);
+        }
 
         //web logo
         $webLogo = BusinessSetting::where(['type' => 'company_web_logo'])->first();
