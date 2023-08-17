@@ -199,7 +199,7 @@ class DashboardController extends Controller
         $product_query = new Product();
         $product = self::common_query_order_stats($product_query);
 
-        $connected_query = ConnectedDevice::where('status',1);
+        $connected_query = ConnectedDevice::join('users','users.id','connected_device.user_id')->where('connected_device.status',1);
         $connected_device = self::common_query_order_stats($connected_query);
 
         $stocks_query = new ProductStock();
