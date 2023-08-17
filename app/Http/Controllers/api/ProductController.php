@@ -267,7 +267,8 @@ class ProductController extends Controller
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         Common::addLog([]);
         if(!empty($user_details->id)){
-            $check_connected = ConnectedDevice::select('id')->where(['device_uuid'=>$device_uuid,'major'=>$major,'minor'=>$minor,'user_id'=>$user_details->id])->first();
+            //$check_connected = ConnectedDevice::select('id')->where(['device_uuid'=>$device_uuid,'major'=>$major,'minor'=>$minor,'user_id'=>$user_details->id])->first();
+            $check_connected = ConnectedDevice::select('id')->where(['device_uuid'=>$device_uuid,'major'=>$major,'minor'=>$minor])->first();
             if(!empty($check_connected->id)){
                 return response()->json(['status'=>400,'message'=>'Device already connected'],400);
             }
