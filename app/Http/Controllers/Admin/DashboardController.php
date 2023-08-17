@@ -241,13 +241,13 @@ class DashboardController extends Controller
         $today = session()->has('statistics_type') && session('statistics_type') == 'today' ? 1 : 0;
         $this_month = session()->has('statistics_type') && session('statistics_type') == 'this_month' ? 1 : 0;
 
-        return $query->when($today, function ($query) {
-            return $query->whereDate('created_at', Carbon::today());
-        })
-            ->when($this_month, function ($query) {
-                return $query->whereMonth('created_at', Carbon::now());
-            })
-            ->count();
+        // return $query->when($today, function ($query) {
+        //     return $query->whereDate('created_at', Carbon::today());
+        // })
+        // ->when($this_month, function ($query) {
+        //     return $query->whereMonth('created_at', Carbon::now());
+        // })
+        return $query->count();
     }
 
     /**
