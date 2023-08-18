@@ -151,8 +151,8 @@
                                             <div class="col-md-3 phone_code">
                                                 <label class="title-color">Phone</label>
                                                 <div class="form-group">
-                                                    <span class="border-end country-code px-2">{{$order->customer['phone_code']}}</span>
-                                                    <input type="number" class="form-control" value="{{$order->customer['phone'] ?? ''}}" name="billing_phone" placeholder="{{ \App\CPU\translate('Phone') }}" />
+                                                    <span class="border-end country-code px-2">{{$order->customer['billing_phone_code']}}</span>
+                                                    <input type="number" class="form-control" value="{{$order->customer['billing_phone'] ?? ''}}" name="billing_phone" placeholder="{{ \App\CPU\translate('Phone') }}" />
                                                 </div>
                                             </div>
                                         </div>
