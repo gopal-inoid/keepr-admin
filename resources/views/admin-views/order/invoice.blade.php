@@ -144,9 +144,9 @@
                     <td>{{$i}}</td>
                     <td style="text-align:center;">
                         <div class="media align-items-center gap-10">
-                            <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$detail['thumbnail']}}" width="50px;" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt="">
+                            {{-- <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$detail['thumbnail']}}" width="50px;" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt=""> --}}
                             <div>
-                                <a href="#" class="title-color hover-c1"><h6>{{substr($detail['name'],0,30)}}{{strlen($detail['name'])>10?'...':''}}</h6></a>
+                                <a href="#" class="title-color hover-c1"><h6>{{substr($detail['name'],0,50)}}{{strlen($detail['name'])>50?'...':''}}</h6></a>
                             </div>
                         </div>
                     </td>
