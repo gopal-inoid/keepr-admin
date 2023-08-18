@@ -279,8 +279,10 @@ class GeneralController extends Controller
                 $user_details->street_address = $request->address;
                 $user_details->name = $request->name;
                 $user_details->email = $request->email;
-                $user_details->phone = $request->phone;
-                $user_details->phone_code = $request->phone_code;
+                // $user_details->phone = $request->phone;
+                // $user_details->phone_code = $request->phone_code;
+                $user_details->billing_phone = $request->phone;
+                $user_details->billing_phone_code = $request->phone_code;
                 $user_details->country = $request->country;
                 $user_details->city = $request->city;
                 $user_details->state = $request->state;
@@ -315,8 +317,10 @@ class GeneralController extends Controller
                 $billing['address'] = $user_details->street_address;
                 $billing['name'] = $user_details->name;
                 $billing['email'] = $user_details->email;
-                $billing['phone_code'] = $user_details->phone_code;
-                $billing['phone'] = $user_details->phone;
+                // $billing['phone_code'] = $user_details->phone_code;
+                // $billing['phone'] = $user_details->phone;
+                $billing['phone_code'] = $user_details->billing_phone_code;
+                $billing['phone'] = $user_details->billing_phone;
                 $billing['country'] = $user_details->country;
                 $billing['country_name'] = $this->getCountryName($user_details->country);
                 $billing['city'] = $user_details->city;

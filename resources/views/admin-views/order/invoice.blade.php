@@ -67,16 +67,16 @@
                             @if (!empty($order->customer->add_shipping_address))
                             <span class="h2">{{\App\CPU\translate('shipping_to')}} </span>
                             <div class="h4 montserrat-normal-600">
-                                <p>{{$order->customer !=null? $order->customer['f_name'].' '.$order->customer['l_name']:\App\CPU\translate('name_not_found')}}</p>
-                                <p>{{$order->customer !=null? $order->customer['email']:\App\CPU\translate('email_not_found')}}</p>
-                                <p>{{$order->customer !=null? $order->customer['phone']:\App\CPU\translate('phone_not_found')}}</p>
+                                <p>{{$order->customer !=null? $order->customer['shipping_name']:\App\CPU\translate('name_not_found')}}</p>
+                                <p>{{$order->customer !=null? $order->customer['shipping_email']:\App\CPU\translate('email_not_found')}}</p>
+                                <p>{{$order->customer !=null? $order->customer['shipping_phone']:\App\CPU\translate('phone_not_found')}}</p>
                                 <p>{{$order->customer ? $order->customer['add_shipping_address'] : ""}}</p>
                                 <p>{{$order->customer ? $order->customer['shipping_city'] : ""}} {{$order->customer ? $order->customer['shipping_zip'] : ""}}</p>
                             </div>
                             @else
                             <span class="h4">{{\App\CPU\translate('customer_info')}} </span>
                             <div class="h4 montserrat-normal-600">
-                                <p>{{$order->customer !=null? $order->customer['f_name'].' '.$order->customer['l_name']:\App\CPU\translate('name_not_found')}}</p>
+                                <p>{{$order->customer !=null? $order->customer['name']:\App\CPU\translate('name_not_found')}}</p>
                                 @if (isset($order->customer) && $order->customer['id']!=0)
                                 <p>{{$order->customer !=null? $order->customer['email']:\App\CPU\translate('email_not_found')}}</p>
                                 <p>{{$order->customer !=null? $order->customer['phone']:\App\CPU\translate('phone_not_found')}}</p>
@@ -94,7 +94,7 @@
                             <span class="h2">{{\App\CPU\translate('billing_address')}} </span>
                             <div class="h4 montserrat-normal-600">
                                 <p>{{$order->customer['name'] ? $order->customer['name'] : ""}}</p>
-                                <p>{{$order->customer['phone'] ? $order->customer['phone'] : ""}}</p>
+                                <p>{{$order->customer['billing_phone'] ? $order->customer['billing_phone'] : ""}}</p>
                                 <p>{{$order->customer['street_address'] ? $order->customer['street_address'] : ""}}</p>
                                 <p>{{$order->customer['city'] ? $order->customer['city'] : ""}} {{$order->customer['zip'] ? $order->customer['zip'] : ""}}</p>
                             </div>

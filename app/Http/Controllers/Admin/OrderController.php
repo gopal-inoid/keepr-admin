@@ -214,7 +214,8 @@ class OrderController extends Controller
                 $user_data['state'] = $request->billing_state;
                 $user_data['country'] = $request->billing_country;
                 $user_data['zip'] = $request->billing_zip;
-                $user_data['phone'] = $request->billing_phone;
+                //$user_data['phone'] = $request->billing_phone;
+                $user_data['billing_phone'] = $request->billing_phone;
                 $user_data['shipping_name'] = $request->shipping_name;
                 $user_data['shipping_email'] = $request->shipping_email;
                 $user_data['add_shipping_address'] = $request->add_shipping_address;
