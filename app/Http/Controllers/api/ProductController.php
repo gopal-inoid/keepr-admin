@@ -352,7 +352,7 @@ class ProductController extends Controller
 													'minor' => $devices->minor,
 													'user_id'=>$user_details->id
 													])->first();
-                        $get_all_devices[$k]['device_request_status'] = $device_request->status ?? ''; // 0 = lost , 1 = found
+                        $get_all_devices[$k]['device_request_status'] = $device_request->status ?? 2; // 0 = lost , 1 = found // 2 means not sent request
                         if(!empty($device_info->thumbnail)){
                             $get_all_devices[$k]['thumbnail'] = asset("/product/thumbnail/$device_info->thumbnail");
                         }else{
