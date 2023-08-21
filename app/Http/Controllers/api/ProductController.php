@@ -270,7 +270,7 @@ class ProductController extends Controller
             //$check_connected = ConnectedDevice::select('id')->where(['device_uuid'=>$device_uuid,'major'=>$major,'minor'=>$minor,'user_id'=>$user_details->id])->first();
             $check_connected = ConnectedDevice::select('id')->where(['device_uuid'=>$device_uuid,'major'=>$major,'minor'=>$minor])->first();
             if(!empty($check_connected->id)){
-                return response()->json(['status'=>400,'message'=>'Device already connected'],400);
+                return response()->json(['status'=>400,'message'=>'You cannot connect to this device, it is already connected with another user.'],400);
             }
             $device_info = ProductStock::select('products.name')->join('products','product_stocks.product_id','products.id')->where(['product_stocks.uuid'=>$device_uuid,'product_stocks.major'=>$major,'product_stocks.minor'=>$minor])->first();
             //$device_info = Product::select('name')->where('mac_id',$device_mac_id)->first();
