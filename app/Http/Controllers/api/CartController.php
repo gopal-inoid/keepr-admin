@@ -279,6 +279,11 @@ class CartController extends Controller
 		$taxes = $request->tax;
 		$shipping_rate_id = $request->shipping_rate_id;
 		$shipping_mode = $request->shipping_mode;
+        $total_amount = $request->total_amount ?? 0;
+        if($total_amount == 0){
+            return response()->json(['status'=>400,'message'=>'Order amount required'],400);
+        }
+
         $left = ltrim($cart_id, "'");
         $right = rtrim($left, "'");
         $data = json_decode($right,true);
@@ -335,7 +340,7 @@ class CartController extends Controller
                     return response()->json(['status'=>400,'message'=>'Device not available'],400);
                 }
 
-                $stripe_payment_create = $this->CreateCheckout($total_price);
+                $stripe_payment_create = $this->CreateCheckout($total_amount);
                 if(!empty($stripe_payment_create['id'])){
                     $intent_data['id'] = $stripe_payment_create['id'];
                     $intent_data['client_secret'] = $stripe_payment_create['client_secret'];
@@ -351,7 +356,7 @@ class CartController extends Controller
                 $order->shipping_rate_id = $shipping_rate_id;
 				$order->shipping_mode = $shipping_mode;
                 $order->mac_ids = json_encode($mac_ids_array);
-                $order->order_amount = number_format($total_price,2);
+                $order->order_amount = $total_amount;
                 $order->save();
 
                 $order_attribute = $this->getOrderAttr($order->mac_ids);
