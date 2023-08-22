@@ -364,12 +364,11 @@
                             </div>
                             <div class="row justify-content-md-end mb-3">
                                 <div class="col-md-12 col-lg-12">
-
                                     <table class="table fz-12 table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
                                         <thead class="thead-light thead-50 text-capitalize">
                                             <tr>
                                                 <th>{{\App\CPU\translate('Other info')}}</th>
-                                                <th class="text-right">{{\App\CPU\translate('Total Amount')}}</th>
+                                                <th class="text-right"></th>
                                             </tr>
                                         </thead>
                                         <tbody>

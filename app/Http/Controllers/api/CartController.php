@@ -288,7 +288,7 @@ class CartController extends Controller
                 array_push($cart_ids,$val['id']);
             }
         }
-        $existed_mac_ids =  $mac_ids_array = [];
+        $existed_mac_ids =  $mac_ids_array = $per_device_amount = [];
         $total_price = $error = 0;
         $check_mac_ids = Order::select('mac_ids')->get();
         if(!empty($check_mac_ids)){
@@ -311,6 +311,7 @@ class CartController extends Controller
             if(!empty($cart_info[0])){
                 foreach($cart_info as $cart){
                     $price = Product::select('purchase_price as price')->where('id',$cart['product_id'])->first()->price ?? 0;
+                    $per_device_amount[$cart['product_id']] = $price;
                     $total_price += ($price * $cart['quantity']);
                     $get_random_stocks = ProductStock::select('uuid','major','minor','product_id')->where('is_purchased',0)
                                                       ->where('product_id',$cart['product_id'])
@@ -344,6 +345,7 @@ class CartController extends Controller
                 $order = new Order();
                 $order->customer_id = $user_details->id;
                 $order->payment_method = 'Stripe';
+                $order->per_device_amount = json_encode($per_device_amount);
                 $order->shipping_method_id = $shipping_id;
                 $order->taxes = $taxes;
                 $order->shipping_rate_id = $shipping_rate_id;

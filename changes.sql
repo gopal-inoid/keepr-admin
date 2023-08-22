@@ -109,3 +109,7 @@ ALTER TABLE `orders` ADD `shipment_info` TEXT NULL DEFAULT NULL AFTER `shipping_
 ALTER TABLE `orders` ADD `tracking_id` VARCHAR(250) NULL DEFAULT NULL AFTER `shipment_info`;
 
 ALTER TABLE `email_templates` ADD `keys` VARCHAR(200) NULL DEFAULT NULL AFTER `name`;
+
+ALTER TABLE `orders` ADD `per_device_amount` VARCHAR(200) NULL DEFAULT NULL AFTER `order_amount`;
+
+ALTER TABLE `orders` CHANGE `per_device_amount` `per_device_amount` MEDIUMTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;
