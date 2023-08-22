@@ -105,7 +105,16 @@ class Controller extends BaseController
                     $prod = Product::select('name','thumbnail','purchase_price')->find($k);
                     $products[$k]['name'] = $prod->name ?? "";
                     $products[$k]['thumbnail'] = $prod->thumbnail ?? "";
-                    $products[$k]['price'] = $prod->purchase_price ?? 0;
+                    if(!empty($order->per_device_amount)){
+                        $perdevice_amount = json_decode($order->per_device_amount,true);
+                        if(!empty($perdevice_amount)){
+                            $products[$k]['price'] = $perdevice_amount[$k] ?? 0;
+                        }else{
+                            $products[$k]['price'] = $prod->purchase_price ?? 0;
+                        }
+                    }else{
+                        $products[$k]['price'] = $prod->purchase_price ?? 0;
+                    }
                     if(!empty($val)){
                         foreach($val['uuid'] as $k1 => $val1){ 
                             $products[$k]['mac_ids'][$k1]['uuid'] = $val1;
