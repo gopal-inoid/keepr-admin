@@ -252,19 +252,28 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="row">
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label class="">Shipping type</label>
+                                                <select class="form-control" id="shipping_mode" name="shipping_mode">
+                                                    <option {{($order['normal_rate'] == 'normal_rate' ? 'selected' : '')}} value="normal_rate">Normal Rate</option>
+                                                    <option {{($order['express_rate'] == 'express_rate' ? 'selected' : '')}} value="express_rate">Express Rate</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
                                             <div class="form-group">
                                                 <label class="title-color">Tracking ID</label>
                                                 <input type="text" name="tracking_id" class="form-control" value="{{$order['tracking_id']}}" required>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="title-color">Estimated Delivery Date</label>
                                                 <input type="date" name="expected_delivery_date" class="form-control" value="{{date('Y-m-d',strtotime($order['expected_delivery_date']))}}" required>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="">Shipment information</label>
                                                 <textarea name="shipment_info" class="form-control">{{ $order['shipment_info'] ?? "" }}</textarea>
