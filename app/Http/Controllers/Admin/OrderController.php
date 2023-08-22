@@ -257,7 +257,7 @@ class OrderController extends Controller
             $order_data['payment_method'] = $request->payment_method;
             $order_data['payment_status'] = $request->payment_status;
             $order_data['tracking_id'] = $request->tracking_id;
-
+            $order_data['shipping_mode'] = $request->shipping_mode;
             $get_order = Order::where('id',$order_id)->first();
             $order_attribute = $this->getOrderAttr($get_order->mac_ids);
             //$this->print_r($a);
