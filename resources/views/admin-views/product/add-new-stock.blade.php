@@ -56,8 +56,7 @@
                                                     @if($stockcount == 0)
                                                         @if(!empty($pro->colors))
                                                             @php
-                                                                $pro_id = $pro->id;
-                                                                $productcolors=explode(",",$pro->colors);
+                                                                $productcolors[$pro->id] = explode(",",$pro->colors);
                                                             @endphp
                                                         @endif
                                                         <option value="{{$pro->id}}">{{$pro->name}}</option>  
