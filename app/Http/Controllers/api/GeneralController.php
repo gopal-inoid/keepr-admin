@@ -412,7 +412,7 @@ class GeneralController extends Controller
                     $mac_ids = json_decode($get_orders->mac_ids,true);
                     if(!empty($mac_ids)){
                         foreach($mac_ids as $k => $val){
-                            $total_mac_ids[$k][] = $val;
+                            $total_mac_ids[$k] = $val;
                             if(!in_array($k,$product_ids)){
                                 array_push($product_ids,$k);
                             }
@@ -421,7 +421,7 @@ class GeneralController extends Controller
                         foreach($product_ids as $k => $products){
                            $product_d = Product::select('id','name','thumbnail','purchase_price')->where(['id'=>$products])->first();
                            if(!empty($product_d->id)){
-                                echo "<pre>"; print_r($total_mac_ids); die;
+                                //echo "<pre>"; print_r($total_mac_ids); die;
                                 $product_d->price = number_format($product_d->purchase_price,2);
                                 $product_d->quantity = count($total_mac_ids[$product_d->id]['uuid'] ?? []);
                                 $product_d->thumbnail = asset("/product/thumbnail/$product_d->thumbnail");
