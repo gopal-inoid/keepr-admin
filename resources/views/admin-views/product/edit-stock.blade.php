@@ -47,7 +47,7 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <select name="product_id" class="form-control" disabled>
-																					<option selected="selected" value="{{$product['id']}}">{{$product['name']}}</option>
+										    <option selected="selected" value="{{$product['id']}}">{{$product['name']}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -114,7 +114,7 @@
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
-                                                        <select name="colors[]" @if(!empty($stocks->is_purchased)) disabled="disabled" @endif class="form-control">
+                                                        <select name="colors[{{$k}}][]" @if(!empty($stocks->is_purchased)) disabled="disabled" @endif class="form-control">
                                                             @if(!empty($product['colors']) && !empty($colors))
                                                                 @php
                                                                 $productColors = explode(",", $product['colors']);
@@ -202,7 +202,7 @@
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <select name="colors[]" class="form-control">
+                            <select name="colors[`+(cnt+1)+`][]" class="form-control">
                                 @if(!empty($product['colors']) && !empty($colors))
                                     @php
                                     $productColors = explode(",", $product['colors']);
