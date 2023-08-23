@@ -419,7 +419,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td><strong>Grand Total</strong></td>
+                                                <td><h4><strong>Grand Total</strong></h4></td>
                                                 <td class="text-right">
                                                     <h4><strong>${{$total_order_amount}}</strong></h4>
                                                 </td>
