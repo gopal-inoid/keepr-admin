@@ -292,7 +292,7 @@ class ProductController extends BaseController
             foreach($product_stock as $k => $mac_id){
                 $check = ProductStock::where(['is_purchased'=>0,'product_id'=>$id,'mac_id'=>$mac_id,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]])->count();
                 if($check == 0){
-                    ProductStock::insert(['product_id'=>$id,'mac_id'=>$mac_id,'color'=>$colors[$k] ?? NULL,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]]);
+                    ProductStock::insert(['product_id'=>$id,'mac_id'=>$mac_id,'color'=>$colors[$k][0] ?? NULL,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]]);
                 }
             }
         }
