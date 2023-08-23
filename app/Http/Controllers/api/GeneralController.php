@@ -422,7 +422,7 @@ class GeneralController extends Controller
                            $product_d = Product::select('id','name','thumbnail','purchase_price')->where(['id'=>$products])->first();
                            if(!empty($product_d->id)){
                                 $product_d->price = number_format($product_d->purchase_price,2);
-                                $product_d->quantity = count($total_mac_ids[$product_d->id] ?? 0);
+                                $product_d->quantity = count($total_mac_ids[$product_d->id]['uuid'] ?? []);
                                 $product_d->thumbnail = asset("/product/thumbnail/$product_d->thumbnail");
                                 unset($product_d->purchase_price);
                                 $product_data[] = $product_d;
