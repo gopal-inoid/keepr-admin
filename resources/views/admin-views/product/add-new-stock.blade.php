@@ -101,13 +101,21 @@
                                             </div>
                                         </div>
                                         <div class="col-md-2">
+                                            <?php //echo "<pre>"; print_r($productcolors); die; ?>
                                             <div class="form-group">
                                                 <label class="title-color">{{ \App\CPU\translate('Color') }}</label>
                                                 <select name="colors[]" class="form-control">
                                                     @if(!empty($productcolors))
-                                                        @foreach($colors as $col)
-                                                            @if(in_array($col['id'], $productcolors))
-                                                                <option value="{{$col['id']}}">{{$col['name']}}</option>
+                                                        @foreach($products as $pro_val)
+                                                            @if(!empty($productcolors[$pro_val->id]))
+                                                                @php
+                                                                    $pro_color = \App\Model\Color::select('id','name')->whereIn('id',$productcolors[$pro_val->id])->get();
+                                                                @endphp
+                                                                @if(!empty($pro_color))
+                                                                    @foreach($pro_color as $col)
+                                                                        <option value="{{$col['id']}}">{{$col['name']}}</option>
+                                                                    @endforeach
+                                                                @endif
                                                             @endif
                                                         @endforeach
                                                     @endif
