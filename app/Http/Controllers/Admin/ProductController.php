@@ -43,8 +43,33 @@ class ProductController extends BaseController
     public function add_new_stock()
     {
         $products = Product::select('id','name','colors')->where('status', 1)->orderBy('id','desc')->get();
-        $colors = Color::get();
-        return view('admin-views.product.add-new-stock', compact('products','colors'));
+        //$colors = Color::get();
+        $product_options = [];
+        if(!empty($products)){
+            $i = 0;
+            foreach($products as $k => $pro){
+                $stockcount = ProductStock::where('product_id',$pro->id)->count();
+                if($stockcount == 0){
+                    $product_options[$pro->id]['product'] = '<option value="'.$pro->id.'">'.$pro->name.'</option>';
+                    if(!empty($pro->colors) && $i == 0){
+                        $productcolors = explode(",",$pro->colors);
+                        $pro_color = Color::select('id','name')->whereIn('id',$productcolors)->get();
+                        if(!empty($pro_color)){
+                            foreach($pro_color as $col){
+                                $product_options[$pro->id]['colors'][] = '<option value="'.$col->id.'">'.$col->name.'</option>';
+                            }
+                        }
+                        $i++;
+                    }
+                }
+            }
+        }
+      
+        //$product_colors_options .= 
+
+        //echo "<pre>"; print_r($product_options); die;
+
+        return view('admin-views.product.add-new-stock', compact('products','product_options'));
     }
 
     public function featured_status(Request $request)
