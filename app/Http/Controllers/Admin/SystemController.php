@@ -81,7 +81,7 @@ class SystemController extends Controller
     public function update_place_order_status()
     {
         $new_order = DB::table('orders')->where(['order_status' => 'pending','payment_status'=>'unpaid'])
-                            ->whereRaw('DATE(created_at) < CURDATE() - INTERVAL 1 DAY')->get();
+                            ->whereRaw('DATE(created_at) < CURDATE() - INTERVAL 3 hour')->get();
         $total_status = 0;
         if(!empty($new_order)){
             foreach($new_order as $val){
@@ -89,7 +89,7 @@ class SystemController extends Controller
                 DB::table('orders')->where('id',$val->id)->update(['order_status' => 'failed','payment_status'=>'unpaid']);
             }
         }
-
+        DB::table('cron_log')->insert(['cron type'=>'order_status','data'=>json_encode(['success' => 1,'total_updated' => $total_status])]);
         return response()->json([
             'success' => 1,
             'total_updated' => $total_status
