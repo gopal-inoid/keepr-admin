@@ -375,7 +375,7 @@
                                                 @endif
                                             </td>
                                             <td>{{count($detail['mac_ids'])}}</td>
-                                            <td>${{$total_price}}</td>
+                                            <td>${{number_format($total_price,2)}}</td>
                                         </tr>
                                     @endforeach
                                     </tbody>
@@ -421,7 +421,7 @@
                                             <tr>
                                                 <td><h4><strong>Grand Total</strong></h4></td>
                                                 <td class="text-right">
-                                                    <h4><strong>${{$total_order_amount}}</strong></h4>
+                                                    <h4><strong>${{number_format($total_order_amount,2)}}</strong></h4>
                                                 </td>
                                             </tr>
                                         </tbody>
