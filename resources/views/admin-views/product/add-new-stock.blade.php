@@ -47,7 +47,7 @@
                                             for="exampleFormControlInput1">{{ \App\CPU\translate('Products') }}
                                             <span class="text-danger">*</span>
                                         </label>
-                                        <select name="product_id" class="form-control new_stock_product">
+                                        <select name="product_id" id="product_id" class="form-control new_stock_product">
                                             @if(!empty($product_options))
                                                 @foreach($product_options as $prod_id => $val)
                                                     @if(!empty($val['product']))
@@ -96,7 +96,7 @@
                                             <?php //echo "<pre>"; print_r($productcolors); die; ?>
                                             <div class="form-group">
                                                 <label class="title-color">{{ \App\CPU\translate('Color') }}</label>
-                                                <select name="colors[]" class="form-control">
+                                                <select name="colors[]" id="prodcolors-first" class="form-control prodcolors">
                                                     @if(!empty($product_options))
                                                         @foreach($product_options as $prod_id => $val)
                                                             @if(!empty($val['colors']))
@@ -150,6 +150,9 @@
 
         $(function() {
             $('.add-mac_id-btn').on('click',function(){
+
+                var color_options = $('#prodcolors-first').html();
+
                 $('#mac_id_device_field').append(
                     `<div class="row mac_id-individual">
                         <div class="col-md-3">
@@ -174,16 +177,8 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <select name="colors[]" class="form-control">
-                                    @if(!empty($product_options))
-                                        @foreach($product_options as $prod_id => $val)
-                                            @if(!empty($val['colors']))
-                                                @foreach($val['colors'] as $color)
-                                                    {{!!$color!!}}
-                                                @endforeach
-                                            @endif
-                                        @endforeach
-                                    @endif
+                                <select name="colors[]" class="form-control prodcolors">
+                                    `+color_options+`
                                 </select>
                             </div>
                         </div>
@@ -197,6 +192,20 @@
 
             $(document).on('click','.remove-mac_id-btn',function(){
                 $(this).closest('.mac_id-individual').remove();
+            });
+
+            $(document).on('change','#product_id',function(){
+                var pro_id = $(this).val();
+                $.get({
+                    url: "{{route('admin.product.stocks.get-product-colors')}}",
+                    dataType: 'json',
+                    data:{product_id:pro_id},
+                    success: function(data) {
+                        if(data.colors != undefined){
+                            $('.prodcolors').html(data.colors);
+                        }
+                    },
+                });
             });
 
             $("#coba").spartanMultiImagePicker({

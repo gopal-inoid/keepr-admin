@@ -324,6 +324,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
 
             Route::get('stocks/list', 'ProductController@stocks_list')->name('stocks.list');
             Route::get('stocks/add-new', 'ProductController@add_new_stock')->name('stocks.add-new');
+            Route::get('stocks/get-product-colors', 'ProductController@get_product_colors')->name('stocks.get-product-colors');
             Route::post('stocks/store_stock', 'ProductController@store_stock')->name('stocks.store');
             Route::post('stocks/update_stock/{id}', 'ProductController@update_stock')->name('stocks.update');
             Route::get('stocks/edit/{id}', 'ProductController@edit_stock')->name('stocks.edit');

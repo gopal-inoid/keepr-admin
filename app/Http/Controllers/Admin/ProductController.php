@@ -64,12 +64,26 @@ class ProductController extends BaseController
                 }
             }
         }
-      
-        //$product_colors_options .= 
-
         //echo "<pre>"; print_r($product_options); die;
-
         return view('admin-views.product.add-new-stock', compact('products','product_options'));
+    }
+
+    public function get_product_colors(Request $request)
+    {
+        $products = Product::find($request->product_id);
+        $product_options['colors'] = '';
+        if(!empty($products)){
+            if(!empty($products->colors)){
+                $productcolors = explode(",",$products->colors);
+                $pro_color = Color::select('id','name')->whereIn('id',$productcolors)->get();
+                if(!empty($pro_color)){
+                    foreach($pro_color as $col){
+                        $product_options['colors'] .= '<option value="'.$col->id.'">'.$col->name.'</option>';
+                    }
+                }
+            }
+        }
+        return response()->json($product_options);
     }
 
     public function featured_status(Request $request)
