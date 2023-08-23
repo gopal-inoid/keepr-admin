@@ -191,10 +191,6 @@ class OrderController extends Controller
                             $shipping_info[$k]['mode'] = 'Express Rate';
                             $shipping_info[$k]['amount'] = $shipping_method_rates->express_rate ?? 0;
                         }
-
-                        if(!empty($shipping_info[$k]['amount'])){
-                            $total_order_amount += $shipping_info[$k]['amount'];
-                        }
                     }
                 }
             }
@@ -653,10 +649,6 @@ class OrderController extends Controller
                             $shipping_info[$k]['duration'] = $shipping->express_duration ?? "";
                             $shipping_info[$k]['mode'] = 'Express Rate';
                             $shipping_info[$k]['amount'] = $shipping_method_rates->express_rate ?? 0;
-                        }
-
-                        if(!empty($shipping_info[$k]['amount'])){
-                            $total_order_amount += $shipping_info[$k]['amount'];
                         }
                     }
                 }

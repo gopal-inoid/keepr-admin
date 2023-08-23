@@ -15,7 +15,7 @@
             <tr>
                 <td class="" width="30%">
                     <span class="text-end">
-                        {{$company_web_logo}}
+                        {{-- $company_web_logo -- }}
                         {{-- <img height="80" src="{{asset("/public/company/$company_web_logo")}}" alt=""> --}}
                         <img height="80" src="{{asset("/public/company/Keepr-logo-black.png")}}" alt="">
                     </span>
@@ -126,12 +126,17 @@
                     </th>
                     <th align="right" style="border-top: 1px solid #eee; padding: 5px;">
                         <strong>
+                            Price
+                        </strong>
+                    </th>
+                    <th align="right" style="border-top: 1px solid #eee; padding: 5px;">
+                        <strong>
                             Qty
                         </strong>
                     </th>
                     <th align="right" style="border-top: 1px solid #eee; padding: 5px;">
                         <strong>
-                            Price
+                            Total Amount
                         </strong>
                     </th>
                 </tr>
@@ -160,8 +165,17 @@
                             @endforeach
                         @endif
                     </td>
+                    <td style="text-align:center;">
+                        @php($total_price = 0)
+                        @if(!empty($detail['mac_ids']))
+                            @foreach($detail['mac_ids'] as $val)
+                                @php($total_price += $detail['price'])
+                                ${{$detail['price'] ?? ''}}<br /><br /><br /><br /><hr />
+                            @endforeach
+                        @endif
+                    </td>
                     <td style="text-align:center;">{{count($detail['mac_ids'])}}</td>
-                    <td style="text-align:center;">${{$detail['price'] ?? ''}}</td>
+                    <td style="text-align:center;">${{number_format($total_price,2)}}</td>
                 </tr>
                 @endforeach
             </tbody>
@@ -175,7 +189,7 @@
             <thead>
                 <tr>
                     <th style="text-align:left;">{{\App\CPU\translate('Other info')}}</th>
-                    <th>{{\App\CPU\translate('Total Amount')}}</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -186,8 +200,7 @@
                         @foreach($tax_info as $product_id => $taxes)
                             @foreach($taxes as $k1 => $tax)
                                 @php($tx_amt += $tax['amount'])
-                                @php($total_order_amount += $tax['amount'])
-                                    <strong>{{$tax['title']}}</strong><br />
+                                <strong>{{$tax['title']}}</strong><br />
                             @endforeach
                         @endforeach
                     </td>
@@ -208,9 +221,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Grand Total</strong></td>
-                    <td style="text-align:center;">
-                        <strong>${{$total_order_amount}}</strong>
+                    <td><hr /><h4><strong>Grand Total</strong></h4></td>
+                    <td style="text-align:center;"><hr />
+                        <h4><strong>${{number_format($total_order_amount,2)}}</strong></h4>
                     </td>
                 </tr>
             </tbody>

@@ -336,8 +336,9 @@
                                             <th>{{\App\CPU\translate('SL')}}</th>
                                             <th>{{\App\CPU\translate('Product Name')}}</th>
                                             <th>Device Info</th>
-                                            <th>Qty</th>
                                             <th>Price</th>
+                                            <th>Qty</th>
+                                            <th>Total Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -364,8 +365,17 @@
                                                     @endforeach
                                                 @endif
                                             </td>
+                                            <td>
+                                                @php($total_price = 0)
+                                                @if(!empty($detail['mac_ids']))
+                                                    @foreach($detail['mac_ids'] as $val)
+                                                    @php($total_price += $detail['price'])
+                                                    <br />${{$detail['price'] ?? ''}}<br /><br /><hr />
+                                                    @endforeach
+                                                @endif
+                                            </td>
                                             <td>{{count($detail['mac_ids'])}}</td>
-                                            <td>${{$detail['price'] ?? ''}}</td>
+                                            <td>${{number_format($total_price,2)}}</td>
                                         </tr>
                                     @endforeach
                                     </tbody>
@@ -388,7 +398,6 @@
                                                     @foreach($tax_info as $product_id => $taxes)
                                                         @foreach($taxes as $k1 => $tax)
                                                             @php($tx_amt += $tax['amount'])
-                                                            @php($total_order_amount += $tax['amount'])
                                                                 <strong>{{$tax['title']}}</strong><br />
                                                         @endforeach
                                                     @endforeach
@@ -410,9 +419,9 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td><strong>Grand Total</strong></td>
+                                                <td><h4><strong>Grand Total</strong></h4></td>
                                                 <td class="text-right">
-                                                    <strong>${{$total_order_amount}}</strong>
+                                                    <h4><strong>${{number_format($total_order_amount,2)}}</strong></h4>
                                                 </td>
                                             </tr>
                                         </tbody>
