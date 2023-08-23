@@ -48,18 +48,10 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <select name="product_id" class="form-control new_stock_product">
-                                            @if(!empty($products))
-                                                @foreach($products as $pro)
-                                                        @php 
-                                                            $stockcount = \App\Model\ProductStock::where('product_id',$pro->id)->count();
-                                                        @endphp
-                                                    @if($stockcount == 0)
-                                                        @if(!empty($pro->colors))
-                                                            @php
-                                                                $productcolors[$pro->id] = explode(",",$pro->colors);
-                                                            @endphp
-                                                        @endif
-                                                        <option value="{{$pro->id}}">{{$pro->name}}</option>  
+                                            @if(!empty($product_options))
+                                                @foreach($product_options as $prod_id => $val)
+                                                    @if(!empty($val['product']))
+                                                        {{!! $val['product'] !!}}
                                                     @endif
                                                 @endforeach
                                             @endif
@@ -105,17 +97,12 @@
                                             <div class="form-group">
                                                 <label class="title-color">{{ \App\CPU\translate('Color') }}</label>
                                                 <select name="colors[]" class="form-control">
-                                                    @if(!empty($productcolors))
-                                                        @foreach($products as $pro_val)
-                                                            @if(!empty($productcolors[$pro_val->id]))
-                                                                @php
-                                                                    $pro_color = \App\Model\Color::select('id','name')->whereIn('id',$productcolors[$pro_val->id])->get();
-                                                                @endphp
-                                                                @if(!empty($pro_color))
-                                                                    @foreach($pro_color as $col)
-                                                                        <option value="{{$col['id']}}">{{$col['name']}}</option>
-                                                                    @endforeach
-                                                                @endif
+                                                    @if(!empty($product_options))
+                                                        @foreach($product_options as $prod_id => $val)
+                                                            @if(!empty($val['colors']))
+                                                                @foreach($val['colors'] as $color)
+                                                                    {{!!$color!!}}
+                                                                @endforeach
                                                             @endif
                                                         @endforeach
                                                     @endif
@@ -188,16 +175,15 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <select name="colors[]" class="form-control">
-                                    @if(!empty($products[0]['colors'])) 
-                                        @php
-                                            $productcolors=explode(",",$products[0]['colors']);
-                                        @endphp
-                                        @foreach($colors as $col)
-                                            @if(in_array($col['id'], $productcolors))
-                                                <option value="{{$col['id']}}">{{$col['name']}}</option>
+                                    @if(!empty($product_options))
+                                        @foreach($product_options as $prod_id => $val)
+                                            @if(!empty($val['colors']))
+                                                @foreach($val['colors'] as $color)
+                                                    {{!!$color!!}}
+                                                @endforeach
                                             @endif
-                                        @endforeach                
-                                     @endif
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                         </div>
