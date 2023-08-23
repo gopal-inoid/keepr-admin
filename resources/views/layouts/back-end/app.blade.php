@@ -324,13 +324,13 @@
                     let data = response.total_updated;
                     if (data > 0) {
                         //$('#popup-modal').appendTo("body").modal('show');
-                        console.log('..........order_status_changed.......... ',data.total_updated);
+                        //console.log('..........order_status_changed.......... ',data.total_updated);
                     }
                 },
             });
         }
 
-        check_place_order_status();
+        //check_place_order_status();
 
         // setInterval(function () {
         //     $.get({
