@@ -26,8 +26,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
-        
-        $schedule->call('App\Http\Controllers\Admin\SystemController@update_place_order_status')->everyMinute();
+
+        $schedule->call('App\Http\Controllers\Admin\SystemController@update_place_order_status')->hourly();
     }
 
     /**
