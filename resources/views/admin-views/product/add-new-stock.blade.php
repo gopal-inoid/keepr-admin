@@ -54,7 +54,11 @@
                                                             $stockcount = \App\Model\ProductStock::where('product_id',$pro->id)->count();
                                                         @endphp
                                                     @if($stockcount == 0)
-                                                         <option value="{{$pro->id}}">{{$pro->name}}</option>  
+                                                        @if(!empty($pro->colors))
+                                                            @php($pro_id = $pro->id)
+                                                            @php($productcolors=explode(",",$pro->colors))
+                                                        @endif
+                                                        <option value="{{$pro->id}}">{{$pro->name}}</option>  
                                                     @endif
                                                 @endforeach
                                             @endif
@@ -99,16 +103,12 @@
                                             <div class="form-group">
                                                 <label class="title-color">{{ \App\CPU\translate('Color') }}</label>
                                                 <select name="colors[]" class="form-control">
-                                                    @if(!empty($products[0]['colors'])) 
-                                                        @php
-                                                            $productcolors=explode(",",$products[0]['colors']);
-                                                        @endphp
+                                                    @if(!empty($productcolors))
                                                         @foreach($colors as $col)
-                                                                    @if(in_array($col['id'], $productcolors))
-                                                                        <option value="{{$col['id']}}">{{$col['name']}}</option>
-                                                                    @endif
+                                                            @if(in_array($col['id'], $productcolors))
+                                                                <option value="{{$col['id']}}">{{$col['name']}}</option>
+                                                            @endif
                                                         @endforeach
-                                                        
                                                     @endif
                                                 </select>
                                             </div>
@@ -133,11 +133,11 @@
     <script src="{{ asset('public/assets/back-end/js/spartan-multi-image-picker.js') }}"></script>
     <script>
 
-let new_stock_select=document.querySelector(".new_stock_product");
-let option=new_stock_select.querySelectorAll("OPTION");
-if(option.length==0){
-document.querySelector(".submit-btn").setAttribute("disabled","disabled");
-}
+    let new_stock_select=document.querySelector(".new_stock_product");
+    let option=new_stock_select.querySelectorAll("OPTION");
+    if(option.length==0){
+    document.querySelector(".submit-btn").setAttribute("disabled","disabled");
+    }
 
     // function formatMAC(e) {
     //     var r = /([a-f0-9]{2})([a-f0-9]{2})/i,
