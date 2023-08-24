@@ -13,6 +13,7 @@ use App\Model\DeliveryManTransaction;
 use App\Model\DeliverymanWallet;
 use App\Model\Order;
 use App\Model\Product;
+use App\Model\ProductStock;
 use App\Model\ShippingMethod;
 use App\Model\ShippingMethodRates;
 use App\Model\Country;
@@ -264,6 +265,22 @@ class OrderController extends Controller
             if(!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])){
                 $product_uuid = implode(',',$order_attribute['uuid']);
             }
+
+            if($request->change_order_status == 'cancelled' || $request->change_order_status == 'failed'){
+                if(!empty($get_order->mac_ids)){
+                    $mac_ids = json_decode($get_order->mac_ids,true);
+                    if(!empty($mac_ids)){
+                        foreach($mac_ids as $k => $val){
+                            if(!empty($val)){
+                                foreach($val['uuid'] as $k1 => $val1){
+                                    ProductStock::where(['product_id'=>$k,'uuid'=>$val1,'major'=>$val['major'][$k1],'minor'=>$val['minor'][$k1]])->update(['is_purchased'=>0]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             $userData['username'] = $user_data['name'] ?? "Keepr User";
             $userData['order_id'] = $order_id;
             $userData['product_name'] = $product_names;
@@ -522,6 +539,22 @@ class OrderController extends Controller
             if(!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])){
                 $product_uuid = implode(',',$order_attribute['uuid']);
             }
+
+            if($request->status == 'cancelled' || $request->status == 'failed'){
+                if(!empty($order->mac_ids)){
+                    $mac_ids = json_decode($order->mac_ids,true);
+                    if(!empty($mac_ids)){
+                        foreach($mac_ids as $k => $val){
+                            if(!empty($val)){
+                                foreach($val['uuid'] as $k1 => $val1){
+                                    ProductStock::where(['product_id'=>$k,'uuid'=>$val1,'major'=>$val['major'][$k1],'minor'=>$val['minor'][$k1]])->update(['is_purchased'=>0]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             $userData['username'] = $user->name ?? "Keepr User";
             $userData['order_id'] = $request->id;
             $userData['product_name'] = $product_names;
