@@ -84,7 +84,7 @@
                                     <strong><a class="title-color hover-c1" href="javascript:void(0);">{{$customer->email}}</a></strong>
 
                                 </div>
-                                <a class="title-color hover-c1" href="javascript:void(0);">{{$customer->phone}}</a>
+                                <a class="title-color hover-c1" href="javascript:void(0);">{{$customer->phone_code.$customer->phone}}</a>
 
                             </td>
                             <td>

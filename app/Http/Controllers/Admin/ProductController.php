@@ -921,7 +921,7 @@ class ProductController extends BaseController
             if(!empty($product)){
                 $check = ProductStock::where(['product_id'=>$product['id'],'mac_id'=>$collection['device_id'],'uuid'=>$collection['product_uuid'],'major'=>$collection['major'],'minor'=>$collection['minor']])->count();
                 if($check == 0){ $cnt++;
-                    ProductStock::insert(['product_id'=>$product['id'],'mac_id'=>$collection['device_id'],'color'=>$color->id ?? 117,'uuid'=>$collection['product_uuid'],'major'=>$collection['major'],'minor'=>$collection['minor']]);
+                    ProductStock::insert(['product_id'=>$product['id'],'mac_id'=>$collection['device_id'],'color'=>$color->id ?? null,'uuid'=>$collection['product_uuid'],'major'=>$collection['major'],'minor'=>$collection['minor']]);
                 }
             }
         }

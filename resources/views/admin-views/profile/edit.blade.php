@@ -85,13 +85,10 @@
 
                         <!-- Avatar -->
                         <label
-                            class="avatar avatar-xxl avatar-circle avatar-border-lg avatar-uploader profile-cover-avatar"
+                            class="avatar avatar-xxl avatar-circle avatar-border-lg profile-cover-avatar"
                             for="avatarUploader">
-                            <img id="viewer"
-                                 onerror="this.src='{{asset('public/assets/back-end/img/160x160/img1.jpg')}}'"
-                                 class="avatar-img"
-                                 src="{{asset('storage/app/public/admin')}}/{{$data->image}}"
-                                 alt="Image">
+                            <img id="viewer" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img1.jpg')}}'"
+                                 class="avatar-img" src="{{url('/public/admin')}}/{{$data->image}}" alt="Image">
                         </label>
                         <!-- End Avatar -->
                     </div>
@@ -132,10 +129,10 @@
                                         class="input-label-secondary">({{\App\CPU\translate('Optional')}})</span></label>
 
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" name="phone" id="phoneLabel"
+                                    <input type="number" class="form-control" name="phone" id="phoneLabel"
                                            placeholder="+x(xxx)xxx-xx-xx"
                                            value="{{$data->phone}}"
-                                            >
+                                           >
                                 </div>
                             </div>
                             <!-- End Form Group -->
@@ -241,7 +238,6 @@
         <!-- End Row -->
     </div>
 @endsection
-
 @push('script_2')
     <script>
         function readURL(input) {

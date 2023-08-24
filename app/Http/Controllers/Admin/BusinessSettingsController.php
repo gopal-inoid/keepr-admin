@@ -505,10 +505,12 @@ class BusinessSettingsController extends Controller
         }
 
         if(!empty($request->android_version)){
-            DB::table('api_versions')->where(['platform' => 'android'])->update(['version'=>$request->android_version]);
+            $force_update_android = $request->force_update_android;
+            DB::table('api_versions')->where(['platform' => 'android'])->update(['version'=>$request->android_version,'status'=>$force_update_android]);
         }
         if(!empty($request->ios_version)){
-            DB::table('api_versions')->where(['platform' => 'ios'])->update(['version'=>$request->ios_version]);
+            $force_update_ios = $request->force_update_ios;
+            DB::table('api_versions')->where(['platform' => 'ios'])->update(['version'=>$request->ios_version,'status'=>$force_update_ios]);
         }
 
         //comapy shop banner
