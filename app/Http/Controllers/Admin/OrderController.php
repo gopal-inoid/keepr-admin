@@ -608,6 +608,14 @@ class OrderController extends Controller
         if(!empty($order->mac_ids)){ // stocks
             $mac_ids = json_decode($order->mac_ids,true);
             if(!empty($mac_ids)){
+
+                if(!empty($order->taxes)){
+                    $taxes = json_decode($order->taxes,true);
+                    if(!empty($taxes)){
+                        $tax_info = $taxes;
+                    }
+                }
+
                 foreach($mac_ids as $k => $val){
                     $total_orders += count($mac_ids[$k]['uuid']);
                     $prod = Product::select('name','thumbnail','purchase_price')->find($k);
@@ -628,13 +636,6 @@ class OrderController extends Controller
                             $products[$k]['mac_ids'][$k1]['uuid'] = $val1;
                             $products[$k]['mac_ids'][$k1]['major'] = $val['major'][$k1];
                             $products[$k]['mac_ids'][$k1]['minor'] = $val['minor'][$k1];
-                        }
-                    }
-
-                    if(!empty($order->taxes)){
-                        $taxes = json_decode($order->taxes,true);
-                        if(!empty($taxes)){
-                            $tax_info[$k] = $taxes;
                         }
                     }
 
