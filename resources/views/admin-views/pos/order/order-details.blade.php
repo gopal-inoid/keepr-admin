@@ -396,10 +396,8 @@
                                                     <label><strong>{{\App\CPU\translate('Tax info')}}</strong>: </label>
                                                     @php($tx_amt = $ship_amt = 0)
                                                     @foreach($tax_info as $product_id => $taxes)
-                                                        @foreach($taxes as $k1 => $tax)
-                                                            @php($tx_amt += $tax['amount'])
-                                                                <strong>{{$tax['title']}}</strong><br />
-                                                        @endforeach
+                                                        @php($tx_amt = $taxes['amount'])
+                                                        <strong>{{$taxes['title']}}</strong><br />
                                                     @endforeach
                                                 </td>
                                                 <td class="text-right"><strong>${{number_format($tx_amt,2)}}</strong></td>
