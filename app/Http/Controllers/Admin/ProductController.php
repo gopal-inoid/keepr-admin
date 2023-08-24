@@ -250,19 +250,16 @@ class ProductController extends BaseController
         $minor = $request->minor;
         if(!empty($request->device_id)){
             foreach($request->device_id as $k => $mac_id){
-              
-                $check = ProductStock::where(['product_id'=>$request->product_id,'mac_id'=>$mac_id,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]])->count();
-             
-                if($check == 0){
-                    ProductStock::insert(['product_id'=>$request->product_id,'mac_id'=>$mac_id,'color'=>$colors[$k] ?? NULL,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]]);
+                if(!$this->CheckDeviceExists('mac_id',$mac_id) && !$this->CheckDeviceExists('uuid',$uuid[$k])){
+                    $check = ProductStock::where(['mac_id'=>$mac_id,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]])->count();
+                    if($check == 0){
+                        ProductStock::insert(['product_id'=>$request->product_id,'mac_id'=>$mac_id,'color'=>$colors[$k] ?? NULL,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]]);
+                    }
                 }
             }
         }
-    
-
         Toastr::success(translate('Product Stocks added successfully!'));
         return redirect()->route('admin.product.stocks.list');
-        
     }
 
     function update_stock(Request $request,$id){
@@ -290,9 +287,11 @@ class ProductController extends BaseController
         $minor = $request->minor;
         if(!empty($product_stock)){
             foreach($product_stock as $k => $mac_id){
-                $check = ProductStock::where(['is_purchased'=>0,'product_id'=>$id,'mac_id'=>$mac_id,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]])->count();
-                if($check == 0){
-                    ProductStock::insert(['product_id'=>$id,'mac_id'=>$mac_id,'color'=>$colors[$k][0] ?? NULL,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]]);
+                if(!$this->CheckDeviceExists('mac_id',$mac_id) && !$this->CheckDeviceExists('uuid',$uuid[$k])){
+                    $check = ProductStock::where(['mac_id'=>$mac_id,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]])->count();
+                    if($check == 0){
+                        ProductStock::insert(['product_id'=>$id,'mac_id'=>$mac_id,'color'=>$colors[$k][0] ?? NULL,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]]);
+                    }
                 }
             }
         }
@@ -919,9 +918,11 @@ class ProductController extends BaseController
             $color = Color::select('id')->where('name',ucfirst($collection['color']))->first();
             $product = Product::where('uuid',$collection['product_uuid'])->first();
             if(!empty($product)){
-                $check = ProductStock::where(['product_id'=>$product['id'],'mac_id'=>$collection['device_id'],'uuid'=>$collection['product_uuid'],'major'=>$collection['major'],'minor'=>$collection['minor']])->count();
-                if($check == 0){ $cnt++;
-                    ProductStock::insert(['product_id'=>$product['id'],'mac_id'=>$collection['device_id'],'color'=>$color->id ?? null,'uuid'=>$collection['product_uuid'],'major'=>$collection['major'],'minor'=>$collection['minor']]);
+                if(!$this->CheckDeviceExists('mac_id',$collection['device_id']) && !$this->CheckDeviceExists('uuid',$collection['product_uuid'])){
+                    $check = ProductStock::where(['mac_id'=>$collection['device_id'],'uuid'=>$collection['product_uuid'],'major'=>$collection['major'],'minor'=>$collection['minor']])->count();
+                    if($check == 0){ $cnt++;
+                        ProductStock::insert(['product_id'=>$product['id'],'mac_id'=>$collection['device_id'],'color'=>$color->id ?? null,'uuid'=>$collection['product_uuid'],'major'=>$collection['major'],'minor'=>$collection['minor']]);
+                    }
                 }
             }
         }

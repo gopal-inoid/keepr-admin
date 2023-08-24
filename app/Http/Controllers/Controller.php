@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Facades\Mail;
 use App\Model\EmailTemplates;
 use App\Model\BusinessSetting;
+use App\Model\ProductStock;
 use App\Model\Order;
 use App\Model\Product;
 use App\Model\ShippingMethod;
@@ -26,6 +27,15 @@ class Controller extends BaseController
             Helpers::currency_load();
         }catch (\Exception $exception){
 
+        }
+    }
+
+    public function CheckDeviceExists($type,$value){
+        $check = ProductStock::where($type,$value)->count();
+        if($check > 0){
+            return true;
+        }else{
+            return false;
         }
     }
 
