@@ -215,15 +215,12 @@
                 <tr>
                     <td>
                         <label><strong>{{\App\CPU\translate('Shipping info')}}</strong>: </label><br />
-                        @foreach($shipping_info as $product_id => $shipping)
-                                @php($ship_amt = $shipping['amount'])
-                                <strong>Shipping Co.: {{$shipping['title']}}</strong><br />
-                                <strong>Duration: {{$shipping['duration']}}</strong><br />
-                                <strong>Shipping Mode: {{$shipping['mode']}}</strong>
-                        @endforeach
+                        <strong>Shipping Co.: {{$shipping_info['title'] ?? ''}}</strong><br />
+                        <strong>Duration: {{$shipping_info['duration'] ?? ''}}</strong><br />
+                        <strong>Shipping Mode: {{$shipping_info['mode'] ?? ''}}</strong>
                     </td>
                     <td style="text-align:center;">
-                        <strong>${{number_format($ship_amt,2)}}</strong>
+                        <strong>${{number_format($shipping_info['amount'] ?? 0,2)}}</strong>
                     </td>
                 </tr>
                 <tr>
