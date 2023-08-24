@@ -143,6 +143,7 @@
             </thead>
             <tbody>
                 @php($i=0)
+                @php($grand_total_price= $grand_total_qty = $grand_total_amt = 0)
                 @foreach($products as $key => $detail)
                 @php($i++)
                 <tr>
@@ -161,7 +162,6 @@
                                 <strong>UUID: </strong>{{$val['uuid']}}<br />
                                 <strong>Major: </strong>{{$val['major']}}<br />
                                 <strong>Minor: </strong>{{$val['minor']}}<br />
-                                <hr />
                             @endforeach
                         @endif
                     </td>
@@ -170,19 +170,28 @@
                         @if(!empty($detail['mac_ids']))
                             @foreach($detail['mac_ids'] as $val)
                                 @php($total_price += $detail['price'])
-                                ${{$detail['price'] ?? ''}}<br /><br /><br /><br /><hr />
+                                ${{$detail['price'] ?? ''}}<br /><br /><br /><br />
                             @endforeach
                         @endif
                     </td>
                     <td style="text-align:center;">{{count($detail['mac_ids'])}}</td>
                     <td style="text-align:center;">${{number_format($total_price,2)}}</td>
+                    @php($grand_total_price += $detail['price'])
+                    @php($grand_total_qty += count($detail['mac_ids']))
+                    @php($grand_total_amt += $total_price)
                 </tr>
                 @endforeach
+                <tr>
+                    <td><strong>Total</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align:center;"><strong>${{number_format($grand_total_price,2)}}</strong></td>
+                    <td style="text-align:center;"><strong>{{$grand_total_qty}}</strong></td>
+                    <td style="text-align:center;"><strong>${{number_format($grand_total_amt,2)}}</strong></td>
+                </tr>
             </tbody>
         </table>
     </div>
-
-
     <div style="padding-top: 1cm; padding-bottom: 1cm;">
         @php($shipping=$order['shipping_cost'])
         <table style="table-layout: fixed; width: 100%;">
