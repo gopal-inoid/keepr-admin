@@ -408,7 +408,7 @@
                                                 <td>
                                                     <label><strong>{{\App\CPU\translate('Shipping info')}}</strong>: </label><br />
                                                     @foreach($shipping_info as $product_id => $shipping)
-                                                            @php($ship_amt += $shipping['amount'])
+                                                            @php($ship_amt = $shipping['amount'])
                                                             <strong>Shipping Co.: {{$shipping['title']}}</strong><br />
                                                             <strong>Duration: {{$shipping['duration']}}</strong><br />
                                                             <strong>Shipping Mode: {{$shipping['mode']}}</strong>
