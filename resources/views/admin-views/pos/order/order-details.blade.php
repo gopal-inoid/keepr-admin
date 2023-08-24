@@ -343,7 +343,7 @@
                                     </thead>
                                     <tbody>
                                     @php($i=0)
-                                    @php($grand_total_price= $grand_total_qty = $grand_total_amt = 0)
+                                    @php($grand_total_qty = $grand_total_amt = 0)
                                     @foreach($products as $key => $detail)
                                     @php($i++)
                                         <tr>
@@ -377,7 +377,6 @@
                                             </td>
                                             <td>{{count($detail['mac_ids'])}}</td>
                                             <td>${{number_format($total_price,2)}}</td>
-                                            @php($grand_total_price += $detail['price'])
                                             @php($grand_total_qty += count($detail['mac_ids']))
                                             @php($grand_total_amt += $total_price)
                                         </tr>
@@ -386,7 +385,7 @@
                                         <td><strong>Total</strong></td>
                                         <td></td>
                                         <td></td>
-                                        <td><strong>${{number_format($grand_total_price,2)}}</strong></td>
+                                        <td></td>
                                         <td><strong>{{$grand_total_qty}}</strong></td>
                                         <td><strong>${{number_format($grand_total_amt,2)}}</strong></td>
                                     </tr>
