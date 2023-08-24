@@ -551,6 +551,14 @@ class UserProfileController extends Controller
         if(!empty($order->mac_ids)){ // stocks
             $mac_ids = json_decode($order->mac_ids,true);
             if(!empty($mac_ids)){
+
+                if(!empty($order->taxes)){
+                    $taxes = json_decode($order->taxes,true);
+                    if(!empty($taxes)){
+                        $tax_info = $taxes;
+                    }
+                }
+
                 foreach($mac_ids as $k => $val){
                     $total_orders += count($mac_ids[$k]['uuid']);
                     $prod = Product::select('name','thumbnail','purchase_price')->find($k);
@@ -574,13 +582,6 @@ class UserProfileController extends Controller
                         }
                     }
 
-                    if(!empty($order->taxes)){
-                        $taxes = json_decode($order->taxes,true);
-                        if(!empty($taxes)){
-                            $tax_info[$k] = $taxes;
-                        }
-                    }
-
                     if(!empty($order->shipping_method_id) && !empty($order->shipping_mode)){
                         $shipping = ShippingMethod::where(['id' => $order->shipping_method_id])->first();
                         $shipping_method_rates = ShippingMethodRates::select('normal_rate','express_rate')->where('shipping_id',$order->shipping_method_id)->where('country_code',$this->getCountryName($order->customer->country))->first();
@@ -593,10 +594,6 @@ class UserProfileController extends Controller
                             $shipping_info[$k]['duration'] = $shipping->express_duration ?? "";
                             $shipping_info[$k]['mode'] = 'Express Rate';
                             $shipping_info[$k]['amount'] = $shipping_method_rates->express_rate ?? 0;
-                        }
-
-                        if(!empty($shipping_info[$k]['amount'])){
-                            $total_order_amount += $shipping_info[$k]['amount'];
                         }
                     }
                 }
