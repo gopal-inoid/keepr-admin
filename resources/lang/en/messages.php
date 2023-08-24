@@ -2447,4 +2447,6 @@
   'Distance' => 'Distance',
   'android_version' => 'Android version',
   'ios_version' => 'Ios version',
+  'android_force_update_status' => 'Android force update status',
+  'ios_force_update_status' => 'Ios force update status',
 );

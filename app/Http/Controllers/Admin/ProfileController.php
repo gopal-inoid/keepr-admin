@@ -28,13 +28,14 @@ class ProfileController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'phone' => 'required|numeric|digits:10'
+            'phone' => 'required|numeric|digits:10',
+            'email' => 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix'
         ]);
 
         $admin = Admin::find($id);
         $admin->name = $request->name;
         $admin->phone = $request->phone;
-        $admin->email = $request->email;
+        $admin->email = trim($request->email);
         if ($request->image) {
             $admin->image = ImageManager::update('admin/', $admin->image, 'png', $request->file('image'));
         }
