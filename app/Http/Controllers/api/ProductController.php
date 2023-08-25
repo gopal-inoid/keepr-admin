@@ -589,7 +589,6 @@ class ProductController extends Controller
     }
 
     public function request_device(Request $request){
-        $device_mac_id = $request->mac_id;
         $uuid = $request->uuid;
         $major = $request->major;
         $minor = $request->minor;
@@ -622,7 +621,7 @@ class ProductController extends Controller
                     return response()->json(['status'=>200,'request_status'=>$check_connected->status,'message'=>'Device request updated successfully'],200);
 
                 }else{
-                    $check = DeviceRequest::insert(['mac_id'=>$device_mac_id,'user_id'=>$user_details->id,'uuid'=>$uuid,'major'=>$major,'minor'=>$minor]);
+                    $check = DeviceRequest::insert(['user_id'=>$user_details->id,'uuid'=>$uuid,'major'=>$major,'minor'=>$minor]);
                     if($check){
                         Common::addLog([]);
                         return response()->json(['status'=>200,'request_status'=>0,'message'=>'Device request added successfully'],200);
