@@ -99,7 +99,7 @@ class CartController extends Controller
             Common::addLog([]);
             return response()->json(['status' => 200, 'message' => 'Success', 'total_price' => number_format($total_cart_price, 2), 'data' => $cart], 200);
         } else {
-            return response()->json(['status' => 400, 'message' => 'Product Not Found.'], 400);
+            return response()->json(['status' => 200, 'message' => 'Cart is Empty.','data'=>[]], 200);
         }
     }
 
