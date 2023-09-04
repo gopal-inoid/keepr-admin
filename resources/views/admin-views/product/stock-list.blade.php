@@ -179,7 +179,6 @@
                                 </div>
                             </div>
                             <div class="d-flex flex-wrap gap-10 align-items-center justify-content-end">
-                                <button type="reset" class="btn btn-secondary px-4" onclick="resetImg();">{{\App\CPU\translate('reset')}}</button>
                                 <button type="submit" class="btn btn--primary px-4">{{\App\CPU\translate('Submit')}}</button>
                             </div>
                         </div>

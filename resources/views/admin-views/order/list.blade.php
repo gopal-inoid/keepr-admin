@@ -158,7 +158,7 @@
                                         @else
                                             @if($order->customer)
                                                 <a class="text-body text-capitalize" href="{{route('admin.orders.details',['id'=>$order['id']])}}">
-                                                    <strong class="title-name">{{$order->customer['f_name'].' '.$order->customer['l_name']}}</strong>
+                                                    <strong class="title-name">{{$order->customer['name']}}</strong>
                                                 </a>
                                                 <a class="d-block title-color" href="tel:{{ $order->customer['phone'] }}">{{ $order->customer['phone'] }}</a>
                                             @else
@@ -168,7 +168,7 @@
                                     </td>
                                     
                                     <td>
-                                        <div>{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order->order_amount))}}</div>
+                                        <div>${{number_format($order->order_amount,2)}}</div>
 
                                         @if($order->payment_status=='paid')
                                             <span class="badge text-success fz-12 px-0">

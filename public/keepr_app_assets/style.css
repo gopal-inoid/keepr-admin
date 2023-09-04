@@ -126,7 +126,7 @@ body {
 .rightMobileIcon img {
     padding-top: 115px;
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
     object-fit: contain;
     /* padding-bottom: 60px; */
 }
@@ -148,7 +148,7 @@ body {
 
 .rightMobileIcon2 img {
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
     object-fit: contain;
     padding: 0px 70px 0px 0px;
     margin: auto;
@@ -311,8 +311,8 @@ body {
     /* margin-top: 30px;
     margin-left: -220px; */
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    /* height: 100%; */
+    object-fit: contain;
 }
 
 .Fifth_Section {
@@ -337,6 +337,7 @@ body {
     background: #F8F8F8;
     text-align: center;
     border-radius: 14px;
+    margin: 40px;
 }
 
 .Product-1 img,
@@ -360,7 +361,7 @@ body {
 .buy_now_btn {
     width: 156px;
     height: 56px;
-    background: #52D1DC 0% 0% no-repeat padding-box;
+    background-color: #52D1DC;
     border-radius: 10px;
     opacity: 1;
     color: #fff;
@@ -411,7 +412,7 @@ body {
     padding-top: 40px;
     display: inline-flex;
     justify-content: space-between;
-    width: 560px;
+    width: 100%;
 }
 
 .mail_section img {
@@ -487,7 +488,7 @@ ul li {
 
 .overlaping_div img {
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
     object-fit: contain;
     max-height: 500px;
 }
@@ -536,7 +537,7 @@ ul li {
 
 .HeadPhone_image img {
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
     object-fit: contain;
 }
 
@@ -632,7 +633,7 @@ ul li {
     }
 
     #Frequently_Asked_Questions2 {
-        padding: 0 !important;
+        padding-left: 30 !important;
     }
 
     #Frequently_Asked_Questions1 {
@@ -640,7 +641,7 @@ ul li {
     }
 
     .rightMobileIcon img {
-        padding-top: 50px;
+        padding-top: 130px;
     }
 
 
@@ -655,7 +656,7 @@ ul li {
     }
 
     .Main_Content {
-        padding-top: 100px;
+        padding-top: 90px;
         padding-left: 0px;
         color: #fff;
         font-size: 40px;
@@ -696,8 +697,8 @@ ul li {
 
     .step_section {
         /* padding: 25px; */
-        padding: 69px 0px;
-        background-size: 450px;
+        padding: 40px 0px;
+        background-size: 300px;
     }
 
     .Steps_Content {
@@ -765,6 +766,7 @@ ul li {
         font-weight: 600;
         font-size: 35px;
         padding: 0px 0px 0px 0px;
+        width: auto;
     }
 
     .mail_section img {
@@ -861,7 +863,7 @@ ul li {
     }
 
     .Fifth_Section {
-        padding-top: 70px;
+        padding-top: 80px;
     }
 
     .More_Questions {
@@ -905,10 +907,6 @@ ul li {
 
     .Seven_Section {
         padding-bottom: 330px;
-    }
-
-    .Frequently_Questions {
-        padding: 50px;
     }
 
     .step_section {
@@ -1086,6 +1084,7 @@ dl {
 .Youtube_Video {
     width: 100%;
     height: 450px;
+    pointer-events: none;
 }
 
 .modal-header {
@@ -1110,4 +1109,16 @@ dl {
 .navbar-collapse > ul > li{
     padding-top: 6px;
     padding-bottom: 6px;
+}
+
+@media (min-width: 768px) and (max-width: 1399px) {
+    .section_seocond {
+        height: 35em;
+    }
+    .app_download_btn img {
+        width: 130px;
+    }
+    .main_heading {
+        font-size: 36px;
+    }
 }

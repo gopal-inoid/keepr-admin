@@ -504,6 +504,15 @@ class BusinessSettingsController extends Controller
             $request['email_verification'] = 0;
         }
 
+        if(!empty($request->android_version)){
+            $force_update_android = $request->force_update_android;
+            DB::table('api_versions')->where(['platform' => 'android'])->update(['version'=>$request->android_version,'status'=>$force_update_android]);
+        }
+        if(!empty($request->ios_version)){
+            $force_update_ios = $request->force_update_ios;
+            DB::table('api_versions')->where(['platform' => 'ios'])->update(['version'=>$request->ios_version,'status'=>$force_update_ios]);
+        }
+
         //comapy shop banner
         $imgBanner = BusinessSetting::where(['type' => 'shop_banner'])->first();
         if ($request->has('shop_banner')) {
@@ -560,9 +569,11 @@ class BusinessSettingsController extends Controller
             'value' => $request['shop_address']
         ]);
 
-        DB::table('business_settings')->updateOrInsert(['type' => 'minimum_distance_fire_alarm'], [
-            'value' => $request['minimum_distance_fire_alarm']
-        ]);
+        if(!empty($request['minimum_distance_fire_alarm'])){
+            DB::table('business_settings')->updateOrInsert(['type' => 'minimum_distance_fire_alarm'], [
+                'value' => $request['minimum_distance_fire_alarm']
+            ]);
+        }
 
         //web logo
         $webLogo = BusinessSetting::where(['type' => 'company_web_logo'])->first();

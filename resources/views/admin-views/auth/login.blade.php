@@ -101,15 +101,14 @@
                             <!-- End Form Group -->
 
                             <!-- Checkbox -->
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="termsCheckbox"
-                                           name="remember">
+                                    <input type="checkbox" class="custom-control-input" id="termsCheckbox" name="remember">
                                     <label class="custom-control-label text-muted" for="termsCheckbox">
                                         {{\App\CPU\translate('remember_me')}}
                                     </label>
                                 </div>
-                            </div>
+                            </div> --}}
                             <!-- End Checkbox -->
                             {{-- recaptcha --}}
                             {{-- @php($recaptcha = \App\CPU\Helpers::get_business_settings('recaptcha'))

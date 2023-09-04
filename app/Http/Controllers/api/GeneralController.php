@@ -279,8 +279,10 @@ class GeneralController extends Controller
                 $user_details->street_address = $request->address;
                 $user_details->name = $request->name;
                 $user_details->email = $request->email;
-                $user_details->phone = $request->phone;
-                $user_details->phone_code = $request->phone_code;
+                // $user_details->phone = $request->phone;
+                // $user_details->phone_code = $request->phone_code;
+                $user_details->billing_phone = $request->phone;
+                $user_details->billing_phone_code = $request->phone_code;
                 $user_details->country = $request->country;
                 $user_details->city = $request->city;
                 $user_details->state = $request->state;
@@ -315,8 +317,10 @@ class GeneralController extends Controller
                 $billing['address'] = $user_details->street_address;
                 $billing['name'] = $user_details->name;
                 $billing['email'] = $user_details->email;
-                $billing['phone_code'] = $user_details->phone_code;
-                $billing['phone'] = $user_details->phone;
+                // $billing['phone_code'] = $user_details->phone_code;
+                // $billing['phone'] = $user_details->phone;
+                $billing['phone_code'] = $user_details->billing_phone_code;
+                $billing['phone'] = $user_details->billing_phone;
                 $billing['country'] = $user_details->country;
                 $billing['country_name'] = $this->getCountryName($user_details->country);
                 $billing['city'] = $user_details->city;
@@ -408,7 +412,7 @@ class GeneralController extends Controller
                     $mac_ids = json_decode($get_orders->mac_ids,true);
                     if(!empty($mac_ids)){
                         foreach($mac_ids as $k => $val){
-                            $total_mac_ids[$k][] = $val;
+                            $total_mac_ids[$k] = $val;
                             if(!in_array($k,$product_ids)){
                                 array_push($product_ids,$k);
                             }
@@ -416,13 +420,16 @@ class GeneralController extends Controller
 
                         foreach($product_ids as $k => $products){
                            $product_d = Product::select('id','name','thumbnail','purchase_price')->where(['id'=>$products])->first();
-                           $product_d->price = number_format($product_d->purchase_price,2);
-                           $product_d->quantity = count($total_mac_ids[$product_d->id] ?? 0);
-                           unset($product_d->purchase_price);
-                           $product_data[] = $product_d;
-                           $get_orders->order_items = $product_data;
+                           if(!empty($product_d->id)){
+                                //echo "<pre>"; print_r($total_mac_ids); die;
+                                $product_d->price = number_format($product_d->purchase_price,2);
+                                $product_d->quantity = count($total_mac_ids[$product_d->id]['uuid'] ?? []);
+                                $product_d->thumbnail = asset("/product/thumbnail/$product_d->thumbnail");
+                                unset($product_d->purchase_price);
+                                $product_data[] = $product_d;
+                            }
+                           $get_orders->order_items = $product_data ?? [];
                         }
-
                     }
                 }
 

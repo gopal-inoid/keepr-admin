@@ -42,9 +42,48 @@ class ProductController extends BaseController
 
     public function add_new_stock()
     {
-        $products = Product::select('id','name','colors')->where('status', 1)->get();
-        $colors = Color::get();
-        return view('admin-views.product.add-new-stock', compact('products','colors'));
+        $products = Product::select('id','name','colors')->where('status', 1)->orderBy('id','desc')->get();
+        //$colors = Color::get();
+        $product_options = [];
+        if(!empty($products)){
+            $i = 0;
+            foreach($products as $k => $pro){
+                $stockcount = ProductStock::where('product_id',$pro->id)->count();
+                if($stockcount == 0){
+                    $product_options[$pro->id]['product'] = '<option value="'.$pro->id.'">'.$pro->name.'</option>';
+                    if(!empty($pro->colors) && $i == 0){
+                        $productcolors = explode(",",$pro->colors);
+                        $pro_color = Color::select('id','name')->whereIn('id',$productcolors)->get();
+                        if(!empty($pro_color)){
+                            foreach($pro_color as $col){
+                                $product_options[$pro->id]['colors'][] = '<option value="'.$col->id.'">'.$col->name.'</option>';
+                            }
+                        }
+                        $i++;
+                    }
+                }
+            }
+        }
+        //echo "<pre>"; print_r($product_options); die;
+        return view('admin-views.product.add-new-stock', compact('products','product_options'));
+    }
+
+    public function get_product_colors(Request $request)
+    {
+        $products = Product::find($request->product_id);
+        $product_options['colors'] = '';
+        if(!empty($products)){
+            if(!empty($products->colors)){
+                $productcolors = explode(",",$products->colors);
+                $pro_color = Color::select('id','name')->whereIn('id',$productcolors)->get();
+                if(!empty($pro_color)){
+                    foreach($pro_color as $col){
+                        $product_options['colors'] .= '<option value="'.$col->id.'">'.$col->name.'</option>';
+                    }
+                }
+            }
+        }
+        return response()->json($product_options);
     }
 
     public function featured_status(Request $request)
@@ -211,19 +250,16 @@ class ProductController extends BaseController
         $minor = $request->minor;
         if(!empty($request->device_id)){
             foreach($request->device_id as $k => $mac_id){
-              
-                $check = ProductStock::where(['product_id'=>$request->product_id,'mac_id'=>$mac_id,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]])->count();
-             
-                if($check == 0){
-                    ProductStock::insert(['product_id'=>$request->product_id,'mac_id'=>$mac_id,'color'=>$colors[$k] ?? NULL,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]]);
+                if(!$this->CheckDeviceExists('mac_id',$mac_id) && !$this->CheckDeviceExists('uuid',$uuid[$k])){
+                    $check = ProductStock::where(['mac_id'=>$mac_id,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]])->count();
+                    if($check == 0){
+                        ProductStock::insert(['product_id'=>$request->product_id,'mac_id'=>$mac_id,'color'=>$colors[$k] ?? NULL,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]]);
+                    }
                 }
             }
         }
-    
-
         Toastr::success(translate('Product Stocks added successfully!'));
         return redirect()->route('admin.product.stocks.list');
-        
     }
 
     function update_stock(Request $request,$id){
@@ -251,9 +287,11 @@ class ProductController extends BaseController
         $minor = $request->minor;
         if(!empty($product_stock)){
             foreach($product_stock as $k => $mac_id){
-                $check = ProductStock::where(['is_purchased'=>0,'product_id'=>$id,'mac_id'=>$mac_id,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]])->count();
-                if($check == 0){
-                    ProductStock::insert(['product_id'=>$id,'mac_id'=>$mac_id,'color'=>$colors[$k] ?? NULL,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]]);
+                if(!$this->CheckDeviceExists('mac_id',$mac_id) && !$this->CheckDeviceExists('uuid',$uuid[$k])){
+                    $check = ProductStock::where(['mac_id'=>$mac_id,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]])->count();
+                    if($check == 0){
+                        ProductStock::insert(['product_id'=>$id,'mac_id'=>$mac_id,'color'=>$colors[$k][0] ?? NULL,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]]);
+                    }
                 }
             }
         }
@@ -880,9 +918,11 @@ class ProductController extends BaseController
             $color = Color::select('id')->where('name',ucfirst($collection['color']))->first();
             $product = Product::where('uuid',$collection['product_uuid'])->first();
             if(!empty($product)){
-                $check = ProductStock::where(['product_id'=>$product['id'],'mac_id'=>$collection['device_id'],'uuid'=>$collection['product_uuid'],'major'=>$collection['major'],'minor'=>$collection['minor']])->count();
-                if($check == 0){ $cnt++;
-                    ProductStock::insert(['product_id'=>$product['id'],'mac_id'=>$collection['device_id'],'color'=>$color->id ?? 117,'uuid'=>$collection['product_uuid'],'major'=>$collection['major'],'minor'=>$collection['minor']]);
+                if(!$this->CheckDeviceExists('mac_id',$collection['device_id']) && !$this->CheckDeviceExists('uuid',$collection['product_uuid'])){
+                    $check = ProductStock::where(['mac_id'=>$collection['device_id'],'uuid'=>$collection['product_uuid'],'major'=>$collection['major'],'minor'=>$collection['minor']])->count();
+                    if($check == 0){ $cnt++;
+                        ProductStock::insert(['product_id'=>$product['id'],'mac_id'=>$collection['device_id'],'color'=>$color->id ?? null,'uuid'=>$collection['product_uuid'],'major'=>$collection['major'],'minor'=>$collection['minor']]);
+                    }
                 }
             }
         }

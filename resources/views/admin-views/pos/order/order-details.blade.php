@@ -151,8 +151,8 @@
                                             <div class="col-md-3 phone_code">
                                                 <label class="title-color">Phone</label>
                                                 <div class="form-group">
-                                                    <span class="border-end country-code px-2">{{$order->customer['phone_code']}}</span>
-                                                    <input type="number" class="form-control" value="{{$order->customer['phone'] ?? ''}}" name="billing_phone" placeholder="{{ \App\CPU\translate('Phone') }}" />
+                                                    <span class="border-end country-code px-2">{{$order->customer['billing_phone_code']}}</span>
+                                                    <input type="number" class="form-control" value="{{$order->customer['billing_phone'] ?? ''}}" name="billing_phone" placeholder="{{ \App\CPU\translate('Phone') }}" />
                                                 </div>
                                             </div>
                                         </div>
@@ -252,19 +252,28 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="row">
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label class="">Shipping type</label>
+                                                <select class="form-control" id="shipping_mode" name="shipping_mode">
+                                                    <option {{($order['normal_rate'] == 'normal_rate' ? 'selected' : '')}} value="normal_rate">Normal Rate</option>
+                                                    <option {{($order['express_rate'] == 'express_rate' ? 'selected' : '')}} value="express_rate">Express Rate</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
                                             <div class="form-group">
                                                 <label class="title-color">Tracking ID</label>
                                                 <input type="text" name="tracking_id" class="form-control" value="{{$order['tracking_id']}}" required>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="title-color">Estimated Delivery Date</label>
                                                 <input type="date" name="expected_delivery_date" class="form-control" value="{{date('Y-m-d',strtotime($order['expected_delivery_date']))}}" required>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="">Shipment information</label>
                                                 <textarea name="shipment_info" class="form-control">{{ $order['shipment_info'] ?? "" }}</textarea>
@@ -327,12 +336,14 @@
                                             <th>{{\App\CPU\translate('SL')}}</th>
                                             <th>{{\App\CPU\translate('Product Name')}}</th>
                                             <th>Device Info</th>
-                                            <th>Qty</th>
                                             <th>Price</th>
+                                            <th>Qty</th>
+                                            <th>Total Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                     @php($i=0)
+                                    @php($grand_total_qty = $grand_total_amt = 0)
                                     @foreach($products as $key => $detail)
                                     @php($i++)
                                         <tr>
@@ -355,21 +366,39 @@
                                                     @endforeach
                                                 @endif
                                             </td>
+                                            <td>
+                                                @php($total_price = 0)
+                                                @if(!empty($detail['mac_ids']))
+                                                    @foreach($detail['mac_ids'] as $val)
+                                                    @php($total_price += $detail['price'])
+                                                    <br />${{$detail['price'] ?? ''}}<br /><br /><hr />
+                                                    @endforeach
+                                                @endif
+                                            </td>
                                             <td>{{count($detail['mac_ids'])}}</td>
-                                            <td>${{$detail['price'] ?? ''}}</td>
+                                            <td>${{number_format($total_price,2)}}</td>
+                                            @php($grand_total_qty += count($detail['mac_ids']))
+                                            @php($grand_total_amt += $total_price)
                                         </tr>
                                     @endforeach
+                                    <tr>
+                                        <td><strong>Total</strong></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><strong>{{$grand_total_qty}}</strong></td>
+                                        <td><strong>${{number_format($grand_total_amt,2)}}</strong></td>
+                                    </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="row justify-content-md-end mb-3">
                                 <div class="col-md-12 col-lg-12">
-
                                     <table class="table fz-12 table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
                                         <thead class="thead-light thead-50 text-capitalize">
                                             <tr>
                                                 <th>{{\App\CPU\translate('Other info')}}</th>
-                                                <th class="text-right">{{\App\CPU\translate('Total Amount')}}</th>
+                                                <th class="text-right"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -378,11 +407,8 @@
                                                     <label><strong>{{\App\CPU\translate('Tax info')}}</strong>: </label>
                                                     @php($tx_amt = $ship_amt = 0)
                                                     @foreach($tax_info as $product_id => $taxes)
-                                                        @foreach($taxes as $k1 => $tax)
-                                                            @php($tx_amt += $tax['amount'])
-                                                            @php($total_order_amount += $tax['amount'])
-                                                                <strong>{{$tax['title']}}</strong><br />
-                                                        @endforeach
+                                                        @php($tx_amt = $taxes['amount'])
+                                                        <strong>{{$taxes['title']}}</strong><br />
                                                     @endforeach
                                                 </td>
                                                 <td class="text-right"><strong>${{number_format($tx_amt,2)}}</strong></td>
@@ -390,21 +416,18 @@
                                             <tr>
                                                 <td>
                                                     <label><strong>{{\App\CPU\translate('Shipping info')}}</strong>: </label><br />
-                                                    @foreach($shipping_info as $product_id => $shipping)
-                                                            @php($ship_amt += $shipping['amount'])
-                                                            <strong>Shipping Co.: {{$shipping['title']}}</strong><br />
-                                                            <strong>Duration: {{$shipping['duration']}}</strong><br />
-                                                            <strong>Shipping Mode: {{$shipping['mode']}}</strong>
-                                                    @endforeach
+                                                    <strong>Shipping Co.: {{$shipping_info['title'] ?? ''}}</strong><br />
+                                                    <strong>Duration: {{$shipping_info['duration'] ?? ''}}</strong><br />
+                                                    <strong>Shipping Mode: {{$shipping_info['mode'] ?? ''}}</strong>
                                                 </td>
                                                 <td class="text-right">
-                                                    <strong>${{number_format($ship_amt,2)}}</strong>
+                                                    <strong>${{number_format($shipping_info['amount'] ?? 0,2)}}</strong>
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td><strong>Grand Total</strong></td>
+                                                <td><h4><strong>Grand Total</strong></h4></td>
                                                 <td class="text-right">
-                                                    <strong>${{$total_order_amount}}</strong>
+                                                    <h4><strong>${{number_format($total_order_amount,2)}}</strong></h4>
                                                 </td>
                                             </tr>
                                         </tbody>

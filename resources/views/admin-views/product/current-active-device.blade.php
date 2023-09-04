@@ -82,7 +82,7 @@
                                     {{ $p['device_uuid'] }}
                                 </td>
                                 <td>
-                                    {{ $p['distance'] }} Miter
+                                    {{ $p['distance'] }} Meter
                                 </td>
                                 <td>
                                     {{ $p['major'] }}

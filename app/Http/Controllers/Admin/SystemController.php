@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Model\BusinessSetting;
 use App\Model\OrderDetail;
 use App\Model\SearchFunction;
+use App\Model\ProductStock;
 use App\Model\WithdrawRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -81,15 +82,27 @@ class SystemController extends Controller
     public function update_place_order_status()
     {
         $new_order = DB::table('orders')->where(['order_status' => 'pending','payment_status'=>'unpaid'])
-                            ->whereRaw('DATE(created_at) < CURDATE() - INTERVAL 1 DAY')->get();
+                            ->whereRaw('DATE(created_at) < CURDATE() - INTERVAL 3 hour')->get();
         $total_status = 0;
         if(!empty($new_order)){
             foreach($new_order as $val){
                 $total_status++;
                 DB::table('orders')->where('id',$val->id)->update(['order_status' => 'failed','payment_status'=>'unpaid']);
+                if(!empty($val->mac_ids)){
+                    $mac_ids = json_decode($val->mac_ids,true);
+                    if(!empty($mac_ids)){
+                        foreach($mac_ids as $k => $inner_val){
+                            if(!empty($inner_val)){
+                                foreach($inner_val['uuid'] as $k1 => $inner_val1){
+                                    ProductStock::where(['product_id'=>$k,'uuid'=>$inner_val1,'major'=>$inner_val['major'][$k1],'minor'=>$inner_val['minor'][$k1]])->update(['is_purchased'=>0]);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
-
+        DB::table('cron_log')->insert(['cron type'=>'order_status','data'=>json_encode(['success' => 1,'total_updated' => $total_status])]);
         return response()->json([
             'success' => 1,
             'total_updated' => $total_status

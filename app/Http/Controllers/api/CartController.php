@@ -279,6 +279,11 @@ class CartController extends Controller
 		$taxes = $request->tax;
 		$shipping_rate_id = $request->shipping_rate_id;
 		$shipping_mode = $request->shipping_mode;
+        $total_amount = $request->total_amount ?? 0;
+        if($total_amount == 0){
+            return response()->json(['status'=>400,'message'=>'Order amount required'],400);
+        }
+
         $left = ltrim($cart_id, "'");
         $right = rtrim($left, "'");
         $data = json_decode($right,true);
@@ -288,7 +293,7 @@ class CartController extends Controller
                 array_push($cart_ids,$val['id']);
             }
         }
-        $existed_mac_ids =  $mac_ids_array = [];
+        $existed_mac_ids =  $mac_ids_array = $per_device_amount = [];
         $total_price = $error = 0;
         $check_mac_ids = Order::select('mac_ids')->get();
         if(!empty($check_mac_ids)){
@@ -311,6 +316,7 @@ class CartController extends Controller
             if(!empty($cart_info[0])){
                 foreach($cart_info as $cart){
                     $price = Product::select('purchase_price as price')->where('id',$cart['product_id'])->first()->price ?? 0;
+                    $per_device_amount[$cart['product_id']] = $price;
                     $total_price += ($price * $cart['quantity']);
                     $get_random_stocks = ProductStock::select('uuid','major','minor','product_id')->where('is_purchased',0)
                                                       ->where('product_id',$cart['product_id'])
@@ -334,7 +340,7 @@ class CartController extends Controller
                     return response()->json(['status'=>400,'message'=>'Device not available'],400);
                 }
 
-                $stripe_payment_create = $this->CreateCheckout($total_price);
+                $stripe_payment_create = $this->CreateCheckout($total_amount);
                 if(!empty($stripe_payment_create['id'])){
                     $intent_data['id'] = $stripe_payment_create['id'];
                     $intent_data['client_secret'] = $stripe_payment_create['client_secret'];
@@ -344,12 +350,13 @@ class CartController extends Controller
                 $order = new Order();
                 $order->customer_id = $user_details->id;
                 $order->payment_method = 'Stripe';
+                $order->per_device_amount = json_encode($per_device_amount);
                 $order->shipping_method_id = $shipping_id;
                 $order->taxes = $taxes;
                 $order->shipping_rate_id = $shipping_rate_id;
 				$order->shipping_mode = $shipping_mode;
                 $order->mac_ids = json_encode($mac_ids_array);
-                $order->order_amount = number_format($total_price,2);
+                $order->order_amount = $total_amount;
                 $order->save();
 
                 $order_attribute = $this->getOrderAttr($order->mac_ids);

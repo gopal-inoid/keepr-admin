@@ -47,7 +47,7 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <select name="product_id" class="form-control" disabled>
-																					<option selected="selected" value="{{$product['id']}}">{{$product['name']}}</option>
+										    <option selected="selected" value="{{$product['id']}}">{{$product['name']}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -94,7 +94,7 @@
                                             <div class="row mac_id-individual">
                                                 <div class="col-md-3">
                                                     <div class="form-group">
-                                                        <input type="text" @if(!empty($stocks->is_purchased)) disabled="disabled" @endif name="device_id[{{$k}}]" class="form-control macAddress" value="{{ $stocks->mac_id }}" placeholder="{{ \App\CPU\translate('Device ID') }}">
+                                                        <input type="text" @if(!empty($stocks->is_purchased)) disabled="disabled" @endif name="device_id[{{$k}}]" class="form-control" value="{{ $stocks->mac_id }}" placeholder="{{ \App\CPU\translate('Device ID') }}">
                                                     </div>
                                                 </div>
 												<div class="col-md-3">
@@ -114,7 +114,7 @@
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
-                                                        <select name="colors[]" @if(!empty($stocks->is_purchased)) disabled="disabled" @endif class="form-control">
+                                                        <select name="colors[{{$k}}][]" @if(!empty($stocks->is_purchased)) disabled="disabled" @endif class="form-control">
                                                             @if(!empty($product['colors']) && !empty($colors))
                                                                 @php
                                                                 $productColors = explode(",", $product['colors']);
@@ -159,18 +159,15 @@
     <script src="{{asset('public/assets/back-end/js/spartan-multi-image-picker.js')}}"></script>
     <script>
 
-    function formatMAC(e) {
-        var r = /([a-f0-9]{2})([a-f0-9]{2})/i,
-            str = e.target.value.replace(/[^a-f0-9]/ig, "");
-        
-        while (r.test(str)) {
-            str = str.replace(r, '$1' + ':' + '$2');
-        }
-
-        e.target.value = str.slice(0, 17);
-    };
-
-    $(document).on('keyup','.macAddress',formatMAC);
+    // function formatMAC(e) {
+    //     var r = /([a-f0-9]{2})([a-f0-9]{2})/i,
+    //         str = e.target.value.replace(/[^a-f0-9]/ig, "");
+    //     while (r.test(str)) {
+    //         str = str.replace(r, '$1' + ':' + '$2');
+    //     }
+    //     e.target.value = str.slice(0, 17);
+    // };
+    // $(document).on('keyup','.macAddress',formatMAC);
 
         var cnt = (parseInt("{{$product_stock_cnt}}") - 1);
 
@@ -202,7 +199,7 @@
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <select name="colors[]" class="form-control">
+                            <select name="colors[`+(cnt+1)+`][]" class="form-control">
                                 @if(!empty($product['colors']) && !empty($colors))
                                     @php
                                     $productColors = explode(",", $product['colors']);

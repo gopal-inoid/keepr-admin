@@ -199,7 +199,7 @@ class DashboardController extends Controller
         $product_query = new Product();
         $product = self::common_query_order_stats($product_query);
 
-        $connected_query = new ConnectedDevice();
+        $connected_query = ConnectedDevice::join('users','users.id','connected_device.user_id')->where('connected_device.status',1);
         $connected_device = self::common_query_order_stats($connected_query);
 
         $stocks_query = new ProductStock();
@@ -241,13 +241,13 @@ class DashboardController extends Controller
         $today = session()->has('statistics_type') && session('statistics_type') == 'today' ? 1 : 0;
         $this_month = session()->has('statistics_type') && session('statistics_type') == 'this_month' ? 1 : 0;
 
-        return $query->when($today, function ($query) {
-            return $query->whereDate('created_at', Carbon::today());
-        })
-            ->when($this_month, function ($query) {
-                return $query->whereMonth('created_at', Carbon::now());
-            })
-            ->count();
+        // return $query->when($today, function ($query) {
+        //     return $query->whereDate('created_at', Carbon::today());
+        // })
+        // ->when($this_month, function ($query) {
+        //     return $query->whereMonth('created_at', Carbon::now());
+        // })
+        return $query->count();
     }
 
     /**

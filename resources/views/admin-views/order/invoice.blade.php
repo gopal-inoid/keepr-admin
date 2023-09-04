@@ -15,7 +15,7 @@
             <tr>
                 <td class="" width="30%">
                     <span class="text-end">
-                        {{$company_web_logo}}
+                        {{-- $company_web_logo -- }}
                         {{-- <img height="80" src="{{asset("/public/company/$company_web_logo")}}" alt=""> --}}
                         <img height="80" src="{{asset("/public/company/Keepr-logo-black.png")}}" alt="">
                     </span>
@@ -67,16 +67,16 @@
                             @if (!empty($order->customer->add_shipping_address))
                             <span class="h2">{{\App\CPU\translate('shipping_to')}} </span>
                             <div class="h4 montserrat-normal-600">
-                                <p>{{$order->customer !=null? $order->customer['f_name'].' '.$order->customer['l_name']:\App\CPU\translate('name_not_found')}}</p>
-                                <p>{{$order->customer !=null? $order->customer['email']:\App\CPU\translate('email_not_found')}}</p>
-                                <p>{{$order->customer !=null? $order->customer['phone']:\App\CPU\translate('phone_not_found')}}</p>
+                                <p>{{$order->customer !=null? $order->customer['shipping_name']:\App\CPU\translate('name_not_found')}}</p>
+                                <p>{{$order->customer !=null? $order->customer['shipping_email']:\App\CPU\translate('email_not_found')}}</p>
+                                <p>{{$order->customer !=null? $order->customer['shipping_phone']:\App\CPU\translate('phone_not_found')}}</p>
                                 <p>{{$order->customer ? $order->customer['add_shipping_address'] : ""}}</p>
                                 <p>{{$order->customer ? $order->customer['shipping_city'] : ""}} {{$order->customer ? $order->customer['shipping_zip'] : ""}}</p>
                             </div>
                             @else
                             <span class="h4">{{\App\CPU\translate('customer_info')}} </span>
                             <div class="h4 montserrat-normal-600">
-                                <p>{{$order->customer !=null? $order->customer['f_name'].' '.$order->customer['l_name']:\App\CPU\translate('name_not_found')}}</p>
+                                <p>{{$order->customer !=null? $order->customer['name']:\App\CPU\translate('name_not_found')}}</p>
                                 @if (isset($order->customer) && $order->customer['id']!=0)
                                 <p>{{$order->customer !=null? $order->customer['email']:\App\CPU\translate('email_not_found')}}</p>
                                 <p>{{$order->customer !=null? $order->customer['phone']:\App\CPU\translate('phone_not_found')}}</p>
@@ -94,7 +94,7 @@
                             <span class="h2">{{\App\CPU\translate('billing_address')}} </span>
                             <div class="h4 montserrat-normal-600">
                                 <p>{{$order->customer['name'] ? $order->customer['name'] : ""}}</p>
-                                <p>{{$order->customer['phone'] ? $order->customer['phone'] : ""}}</p>
+                                <p>{{$order->customer['billing_phone'] ? $order->customer['billing_phone'] : ""}}</p>
                                 <p>{{$order->customer['street_address'] ? $order->customer['street_address'] : ""}}</p>
                                 <p>{{$order->customer['city'] ? $order->customer['city'] : ""}} {{$order->customer['zip'] ? $order->customer['zip'] : ""}}</p>
                             </div>
@@ -126,27 +126,33 @@
                     </th>
                     <th align="right" style="border-top: 1px solid #eee; padding: 5px;">
                         <strong>
+                            Price
+                        </strong>
+                    </th>
+                    <th align="right" style="border-top: 1px solid #eee; padding: 5px;">
+                        <strong>
                             Qty
                         </strong>
                     </th>
                     <th align="right" style="border-top: 1px solid #eee; padding: 5px;">
                         <strong>
-                            Price
+                            Total Amount
                         </strong>
                     </th>
                 </tr>
             </thead>
             <tbody>
                 @php($i=0)
+                @php($grand_total_qty = $grand_total_amt = 0)
                 @foreach($products as $key => $detail)
                 @php($i++)
                 <tr>
                     <td>{{$i}}</td>
                     <td style="text-align:center;">
                         <div class="media align-items-center gap-10">
-                            <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$detail['thumbnail']}}" width="50px;" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt="">
+                            {{-- <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$detail['thumbnail']}}" width="50px;" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt=""> --}}
                             <div>
-                                <a href="#" class="title-color hover-c1"><h6>{{substr($detail['name'],0,30)}}{{strlen($detail['name'])>10?'...':''}}</h6></a>
+                                <a href="#" class="title-color hover-c1"><h6>{{substr($detail['name'],0,50)}}{{strlen($detail['name'])>50?'...':''}}</h6></a>
                             </div>
                         </div>
                     </td>
@@ -156,26 +162,42 @@
                                 <strong>UUID: </strong>{{$val['uuid']}}<br />
                                 <strong>Major: </strong>{{$val['major']}}<br />
                                 <strong>Minor: </strong>{{$val['minor']}}<br />
-                                <hr />
+                            @endforeach
+                        @endif
+                    </td>
+                    <td style="text-align:center;">
+                        @php($total_price = 0)
+                        @if(!empty($detail['mac_ids']))
+                            @foreach($detail['mac_ids'] as $val)
+                                @php($total_price += $detail['price'])
+                                ${{$detail['price'] ?? ''}}<br /><br /><br /><br />
                             @endforeach
                         @endif
                     </td>
                     <td style="text-align:center;">{{count($detail['mac_ids'])}}</td>
-                    <td style="text-align:center;">${{$detail['price'] ?? ''}}</td>
+                    <td style="text-align:center;">${{number_format($total_price,2)}}</td>
+                    @php($grand_total_qty += count($detail['mac_ids']))
+                    @php($grand_total_amt += $total_price)
                 </tr>
                 @endforeach
+                <tr>
+                    <td><strong>Total</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align:center;"><strong>{{$grand_total_qty}}</strong></td>
+                    <td style="text-align:center;"><strong>${{number_format($grand_total_amt,2)}}</strong></td>
+                </tr>
             </tbody>
         </table>
     </div>
-
-
     <div style="padding-top: 1cm; padding-bottom: 1cm;">
         @php($shipping=$order['shipping_cost'])
         <table style="table-layout: fixed; width: 100%;">
             <thead>
                 <tr>
                     <th style="text-align:left;">{{\App\CPU\translate('Other info')}}</th>
-                    <th>{{\App\CPU\translate('Total Amount')}}</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -183,34 +205,28 @@
                     <td>
                         <label><strong>{{\App\CPU\translate('Tax info')}}</strong>: </label>
                         @php($tx_amt = $ship_amt = 0)
-                        @foreach($tax_info as $product_id => $taxes)
-                            @foreach($taxes as $k1 => $tax)
-                                @php($tx_amt += $tax['amount'])
-                                @php($total_order_amount += $tax['amount'])
-                                    <strong>{{$tax['title']}}</strong><br />
+                            @foreach($tax_info as $product_id => $taxes)
+                                @php($tx_amt = $taxes['amount'])
+                                <strong>{{$taxes['title']}}</strong><br />
                             @endforeach
-                        @endforeach
                     </td>
                     <td style="text-align:center;"><strong>${{number_format($tx_amt,2)}}</strong></td>
                 </tr>
                 <tr>
                     <td>
                         <label><strong>{{\App\CPU\translate('Shipping info')}}</strong>: </label><br />
-                        @foreach($shipping_info as $product_id => $shipping)
-                                @php($ship_amt += $shipping['amount'])
-                                <strong>Shipping Co.: {{$shipping['title']}}</strong><br />
-                                <strong>Duration: {{$shipping['duration']}}</strong><br />
-                                <strong>Shipping Mode: {{$shipping['mode']}}</strong>
-                        @endforeach
+                        <strong>Shipping Co.: {{$shipping_info['title'] ?? ''}}</strong><br />
+                        <strong>Duration: {{$shipping_info['duration'] ?? ''}}</strong><br />
+                        <strong>Shipping Mode: {{$shipping_info['mode'] ?? ''}}</strong>
                     </td>
                     <td style="text-align:center;">
-                        <strong>${{number_format($ship_amt,2)}}</strong>
+                        <strong>${{number_format($shipping_info['amount'] ?? 0,2)}}</strong>
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Grand Total</strong></td>
-                    <td style="text-align:center;">
-                        <strong>${{$total_order_amount}}</strong>
+                    <td><hr /><h4><strong>Grand Total</strong></h4></td>
+                    <td style="text-align:center;"><hr />
+                        <h4><strong>${{number_format($total_order_amount,2)}}</strong></h4>
                     </td>
                 </tr>
             </tbody>

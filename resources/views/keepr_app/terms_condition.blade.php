@@ -40,7 +40,7 @@
                             </li>
                         </ul>
                         <form class="d-flex mt-3">
-                            <a href="{{route('home')}}/#Download_keepr" class="btn download_keeper_btn" type="submit">Download Keepr</a>
+                            <a href="{{route('home')}}/#downloads" class="btn download_keeper_btn" type="submit">Download Keepr</a>
                         </form>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
         <div class="container-fluid" id="Terms_And_Condition">
             <div class="container" id="Terms_And_Condition_main">
                 <h2 class="Heading_terms" style="text-align: center;">TERMS AND CONDITIONS</h2>
-                {!!  $data ?? "" !!}
+                {!! $data ?? "" !!}
                 <!-- <ol>
                     <li><strong>Introduction</strong></li>
                 </ol>
@@ -114,7 +114,7 @@
                 <ol start="12">
                     <li><strong>Governing Law &amp; Jurisdiction</strong></li>
                 </ol> -->
-               
+
             </div>
         </div>
 
