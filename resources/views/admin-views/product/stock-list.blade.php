@@ -9,7 +9,6 @@
 @section('content')
 
 <div class="content container-fluid">
-    {{$pro}}
     <!-- Page Title -->
     <div class="mb-3">
         <h2 class="h1 mb-0 text-capitalize d-flex gap-2">
@@ -77,12 +76,16 @@
                         </thead>
                         <tbody>
                         @foreach($pro as $k=>$p)
-
-                             <?php 
+                       
+                            <?php 
                                 //echo "<pre>"; print_r($p->stocks); die;
                                 $total_stocks = \App\Model\ProductStock::where('product_id',$p['product_id'])->count();
                                 $total_purchased_stocks = \App\Model\ProductStock::where('product_id',$p['product_id'])->where('is_purchased',1)->count();
-                            ?>
+                                    $status = \App\Model\Product::select('status')->where('id', $p['product_id'])->first();
+                                   
+                           
+                           ?>
+                        
                             <tr>
                                 <th scope="row">{{$pro->firstItem()+$k}}</th>
                                 <td class="text-center">
@@ -94,17 +97,21 @@
                                 </td>
                                 <td class="text-center">
                                     {{$total_stocks}}
+                                 
                                 </td>
                                 <td class="text-center">
                                     {{$total_purchased_stocks}}
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center gap-2">
-                                        <a class="btn btn-outline--primary btn-sm square-btn"
+                                       
+                                        <a class="btn btn-outline--primary btn-sm square-btn {{(!empty($status->status)) ? '' : 'disabled'  }}"
                                             title="{{\App\CPU\translate('Edit')}}"
                                             href="{{route('admin.product.stocks.edit',[$p['product_id']])}}">
                                             <i class="tio-edit"></i>
                                         </a>
+                                        
+                                       
                                         <a class="btn btn-outline-danger btn-sm square-btn" href="javascript:"
                                             title="{{\App\CPU\translate('Delete')}}"
                                             onclick="form_alert('product-stock-{{$p['product_id']}}','Want to delete this item ?')">
