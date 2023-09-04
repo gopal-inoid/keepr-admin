@@ -2449,4 +2449,24 @@
   'ios_version' => 'Ios version',
   'android_force_update_status' => 'Android force update status',
   'ios_force_update_status' => 'Ios force update status',
+  '
+            Are you sure Change this ' => '
+            Are you sure Change this ',
+  '
+            Yes,
+            Change it ' => '
+            Yes 
+            Change it ',
+  '
+                            Status Change successfully ' => '
+                            Status Change successfully ',
+  '
+                                Order is already delivered, You can not change it ' => '
+                                Order is already delivered  You can not change it ',
+  '
+                                Status Change successfully ' => '
+                                Status Change successfully ',
+  '
+            waiting_for_location ' => '
+            waiting for location ',
 );

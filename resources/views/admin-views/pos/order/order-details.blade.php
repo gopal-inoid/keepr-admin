@@ -4,31 +4,11 @@
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <style>
-    .phone_code > .form-group {
-        border: 1px solid #ced4da !important;
-        border-radius: 6px !important;
-        width: auto !important;
-    }
-    .phone_code > .form-group:focus {
-        color: #212529;
-        background-color: #fff;
-        border-color: #86b7fe;
-        outline: 0;
-        box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
-    }
-    .phone_code > .form-group input {
-        display: inline-block !important;
-        width: auto !important;
-        border: none !important;
-    }
-    .phone_code > .form-group input:focus {
-        box-shadow: none !important;
-    }
-</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.8/css/intlTelInput.css" />
 @endpush
 
 @section('content')
+
     <div class="content container-fluid">
         <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
             <h2 class="h1 mb-0">
@@ -36,6 +16,8 @@
                 {{ \App\CPU\translate('Order_Details') }} For {{\App\CPU\translate('Order_ID')}} #{{$order['id']}}
             </h2>
         </div>
+    
+       
         <div class="row gx-2 gy-3" id="printableArea">
             <form class="" action="{{ route('admin.orders.update-order-details') }}" method="POST" id="order_detail_form">
                 @csrf
@@ -148,10 +130,24 @@
                                                     <input type="text" name="billing_zip" class="form-control" value="{{$order->customer['zip']}}" placeholder="{{ \App\CPU\translate('Name') }}">
                                                 </div>
                                             </div>
-                                            <div class="col-md-3 phone_code">
+                                            @if(!empty($order->customer['billing_phone_code']))
+                                                @php 
+                                                $phonecode = explode('+',$order->customer['billing_phone_code']);
+                                                    if(!empty($phonecode[1])){
+                                                        $codeadded = '+'.$phonecode[1];
+                                                    }
+                                                @endphp
+                                            @endif
+                                            
+                                            <div class="col-md-1">
+                                                <div class="form-group">
+                                                    <label class="title-color d-flex">Phone Code</label>
+                                                    <input class="form-control txtPhone" name="billing_phone_code" type="tel" id="txtPhone" class="txtbox" value="{{($codeadded ?? '')}}" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
                                                 <label class="title-color">Phone</label>
                                                 <div class="form-group">
-                                                    <span class="border-end country-code px-2">{{$order->customer['billing_phone_code']}}</span>
                                                     <input type="number" class="form-control" value="{{$order->customer['billing_phone'] ?? ''}}" name="billing_phone" placeholder="{{ \App\CPU\translate('Phone') }}" />
                                                 </div>
                                             </div>
@@ -229,11 +225,25 @@
                                                     <input type="text" name="shipping_zip" class="form-control" value="{{$order->customer['shipping_zip'] ?? ''}}" placeholder="{{ \App\CPU\translate('Zipcode') }}">
                                                 </div>
                                             </div>
-                                            <div class="col-md-3 phone_code">
+
+                                            @if(!empty($order->customer['shipping_phone_code']))
+                                                @php 
+                                                $phonecode = explode('+',$order->customer['shipping_phone_code']);
+                                                    if(!empty($phonecode[1])){
+                                                        $codeadded = '+'.$phonecode[1];
+                                                    }
+                                                @endphp
+                                            @endif
+                                            <div class="col-md-1">
+                                                <div class="form-group">
+                                                    <label class="title-color d-flex">Phone Code</label>
+                                                    <input class="form-control txtPhone" name="shipping_phone_code" type="tel" id="txtPhone" class="txtbox" value="{{($codeadded ?? '')}}" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
                                                 <label class="title-color">Phone</label>
                                                 <div class="form-group">
-                                                    <span class="border-end country-code px-2">{{$order->customer['shipping_phone_code']}}</span>
-                                                    <input type="number" class="form-control" name="shipping_phone" value="{{$order->customer['shipping_phone'] ?? ''}}" placeholder="{{ \App\CPU\translate('Phone') }}" />
+                                                <input type="number" class="form-control" value="{{$order->customer['shipping_phone'] ?? ''}}" name="shipping_phone" placeholder="{{ \App\CPU\translate('Phone') }}" />
                                                 </div>
                                             </div>
                                         </div>
@@ -471,6 +481,7 @@
 @endsection
 
 @push('script_2')
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.8/js/intlTelInput-jquery.min.js"></script>
     <script>
         $(document).on('change', '.payment_status', function () {
             var id = $(this).attr("data-id");
@@ -628,6 +639,16 @@
                 ProgressBar: true
             });
         }
-    </script>
 
+        $(function() {
+            $("#country").change(function() {
+                let countryCode = $(this).find('option:selected').data('country-code');
+                let value = "+" + $(this).val();
+                $('.txtPhone').val(value).intlTelInput("setCountry", countryCode);
+            });
+            var code = $('.txtPhone').val();
+            $('.txtPhone').val(code).intlTelInput();
+        });
+
+    </script>
 @endpush

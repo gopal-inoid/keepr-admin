@@ -522,7 +522,7 @@ class ProductController extends Controller
         if(!empty($user_details->id)){
             if(!empty($data)){
                 foreach($data as $k => $val){
-                    DB::table('device_tracking_log')->insert(['mac_id'=>$val['mac_id'] ?? NULL,'lat'=>$val['lat'],'lan'=>$val['lan'],'minor'=>$val['minor'],'major'=>$val['major'],'uuid'=>$val['uuid']]);
+                    //DB::table('device_tracking_log')->insert(['mac_id'=>$val['mac_id'] ?? NULL,'lat'=>$val['lat'],'lan'=>$val['lan'],'minor'=>$val['minor'],'major'=>$val['major'],'uuid'=>$val['uuid']]);
                     $check_connected = DeviceTracking::select('id')->where(['user_id'=>$user_details->id,'uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']])->first();
                     if(empty($check_connected->id)){
                         $device_info = ProductStock::where(['uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']])->first();
