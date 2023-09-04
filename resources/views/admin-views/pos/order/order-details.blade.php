@@ -4,28 +4,7 @@
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <style>
-    .phone_code > .form-group {
-        border: 1px solid #ced4da !important;
-        border-radius: 6px !important;
-        width: auto !important;
-    }
-    .phone_code > .form-group:focus {
-        color: #212529;
-        background-color: #fff;
-        border-color: #86b7fe;
-        outline: 0;
-        box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
-    }
-    .phone_code > .form-group input {
-        display: inline-block !important;
-        width: auto !important;
-        border: none !important;
-    }
-    .phone_code > .form-group input:focus {
-        box-shadow: none !important;
-    }
-</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.8/css/intlTelInput.css" />
 @endpush
 
 @section('content')
@@ -148,10 +127,15 @@
                                                     <input type="text" name="billing_zip" class="form-control" value="{{$order->customer['zip']}}" placeholder="{{ \App\CPU\translate('Name') }}">
                                                 </div>
                                             </div>
-                                            <div class="col-md-3 phone_code">
+                                            <div class="col-md-1">
+                                                <div class="form-group">
+                                                    <label class="title-color d-flex">Phone Code</label>
+                                                    <input class="form-control" name="phone_code" type="tel" id="txtPhone" class="txtbox" value="{{$order->customer['billing_phone_code']}}" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
                                                 <label class="title-color">Phone</label>
                                                 <div class="form-group">
-                                                    <span class="border-end country-code px-2">{{$order->customer['billing_phone_code']}}</span>
                                                     <input type="number" class="form-control" value="{{$order->customer['billing_phone'] ?? ''}}" name="billing_phone" placeholder="{{ \App\CPU\translate('Phone') }}" />
                                                 </div>
                                             </div>
@@ -471,6 +455,7 @@
 @endsection
 
 @push('script_2')
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.8/js/intlTelInput-jquery.min.js"></script>
     <script>
         $(document).on('change', '.payment_status', function () {
             var id = $(this).attr("data-id");
@@ -628,6 +613,18 @@
                 ProgressBar: true
             });
         }
+
+        $(function() {
+            $("#country").change(function() {
+                let countryCode = $(this).find('option:selected').data('country-code');
+                let value = "+" + $(this).val();
+                $('#txtPhone').val(value).intlTelInput("setCountry", countryCode);
+            });
+            
+            var code = $('#txtPhone').val();
+            $('#txtPhone').val(code).intlTelInput();
+        });
+
     </script>
 
 @endpush
