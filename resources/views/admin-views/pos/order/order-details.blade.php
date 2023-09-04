@@ -8,6 +8,7 @@
 @endpush
 
 @section('content')
+
     <div class="content container-fluid">
         <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
             <h2 class="h1 mb-0">
@@ -15,6 +16,8 @@
                 {{ \App\CPU\translate('Order_Details') }} For {{\App\CPU\translate('Order_ID')}} #{{$order['id']}}
             </h2>
         </div>
+    
+       
         <div class="row gx-2 gy-3" id="printableArea">
             <form class="" action="{{ route('admin.orders.update-order-details') }}" method="POST" id="order_detail_form">
                 @csrf
@@ -127,10 +130,19 @@
                                                     <input type="text" name="billing_zip" class="form-control" value="{{$order->customer['zip']}}" placeholder="{{ \App\CPU\translate('Name') }}">
                                                 </div>
                                             </div>
+                                            @if(!empty($order->customer['billing_phone_code']))
+                                                @php 
+                                                $phonecode = explode('+',$order->customer['billing_phone_code']);
+                                                    if(!empty($phonecode[1])){
+                                                        $codeadded = '+'.$phonecode[1];
+                                                    }
+                                                @endphp
+                                            @endif
+                                            
                                             <div class="col-md-1">
                                                 <div class="form-group">
                                                     <label class="title-color d-flex">Phone Code</label>
-                                                    <input class="form-control" name="phone_code" type="tel" id="txtPhone" class="txtbox" value="{{$order->customer['billing_phone_code']}}" />
+                                                    <input class="form-control txtPhone" name="billing_phone_code" type="tel" id="txtPhone" class="txtbox" value="{{($codeadded ?? '')}}" />
                                                 </div>
                                             </div>
                                             <div class="col-md-2">
@@ -213,11 +225,25 @@
                                                     <input type="text" name="shipping_zip" class="form-control" value="{{$order->customer['shipping_zip'] ?? ''}}" placeholder="{{ \App\CPU\translate('Zipcode') }}">
                                                 </div>
                                             </div>
-                                            <div class="col-md-3 phone_code">
+
+                                            @if(!empty($order->customer['shipping_phone_code']))
+                                                @php 
+                                                $phonecode = explode('+',$order->customer['shipping_phone_code']);
+                                                    if(!empty($phonecode[1])){
+                                                        $codeadded = '+'.$phonecode[1];
+                                                    }
+                                                @endphp
+                                            @endif
+                                            <div class="col-md-1">
+                                                <div class="form-group">
+                                                    <label class="title-color d-flex">Phone Code</label>
+                                                    <input class="form-control txtPhone" name="shipping_phone_code" type="tel" id="txtPhone" class="txtbox" value="{{($codeadded ?? '')}}" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
                                                 <label class="title-color">Phone</label>
                                                 <div class="form-group">
-                                                    <span class="border-end country-code px-2">{{$order->customer['shipping_phone_code']}}</span>
-                                                    <input type="number" class="form-control" name="shipping_phone" value="{{$order->customer['shipping_phone'] ?? ''}}" placeholder="{{ \App\CPU\translate('Phone') }}" />
+                                                <input type="number" class="form-control" value="{{$order->customer['shipping_phone'] ?? ''}}" name="shipping_phone" placeholder="{{ \App\CPU\translate('Phone') }}" />
                                                 </div>
                                             </div>
                                         </div>
@@ -618,13 +644,11 @@
             $("#country").change(function() {
                 let countryCode = $(this).find('option:selected').data('country-code');
                 let value = "+" + $(this).val();
-                $('#txtPhone').val(value).intlTelInput("setCountry", countryCode);
+                $('.txtPhone').val(value).intlTelInput("setCountry", countryCode);
             });
-            
-            var code = $('#txtPhone').val();
-            $('#txtPhone').val(code).intlTelInput();
+            var code = $('.txtPhone').val();
+            $('.txtPhone').val(code).intlTelInput();
         });
 
     </script>
-
 @endpush

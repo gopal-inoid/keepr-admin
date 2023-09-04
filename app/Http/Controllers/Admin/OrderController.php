@@ -199,12 +199,13 @@ class OrderController extends Controller
         }
        
         //echo "<pre>"; print_r($shipping_info); die;
+        // echo "<pre>"; print_r($order); die;
         return view('admin-views.pos.order.order-details', compact('order','total_orders','products', 'company_name', 'company_web_logo','countries','states','shipping_info','tax_info','total_order_amount'));
     }
 
     public function update_order_details(Request $request)
     {
-        //echo "<pre>"; print_r($request->all()); die;
+        // echo "<pre>"; print_r($request->all()); die;
 
         $order_id = $request->order_id;
         $user_id = $request->user_id;
@@ -221,8 +222,9 @@ class OrderController extends Controller
                 $user_data['state'] = $request->billing_state;
                 $user_data['country'] = $request->billing_country;
                 $user_data['zip'] = $request->billing_zip;
-                //$user_data['phone'] = $request->billing_phone;
+                // $user_data['phone'] = $request->billing_phone;
                 $user_data['billing_phone'] = $request->billing_phone;
+                $user_data['billing_phone_code'] = $request->billing_phone_code;
                 $user_data['shipping_name'] = $request->shipping_name;
                 $user_data['shipping_email'] = $request->shipping_email;
                 $user_data['add_shipping_address'] = $request->add_shipping_address;
@@ -231,6 +233,7 @@ class OrderController extends Controller
                 $user_data['shipping_country'] = $request->shipping_country;
                 $user_data['shipping_zip'] = $request->shipping_zip;
                 $user_data['shipping_phone'] = $request->shipping_phone;
+                $user_data['shipping_phone_code'] = $request->shipping_phone_code;
 
                 if(!empty($request->is_billing_address_same) && $request->is_billing_address_same == 'on'){
                     $user_data['is_billing_address_same'] =  1;
