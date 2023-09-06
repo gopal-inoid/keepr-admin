@@ -38,15 +38,22 @@
                                 <div class="col-md-4">
                                     <div class="lang_form" id="english-form">
                                         <div class="form-group">
-                                            <label class="title-color" for="name">{{ \App\CPU\translate('Template Name') }}
+                                            <label class="title-color" for="name">{{ \App\CPU\translate('Template Name (For internal Use only)') }}
                                             </label>
-                                            <input type="text" required name="name" id="name" value="{{$email_templates->name}}" class="form-control" placeholder="Name">
+                                            <input type="text" required name="name" id="name" disabled="disabled" value="{{$email_templates->name}}" class="form-control" placeholder="Name">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-8">
                                     <div class="form-group">
-                                        <label class="title-color" for="subject">{{ \App\CPU\translate('subject') }}
+                                        <label class="title-color" for="description">{{ \App\CPU\translate('Description (For internal Use only)') }}
+                                            </label>
+										<input type="text" required name="description" id="description" value="{{$email_templates->description}}" class="form-control" placeholder="Description">
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label class="title-color" for="subject">{{ \App\CPU\translate('Email Subject') }}
                                             </label>
                                             <input type="text" required name="subject" value="{{$email_templates->subject}}" id="subject" class="form-control" placeholder="Subject">
                                     </div>
@@ -64,12 +71,12 @@
                                 </div>
                                 <div class="col-md-8">
                                     <div class="form-group">
-                                        <label class="title-color" for="body">{{ \App\CPU\translate('Template Body') }}</label>
+                                        <label class="title-color" for="body">{{ \App\CPU\translate('Email Body') }}</label>
                                         <textarea name="body" id="body" class="textarea editor-textarea">{{$email_templates->body}}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="title-color">Templates Variables</label>
+                                    <label class="title-color">Email Variables (<small class="title-color" for="body">Click on any variable to insert between email Subject or Body.</small>)</label>
                                     <div class="form-group">
                                         <div class="list-group mt-1">
                                             <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{STATUS}">
