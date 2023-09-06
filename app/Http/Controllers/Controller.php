@@ -84,7 +84,7 @@ class Controller extends BaseController
     }
 
     public function getEmailTemplate($key){
-        $get_email = EmailTemplates::select('id','subject','body')->where('status',1)->where('keys',$key)->first();
+        $get_email = EmailTemplates::select('id','subject','body')->where('status',1)->where('name',$key)->first();
         if(!empty($get_email->id)){
             return $get_email;
         }else{

@@ -26,7 +26,7 @@
                             <tr>
                                 <th>{{\App\CPU\translate('SL')}}</th>
                                 <th>{{\App\CPU\translate('Template Name')}}</th>
-                                <th>{{\App\CPU\translate('Subject')}}</th>
+                                <th>{{\App\CPU\translate('Description')}}</th>
                                 <th>{{\App\CPU\translate('status')}}</th>
                                 <th>{{\App\CPU\translate('Action')}}</th>
                             </tr>
@@ -45,7 +45,7 @@
                                 <td>
                                     <a href="javascript:void(0);" class="media gap-2">
                                         <span class="media-body title-color">
-                                            {{\Illuminate\Support\Str::limit($p['subject'],20)}}
+                                            {{\Illuminate\Support\Str::limit($p['description'],50)}}
                                         </span>
                                     </a>
                                 </td>

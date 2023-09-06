@@ -2469,4 +2469,8 @@
   '
             waiting_for_location ' => '
             waiting for location ',
+  'Template Name (For internal Use only)' => 'Template Name (For internal Use only)',
+  'Description (For internal Use only)' => 'Description (For internal Use only)',
+  'Email Subject' => 'Email Subject',
+  'Email Body' => 'Email Body',
 );

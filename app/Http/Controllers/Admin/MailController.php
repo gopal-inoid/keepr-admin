@@ -137,7 +137,6 @@ class MailController extends Controller
 
     public function templates(Request $request){
         $query_param = [];
-        //$email_templates = EmailTemplates::get();
         $email_templates = EmailTemplates::orderBy('id', 'DESC')->paginate(Helpers::pagination_limit())->appends(['status' => $request['status']])->appends($query_param);
         return view('admin-views.business-settings.mail.templates',compact('email_templates'));
     }
@@ -149,11 +148,11 @@ class MailController extends Controller
 
     public function templates_update(Request $request){
         $id = $request->id;
-        $name = $request->name;
         $subject = $request->subject;
+        $description = $request->description;
         $status = $request->status ?? 0;
         $body = $request->body;
-        EmailTemplates::where('id',$id)->update(['name'=>$name,'subject'=>$subject,'body'=>$body,'status'=>$status]);
+        EmailTemplates::where('id',$id)->update(['subject'=>$subject,'description'=>$description,'body'=>$body,'status'=>$status]);
         Toastr::success('Email template updated successfully!');
         return back();
     }
