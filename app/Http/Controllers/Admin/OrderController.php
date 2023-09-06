@@ -213,7 +213,7 @@ class OrderController extends Controller
         if(!empty($order_id)){
             if(!empty($user_id)){
 
-                $user_details = User::select('fcm_token','email')->where(['id'=>$user_id])->first();
+                $user_details = User::where(['id'=>$user_id])->first();
 
                 $user_data['name'] = $request->billing_name;
                 $user_data['email'] = $request->email;
@@ -284,20 +284,22 @@ class OrderController extends Controller
                 }
             }
 
-            $userData['username'] = $user_data['name'] ?? "Keepr User";
-            $userData['order_id'] = $order_id;
-            $userData['product_name'] = $product_names;
-            $userData['device_id'] = $product_uuid;
-            $userData['qty'] = $order_attribute['total_orders'] ?? 0;
-            $userData['total_price'] = $get_order->order_amount ?? "";
-            $userData['company_name'] = 'Keepr';
-            $userData['company_logo'] = '<img src="'.url('/public/public/company/Keepe_logo.png').'" />';
             //SEND ORDER EMAIL
-            $subject = $this->replacedEmailVariables($request->change_order_status,$email_templates->subject ?? "Order");
-            $body = $this->replacedEmailVariables($request->change_order_status,$email_templates->body ?? "Order status has been changed",$userData);
+            //$subject = $this->replacedEmailVariables($request->change_order_status,$email_templates->subject ?? "Order");
+            //$body = $this->replacedEmailVariables($request->change_order_status,$email_templates->body ?? "Order status has been changed",$userData);
             //$this->save_invoice($request->id);
             //$invoice_file_path = public_path('public/assets/orders/order_invoice_'.$request->id.'.pdf');
-            $this->sendEmail($user_details->email ?? "", $subject, $body);
+            
+            $email_data['email'] = $user_details->email ?? "";
+            $email_data['order_status'] = $request->change_order_status ?? "";
+            $email_data['username'] = $user_data['name'] ?? "Keepr User";
+            $email_data['order_id'] = $order_id;
+            $email_data['product_name'] = $product_names;
+            $email_data['device_id'] = $product_uuid;
+            $email_data['qty'] = $order_attribute['total_orders'] ?? 0;
+            $email_data['total_price'] = $get_order->order_amount ?? "";
+
+            $this->sendKeeprEmail('order-status-changed-customer',$email_data);
             Order::where('id',$order_id)->update($order_data);
             return redirect()->back()->with('success','Order Details Updated Successfully');
         }else{
@@ -568,7 +570,7 @@ class OrderController extends Controller
             $userData['company_logo'] = '<img src="'.url('/public/public/company/Keepe_logo.png').'" />';
             $subject = $this->replacedEmailVariables($request->status,$email_templates->subject ?? "Order");
             $body = $this->replacedEmailVariables($request->status,$email_templates->body ?? "Order status has been changed",$userData);
-            $this->sendEmail($order->customer->email ?? "", $subject, $body);
+            $this->sendKeeprEmail($order->customer->email ?? "", $subject, $body);
             return response()->json($data);
         }
     }

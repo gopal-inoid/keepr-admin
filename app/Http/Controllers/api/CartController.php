@@ -38,11 +38,11 @@ class CartController extends Controller
             ->get();
 
         if ($cart) {
+
             foreach ($cart as $key => $value) {
                 if (!isset($value['product'])) {
                     $cart_data = Cart::find($value['id']);
                     $cart_data->delete();
-
                     unset($cart[$key]);
                 }
             }
@@ -385,7 +385,7 @@ class CartController extends Controller
 
                 if(!empty($email_templates->id)){
                     $body = $this->replacedEmailVariables("Placed", $email_templates->body ?? "Order status has been changed", $userData);
-                    $this->sendEmail($user_details->email, $email_templates->subject ?? "Order Placed", $body ?? "Order has been Placed");
+                    $this->sendKeeprEmail($user_details->email, $email_templates->subject ?? "Order Placed", $body ?? "Order has been Placed");
                 }
 
                 if (!empty($order->mac_ids)) {
@@ -473,7 +473,7 @@ class CartController extends Controller
                 $userData['company_name'] = 'Keepr';
                 $userData['company_logo'] = '<img src="' . url('/public/public/company/Keepe_logo.png') . '" />';
                 $body = $this->replacedEmailVariables("Confirmed", $email_templates->body ?? "Order status has been changed", $userData);
-                $this->sendEmail($user_details->email, $email_templates->subject ?? "Order Confirmed", $body ?? "Order has been Confirmed", $invoice_file_path);
+                $this->sendKeeprEmail($user_details->email, $email_templates->subject ?? "Order Confirmed", $body ?? "Order has been Confirmed", $invoice_file_path);
                 $payload['order_id'] = $update_order->id ?? NULL;
                 $msg = "Your Order has been confirmed with Order ID #" . $payload['order_id'];
             }

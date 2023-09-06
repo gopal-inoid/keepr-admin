@@ -37,16 +37,12 @@
                                 <th scope="row">{{$email_templates->firstItem()+$k}}</th>
                                 <td>
                                     <a href="javascript:void(0);" class="media gap-2">
-                                        <span class="media-body title-color">
-                                            {{\Illuminate\Support\Str::limit($p['name'],20)}}
-                                        </span>
+                                        <span class="media-body title-color">{{$p['name']}}</span>
                                     </a>
                                 </td>
                                 <td>
                                     <a href="javascript:void(0);" class="media gap-2">
-                                        <span class="media-body title-color">
-                                            {{\Illuminate\Support\Str::limit($p['description'],50)}}
-                                        </span>
+                                        <span class="media-body title-color">{{$p['description']}}</span>
                                     </a>
                                 </td>
                                 <td>

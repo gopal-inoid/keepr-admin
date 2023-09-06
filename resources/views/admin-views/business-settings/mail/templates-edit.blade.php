@@ -10,6 +10,10 @@
        .variable-style{
         font-size: 16px;padding: 5px;font-weight: bold;
        }
+       #variable-main-div{
+        max-height: 495px;
+        overflow-x: hidden;
+       }
     </style>
 @endpush
 
@@ -77,7 +81,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="title-color">Email Variables (<small class="title-color" for="body">Click on any variable to insert between email Subject or Body.</small>)</label>
-                                    <div class="form-group">
+                                    <div class="form-group" id="variable-main-div">
                                         <div class="list-group mt-1">
                                             <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{STATUS}">
                                                 {STATUS}
@@ -116,6 +120,66 @@
                                         <div class="list-group mt-1">
                                             <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{COMPANY_NAME}">
                                                 {COMPANY_NAME}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{COMPANY_LOGO}">
+                                                {COMPANY_LOGO}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{ORDER_DATE}">
+                                                {ORDER_DATE}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{ORDER_NOTE}">
+                                                {ORDER_NOTE}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{BILLING_NAME}">
+                                                {BILLING_NAME}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{BILLING_EMAIL}">
+                                                {BILLING_EMAIL}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{BILLING_ADDRESS}">
+                                                {BILLING_ADDRESS} (city,state,country,zip included)
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{SHIPPING_NAME}">
+                                                {SHIPPING_NAME}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{SHIPPING_EMAIL}">
+                                                {SHIPPING_EMAIL}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{SHIPPING_ADDRESS}">
+                                                {SHIPPING_ADDRESS} (city,state,country,zip included)
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{SHIPMENT_INFORMATION}">
+                                                {SHIPMENT_INFORMATION}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{ESTIMATED_DELIVERY_DATE}">
+                                                {ESTIMATED_DELIVERY_DATE}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{TRACKING_ID}">
+                                                {TRACKING_ID}
                                             </a>
                                         </div>
                                     </div>
