@@ -11,6 +11,7 @@ use App\Model\BusinessSetting;
 use App\Model\ProductStock;
 use App\Model\Order;
 use App\Model\Product;
+use App\Model\Admin;
 use App\Model\ShippingMethod;
 use App\Model\ShippingMethodRates;
 use Illuminate\Support\Facades\View;
@@ -41,6 +42,16 @@ class Controller extends BaseController
 
     public function print_r($str){
         echo "<pre>"; print_r($str); die;
+    }
+
+    public function getAdminDetail($field = null){
+        if($field != null){
+            return Admin::select($field)->first()->$field ?? "";
+        }elseif($field != null && is_array($field)){
+            return Admin::select(implode(',',$field))->first();
+        }else{
+            return Admin::first();
+        }
     }
 
     public function getOrderAttr($mac_ids){
@@ -81,15 +92,6 @@ class Controller extends BaseController
     public function getStateName($id){
         $state_names = \DB::table('states')->select('name')->where('id',$id)->first();
         return $state_names->name ?? "";
-    }
-
-    public function getEmailTemplate($key){
-        $get_email = EmailTemplates::select('id','subject','body')->where('status',1)->where('name',$key)->first();
-        if(!empty($get_email->id)){
-            return $get_email;
-        }else{
-            return false;
-        }
     }
 
     public function save_invoice($id)
@@ -164,44 +166,77 @@ class Controller extends BaseController
         Helpers::save_mpdf($mpdf_view, 'order_invoice_', $order->id);
     }
 
-    public function sendEmail($to,$subject,$body,$attachment = null){
+    public function sendKeeprEmail($template_type,$user_data,$attachment = null){
         $emailServices_smtp = Helpers::get_business_settings('mail_config');
-        $data['email'] = $to;
-        $data['subject'] = $subject;
-        $data["body"] = $body;
         $files = null;
         if($attachment != null){
             $files = [$attachment];
         }
         if ($emailServices_smtp['status'] == 1) {
             try{
-                //Mail::to($to)->send(new \App\Mail\TestEmailSender($subject, $body));
-                Mail::send('email-templates.mail-tester', $data, function($message)use($data, $files) {
-                    $message->to($data["email"])
-                            ->subject($data["subject"]);
-                    if($files != null){
-                        foreach ($files as $file){
-                            $message->attach($file);
-                        }
+                $email_temp = EmailTemplates::where(['name' => $template_type])->where('status', 1)->first();
+                if(!empty($email_temp->id)){
+                    $email_temp->subject = str_replace("{STATUS}", $user_data['order_status'] ?? "", $email_temp->subject);
+                    $email_temp->body = str_replace("{USERNAME}", $user_data['username'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{ORDER_ID}", $user_data['order_id'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{PRODUCT_NAME}", $user_data['product_name'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{DEVICE_UUID}", $user_data['device_id'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{QTY}", $user_data['qty'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{TOTAL_PRICE}", $user_data['total_price'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{ORDER_DATE}", $user_data['order_date'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{ORDER_NOTE}", $user_data['order_note'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{BILLING_NAME}", $user_data['billing_name'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{BILLING_EMAIL}", $user_data['billing_email'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{BILLING_ADDRESS}", $user_data['billing_address'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{SHIPPING_NAME}", $user_data['shipping_name'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{SHIPPING_EMAIL}", $user_data['shipping_email'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{SHIPPING_ADDRESS}", $user_data['shipping_address'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{SHIPMENT_INFORMATION}", $user_data['shipment_information'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{ESTIMATED_DELIVERY_DATE}", $user_data['estimated_delivery_date'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{TRACKING_ID}", $user_data['tracking_id'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{COMPANY_NAME}", 'Keepr', $email_temp->body);
+                    $email_temp->body = str_replace("{COMPANY_LOGO}", '<img src="'.url('/public/public/company/Keepe_logo.png').'" />', $email_temp->body);
+                    $data['email'] = $user_data['email'] ?? "";
+                    $data['subject'] = $email_temp->subject ?? "";
+                    $data["body"] = $email_temp->body ?? "";
+
+                    if(!empty($data['email'])){
+                        Mail::send('email-templates.mail-tester', $data, function($message)use($data, $files) {
+                            $message->to($data["email"])
+                                    ->subject($data["subject"]);
+                            if($files != null){
+                                foreach ($files as $file){
+                                    $message->attach($file);
+                                }
+                            }
+                        });
                     }
-                });
+                    
+                }
             }catch(\Exception $e){
                 $error = $e->getMessage();
             }
             if(isset($error)){
-                return ['status'=>2,'error'=>$error];
+                return false;
             }else{
-                return ['status'=>1];
+                return true;
             }
         }
         
-        return false;
+        return true;
     }
 
     public function replacedEmailVariables($status,$body,$userData = null){
         if($userData != null){
-            $notif_keys = ["{STATUS}","{USERNAME}","{ORDER_ID}","{PRODUCT_NAME}","{DEVICE_UUID}","{QTY}","{TOTAL_PRICE}","{COMPANY_NAME}","{COMPANY_LOGO}"];
-            $notif_values   = [$status,$userData['username'],$userData['order_id'],$userData['product_name'],$userData['device_id'],$userData['qty'],$userData['total_price'],$userData['company_name'],$userData['company_logo']];
+            $notif_keys = ["{STATUS}","{USERNAME}","{ORDER_ID}","{PRODUCT_NAME}",
+                           "{DEVICE_UUID}","{QTY}","{TOTAL_PRICE}","{COMPANY_NAME}",
+                           "{COMPANY_LOGO}","{ORDER_DATE}","{ORDER_NOTE}","{BILLING_NAME}",
+                           "{BILLING_EMAIL}","{BILLING_ADDRESS}","{SHIPPING_NAME}","{SHIPPING_EMAIL}",
+                           "{SHIPPING_ADDRESS}","{SHIPMENT_INFORMATION}","{ESTIMATED_DELIVERY_DATE}","{TRACKING_ID}"];
+
+            $notif_values   = [$status,$userData['username'],$userData['order_id'],$userData['product_name'],
+                               $userData['device_id'],$userData['qty'],$userData['total_price'],$userData['company_name'],
+                               $userData['company_logo']];
         }else{
             $notif_keys = ["{STATUS}"];
             $notif_values   = [$status];

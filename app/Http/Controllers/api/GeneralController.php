@@ -514,7 +514,7 @@ class GeneralController extends Controller
         $to = $request->to;
         $subject = $request->subject;
         $body = $request->body;
-        $test = $this->sendEmail($to, $subject, $body);
+        $test = $this->sendKeeprEmail($to, $subject, $body);
         if(isset($test['status']) && $test['status'] == 2){
             return response()->json(['status'=>400,'message'=>$test['error']],200);
         }elseif(isset($test['status']) && $test['status'] == 1){

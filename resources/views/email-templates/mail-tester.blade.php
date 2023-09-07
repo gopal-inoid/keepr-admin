@@ -100,7 +100,7 @@
         }
     </style>
 </head>
-<body style="background-color: #e9ecef;">
+<body>
 <!-- end preheader -->
 <div class="card">
     <div class="card-header">
