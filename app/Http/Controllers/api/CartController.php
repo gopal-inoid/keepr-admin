@@ -279,7 +279,6 @@ class CartController extends Controller
     {
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
-        $email_templates = $this->getEmailTemplate('order-placed');
         $cart_id = $request->cart_id;
         $shipping_id = $request->shipping_id ?? "";
         $taxes = $request->tax;
@@ -379,15 +378,10 @@ class CartController extends Controller
                 $userData['device_id'] = $product_uuid;
                 $userData['qty'] = $order_attribute['total_orders'] ?? 0;
                 $userData['total_price'] = $order->order_amount ?? "";
-                $userData['company_name'] = 'Keepr';
-                $userData['company_logo'] = '<img src="' . url('/public/public/company/Keepe_logo.png') . '" />';
+                $userData['email'] = $user_details->email ?? "";
                 //SEND ORDER EMAIL
-
-                if(!empty($email_templates->id)){
-                    $body = $this->replacedEmailVariables("Placed", $email_templates->body ?? "Order status has been changed", $userData);
-                    $this->sendKeeprEmail($user_details->email, $email_templates->subject ?? "Order Placed", $body ?? "Order has been Placed");
-                }
-
+                $this->sendKeeprEmail('order-pending-customer',$userData);
+    
                 if (!empty($order->mac_ids)) {
                     $mac_ids = json_decode($order->mac_ids, true);
                     foreach ($mac_ids as $product_id => $mac_values) {
@@ -438,7 +432,6 @@ class CartController extends Controller
     {
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
-        $email_templates = $this->getEmailTemplate('order-confirmed');
         $order_id = $request->order_id;
         $transaction_id = $request->transaction_id;
         $is_verified = $this->verify_payment_intent($transaction_id);
@@ -463,21 +456,20 @@ class CartController extends Controller
                 $product_uuid = implode(',', $order_attribute['uuid']);
             }
 
-            if(!empty($email_templates->id)){
-                $userData['username'] = $user_details['name'] ?? "Keepr User";
-                $userData['order_id'] = $order_id;
-                $userData['product_name'] = $product_names;
-                $userData['device_id'] = $product_uuid;
-                $userData['qty'] = $order_attribute['total_orders'] ?? 0;
-                $userData['total_price'] = $update_order->order_amount ?? "";
-                $userData['company_name'] = 'Keepr';
-                $userData['company_logo'] = '<img src="' . url('/public/public/company/Keepe_logo.png') . '" />';
-                $body = $this->replacedEmailVariables("Confirmed", $email_templates->body ?? "Order status has been changed", $userData);
-                $this->sendKeeprEmail($user_details->email, $email_templates->subject ?? "Order Confirmed", $body ?? "Order has been Confirmed", $invoice_file_path);
-                $payload['order_id'] = $update_order->id ?? NULL;
-                $msg = "Your Order has been confirmed with Order ID #" . $payload['order_id'];
-            }
-
+            $userData['username'] = $user_details['name'] ?? "Keepr User";
+            $userData['order_id'] = $order_id;
+            $userData['product_name'] = $product_names;
+            $userData['device_id'] = $product_uuid;
+            $userData['qty'] = $order_attribute['total_orders'] ?? 0;
+            $userData['total_price'] = $update_order->order_amount ?? "";
+            $userData['email'] = $user_details->email ?? "";
+            $this->sendKeeprEmail('order-confirmed-customer',$userData,$invoice_file_path);
+            $userData['username'] = $this->getAdminDetail('name') ?? "Keepr Admin";
+            $userData['email'] = $this->getAdminDetail('email') ?? "";
+            $this->sendKeeprEmail('order-confirmed-admin',$userData);
+            $payload['order_id'] = $update_order->id ?? NULL;
+            $msg = "Your Order has been confirmed with Order ID #" . $payload['order_id'];
+            
             $this->sendNotification($user_details->fcm_token, $msg, $payload);
             Common::addLog([]);
             return response()->json(['status' => 200, 'message' => 'Order Successfully Confirmed', 'order_id' => (int)$order_id], 200);
