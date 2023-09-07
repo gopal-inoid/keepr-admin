@@ -128,7 +128,6 @@
                             style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}}">
                             <thead class="thead-light thead-50 text-capitalize">
                                 <tr>
-                                    <th class="">{{\App\CPU\translate('SL')}}</th>
                                     <th>{{\App\CPU\translate('Order')}} {{\App\CPU\translate('ID')}}</th>
                                     <th>{{\App\CPU\translate('Order')}} {{\App\CPU\translate('Date')}}</th>
                                     <th>{{\App\CPU\translate('customer')}} {{\App\CPU\translate('info')}}</th>
@@ -142,9 +141,6 @@
                             @foreach($orders as $key=>$order)
 
                                 <tr class="status-{{$order['order_status']}} class-all">
-                                    <td class="">
-                                        {{$orders->firstItem()+$key}}
-                                    </td>
                                     <td >
                                         <a class="title-color" href="{{route('admin.orders.details',['id'=>$order['id']])}}">{{$order['id']}}</a>
                                     </td>

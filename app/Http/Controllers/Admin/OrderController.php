@@ -260,6 +260,7 @@ class OrderController extends Controller
             $order_data['shipping_mode'] = $request->shipping_mode;
             $get_order = Order::where('id',$order_id)->first();
             $order_attribute = $this->getOrderAttr($get_order->mac_ids);
+            
             //$this->print_r($a);
             if(!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])){
                 $product_names = implode(',',$order_attribute['product_name']);
