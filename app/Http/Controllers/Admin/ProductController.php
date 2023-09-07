@@ -136,6 +136,7 @@ class ProductController extends BaseController
             'image.required'                   => 'Product thumbnail is required!',
             'code.min'                         => 'Code must be positive!',
             'code.digits_between'              => 'Code must be minimum 6 digits!',
+            'uuid.unique'                      => 'UUID should be unique',
         ]);
 
         if (is_null($request->name[array_search('en', $request->lang)])) {
@@ -248,14 +249,19 @@ class ProductController extends BaseController
         $uuid = $request->uuid;
         $major = $request->major;
         $minor = $request->minor;
+
         if(!empty($request->device_id)){
             foreach($request->device_id as $k => $mac_id){
-                $check = ProductStock::where(['uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]])->count();
-                if($check == 0){
-                    ProductStock::insert(['product_id'=>$request->product_id,'mac_id'=>$mac_id,'color'=>$colors[$k] ?? NULL,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]]);
+                $product = Product::where('uuid',$uuid[$k])->first();
+                if(!empty($product)){
+                    $check = ProductStock::where(['uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]])->count();
+                    if($check == 0){
+                        ProductStock::insert(['product_id'=>$product->id,'mac_id'=>$mac_id,'color'=>$colors[$k] ?? NULL,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]]);
+                    }
                 }
             }
         }
+        
         Toastr::success(translate('Product Stocks added successfully!'));
         return redirect()->route('admin.product.stocks.list');
     }
@@ -283,12 +289,14 @@ class ProductController extends BaseController
         $uuid = $request->uuid;
         $major = $request->major;
         $minor = $request->minor;
+
         if(!empty($product_stock)){
             foreach($product_stock as $k => $mac_id){
-                if(!$this->CheckDeviceExists('mac_id',$mac_id) && !$this->CheckDeviceExists('uuid',$uuid[$k])){
+                $product = Product::where('uuid',$uuid[$k])->first();
+                if(!empty($product)){
                     $check = ProductStock::where(['mac_id'=>$mac_id,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]])->count();
                     if($check == 0){
-                        ProductStock::insert(['product_id'=>$id,'mac_id'=>$mac_id,'color'=>$colors[$k][0] ?? NULL,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]]);
+                        ProductStock::insert(['product_id'=>$product->id,'mac_id'=>$mac_id,'color'=>$colors[$k][0] ?? NULL,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]]);
                     }
                 }
             }
@@ -651,6 +659,7 @@ class ProductController extends BaseController
             'image.required'                   => 'Product thumbnail is required!',
             'code.min'                         => 'Code must be positive!',
             'code.digits_between'              => 'Code must be minimum 6 digits!',
+            'uuid.unique'                      => 'UUID should be unique',
         ]);
 
         if (is_null($request->name[array_search('en', $request->lang)])) {
