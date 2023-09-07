@@ -124,7 +124,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-lg-2 col-md-3">
                                                 <div class="form-group">
                                                     <label class="title-color">zipcode</label>
                                                     <input type="text" name="billing_zip" class="form-control" value="{{$order->customer['zip']}}" placeholder="{{ \App\CPU\translate('Name') }}">
@@ -139,13 +139,13 @@
                                                 @endphp
                                             @endif
                                             
-                                            <div class="col-md-1">
+                                            <div class="col-lg-2 col-md-3 col-sm-3">
                                                 <div class="form-group">
                                                     <label class="title-color d-flex">Phone Code</label>
                                                     <input class="form-control txtPhone" name="billing_phone_code" type="tel" id="txtPhone" class="txtbox" value="{{($codeadded ?? '')}}" />
                                                 </div>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-lg-2 col-md-3 col-sm-6">
                                                 <label class="title-color">Phone</label>
                                                 <div class="form-group">
                                                     <input type="number" class="form-control" value="{{$order->customer['billing_phone'] ?? ''}}" name="billing_phone" placeholder="{{ \App\CPU\translate('Phone') }}" />
@@ -219,7 +219,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-lg-2 col-md-3">
                                                 <div class="form-group">
                                                     <label class="title-color">Zip</label>
                                                     <input type="text" name="shipping_zip" class="form-control" value="{{$order->customer['shipping_zip'] ?? ''}}" placeholder="{{ \App\CPU\translate('Zipcode') }}">
@@ -234,13 +234,13 @@
                                                     }
                                                 @endphp
                                             @endif
-                                            <div class="col-md-1">
+                                            <div class="col-lg-2 col-md-3 col-sm-3">
                                                 <div class="form-group">
                                                     <label class="title-color d-flex">Phone Code</label>
                                                     <input class="form-control txtPhone" name="shipping_phone_code" type="tel" id="txtPhone" class="txtbox" value="{{($codeadded ?? '')}}" />
                                                 </div>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-lg-2 col-md-3 col-sm-6">
                                                 <label class="title-color">Phone</label>
                                                 <div class="form-group">
                                                 <input type="number" class="form-control" value="{{$order->customer['shipping_phone'] ?? ''}}" name="shipping_phone" placeholder="{{ \App\CPU\translate('Phone') }}" />
