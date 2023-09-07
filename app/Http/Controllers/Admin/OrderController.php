@@ -295,7 +295,23 @@ class OrderController extends Controller
             $email_data['device_id'] = $product_uuid;
             $email_data['qty'] = $order_attribute['total_orders'] ?? 0;
             $email_data['total_price'] = $get_order->order_amount ?? "";
-            $this->sendKeeprEmail('order-status-changed-customer',$email_data);
+
+            if($email_data['order_status'] == 'shipped'){
+                $email_data['email'] = $user_details->shipping_email ?? "";
+                $this->sendKeeprEmail('order-shipped-customer',$email_data);
+            }elseif($email_data['order_status'] == 'cancelled'){
+                $this->sendKeeprEmail('order-cancelled-customer',$email_data);
+            }elseif($email_data['order_status'] == 'refunded'){
+                $this->sendKeeprEmail('order-refunded-customer',$email_data);
+            }elseif($email_data['order_status'] == 'delivered'){
+                $this->sendKeeprEmail('order-delivered-customer',$email_data);
+            }else{
+                $this->sendKeeprEmail('order-status-changed-customer',$email_data);
+            }
+
+            $email_data['username'] = $this->getAdminDetail('name') ?? "Keepr Admin";
+            $email_data['email'] = $this->getAdminDetail('email') ?? "";
+            $this->sendKeeprEmail('order-status-changed-admin',$email_data);
             Order::where('id',$order_id)->update($order_data);
             return redirect()->back()->with('success','Order Details Updated Successfully');
         }else{
@@ -564,6 +580,10 @@ class OrderController extends Controller
             $userData['order_status'] = $order->order_status ?? "";
             $userData['email'] = $order->customer->email ?? "";
             $this->sendKeeprEmail('order-status-changed-customer',$userData);
+            $userData['username'] = $this->getAdminDetail('name') ?? "Keepr Admin";
+            $userData['email'] = $this->getAdminDetail('email') ?? "";
+            $this->sendKeeprEmail('order-status-changed-admin',$userData);
+            
             return response()->json($data);
         }
     }

@@ -79,15 +79,72 @@ class SystemController extends Controller
         ]);
     }
 
-    public function update_place_order_status()
-    {
+    public function update_pending_email(){
         $new_order = DB::table('orders')->where(['order_status' => 'pending','payment_status'=>'unpaid'])
-                            ->whereRaw('DATE(created_at) < CURDATE() - INTERVAL 3 hour')->get();
+        ->whereRaw('DATE(created_at) < CURDATE() - INTERVAL 5 minutes')->get();
         $total_status = 0;
         if(!empty($new_order)){
             foreach($new_order as $val){
                 $total_status++;
-                DB::table('orders')->where('id',$val->id)->update(['order_status' => 'failed','payment_status'=>'unpaid']);
+                $user_details = DB::table('users')->where('id',$val->customer_id)->first();
+                if(!empty($user_details->id)){
+                    $order_attribute = $this->getOrderAttr($val->mac_ids);
+                    if(!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])){
+                        $product_names = implode(',',$order_attribute['product_name']);
+                    }
+                    if(!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])){
+                        $product_uuid = implode(',',$order_attribute['uuid']);
+                    }
+                    $email_data['email'] = $user_details->email ?? "";
+                    $email_data['order_status'] = $val->order_status ?? "";
+                    $email_data['username'] = $user_details->name ?? "Keepr User";
+                    $email_data['order_id'] = $val->id;
+                    $email_data['product_name'] = $product_names;
+                    $email_data['device_id'] = $product_uuid;
+                    $email_data['qty'] = $order_attribute['total_orders'] ?? 0;
+                    $email_data['total_price'] = $val->order_amount ?? "";
+                    $this->sendKeeprEmail('order-pending-customer',$email_data);
+                }
+            }
+        }
+        return response()->json([
+            'success' => 1,
+            'total_email_sent' => $total_status
+        ]);
+    }
+
+    public function update_place_order_status()
+    {
+        $new_order = DB::table('orders')->where(['order_status' => 'pending','payment_status'=>'unpaid'])
+                            ->whereRaw('DATE(created_at) < CURDATE() - INTERVAL 2 hour')->get();
+        $total_status = 0;
+        if(!empty($new_order)){
+            foreach($new_order as $val){
+                $total_status++;
+                DB::table('orders')->where('id',$val->id)->update(['order_status' => 'failed']);
+                $user_details = DB::table('users')->where('id',$val->customer_id)->first();
+                if(!empty($user_details->id)){
+
+                    $order_attribute = $this->getOrderAttr($val->mac_ids);
+                    if(!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])){
+                        $product_names = implode(',',$order_attribute['product_name']);
+                    }
+                    if(!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])){
+                        $product_uuid = implode(',',$order_attribute['uuid']);
+                    }
+
+                    $email_data['email'] = $user_details->email ?? "";
+                    $email_data['order_status'] = $val->order_status ?? "";
+                    $email_data['username'] = $user_details->name ?? "Keepr User";
+                    $email_data['order_id'] = $val->id;
+                    $email_data['product_name'] = $product_names;
+                    $email_data['device_id'] = $product_uuid;
+                    $email_data['qty'] = $order_attribute['total_orders'] ?? 0;
+                    $email_data['total_price'] = $val->order_amount ?? "";
+                    $this->sendKeeprEmail('order-payment-failed-customer',$email_data);
+
+                }
+                
                 if(!empty($val->mac_ids)){
                     $mac_ids = json_decode($val->mac_ids,true);
                     if(!empty($mac_ids)){
@@ -102,7 +159,7 @@ class SystemController extends Controller
                 }
             }
         }
-        DB::table('cron_log')->insert(['cron type'=>'order_status','data'=>json_encode(['success' => 1,'total_updated' => $total_status])]);
+        //DB::table('cron_log')->insert(['cron type'=>'order_status','data'=>json_encode(['success' => 1,'total_updated' => $total_status])]);
         return response()->json([
             'success' => 1,
             'total_updated' => $total_status

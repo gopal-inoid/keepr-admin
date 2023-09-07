@@ -363,24 +363,6 @@ class CartController extends Controller
                 $order->mac_ids = json_encode($mac_ids_array);
                 $order->order_amount = $total_amount;
                 $order->save();
-
-                $order_attribute = $this->getOrderAttr($order->mac_ids);
-                //$this->print_r($a);
-                if (!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])) {
-                    $product_names = implode(',', $order_attribute['product_name']);
-                }
-                if (!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])) {
-                    $product_uuid = implode(',', $order_attribute['uuid']);
-                }
-                $userData['username'] = $user_data['name'] ?? "Keepr User";
-                $userData['order_id'] = $order->id;
-                $userData['product_name'] = $product_names;
-                $userData['device_id'] = $product_uuid;
-                $userData['qty'] = $order_attribute['total_orders'] ?? 0;
-                $userData['total_price'] = $order->order_amount ?? "";
-                $userData['email'] = $user_details->email ?? "";
-                //SEND ORDER EMAIL
-                $this->sendKeeprEmail('order-pending-customer',$userData);
     
                 if (!empty($order->mac_ids)) {
                     $mac_ids = json_decode($order->mac_ids, true);
