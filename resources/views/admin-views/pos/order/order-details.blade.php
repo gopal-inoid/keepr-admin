@@ -107,7 +107,7 @@
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label class="title-color">State</label>
-                                                    <select class="form-control js-select2-custom" id="billing_state" name="billing_state">
+                                                    <select class="form-control" id="billing_state" name="billing_state">
                                                         @foreach($states as $k => $val)
                                                             <option {{($order->customer['state'] == $val->id ? 'selected' : '')}} value="{{$val->id}}">{{$val->name}}</option>
                                                         @endforeach
@@ -117,7 +117,7 @@
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label class="title-color">Country</label>
-                                                    <select class="form-control js-select2-custom" id="billing_country" name="billing_country">
+                                                    <select class="form-control" id="billing_country" name="billing_country">
                                                         @foreach($countries as $k => $val)
                                                             <option {{($order->customer['country'] == $val->id ? 'selected' : '')}} value="{{$val->id}}">{{$val->name}}</option>
                                                         @endforeach
@@ -202,7 +202,7 @@
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label class="title-color">State</label>
-                                                    <select class="form-control js-select2-custom" id="shipping_state" name="shipping_state">
+                                                    <select class="form-control" id="shipping_state" name="shipping_state">
                                                         @foreach($states as $k => $val)
                                                             <option {{($order->customer['state'] == $val->id ? 'selected' : '')}} value="{{$val->id}}">{{$val->name}}</option>
                                                         @endforeach
@@ -212,7 +212,7 @@
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label class="title-color">Country</label>
-                                                    <select class="form-control js-select2-custom" id="shipping_country" name="shipping_country">
+                                                    <select class="form-control" id="shipping_country" name="shipping_country">
                                                         @foreach($countries as $k => $val)
                                                             <option {{($order->customer['country'] == $val->id ? 'selected' : '')}} value="{{$val->id}}">{{$val->name}}</option>
                                                         @endforeach

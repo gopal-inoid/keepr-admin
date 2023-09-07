@@ -117,9 +117,6 @@
                 <table class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}}">
                     <thead class="thead-light thead-50 text-capitalize">
                         <tr>
-                            <th class="">
-                                {{\App\CPU\translate('SL')}}
-                            </th>
                             <th>{{\App\CPU\translate('Order')}}</th>
                             <th>{{\App\CPU\translate('Date')}}</th>
                             <th>{{\App\CPU\translate('customer_name')}}</th>
@@ -133,9 +130,6 @@
                     <tbody>
                     @foreach($orders as $key=>$order)
                         <tr class="status-{{$order['order_status']}} class-all">
-                            <td class="">
-                                {{$orders->firstItem()+$key}}
-                            </td>
                             <td>
                                 <a href="{{route('admin.pos.order-details',['id'=>$order['id']])}}" class="title-color hover-c1">{{ $order['id'] }}</a>
                             </td>
