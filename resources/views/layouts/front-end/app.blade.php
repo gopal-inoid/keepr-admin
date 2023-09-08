@@ -8,8 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="apple-touch-icon" sizes="180x180"
           href="{{asset('storage/app/public/company')}}/{{$web_config['fav_icon']->value}}">
-    <link rel="icon" type="image/png" sizes="32x32"
-          href="{{asset('storage/app/public/company')}}/{{$web_config['fav_icon']->value}}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{asset("public/company/keepr-favicon.png")}}">
 
     <link rel="stylesheet" media="screen"
           href="{{asset('public/assets/front-end')}}/vendor/simplebar/dist/simplebar.min.css"/>
