@@ -26,7 +26,7 @@ Route::get('/terms-condition', function (){
     return view('keepr_app.terms_condition',compact('data'));
 })->name('terms-condition');
 
-Route::get('/privacy-policy', function (){ echo "asas"; die;
+Route::get('/privacy-policy', function (){
     //return redirect()->route('admin.auth.login');
     $data = App\CPU\Helpers::get_business_settings('privacy_policy');
     return view('keepr_app.privacy_policy',compact('data'));
