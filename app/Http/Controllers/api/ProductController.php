@@ -551,7 +551,7 @@ class ProductController extends Controller
                             if(!empty($tracking_user->id)){
                                 $msg = "Your device found";
                                 $payload = ['lat'=>$val['lat'],'lan'=>$val['lan']];
-                                $this->sendNotification($tracking_user->fcm_token,$msg,$payload);
+                                //$this->sendNotification($tracking_user->fcm_token,$msg,$payload);
                             }
                         }
 
