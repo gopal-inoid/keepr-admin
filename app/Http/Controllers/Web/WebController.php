@@ -993,6 +993,7 @@ class WebController extends Controller
     public function privacy_policy()
     {
         $data = BusinessSetting::where('type', 'privacy_policy')->first();
+        $data = $data->value ?? "";
         return view('keepr_app.privacy_policy', compact('data'));
     }
 
