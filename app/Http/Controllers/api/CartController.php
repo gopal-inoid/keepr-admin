@@ -446,8 +446,8 @@ class CartController extends Controller
             $userData['total_price'] = $update_order->order_amount ?? "";
             $userData['email'] = $user_details->email ?? "";
             $this->sendKeeprEmail('order-confirmed-customer',$userData,$invoice_file_path);
-            $userData['username'] = $this->getAdminDetail('name') ?? "Keepr Admin";
-            $userData['email'] = $this->getAdminDetail('email') ?? "";
+            $userData['username'] = $this->getAdminDetail('company_name') ?? "Keepr Admin";
+            $userData['email'] = $this->getAdminDetail('company_email') ?? "";
             $this->sendKeeprEmail('order-confirmed-admin',$userData);
             $payload['order_id'] = $update_order->id ?? NULL;
             $msg = "Your Order has been confirmed with Order ID #" . $payload['order_id'];

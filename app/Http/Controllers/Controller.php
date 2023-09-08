@@ -46,11 +46,12 @@ class Controller extends BaseController
 
     public function getAdminDetail($field = null){
         if($field != null){
-            return Admin::select($field)->first()->$field ?? "";
+            //return Admin::select($field)->first()->$field ?? "";
+            return Helpers::get_business_settings($field);
         }elseif($field != null && is_array($field)){
-            return Admin::select(implode(',',$field))->first();
+            return "";
         }else{
-            return Admin::first();
+            return "";
         }
     }
 
