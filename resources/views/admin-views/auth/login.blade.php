@@ -10,7 +10,7 @@
     <title>{{\App\CPU\translate('Admin | Login')}}</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="shortcut icon" href="{{asset("public/company/keepr-favicon.png")}}">
 
     <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&amp;display=swap" rel="stylesheet">

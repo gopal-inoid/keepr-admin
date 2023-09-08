@@ -46,11 +46,12 @@ class Controller extends BaseController
 
     public function getAdminDetail($field = null){
         if($field != null){
-            return Admin::select($field)->first()->$field ?? "";
+            //return Admin::select($field)->first()->$field ?? "";
+            return Helpers::get_business_settings($field);
         }elseif($field != null && is_array($field)){
-            return Admin::select(implode(',',$field))->first();
+            return "";
         }else{
-            return Admin::first();
+            return "";
         }
     }
 
@@ -188,9 +189,17 @@ class Controller extends BaseController
                     $email_temp->body = str_replace("{BILLING_NAME}", $user_data['billing_name'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{BILLING_EMAIL}", $user_data['billing_email'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{BILLING_ADDRESS}", $user_data['billing_address'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{BILLING_CITY}", $user_data['billing_city'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{BILLING_STATE}", $user_data['billing_state'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{BILLING_COUNTRY}", $user_data['billing_country'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{BILLING_ZIP}", $user_data['billing_zip'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{SHIPPING_NAME}", $user_data['shipping_name'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{SHIPPING_EMAIL}", $user_data['shipping_email'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{SHIPPING_ADDRESS}", $user_data['shipping_address'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{SHIPPING_CITY}", $user_data['shipping_city'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{SHIPPING_STATE}", $user_data['shipping_state'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{SHIPPING_COUNTRY}", $user_data['shipping_country'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{SHIPPING_ZIP}", $user_data['shipping_zip'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{SHIPMENT_INFORMATION}", $user_data['shipment_information'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{ESTIMATED_DELIVERY_DATE}", $user_data['estimated_delivery_date'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{TRACKING_ID}", $user_data['tracking_id'] ?? "", $email_temp->body);

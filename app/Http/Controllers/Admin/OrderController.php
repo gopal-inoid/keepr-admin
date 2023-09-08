@@ -310,8 +310,9 @@ class OrderController extends Controller
                 $this->sendKeeprEmail('order-status-changed-customer',$email_data);
             }
 
-            $email_data['username'] = $this->getAdminDetail('name') ?? "Keepr Admin";
-            $email_data['email'] = $this->getAdminDetail('email') ?? "";
+            $email_data['username'] = $this->getAdminDetail('company_name') ?? "Keepr Admin";
+            $email_data['email'] = $this->getAdminDetail('company_email') ?? "";
+           
             $this->sendKeeprEmail('order-status-changed-admin',$email_data);
             Order::where('id',$order_id)->update($order_data);
             return redirect()->back()->with('success','Order Details Updated Successfully');
@@ -581,8 +582,9 @@ class OrderController extends Controller
             $userData['order_status'] = $order->order_status ?? "";
             $userData['email'] = $order->customer->email ?? "";
             $this->sendKeeprEmail('order-status-changed-customer',$userData);
-            $userData['username'] = $this->getAdminDetail('name') ?? "Keepr Admin";
-            $userData['email'] = $this->getAdminDetail('email') ?? "";
+            $userData['username'] = $this->getAdminDetail('company_name') ?? "Keepr Admin";
+            $userData['email'] = $this->getAdminDetail('company_email') ?? "";
+
             $this->sendKeeprEmail('order-status-changed-admin',$userData);
             
             return response()->json($data);
