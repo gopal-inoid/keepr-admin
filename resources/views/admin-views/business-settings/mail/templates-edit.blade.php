@@ -149,7 +149,27 @@
                                         </div>
                                         <div class="list-group mt-1">
                                             <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{BILLING_ADDRESS}">
-                                                {BILLING_ADDRESS} (city,state,country,zip included)
+                                                {BILLING_ADDRESS}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{BILLING_CITY}">
+                                                {BILLING_CITY}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{BILLING_STATE}">
+                                                {BILLING_STATE}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{BILLING_COUNTRY}">
+                                                {BILLING_COUNTRY}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{BILLING_ZIP}">
+                                                {BILLING_ZIP}
                                             </a>
                                         </div>
                                         <div class="list-group mt-1">
@@ -164,7 +184,27 @@
                                         </div>
                                         <div class="list-group mt-1">
                                             <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{SHIPPING_ADDRESS}">
-                                                {SHIPPING_ADDRESS} (city,state,country,zip included)
+                                                {SHIPPING_ADDRESS}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{SHIPPING_CITY}">
+                                                {SHIPPING_CITY}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{SHIPPING_STATE}">
+                                                {SHIPPING_STATE}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{SHIPPING_COUNTRY}">
+                                                {SHIPPING_COUNTRY}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{SHIPPING_ZIP}">
+                                                {SHIPPING_ZIP}
                                             </a>
                                         </div>
                                         <div class="list-group mt-1">
