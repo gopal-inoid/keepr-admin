@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Mail;
 //for maintenance mode
 Route::get('maintenance-mode', 'Web\WebController@maintenance_mode')->name('maintenance-mode');
 
-Route::get('/terms-condition', function (){
+Route::get('/terms-of-service', function (){
     //return redirect()->route('admin.auth.login');
     $data = App\CPU\Helpers::get_business_settings('terms_condition');
     return view('keepr_app.terms_condition',compact('data'));
