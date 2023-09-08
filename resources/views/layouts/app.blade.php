@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
-    <link rel="icon" type="image/x-icon" href="{{asset("public/company/Keepr-logo-black.png")}}">
+    <link rel="icon" type="image/x-icon" href="{{asset("public/company/keepr-favicon.png")}}">
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 

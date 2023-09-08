@@ -986,14 +986,14 @@ class WebController extends Controller
 
     public function termsandCondition()
     {
-        $terms_condition = BusinessSetting::where('type', 'terms_condition')->first();
-        return view('web-views.terms', compact('terms_condition'));
+        $data = BusinessSetting::where('type', 'terms_condition')->first();
+        return view('keepr_app.terms_condition', compact('data'));
     }
 
     public function privacy_policy()
     {
-        $privacy_policy = BusinessSetting::where('type', 'privacy_policy')->first();
-        return view('web-views.privacy-policy', compact('privacy_policy'));
+        $data = BusinessSetting::where('type', 'privacy_policy')->first();
+        return view('keepr_app.privacy_policy', compact('data'));
     }
 
     //order Details

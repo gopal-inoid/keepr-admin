@@ -354,6 +354,9 @@
                                             <a class="nav-link" href="{{route('terms-condition')}}">Terms and
                                                 Conditions</a>
                                         </li>
+                                        <li class="nav-item mx-3">
+                                            <a class="nav-link" href="{{route('privacy-policy')}}">Privacy and Policy</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>

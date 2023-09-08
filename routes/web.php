@@ -20,18 +20,23 @@ use Illuminate\Support\Facades\Mail;
 //for maintenance mode
 Route::get('maintenance-mode', 'Web\WebController@maintenance_mode')->name('maintenance-mode');
 
+Route::get('/terms-condition', function (){
+    //return redirect()->route('admin.auth.login');
+    $data = App\CPU\Helpers::get_business_settings('terms_condition');
+    return view('keepr_app.terms_condition',compact('data'));
+})->name('terms-condition');
+
+Route::get('/privacy-policy', function (){
+    //return redirect()->route('admin.auth.login');
+    $data = App\CPU\Helpers::get_business_settings('privacy_policy');
+    return view('keepr_app.privacy_policy',compact('data'));
+})->name('privacy-policy');
 
 Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function () {
     Route::get('/', 'UserProfileController@keepr_home_page')->name('home');
     // Route::get('/', function (){
     //     //return view('keepr_app.index');
     // })->name('home');
-
-    Route::get('/terms-condition', function (){
-        //return redirect()->route('admin.auth.login');
-        $data = App\CPU\Helpers::get_business_settings('terms_condition');
-        return view('keepr_app.terms_condition',compact('data'));
-    })->name('terms-condition');
 
     Route::get('generate-invoice/{id}', 'UserProfileController@generate_invoice')->name('generate-invoice');
 
