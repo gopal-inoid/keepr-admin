@@ -51,7 +51,7 @@
     <div class="container-fluid" style="padding-top: 80px;">
         <div class="container-fluid" id="Terms_And_Condition">
             <div class="container" id="Terms_And_Condition_main">
-                <h2 class="Heading_terms" style="text-align: center;">TERMS AND CONDITIONS</h2>
+                <h2 class="Heading_terms" style="text-align: center;">TERMS OF SERVICE</h2>
                 {!! $data ?? "" !!}
                 <!-- <ol>
                     <li><strong>Introduction</strong></li>
@@ -147,7 +147,7 @@
                                             <a class="nav-link" href="{{route('home')}}/#Frequently_Questions">FAQ</a>
                                         </li>
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" href="{{route('terms-condition')}}">Terms and Conditions</a>
+                                            <a class="nav-link" href="{{route('terms-condition')}}">Terms of Service</a>
                                         </li>
                                         <li class="nav-item mx-3">
                                             <a class="nav-link" href="{{route('privacy-policy')}}">Privacy and Policy</a>

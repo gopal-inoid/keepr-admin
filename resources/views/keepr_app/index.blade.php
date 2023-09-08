@@ -351,8 +351,7 @@
                                             <a class="nav-link" href="#faq">FAQ</a>
                                         </li>
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" href="{{route('terms-condition')}}">Terms and
-                                                Conditions</a>
+                                            <a class="nav-link" href="{{route('terms-condition')}}">Terms of Service</a>
                                         </li>
                                         <li class="nav-item mx-3">
                                             <a class="nav-link" href="{{route('privacy-policy')}}">Privacy and Policy</a>
