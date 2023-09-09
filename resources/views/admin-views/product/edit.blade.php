@@ -362,7 +362,7 @@
                 }
 
                 let rssi=$("#rssi").val().trim();
-                if(rssi <= 0 || rssi.length <=0){ 
+                if(rssi.length <=0){ 
                     $(".rssi_notice").html("");
                     $(".rssi_notice").html("Invalid value");
                     $("#rssi").val("");
