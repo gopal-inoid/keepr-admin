@@ -2473,4 +2473,10 @@
   'Description (For internal Use only)' => 'Description (For internal Use only)',
   'Email Subject' => 'Email Subject',
   'Email Body' => 'Email Body',
+  '
+                    Please only input png or jpg type file ' => '
+                    Please only input png or jpg type file ',
+  '
+                    File size too big ' => '
+                    File size too big ',
 );

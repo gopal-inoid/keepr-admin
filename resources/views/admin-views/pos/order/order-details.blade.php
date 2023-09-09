@@ -3,7 +3,7 @@
 @section('title', \App\CPU\translate('Order Details'))
 
 @push('css_or_js')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.8/css/intlTelInput.css" />
 @endpush
 
@@ -362,7 +362,7 @@
                                                 <div class="media align-items-center gap-10">
                                                     <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$detail['thumbnail']}}" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt="">
                                                     <div>
-                                                        <a href="#" class="title-color hover-c1"><h6>{{substr($detail['name'],0,30)}}{{strlen($detail['name'])>10?'...':''}}</h6></a>
+                                                        <a href="#" class="title-color hover-c1"><h1>{{substr($detail['name'],0,30)}}{{strlen($detail['name'])>10?'...':''}}</h1></a>
                                                     </div>
                                                 </div>
                                             </td>
