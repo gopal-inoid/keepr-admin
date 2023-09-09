@@ -100,6 +100,7 @@
 												<div class="col-md-3">
                                                     <div class="form-group">
                                                         <input type="text" style="text-transform: uppercase;" maxlength="36"  @if(!empty($stocks->is_purchased)) disabled="disabled" @endif name="uuid[{{$k}}]" class="form-control uuid" value="{{ $stocks->uuid }}" id="uuid" placeholder="{{ \App\CPU\translate('UUID') }}" required>
+                                                        <span class="uuid_notice v_notice text-danger" id="uuid_notice"></span>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-1">
@@ -158,6 +159,25 @@
     <script src="{{asset('public/assets/back-end')}}/js/tags-input.min.js"></script>
     <script src="{{asset('public/assets/back-end/js/spartan-multi-image-picker.js')}}"></script>
     <script>
+
+                $(".product-form").submit(function(e){
+                    var isValidated=true;
+                    let uuid=$("#uuid").val().trim();
+                    let array=uuid.split('-');
+                    const sum = array.reduce((accumulator, currentValue) => {
+                        return accumulator + currentValue;
+                    }, 0);
+                    if(uuid <= 0 || uuid.length < 36||sum==0){
+                            $(".uuid_notice").html("");
+                            $(".uuid_notice").html("Invalid value");
+                            $(".uuid").val("");
+                            isValidated = false;
+                    }
+                    if(!isValidated){
+                        e.preventDefault();
+                        window.scrollTo(0, 0);
+                    }
+                });
 
     // function formatMAC(e) {
     //     var r = /([a-f0-9]{2})([a-f0-9]{2})/i,
@@ -224,10 +244,13 @@
                                 value = value.substring(0, 23) + '-' + value.substring(23);
                                 }
                                 return value;
-                            }
+                            }else if(value.length==36){
+                            return value;
+                        }
                         };
                     });
-                     
+
+                   
 
         var cnt = (parseInt("{{$product_stock_cnt}}") - 1);
 
@@ -244,8 +267,9 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <input type="text" name="uuid[`+(cnt+1)+`]" class="form-control uuid" style="text-transform:uppercase;" maxlength="36" value="" placeholder="{{ \App\CPU\translate('UUID') }}" required>
-                        </div>
+                            <input type="text" name="uuid[`+(cnt+1)+`]" class="form-control uuid" style="text-transform:uppercase;" maxlength="36" id="uuid" value="" placeholder="{{ \App\CPU\translate('UUID') }}" required>
+                            <span class="uuid_notice v_notice text-danger" id="uuid_notice"></span>
+                             </div>
                     </div>
                     <div class="col-md-1">
                         <div class="form-group">

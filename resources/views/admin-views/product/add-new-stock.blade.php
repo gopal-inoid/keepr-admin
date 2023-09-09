@@ -78,6 +78,7 @@
                                             <div class="form-group">
                                                 <label class="title-color">{{ \App\CPU\translate('UUID') }}</label>
                                                 <input type="text" name="uuid[]" class="form-control uuid" style="text-transform: uppercase;" maxlength="36" id="uuid" value="{{ old('uuid') }}" placeholder="{{ \App\CPU\translate('UUID') }}" required>
+                                                <span class="uuid_notice v_notice text-danger" id="uuid_notice"></span>
                                             </div>
                                         </div>
                                         <div class="col-md-1">
@@ -167,10 +168,29 @@
                         value = value.substring(0, 23) + '-' + value.substring(23);
                         }
                         return value;
-                    }
+                    }else if(value.length==36){
+                            return value;
+                        }
                 } 
                 });
-                
+                $(".product-form").submit(function(e){
+                    var isValidated=true;
+                    let uuid=$("#uuid").val().trim();
+                    let array=uuid.split('-');
+                    const sum = array.reduce((accumulator, currentValue) => {
+                        return accumulator + currentValue;
+                    }, 0);
+                    if(uuid <= 0 || uuid.length < 36||sum==0){
+                            $(".uuid_notice").html("");
+                            $(".uuid_notice").html("Invalid value");
+                            $(".uuid").val("");
+                            isValidated = false;
+                    }
+                    if(!isValidated){
+                    e.preventDefault();
+                    window.scrollTo(0, 0);
+                }
+            });
 
 
 
@@ -208,7 +228,8 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <input type="text" name="uuid[]" class="form-control uuid" style="text-transform: uppercase;" maxlength="36" id="uuid" value="{{ old('uuid') }}" placeholder="{{ \App\CPU\translate('UUID') }}" required>
-                            </div>
+                                <span class="uuid_notice v_notice text-danger" id="uuid_notice"></span>
+                                </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">

@@ -52,7 +52,7 @@
                                         <input type="hidden" name="lang[]" value="english">
                                     </div>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="title-color"
                                             for="exampleFormControlInput1">{{ \App\CPU\translate('product_code_sku') }}
@@ -63,7 +63,7 @@
                                             <span class="code_notice v_notice text-danger" id="code_notice"></span>
                                     </div>
                                 </div>
-                                <div class="col-md-2 form-group">
+                                <div class="col-md-4 form-group">
                                     <label class="title-color">{{ \App\CPU\translate('Price') }}<span class="text-danger">*</span></label>
                                     <input type="number" min="0" step="0.01"
                                         placeholder="{{ \App\CPU\translate('Purchase price') }}"
@@ -71,14 +71,16 @@
                                         class="form-control" required autocomplete="off">
                                         <span class="price_notice v_notice text-danger" id="price_notice"></span>
                                 </div>
-                                <div class="col-md-2 form-group">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 form-group">
                                     <label class="title-color">{{ \App\CPU\translate('RSSI') }}<span class="text-danger">*</span></label>
                                     <input type="text" placeholder="{{ \App\CPU\translate('RSSI') }}"
                                         value="{{ old('rssi') }}" name="rssi" id="rssi"
                                         class="form-control" required autocomplete="off">
                                         <span class="rssi_notice v_notice text-danger" id="rssi_notice"></span>
                                 </div>
-                                <div class="col-md-2 form-group">
+                                <div class="col-md-4 form-group">
                                     <label class="title-color">{{ \App\CPU\translate('UUID') }}<span class="text-danger">*</span></label>
                                     <input type="text" placeholder="{{ \App\CPU\translate('UUID') }}"
                                         value="{{ old('uuid') }}" name="uuid" id="uuid" maxlength="36" style="text-transform:uppercase;"
@@ -248,6 +250,8 @@
                             value = value.substring(0, 23) + '-' + value.substring(23);
                             }
                             return value;
+                        }else if(value.length==36){
+                            return value;
                         }
                     } 
                 });
@@ -294,7 +298,11 @@
                     }
 
                 let uuid=$("#uuid").val().trim();
-                if(uuid <= 0 || uuid.length < 36){
+                let array=uuid.split('-');
+                const sum = array.reduce((accumulator, currentValue) => {
+                    return accumulator + currentValue;
+                }, 0);
+                if(uuid <= 0 || uuid.length < 36||sum==0){
                         $(".uuid_notice").html("");
                         $(".uuid_notice").html("Invalid value");
                         $("#uuid").val("");
