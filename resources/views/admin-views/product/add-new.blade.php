@@ -81,7 +81,7 @@
                                 <div class="col-md-2 form-group">
                                     <label class="title-color">{{ \App\CPU\translate('UUID') }}<span class="text-danger">*</span></label>
                                     <input type="text" placeholder="{{ \App\CPU\translate('UUID') }}"
-                                        value="{{ old('uuid') }}" name="uuid" id="uuid"
+                                        value="{{ old('uuid') }}" name="uuid" id="uuid" maxlength="36" style="text-transform:uppercase;"
                                         class="form-control" required autocomplete="off">
                                         <span class="uuid_notice v_notice text-danger" id="uuid_notice"></span>
                                 </div>
@@ -209,60 +209,102 @@
     <script>
         $(function() {
 
+            // UUID Fix Format Validation
+                $("#uuid").on("input", function (e) {
+                    let value=$(this).val().trim();
+                    uuidinputFormat(value,this);
+                    function uuidinputFormat(value,elm){
+                        if(value.length<=36){
+                            if(value.length==8||value.length==13||value.length==18||value.length==23){
+                                    elm.value += '-';
+                            } 
+                            const lastChar = value.charAt(value.length - 1);
+                            if (lastChar === '-') {
+                            value = value.substring(0, value.length - 1);
+                            elm.value=value;
+                            }
+                        }
+                    } 
+                });
+                
+                $("#uuid").on("paste", function () {
+                     let elm = $(this);
+                     setTimeout(function(){
+                        let value=$(elm).val().trim();
+                        $(elm).val(uuidpestFormat(value));
+                    },10);
+                    function uuidpestFormat(value){
+                        if(value.length<=32){
+                            if (value.length >= 8) {
+                            value = value.substring(0, 8) + '-' + value.substring(8);
+                            }
+                            if (value.length >= 13) {
+                            value = value.substring(0, 13) + '-' + value.substring(13);
+                            }
+                            if (value.length >= 18) {
+                            value = value.substring(0, 18) + '-' + value.substring(18);
+                            }
+                            if (value.length >= 23) {
+                            value = value.substring(0, 23) + '-' + value.substring(23);
+                            }
+                            return value;
+                        }
+                    } 
+                });
+                
             // Price, Rssi, Uuid is made mandatory non-zero & non negative 
             $(".product-form").submit(function(e){
-            var isValidated=true;
-            $(".v_notice").each(function(){
-                $(this).html("");
-            });
+                var isValidated=true;
+                $(".v_notice").each(function(){
+                    $(this).html("");
+                });
 
-             let deviceName=$("#english_name").val();
-             let val1 = $.trim(deviceName);
-             if(val1.length<=0){ 
-                $(".name_notice").html("");
-                $(".name_notice").html("Empty field alert");
-                $("#english_name").val("");
-                isValidated = false;
-             }
-
-             let code=$("#generate_number").val();
-             let val2 = $.trim(code);
-             if(val2.length<=0){        
-                $(".code_notice").html("");
-                $(".code_notice").html("Empty field alert");
-                $("#generate_number").val("");
-                isValidated = false;
-              }
-
-              let price=$("#purchase_price").val();
-              if(price <= 0 || price == ""){ 
-                $(".price_notice").html("");
-                $(".price_notice").html("Invalid value");
-                $("#purchase_price").val("");
-                isValidated = false;
-              }
-
-              let rssi=$("#rssi").val().trim();
-              if(rssi <= 0 || rssi.length <=0){ 
-                $(".rssi_notice").html("");
-                $(".rssi_notice").html("Invalid value");
-                $("#rssi").val("");
-                 isValidated = false;
+                let deviceName=$("#english_name").val();
+                let val1 = $.trim(deviceName);
+                if(val1.length<=0){ 
+                    $(".name_notice").html("");
+                    $(".name_notice").html("Empty field alert");
+                    $("#english_name").val("");
+                    isValidated = false;
                 }
 
-              let uuid=$("#uuid").val().trim();
-              if(uuid <= 0 || uuid.length == 0){
-                    $(".uuid_notice").html("");
-                    $(".uuid_notice").html("Invalid value");
-                    $("#uuid").val("");
+                let code=$("#generate_number").val();
+                let val2 = $.trim(code);
+                if(val2.length<=0){        
+                    $(".code_notice").html("");
+                    $(".code_notice").html("Empty field alert");
+                    $("#generate_number").val("");
                     isValidated = false;
-              }
+                }
 
-            if(!isValidated){
-            e.preventDefault();
-            window.scrollTo(0, 0);
-            }
-            
+                let price=$("#purchase_price").val();
+                if(price <= 0 || price == ""){ 
+                    $(".price_notice").html("");
+                    $(".price_notice").html("Invalid value");
+                    $("#purchase_price").val("");
+                    isValidated = false;
+                }
+
+                let rssi=$("#rssi").val().trim();
+                if(rssi <= 0 || rssi.length <=0){ 
+                    $(".rssi_notice").html("");
+                    $(".rssi_notice").html("Invalid value");
+                    $("#rssi").val("");
+                    isValidated = false;
+                    }
+
+                let uuid=$("#uuid").val().trim();
+                if(uuid <= 0 || uuid.length < 36){
+                        $(".uuid_notice").html("");
+                        $(".uuid_notice").html("Invalid value");
+                        $("#uuid").val("");
+                        isValidated = false;
+                }
+
+                if(!isValidated){
+                e.preventDefault();
+                window.scrollTo(0, 0);
+                }
             });
             // Front-End validation for Price, Rssi & UUid is right above
 

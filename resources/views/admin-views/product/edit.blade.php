@@ -80,7 +80,7 @@
                                 <div class="col-md-2 form-group">
                                     <label class="title-color">{{ \App\CPU\translate('UUID') }}</label>
                                     <input type="text" placeholder="{{ \App\CPU\translate('UUID') }}"
-                                        value="{{ $product->uuid }}" name="uuid"
+                                        value="{{ $product->uuid }}" name="uuid" id="uuid" maxlength="36" style="text-transform:uppercase;"
                                         class="form-control" required>
                                 </div>
                                 <div class="col-md-12">
@@ -274,6 +274,49 @@
     <script src="{{asset('public/assets/back-end')}}/js/tags-input.min.js"></script>
     <script src="{{asset('public/assets/back-end/js/spartan-multi-image-picker.js')}}"></script>
     <script>
+                // UUID Fix Format Validation
+                 $("#uuid").on("input", function () {
+                    let value=$(this).val().trim();
+                    uuidinputFormat(value,this);
+                    function uuidinputFormat(value,elm){
+                        if(value.length<=36){
+                            if(value.length==8||value.length==13||value.length==18||value.length==23){
+                                    elm.value += '-';
+                            }  
+                        }
+                        const lastChar = value.charAt(value.length - 1);
+                            if (lastChar === '-') {
+                            value = value.substring(0, value.length - 1);
+                            elm.value=value;
+                        }
+                    }
+                });
+              
+                $("#uuid").on("paste", function () {
+                     let elm = $(this);
+                     setTimeout(function(){
+                        let value=$(elm).val().trim();
+                        $(elm).val(uuidpestFormat(value));
+                    },10);
+                    function uuidpestFormat(value){
+                    if(value.length<=32){
+                        if (value.length >= 8) {
+                        value = value.substring(0, 8) + '-' + value.substring(8);
+                        }
+                        if (value.length >= 13) {
+                        value = value.substring(0, 13) + '-' + value.substring(13);
+                        }
+                        if (value.length >= 18) {
+                        value = value.substring(0, 18) + '-' + value.substring(18);
+                        }
+                        if (value.length >= 23) {
+                        value = value.substring(0, 23) + '-' + value.substring(23);
+                        }
+                        return value;
+                    }
+                } 
+                });
+               
         imageCount = 0;
         @if(!empty($product->images))
         var imageCount = {{10-count(json_decode($product->images))}};

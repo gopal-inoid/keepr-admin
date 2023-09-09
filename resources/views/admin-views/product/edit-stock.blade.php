@@ -99,7 +99,7 @@
                                                 </div>
 												<div class="col-md-3">
                                                     <div class="form-group">
-                                                        <input type="text" @if(!empty($stocks->is_purchased)) disabled="disabled" @endif name="uuid[{{$k}}]" class="form-control " value="{{ $stocks->uuid }}" placeholder="{{ \App\CPU\translate('UUID') }}" required>
+                                                        <input type="text" style="text-transform: uppercase;" maxlength="36"  @if(!empty($stocks->is_purchased)) disabled="disabled" @endif name="uuid[{{$k}}]" class="form-control uuid" value="{{ $stocks->uuid }}" id="uuid" placeholder="{{ \App\CPU\translate('UUID') }}" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-1">
@@ -169,6 +169,66 @@
     // };
     // $(document).on('keyup','.macAddress',formatMAC);
 
+                    // UUID Fix Format Validation
+                    // $(document).on("input", ".uuid", function (e) {
+                    //     let value = $(this).val().trim();
+                    //         if (e.inputType === 'deleteContentBackward') {
+                    //             // Handle backspace event: remove hyphen before erasing
+                    //             if (value.length === 9 || value.length === 14 || value.length === 19 || value.length === 24) {
+                    //             value = value.substring(0, value.length - 1);
+                    //             }
+                    //         } else {
+                    //             // Handle normal input: add hyphen at specific positions
+                    //             if (value.length === 8 || value.length === 13 || value.length === 18 || value.length === 23) {
+                    //             value += '-';
+                    //         }
+                    //     }
+                    // });
+
+                    $(document).on("input",".uuid", function (e) {
+                        let value=$(this).val().trim();
+                        uuidinputFormat(value,this);
+                        function uuidinputFormat(value,elm){
+                            if(value.length<=36){
+                                if(value.length==8||value.length==13||value.length==18||value.length==23){
+                                        elm.value += '-';
+                                }  
+                            }
+                            const lastChar = value.charAt(value.length - 1);
+                            if (lastChar === '-') {
+                                value = value.substring(0, value.length - 1);
+                                elm.value=value;
+                            }
+                        }
+                    });
+                    
+                
+                    $(document).on("paste",".uuid", function () {
+                        let elm = $(this);
+                        setTimeout(function(){
+                            let value=$(elm).val().trim();
+                            $(elm).val(uuidpestFormat(value));
+                        },10)
+                        function uuidpestFormat(value){
+                            if(value.length<=32){
+                                if (value.length >= 8) {
+                                value = value.substring(0, 8) + '-' + value.substring(8);
+                                }
+                                if (value.length >= 13) {
+                                value = value.substring(0, 13) + '-' + value.substring(13);
+                                }
+                                if (value.length >= 18) {
+                                value = value.substring(0, 18) + '-' + value.substring(18);
+                                }
+                                if (value.length >= 23) {
+                                value = value.substring(0, 23) + '-' + value.substring(23);
+                                }
+                                return value;
+                            }
+                        };
+                    });
+                     
+
         var cnt = (parseInt("{{$product_stock_cnt}}") - 1);
 
         $('.add-mac_id-btn').on('click',function(){
@@ -184,7 +244,7 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <input type="text" name="uuid[`+(cnt+1)+`]" class="form-control " value="" placeholder="{{ \App\CPU\translate('UUID') }}" required>
+                            <input type="text" name="uuid[`+(cnt+1)+`]" class="form-control uuid" style="text-transform:uppercase;" maxlength="36" value="" placeholder="{{ \App\CPU\translate('UUID') }}" required>
                         </div>
                     </div>
                     <div class="col-md-1">
