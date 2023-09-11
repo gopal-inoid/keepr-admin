@@ -282,57 +282,57 @@
     <script src="{{asset('public/assets/back-end/js/spartan-multi-image-picker.js')}}"></script>
     <script>
                 // UUID Fix Format Validation
-                $("#uuid").on("keydown", function (e) {
-                    let keycode=e.keyCode|| e.which;
-                        if((keycode >= 65 && keycode <= 70) || (keycode >= 97 && keycode <= 102)){
-                            let value=$(this).val().trim();
-                            uuidinputFormat(value,this);
-                            function uuidinputFormat(value,elm){
-                                if(value.length<=36){
-                                    if(value.length==8||value.length==13||value.length==18||value.length==23){
-                                            elm.value += '-';
-                                    } 
-                                    const lastChar = value.charAt(value.length - 1);
-                                    if (lastChar === '-') {
-                                    value = value.substring(0, value.length - 1);
-                                    elm.value=value;
-                                    }
-                                }            
-                            } 
-                        } else if ((keycode === 8 || keycode === 37 || keycode === 39 || keycode === 46)||(ctrlKey && (keycode === 67 || keycode === 86 || keycode === 82 || keycode === 88))) {
-                            return true;
-                        }
-                        else{
-                            return false;
-                        }
-                });
+                // $("#uuid").on("keydown", function (e) {
+                //     let keycode=e.keyCode|| e.which;
+                //         if((keycode >= 65 && keycode <= 70) || (keycode >= 97 && keycode <= 102)){
+                //             let value=$(this).val().trim();
+                //             uuidinputFormat(value,this);
+                //             function uuidinputFormat(value,elm){
+                //                 if(value.length<=36){
+                //                     if(value.length==8||value.length==13||value.length==18||value.length==23){
+                //                             elm.value += '-';
+                //                     } 
+                //                     const lastChar = value.charAt(value.length - 1);
+                //                     if (lastChar === '-') {
+                //                     value = value.substring(0, value.length - 1);
+                //                     elm.value=value;
+                //                     }
+                //                 }            
+                //             } 
+                //         } else if ((keycode === 8 || keycode === 37 || keycode === 39 || keycode === 46)||(ctrlKey && (keycode === 67 || keycode === 86 || keycode === 82 || keycode === 88))) {
+                //             return true;
+                //         }
+                //         else{
+                //             return false;
+                //         }
+                // });
               
-                $("#uuid").on("paste", function () {
-                     let elm = $(this);
-                     setTimeout(function(){
-                        let value=$(elm).val().trim();
-                        $(elm).val(uuidpestFormat(value));
-                    },10);
-                    function uuidpestFormat(value){
-                        if(value.length<=32){
-                            if (value.length >= 8) {
-                            value = value.substring(0, 8) + '-' + value.substring(8);
-                            }
-                            if (value.length >= 13) {
-                            value = value.substring(0, 13) + '-' + value.substring(13);
-                            }
-                            if (value.length >= 18) {
-                            value = value.substring(0, 18) + '-' + value.substring(18);
-                            }
-                            if (value.length >= 23) {
-                            value = value.substring(0, 23) + '-' + value.substring(23);
-                            }
-                            return value;
-                        }else if(value.length==36){
-                            return value;
-                        }
-                    } 
-                });
+                // $("#uuid").on("paste", function () {
+                //      let elm = $(this);
+                //      setTimeout(function(){
+                //         let value=$(elm).val().trim();
+                //         $(elm).val(uuidpestFormat(value));
+                //     },10);
+                //     function uuidpestFormat(value){
+                //         if(value.length<=32){
+                //             if (value.length >= 8) {
+                //             value = value.substring(0, 8) + '-' + value.substring(8);
+                //             }
+                //             if (value.length >= 13) {
+                //             value = value.substring(0, 13) + '-' + value.substring(13);
+                //             }
+                //             if (value.length >= 18) {
+                //             value = value.substring(0, 18) + '-' + value.substring(18);
+                //             }
+                //             if (value.length >= 23) {
+                //             value = value.substring(0, 23) + '-' + value.substring(23);
+                //             }
+                //             return value;
+                //         }else if(value.length==36){
+                //             return value;
+                //         }
+                //     } 
+                // });
 
             // Price, Rssi, Uuid is made mandatory non-zero & non negative 
             

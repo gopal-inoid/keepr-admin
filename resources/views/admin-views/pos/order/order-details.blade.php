@@ -130,17 +130,19 @@
                                                     <input type="text" name="billing_zip" class="form-control" value="{{$order->customer['zip']}}" placeholder="{{ \App\CPU\translate('Name') }}">
                                                 </div>
                                             </div>
+                                            
                                             @if(!empty($order->customer['billing_phone_code']))
                                                 @php 
                                                 $phonecode = explode('+',$order->customer['billing_phone_code']);
-                                                    if(!empty($phonecode[0])){
+                                                if(!empty($phonecode[0])){
                                                         $codeadded = '+'.$phonecode[0];
-                                                    }
+                                                }
                                                 @endphp
                                             @endif
-                                            
+
                                             <div class="col-lg-2 col-md-3 col-sm-3">
                                                 <div class="form-group">
+                                                    {{$phonecode}}
                                                     <label class="title-color d-flex">Phone Code</label>
                                                     <input class="form-control txtPhone" name="billing_phone_code" type="tel" id="txtPhone" class="txtbox" value="{{($codeadded ?? '')}}" />
                                                 </div>
