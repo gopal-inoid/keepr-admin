@@ -28,8 +28,8 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
 
         $schedule->call('App\Http\Controllers\Admin\SystemController@update_place_order_status')->hourly();
-        //$schedule->call('App\Http\Controllers\Admin\SystemController@update_pending_email')->everyFiveMinutes();
-        $schedule->call('App\Http\Controllers\Admin\SystemController@update_pending_email')->everyMinute();
+        $schedule->call('App\Http\Controllers\Admin\SystemController@update_pending_email')->everyFiveMinutes();
+        //$schedule->call('App\Http\Controllers\Admin\SystemController@update_pending_email')->everyMinute();
     }
 
     /**
