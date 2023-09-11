@@ -160,7 +160,7 @@ class SystemController extends Controller
                 }
             }
         }
-        //DB::table('cron_log')->insert(['cron type'=>'order_status','data'=>json_encode(['success' => 1,'total_updated' => $total_status])]);
+        DB::table('cron_log')->insert(['cron type'=>'order_status','data'=>json_encode(['success' => 1,'total_updated' => $total_status])]);
         return response()->json([
             'success' => 1,
             'total_updated' => $total_status
