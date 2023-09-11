@@ -313,7 +313,6 @@ class GeneralController extends Controller
                 $shipping['state_name'] = $this->getStateName($user_details->shipping_state);
                 $shipping['zip'] = $user_details->shipping_zip;
                 $shipping['country_iso'] = $user_details->shipping_country_iso;
-
                 $billing['address'] = $user_details->street_address;
                 $billing['name'] = $user_details->name;
                 $billing['email'] = $user_details->email;
@@ -339,7 +338,6 @@ class GeneralController extends Controller
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
-
             $order_list = [];
             $get_orders = Order::select('id as order_id','order_status','expected_delivery_date','customer_id','mac_ids','order_amount','created_at')
                                ->where(['customer_id'=>$user_details->id])->get();
@@ -356,7 +354,6 @@ class GeneralController extends Controller
                 }else{
                     $order_list[$k]['delivery_message']  = "";
                 }
-                
                 $mac_ids = 0;
                 if(!empty($order['mac_ids'])){
                     $mac_ids = json_decode($order['mac_ids'],true);
