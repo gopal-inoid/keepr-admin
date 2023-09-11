@@ -133,8 +133,8 @@
                                             @if(!empty($order->customer['billing_phone_code']))
                                                 @php 
                                                 $phonecode = explode('+',$order->customer['billing_phone_code']);
-                                                    if(!empty($phonecode[1])){
-                                                        $codeadded = '+'.$phonecode[1];
+                                                    if(!empty($phonecode[0])){
+                                                        $codeadded = '+'.$phonecode[0];
                                                     }
                                                 @endphp
                                             @endif
