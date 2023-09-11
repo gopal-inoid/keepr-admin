@@ -36,7 +36,8 @@
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                title="{{\App\CPU\translate('Dashboard')}}"
                                href="{{route('admin.dashboard.index')}}">
-                                <i class="tio-home-vs-1-outlined nav-icon"></i>
+                                <!-- <i class="tio-home-vs-1-outlined nav-icon"></i> -->
+                                <img src="{{asset('/assets/back-end/img/Home Lined.svg')}}" alt="">&nbsp;
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                                     {{\App\CPU\translate('Dashboard')}}
                                 </span>
@@ -52,7 +53,8 @@
                             <li class="navbar-vertical-aside-has-menu {{(Request::is('admin/customer/wallet*') || Request::is('admin/customer/list') || Request::is('admin/customer/view*') || Request::is('admin/reviews*') || Request::is('admin/customer/loyalty/report'))?'active':''}}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{route('admin.customer.list')}}" title="{{ \App\CPU\translate('Active Users') }}">
-                                    <i class="tio-user nav-icon"></i>
+                                    <!-- <i class="tio-user nav-icon"></i> -->
+                                    <img src="{{asset('/assets/back-end/img/Active Users Lined.svg')}}" alt="">&nbsp;
                                     <span
                                         class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ \App\CPU\translate('Active Users') }}</span>
                                 </a>
@@ -72,21 +74,24 @@
                             <li class="navbar-vertical-aside-has-menu {{(Request::is('admin/product/list') || (Request::is('admin/product/stock-limit-list/in_house')) || (Request::is('admin/product/bulk-import')) || (Request::is('admin/product/add-new')) || (Request::is('admin/product/view/*')) || (Request::is('admin/product/barcode/*')))?'active':''}}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{route('admin.product.list')}}" title="{{ \App\CPU\translate('Products') }}">
-                                    <i class="tio-shop nav-icon"></i>
+                                    <!-- <i class="tio-shop nav-icon"></i> -->
+                                    <img src="{{asset('/assets/back-end/img/Product Lined.svg')}}" alt="">&nbsp;
                                     <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ \App\CPU\translate('Products') }}</span>
                                 </a>
                             </li>
                             <li class="navbar-vertical-aside-has-menu {{(Request::is('admin/product/stocks/list') || (Request::is('admin/product/stocks/add-new')) || (Request::is('admin/product/stocks/view/*')))?'active':''}}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{route('admin.product.stocks.list')}}" title="Stock management">
-                                    <i class="tio-shop nav-icon"></i>
+                                    <!-- <i class="tio-shop nav-icon"></i> -->
+                                    <img src="{{asset('/assets/back-end/img/Stock Management Lined.svg')}}" alt="">&nbsp;
                                     <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Stock management</span>
                                 </a>
                             </li>
                             <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/product/current-active-device')?'active':''}}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{route('admin.product.current-active-device')}}" title="{{ \App\CPU\translate('Connected Devices') }}">
-                                    <i class="tio-globe nav-icon"></i>
+                                    <!-- <i class="tio-globe nav-icon"></i> -->
+                                    <img src="{{asset('/assets/back-end/img/Connected Devices Lined.svg')}}" alt="">&nbsp;
                                     <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ \App\CPU\translate('Connected Devices') }}</span>
                                 </a>
                             </li>
@@ -103,7 +108,8 @@
                             <li class="navbar-vertical-aside-has-menu {{Request::is('admin/order*')?'active':''}}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{route('admin.orders.list',['all'])}}" title="{{ \App\CPU\translate('Orders') }}">
-                                    <i class="tio-shopping-cart-outlined nav-icon"></i>
+                                    <!-- <i class="tio-shopping-cart-outlined nav-icon"></i> -->
+                                    <img src="{{asset('/assets/back-end/img/Orders Lined.svg')}}" alt="">&nbsp;
                                     <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ \App\CPU\translate('Orders') }}</span>
                                 </a>
                             </li>
@@ -120,7 +126,8 @@
                         <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/web-config') ?'active':''}}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                href="{{route('admin.business-settings.web-config.index')}}" title="Business Setup">
-                                <i class="tio-settings nav-icon"></i>
+                                <!-- <i class="tio-settings nav-icon"></i> -->
+                                <img src="{{asset('/assets/back-end/img/Business Setup Lined.svg')}}" alt="">&nbsp;
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Business Setup</span>
                             </a>
                         </li>
@@ -128,6 +135,7 @@
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                href="{{route('admin.banner.list')}}" title="{{\App\CPU\translate('banners')}}">
                                 <i class="tio-photo-square-outlined nav-icon"></i>
+                                <!-- <img src="{{asset('/assets/back-end/img/Connected Devices Lined.svg')}}" alt="">&nbsp; -->
                                 <span
                                     class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{\App\CPU\translate('banners')}}</span>
                             </a>
@@ -136,20 +144,23 @@
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                href="{{route('admin.business-settings.terms-condition')}}" title="{{\App\CPU\translate('pages')}}">
                                 <i class="tio-pages-outlined nav-icon"></i>
+                                <!-- <img src="{{asset('/assets/back-end/img/Connected Devices Lined.svg')}}" alt="">&nbsp; -->
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{\App\CPU\translate('pages')}}</span>
                             </a>
                         </li>
                         <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/shipping-method/setting') ?'active':''}}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                href="{{route('admin.business-settings.shipping-method.setting')}}" title="Shipping Methods">
-                                <i class="tio-shopping nav-icon"></i>
+                                <!-- <i class="tio-shopping nav-icon"></i> -->
+                                <img src="{{asset('/assets/back-end/img/Connected Devices Lined.svg')}}" alt="">&nbsp;
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Shipping Methods</span>
                             </a>
                         </li>
                         <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/shipping-method/tax-calculation') ?'active':''}}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                href="{{route('admin.business-settings.shipping-method.tax-calculation')}}" title="Shipping Methods">
-                                <i class="tio-shopping nav-icon"></i>
+                                <!-- <i class="tio-shopping nav-icon"></i> -->
+                                <img src="{{asset('/assets/back-end/img/Tax Lined.svg')}}" alt="">&nbsp;
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Tax Calculation</span>
                             </a>
                         </li>
@@ -163,14 +174,16 @@
                         <li class="navbar-vertical-aside-has-menu {{(Request::is('admin/business-settings/mail') || Request::is('admin/business-settings/sms-module') || Request::is('admin/business-settings/captcha') || Request::is('admin/social-login/view') || Request::is('admin/business-settings/map-api') || Request::is('admin/business-settings/payment-method') || Request::is('admin/business-settings/fcm-index'))?'active':''}}">
                             <a class="nav-link " href="{{route('admin.business-settings.mail.index')}}"
                                title="{{\App\CPU\translate('3rd_party')}}">
-                                <span class="tio-key nav-icon"></span>
+                                <!-- <span class="tio-key nav-icon"></span> -->
+                                <img src="{{asset('/assets/back-end/img/3rd_party Lined.svg')}}" alt="">&nbsp;
                                 <span class="text-truncate">{{\App\CPU\translate('3rd_party')}}</span>
                             </a>
                         </li>
                         <li class="navbar-vertical-aside-has-menu {{(Request::is('admin/business-settings/mail/templates'))?'active':''}}">
                             <a class="nav-link " href="{{route('admin.business-settings.mail.templates')}}"
                                title="{{\App\CPU\translate('email_templates')}}">
-                                <span class="tio-key nav-icon"></span>
+                                <!-- <span class="tio-key nav-icon"></span> -->
+                                <img src="{{asset('/assets/back-end/img/Email Lined.svg')}}" alt="">&nbsp;
                                 <span class="text-truncate">{{\App\CPU\translate('email_templates')}}</span>
                             </a>
                         </li>

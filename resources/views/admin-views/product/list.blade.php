@@ -11,7 +11,7 @@
     <!-- Page Title -->
     <div class="mb-3">
         <h2 class="h1 mb-0 text-capitalize d-flex gap-2">
-            <img src="{{asset('/public/assets/back-end/img/inhouse-product-list.png')}}" alt="">
+            <img src="{{asset('/assets/back-end/img/Product_Solid.svg')}}" alt="">
              Product List
             <span class="badge badge-soft-dark radius-50 fz-14 ml-1">{{ $pro->total() }}</span>
         </h2>

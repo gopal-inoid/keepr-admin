@@ -16,7 +16,7 @@
                     <!-- Page Title -->
                     <div class="mb-3">
                         <h2 class="h1 mb-0 text-capitalize d-flex gap-2">
-                            <img width="20" src="{{asset('/public/assets/back-end/img/customer.png')}}" alt="">
+                            <img width="20" src="{{asset('/assets/back-end/img/Active_Users_Solid.svg')}}" alt="">
                             {{\App\CPU\translate('customer_details')}}
                         </h2>
                     </div>

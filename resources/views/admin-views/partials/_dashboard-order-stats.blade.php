@@ -31,7 +31,7 @@
     <div class="business-analytics">
         <h5 class="business-analytics__subtitle">{{ \App\CPU\translate('Total Users') }}</h5>
         <h2 class="business-analytics__title">{{ $data['customer'] }}</h2>
-        <img src="{{asset('/public/assets/back-end/img/total-customer.png')}}" class="business-analytics__img" alt="">
+        <img src="{{asset('/assets/back-end/img/Total_user_Solid.svg')}}" class="business-analytics__img" alt="">
     </div>
     <!-- End Business Analytics Card -->
 </div>
@@ -40,7 +40,7 @@
     <div class="business-analytics">
         <h5 class="business-analytics__subtitle">{{\App\CPU\translate('Total Products')}}</h5>
         <h2 class="business-analytics__title">{{ $data['product'] }}</h2>
-        <img src="{{asset('/public/assets/back-end/img/total-product.png')}}" class="business-analytics__img" alt="">
+        <img src="{{asset('/assets/back-end/img/Total_Products_Solid.svg')}}" class="business-analytics__img" alt="">
     </div>
     <!-- End Business Analytics Card -->
 </div>
@@ -49,7 +49,7 @@
     <div class="business-analytics">
         <h5 class="business-analytics__subtitle">{{\App\CPU\translate('Total Product Stocks')}}</h5>
         <h2 class="business-analytics__title">{{ $data['total_stocks'] }}</h2>
-        <img src="{{asset('/public/assets/back-end/img/total-product.png')}}" class="business-analytics__img" alt="">
+        <img src="{{asset('/assets/back-end/img/Total_Products_Stock_Solid.svg')}}" class="business-analytics__img" alt="">
     </div>
     <!-- End Business Analytics Card -->
 </div>
@@ -58,7 +58,7 @@
     <div class="business-analytics">
         <h5 class="business-analytics__subtitle">{{\App\CPU\translate('Connected Devices')}}</h5>
         <h2 class="business-analytics__title">{{ $data['connected_device'] }}</h2>
-        <img src="{{asset('/public/assets/back-end/img/total-product.png')}}" class="business-analytics__img" alt="">
+        <img src="{{asset('/assets/back-end/img/Connected_Devices_Solid.svg')}}" class="business-analytics__img" alt="">
     </div>
     <!-- End Business Analytics Card -->
 </div>

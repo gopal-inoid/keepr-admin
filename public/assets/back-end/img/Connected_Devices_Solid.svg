@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_22151" data-name="Rectangle 22151" width="24" height="24" transform="translate(-370 -7533)" fill="#52d1dc" opacity="0.38"/>
+    </clipPath>
+  </defs>
+  <g id="Connected_Devices_Solid" transform="translate(370 7533)" clip-path="url(#clip-path)">
+    <g id="cast_566079" transform="translate(-370 -7533)">
+      <g id="Group_15365" data-name="Group 15365">
+        <g id="Group_15364" data-name="Group 15364">
+          <path id="Path_14533" data-name="Path 14533" d="M0,9.818V12a9.819,9.819,0,0,1,9.818,9.818H12A12,12,0,0,0,0,9.818Z" fill="#52d1dc"/>
+          <path id="Path_14534" data-name="Path 14534" d="M0,14.182v2.182a5.457,5.457,0,0,1,5.455,5.455H7.636A7.638,7.638,0,0,0,0,14.182Z" fill="#52d1dc"/>
+          <path id="Path_14535" data-name="Path 14535" d="M0,18.545v3.273H3.273A3.275,3.275,0,0,0,0,18.545Z" fill="#52d1dc"/>
+          <path id="Path_14536" data-name="Path 14536" d="M21.818,2.182H2.182A2.181,2.181,0,0,0,0,4.364V7.636H2.182V4.364H21.818V19.636H14.182v2.182h7.636A2.181,2.181,0,0,0,24,19.636V4.364A2.181,2.181,0,0,0,21.818,2.182Z" fill="#2cacb7"/>
+          <path id="Path_14537" data-name="Path 14537" d="M19.636,6.545H4.364V8.329a14.2,14.2,0,0,1,9.125,9.125h6.147Z" fill="#52d1dc"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -25,7 +25,7 @@
         <!-- Page Title -->
         <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
             <h2 class="h1 mb-0 d-flex gap-2">
-                <img src="{{asset('/public/assets/back-end/img/inhouse-product-list.png')}}" alt="">
+                <img src="{{asset('/assets/back-end/img/Product_Solid.svg')}}" alt="">
                 {{\App\CPU\translate('Add')}} {{\App\CPU\translate('New')}} {{\App\CPU\translate('Product')}}
             </h2>
         </div>
@@ -211,30 +211,55 @@
     <script>
         $(function() {
 
-            // UUID Fix Format Validation
-                $("#uuid").on("input", function (e) {
-                    let value=$(this).val().trim();
-                    uuidinputFormat(value,this);
-                    function uuidinputFormat(value,elm){
-                        if(value.length<=36){
-                            if(value.length==8||value.length==13||value.length==18||value.length==23){
-                                    elm.value += '-';
+                // UUID Fix Format Validation
+                $("#uuid").on("keydown", function (e) {
+                         let keycode=e.keyCode|| e.which;
+                         let ctrlKey = e.ctrlKey || e.metaKey;
+                        if((keycode >= 65 && keycode <= 70) || (keycode >= 97 && keycode <= 102)){
+                            let value=$(this).val().trim();
+                            uuidinputFormat(value,this);
+                            function uuidinputFormat(value,elm){
+                                if(value.length<=36){
+                                    if(value.length==8||value.length==13||value.length==18||value.length==23){
+                                            elm.value += '-';
+                                    } 
+                                    const lastChar = value.charAt(value.length - 1);
+                                    if (lastChar === '-') {
+                                    value = value.substring(0, value.length - 1);
+                                    elm.value=value;
+                                    }
+                                }     
                             } 
-                            const lastChar = value.charAt(value.length - 1);
-                            if (lastChar === '-') {
-                            value = value.substring(0, value.length - 1);
-                            elm.value=value;
-                            }
+                        } else if ((keycode === 8 || keycode === 37 || keycode === 39 || keycode === 46)||(ctrlKey && (keycode === 67 || keycode === 86 || keycode === 82 || keycode === 88))) {
+                            return true;
                         }
-                    } 
+                        else{
+                            return false;
+                        }
                 });
                 
-                $("#uuid").on("paste", function () {
+                $("#uuid").on("paste", function (e) {
                      let elm = $(this);
                      setTimeout(function(){
                         let value=$(elm).val().trim();
-                        $(elm).val(uuidpestFormat(value));
-                    },10);
+                        let i;
+                        for(i=0;i<value.length;i++){
+                            let keycode=value[i].charCodeAt(0)
+                            if((keycode < 65 && keycode > 70) || (keycode < 97 && keycode > 102)){
+                                $(elm).val("");
+                                break;
+                            }
+                            let ctrlKey = e.ctrlKey || e.metaKey;
+                            if((keycode >= 65 && keycode <= 70) || (keycode >= 97 && keycode <= 102)){
+                                $(elm).val(uuidpestFormat(value));
+                                console.log(value[i]);
+                            } else if ((keycode === 8 || keycode === 37 || keycode === 39 || keycode === 46)||(ctrlKey && (keycode === 67 || keycode === 86 || keycode === 82 || keycode === 88))) {
+                            return true;
+                            }else{
+                                $(elm).val("");
+                            }
+                        }
+                     },10);
                     function uuidpestFormat(value){
                         if(value.length<=32){
                             if (value.length >= 8) {
@@ -258,7 +283,6 @@
                 
             // Price, Rssi, Uuid is made mandatory non-zero & non negative 
             $(".product-form").submit(function(e){
-                e.preventDefault();
                 var isValidated=true;
                 $(".v_notice").each(function(){
                     $(this).html("");

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_22153" data-name="Rectangle 22153" width="24" height="24" transform="translate(-370 -7488)" fill="#fff"/>
+    </clipPath>
+  </defs>
+  <g id="Active_Users_Solid" transform="translate(370 7488)" clip-path="url(#clip-path)">
+    <g id="Icon" transform="translate(-371.392 -7489.388)">
+      <circle id="Ellipse_356" data-name="Ellipse 356" cx="6.138" cy="6.138" r="6.138" transform="translate(6.696 1.388)" fill="#585858"/>
+      <path id="Path_14542" data-name="Path 14542" d="M14.424,24.279a6.968,6.968,0,0,1,.085-9.588q-.82-.064-1.675-.065a16.607,16.607,0,0,0-9.027,2.317,4.778,4.778,0,0,0-2.412,3.821v1.618a1.9,1.9,0,0,0,1.9,1.9Z" fill="#585858" fill-rule="evenodd"/>
+      <path id="Path_14543" data-name="Path 14543" d="M19.529,13.671a5.859,5.859,0,1,0,5.859,5.859A5.861,5.861,0,0,0,19.529,13.671Zm-2.7,6.834,1.674,1.116a.837.837,0,0,0,1.056-.1l2.79-2.79a.836.836,0,1,0-1.183-1.183l-2.306,2.3-1.1-.735a.837.837,0,1,0-.928,1.393Z" fill="#52d1dc" fill-rule="evenodd"/>
+    </g>
+  </g>
+</svg>
