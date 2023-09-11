@@ -342,7 +342,7 @@ class ProductController extends Controller
 																						->first();
                         
                         $get_all_devices[$k]['rssi'] = $device_info->rssi ?? '';
-                        $get_all_devices[$k]['device_id'] = (string) $device_info->product_id ?? '';
+                        $get_all_devices[$k]['device_id'] = !empty($device_info->product_id) ? (string) $device_info->product_id : "";
                         $get_all_devices[$k]['device_type'] = $device_info->device_type ?? '';
 						$get_all_devices[$k]['distance'] = "-1";
 
