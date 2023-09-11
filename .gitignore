@@ -5,6 +5,7 @@
 /public/product
 /storage/*.key
 /vendor
+/resources/lang/
 
 .idea
 .env
