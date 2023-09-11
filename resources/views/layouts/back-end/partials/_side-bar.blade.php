@@ -134,8 +134,8 @@
                         <li class="navbar-vertical-aside-has-menu {{Request::is('admin/banner*')?'active':''}}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                href="{{route('admin.banner.list')}}" title="{{\App\CPU\translate('banners')}}">
-                                <i class="tio-photo-square-outlined nav-icon"></i>
-                                <!-- <img src="{{asset('/assets/back-end/img/Connected Devices Lined.svg')}}" alt="">&nbsp; -->
+                                <!-- <i class="tio-photo-square-outlined nav-icon"></i> -->
+                                <img src="{{asset('/assets/back-end/img/Banner_lined.svg')}}" alt="">&nbsp;
                                 <span
                                     class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{\App\CPU\translate('banners')}}</span>
                             </a>
@@ -143,8 +143,8 @@
                         <li class="navbar-vertical-aside-has-menu {{(Request::is('admin/business-settings/terms-condition') || Request::is('admin/business-settings/privacy-policy') || Request::is('admin/business-settings/about-us') || Request::is('admin/helpTopic/list'))?'active':''}}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                href="{{route('admin.business-settings.terms-condition')}}" title="{{\App\CPU\translate('pages')}}">
-                                <i class="tio-pages-outlined nav-icon"></i>
-                                <!-- <img src="{{asset('/assets/back-end/img/Connected Devices Lined.svg')}}" alt="">&nbsp; -->
+                                <!-- <i class="tio-pages-outlined nav-icon"></i> -->
+                                <img src="{{asset('/assets/back-end/img/Page_line.svg')}}" alt="">&nbsp;
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{\App\CPU\translate('pages')}}</span>
                             </a>
                         </li>

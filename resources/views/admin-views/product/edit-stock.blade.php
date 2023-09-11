@@ -206,14 +206,15 @@
                     // });
 
                        // UUID Fix Format Validation
-                // $(document).on("keydown",".uuid", function (e) {
-                //     let keycode=e.keyCode|| e.which;
+                //        $("#uuid").on("keydown", function (e) {
+                //          let keycode=e.keyCode|| e.which;
                 //          let ctrlKey = e.ctrlKey || e.metaKey;
-                //         if((keycode >= 65 && keycode <= 70) || (keycode >= 97 && keycode <= 102)){
-                //             let value=$(this).val().trim();
+                //         if(keycode >= 71 && keycode <= 90){
+                //           return false;
+                //         } else{
+                //              let value=$(this).val().trim();
                 //             uuidinputFormat(value,this);
                 //             function uuidinputFormat(value,elm){
-                //                 if(value.length<=36){
                 //                     if(value.length==8||value.length==13||value.length==18||value.length==23){
                 //                             elm.value += '-';
                 //                     } 
@@ -221,14 +222,8 @@
                 //                     if (lastChar === '-') {
                 //                     value = value.substring(0, value.length - 1);
                 //                     elm.value=value;
-                //                     }
-                //                 }     
+                //                     }     
                 //             } 
-                //         } else if ((keycode === 8 || keycode === 37 || keycode === 39 || keycode === 46)||(ctrlKey && (keycode === 67 || keycode === 86 || keycode === 82 || keycode === 88))) {
-                //             return true;
-                //         }
-                //         else{
-                //             return false;
                 //         }
                 // });
                 

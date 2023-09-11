@@ -212,11 +212,16 @@
         $(function() {
 
                 // UUID Fix Format Validation
+
                 // $("#uuid").on("keydown", function (e) {
                 //          let keycode=e.keyCode|| e.which;
                 //          let ctrlKey = e.ctrlKey || e.metaKey;
-                //         if((keycode >= 65 && keycode <= 70) || (keycode >= 97 && keycode <= 102)){
-                //             let value=$(this).val().trim();
+                //          let value=$(this).val().trim();
+                //         if(keycode >= 71 && keycode <= 90){
+                //            $(this).val("");
+                //         }else if((keycode === 8 || keycode === 37 || keycode === 39 || keycode === 46)||(ctrlKey && (keycode === 67 || keycode === 86 || keycode === 82 || keycode === 88))){
+                //             return true;
+                //         }else{
                 //             uuidinputFormat(value,this);
                 //             function uuidinputFormat(value,elm){
                 //                 if(value.length<=36){
@@ -230,13 +235,8 @@
                 //                     }
                 //                 }     
                 //             } 
-                //         } else if ((keycode === 8 || keycode === 37 || keycode === 39 || keycode === 46)||(ctrlKey && (keycode === 67 || keycode === 86 || keycode === 82 || keycode === 88))) {
-                //             return true;
                 //         }
-                //         else{
-                //             return false;
-                //         }
-                // });
+                //     });
                 
                 // $("#uuid").on("paste", function (e) {
                 //      let elm = $(this);
