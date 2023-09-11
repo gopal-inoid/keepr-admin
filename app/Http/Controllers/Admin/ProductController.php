@@ -123,7 +123,6 @@ class ProductController extends BaseController
 
     public function store(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'name'                 => 'required',
             'purchase_price'       => 'required|numeric|min:1',

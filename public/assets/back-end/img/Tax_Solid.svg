@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_22164" data-name="Rectangle 22164" width="24" height="24" transform="translate(-370 -7263)" fill="#fff"/>
+    </clipPath>
+  </defs>
+  <g id="Tax_Solid" transform="translate(370 7263)" clip-path="url(#clip-path)">
+    <g id="Page-1" transform="translate(-370 -7263)">
+      <g id="_022---Signing-Tax-Document" data-name="022---Signing-Tax-Document">
+        <path id="Shape" d="M16.552,22.758A1.241,1.241,0,0,1,15.31,24H1.241A1.241,1.241,0,0,1,0,22.758V1.241A1.241,1.241,0,0,1,1.241,0H11.83a.407.407,0,0,1,.29.12l4.312,4.312a.407.407,0,0,1,.12.29Z" fill="#f5efca"/>
+        <path id="Shape-2" data-name="Shape" d="M16.51,4.552H13.241A1.241,1.241,0,0,1,12,3.31V.041Z" fill="#e4c05c"/>
+        <g id="Group_15391" data-name="Group 15391">
+          <path id="Shape-3" data-name="Shape" d="M7.448,2.483H2.069a.414.414,0,0,1,0-.828H7.448a.414.414,0,0,1,0,.828Z" fill="#41767f"/>
+          <path id="Shape-4" data-name="Shape" d="M4.552,4.552H2.069a.414.414,0,1,1,0-.828H4.552a.414.414,0,1,1,0,.828Z" fill="#41767f"/>
+          <path id="Shape-5" data-name="Shape" d="M12,12.827H2.069a.414.414,0,1,1,0-.828H12a.414.414,0,1,1,0,.828Z" fill="#41767f"/>
+          <path id="Shape-6" data-name="Shape" d="M10.345,14.9H2.069a.414.414,0,1,1,0-.828h8.276a.414.414,0,1,1,0,.828Z" fill="#41767f"/>
+          <path id="Shape-7" data-name="Shape" d="M9.1,16.965H2.069a.414.414,0,0,1,0-.828H9.1a.414.414,0,1,1,0,.828Z" fill="#41767f"/>
+          <path id="Shape-8" data-name="Shape" d="M4.965,19.034h-2.9a.414.414,0,0,1,0-.828h2.9a.414.414,0,0,1,0,.828Z" fill="#41767f"/>
+          <path id="Shape-9" data-name="Shape" d="M5.379,6.207H2.069a.414.414,0,1,0,0,.828H3.31v3.31a.414.414,0,1,0,.828,0V7.034H5.379a.414.414,0,0,0,0-.828Z" fill="#41767f"/>
+          <path id="Shape-10" data-name="Shape" d="M13.324,8.483,14.412,6.85a.414.414,0,1,0-.689-.459l-.9,1.347-.9-1.346a.414.414,0,0,0-.689.459l1.089,1.631-1.088,1.632a.414.414,0,0,0,.689.459l.9-1.347.9,1.346a.414.414,0,0,0,.689-.459Z" fill="#41767f"/>
+          <path id="Shape-11" data-name="Shape" d="M9.763,8.948l-.005-.012-1.1-2.483a.414.414,0,0,0-.756,0l-1.1,2.483-.005.012-.546,1.229A.414.414,0,1,0,7,10.513l.442-1H9.11l.442,1a.414.414,0,1,0,.756-.336ZM7.809,8.69l.467-1.05.467,1.05Z" fill="#41767f"/>
+          <path id="Shape-12" data-name="Shape" d="M9.939,21.931H2.069a.414.414,0,0,1,0-.828h7.87a.414.414,0,0,1,0,.828Z" fill="#41767f"/>
+        </g>
+        <path id="Shape-13" data-name="Shape" d="M23.549,5.93,22.273,4.876a1.241,1.241,0,0,0-1.747.166L18.681,7.276l-7.644,9.25L9.547,20.97a.414.414,0,0,0,.6.492l4.084-2.3L21.87,9.911l1.845-2.234a1.241,1.241,0,0,0-.166-1.746Z" fill="#c03a2b"/>
+        <path id="Shape-14" data-name="Shape" d="M23.714,7.676,21.869,9.91l-3.19-2.636,1.846-2.23a1.246,1.246,0,0,1,1.75-.17L23.549,5.93a1.237,1.237,0,0,1,.166,1.746Z" fill="#ff5364"/>
+        <path id="Shape-15" data-name="Shape" d="M21.869,9.91l-1.316,1.6h0L17.363,8.872l1.316-1.6Z" fill="#f0c419"/>
+        <path id="Shape-16" data-name="Shape" d="M14.226,19.163l-4.084,2.3a.414.414,0,0,1-.6-.492l1.49-4.444Z" fill="#fdd7ad"/>
+        <path id="Shape-17" data-name="Shape" d="M11.909,20.466l-1.767,1a.414.414,0,0,1-.6-.492l.646-1.924Z" fill="#2c3e50"/>
+      </g>
+    </g>
+  </g>
+</svg>

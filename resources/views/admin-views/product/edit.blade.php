@@ -27,7 +27,7 @@
         <!-- Page Title -->
         <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
             <h2 class="h1 mb-0 d-flex gap-2">
-                <img src="{{asset('/public/assets/back-end/img/inhouse-product-list.png')}}" alt="">
+                <img src="{{asset('/assets/back-end/img/Product_Solid.svg')}}" alt="">
                 {{\App\CPU\translate('Product')}} {{\App\CPU\translate('Edit')}}
             </h2>
         </div>
@@ -282,21 +282,29 @@
     <script src="{{asset('public/assets/back-end/js/spartan-multi-image-picker.js')}}"></script>
     <script>
                 // UUID Fix Format Validation
-                 $("#uuid").on("input", function () {
-                    let value=$(this).val().trim();
-                    uuidinputFormat(value,this);
-                    function uuidinputFormat(value,elm){
-                        if(value.length<=36){
-                            if(value.length==8||value.length==13||value.length==18||value.length==23){
-                                    elm.value += '-';
-                            }  
+                $("#uuid").on("keydown", function (e) {
+                    let keycode=e.keyCode|| e.which;
+                        if((keycode >= 65 && keycode <= 70) || (keycode >= 97 && keycode <= 102)){
+                            let value=$(this).val().trim();
+                            uuidinputFormat(value,this);
+                            function uuidinputFormat(value,elm){
+                                if(value.length<=36){
+                                    if(value.length==8||value.length==13||value.length==18||value.length==23){
+                                            elm.value += '-';
+                                    } 
+                                    const lastChar = value.charAt(value.length - 1);
+                                    if (lastChar === '-') {
+                                    value = value.substring(0, value.length - 1);
+                                    elm.value=value;
+                                    }
+                                }            
+                            } 
+                        } else if ((keycode === 8 || keycode === 37 || keycode === 39 || keycode === 46)||(ctrlKey && (keycode === 67 || keycode === 86 || keycode === 82 || keycode === 88))) {
+                            return true;
                         }
-                        const lastChar = value.charAt(value.length - 1);
-                            if (lastChar === '-') {
-                            value = value.substring(0, value.length - 1);
-                            elm.value=value;
+                        else{
+                            return false;
                         }
-                    }
                 });
               
                 $("#uuid").on("paste", function () {
