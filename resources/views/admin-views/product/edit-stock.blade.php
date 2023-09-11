@@ -206,74 +206,74 @@
                     // });
 
                        // UUID Fix Format Validation
-                $(document).on("keydown",".uuid", function (e) {
-                    let keycode=e.keyCode|| e.which;
-                         let ctrlKey = e.ctrlKey || e.metaKey;
-                        if((keycode >= 65 && keycode <= 70) || (keycode >= 97 && keycode <= 102)){
-                            let value=$(this).val().trim();
-                            uuidinputFormat(value,this);
-                            function uuidinputFormat(value,elm){
-                                if(value.length<=36){
-                                    if(value.length==8||value.length==13||value.length==18||value.length==23){
-                                            elm.value += '-';
-                                    } 
-                                    const lastChar = value.charAt(value.length - 1);
-                                    if (lastChar === '-') {
-                                    value = value.substring(0, value.length - 1);
-                                    elm.value=value;
-                                    }
-                                }     
-                            } 
-                        } else if ((keycode === 8 || keycode === 37 || keycode === 39 || keycode === 46)||(ctrlKey && (keycode === 67 || keycode === 86 || keycode === 82 || keycode === 88))) {
-                            return true;
-                        }
-                        else{
-                            return false;
-                        }
-                });
+                // $(document).on("keydown",".uuid", function (e) {
+                //     let keycode=e.keyCode|| e.which;
+                //          let ctrlKey = e.ctrlKey || e.metaKey;
+                //         if((keycode >= 65 && keycode <= 70) || (keycode >= 97 && keycode <= 102)){
+                //             let value=$(this).val().trim();
+                //             uuidinputFormat(value,this);
+                //             function uuidinputFormat(value,elm){
+                //                 if(value.length<=36){
+                //                     if(value.length==8||value.length==13||value.length==18||value.length==23){
+                //                             elm.value += '-';
+                //                     } 
+                //                     const lastChar = value.charAt(value.length - 1);
+                //                     if (lastChar === '-') {
+                //                     value = value.substring(0, value.length - 1);
+                //                     elm.value=value;
+                //                     }
+                //                 }     
+                //             } 
+                //         } else if ((keycode === 8 || keycode === 37 || keycode === 39 || keycode === 46)||(ctrlKey && (keycode === 67 || keycode === 86 || keycode === 82 || keycode === 88))) {
+                //             return true;
+                //         }
+                //         else{
+                //             return false;
+                //         }
+                // });
                 
-                $(document).on("paste",".uuid", function (e) {
-                    let elm = $(this);
-                     setTimeout(function(){
-                        let value=$(elm).val().trim();
-                        let i;
-                        for(i=0;i<value.length;i++){
-                            let keycode=value[i].charCodeAt(0)
-                            if((keycode < 65 && keycode > 70) || (keycode < 97 && keycode > 102)){
-                                $(elm).val("");
-                                break;
-                            }
-                            let ctrlKey = e.ctrlKey || e.metaKey;
-                            if((keycode >= 65 && keycode <= 70) || (keycode >= 97 && keycode <= 102)){
-                                $(elm).val(uuidpestFormat(value));
-                                console.log(value[i]);
-                            } else if ((keycode === 8 || keycode === 37 || keycode === 39 || keycode === 46)||(ctrlKey && (keycode === 67 || keycode === 86 || keycode === 82 || keycode === 88))) {
-                            return true;
-                            }else{
-                                $(elm).val("");
-                            }
-                        }
-                     },10);
-                    function uuidpestFormat(value){
-                        if(value.length<=32){
-                            if (value.length >= 8) {
-                            value = value.substring(0, 8) + '-' + value.substring(8);
-                            }
-                            if (value.length >= 13) {
-                            value = value.substring(0, 13) + '-' + value.substring(13);
-                            }
-                            if (value.length >= 18) {
-                            value = value.substring(0, 18) + '-' + value.substring(18);
-                            }
-                            if (value.length >= 23) {
-                            value = value.substring(0, 23) + '-' + value.substring(23);
-                            }
-                            return value;
-                        }else if(value.length==36){
-                            return value;
-                        }
-                    } 
-                });
+                // $(document).on("paste",".uuid", function (e) {
+                //     let elm = $(this);
+                //      setTimeout(function(){
+                //         let value=$(elm).val().trim();
+                //         let i;
+                //         for(i=0;i<value.length;i++){
+                //             let keycode=value[i].charCodeAt(0)
+                //             if((keycode < 65 && keycode > 70) || (keycode < 97 && keycode > 102)){
+                //                 $(elm).val("");
+                //                 break;
+                //             }
+                //             let ctrlKey = e.ctrlKey || e.metaKey;
+                //             if((keycode >= 65 && keycode <= 70) || (keycode >= 97 && keycode <= 102)){
+                //                 $(elm).val(uuidpestFormat(value));
+                //                 console.log(value[i]);
+                //             } else if ((keycode === 8 || keycode === 37 || keycode === 39 || keycode === 46)||(ctrlKey && (keycode === 67 || keycode === 86 || keycode === 82 || keycode === 88))) {
+                //             return true;
+                //             }else{
+                //                 $(elm).val("");
+                //             }
+                //         }
+                //      },10);
+                //     function uuidpestFormat(value){
+                //         if(value.length<=32){
+                //             if (value.length >= 8) {
+                //             value = value.substring(0, 8) + '-' + value.substring(8);
+                //             }
+                //             if (value.length >= 13) {
+                //             value = value.substring(0, 13) + '-' + value.substring(13);
+                //             }
+                //             if (value.length >= 18) {
+                //             value = value.substring(0, 18) + '-' + value.substring(18);
+                //             }
+                //             if (value.length >= 23) {
+                //             value = value.substring(0, 23) + '-' + value.substring(23);
+                //             }
+                //             return value;
+                //         }else if(value.length==36){
+                //             return value;
+                //         }
+                //     } 
+                // });
                    
 
         var cnt = (parseInt("{{$product_stock_cnt}}") - 1);
