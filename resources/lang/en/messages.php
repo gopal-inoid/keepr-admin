@@ -2473,4 +2473,7 @@
   'Description (For internal Use only)' => 'Description (For internal Use only)',
   'Email Subject' => 'Email Subject',
   'Email Body' => 'Email Body',
+  'Please come back later' => 'Please come back later',
+  'Website is under Maintenance' => 'Website is under Maintenance',
+  'Maintenance Mode on' => 'Maintenance Mode on',
 );
