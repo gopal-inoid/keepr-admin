@@ -160,24 +160,80 @@
     <script src="{{asset('public/assets/back-end/js/spartan-multi-image-picker.js')}}"></script>
     <script>
 
-                $(".product-form").submit(function(e){
-                    var isValidated=true;
-                    let uuid=$("#uuid").val().trim();
-                    let array=uuid.split('-');
-                    const sum = array.reduce((accumulator, currentValue) => {
-                        return accumulator + currentValue;
-                    }, 0);
-                    if(uuid <= 0 || uuid.length < 36||sum==0){
-                            $(".uuid_notice").html("");
-                            $(".uuid_notice").html("Invalid value");
-                            $(".uuid").val("");
-                            isValidated = false;
-                    }
-                    if(!isValidated){
-                        e.preventDefault();
-                        window.scrollTo(0, 0);
+$(document).on("keydown",".uuid", function (e) {
+                    let keycode=e.keyCode|| e.which;
+                         let ctrlKey = e.ctrlKey || e.metaKey;
+                         let value=$(this).val().trim();
+                            uuidinputFormat(value,this);
+                            function uuidinputFormat(value,elm){
+                                if(value.length<=36){
+                                    if(value.length==8||value.length==13||value.length==18||value.length==23){
+                                            elm.value += '-';
+                                    } 
+                                    const lastChar = value.charAt(value.length - 1);
+                                    if (lastChar === '-') {
+                                    value = value.substring(0, value.length - 1);
+                                    elm.value=value;
+                                    }
+                                }     
+                            }
+                });
+                
+                $(document).on("paste",".uuid", function (e) {
+                    let elm = $(this);
+                     setTimeout(function(){
+                        let value=$(elm).val().trim();
+                        if(!isValidUUID(value)){
+                            $(elm).val(convertToUUID(value));
+                        }else{
+                            $(elm).val(value);
+                        }
+                    },10);
+                    function convertToUUID(value) {
+                    // Remove any unwanted characters (e.g., spaces or dashes)
+                    const cleanedValue = value.replace(/[^0-9A-Fa-f]/g, '');
+                    // Ensure the cleaned value has the correct length
+                    const formattedValue = cleanedValue.slice(0, 8) + '-' +
+                                            cleanedValue.slice(8, 12) + '-' +
+                                            cleanedValue.slice(12, 16) + '-' +
+                                            cleanedValue.slice(16, 20) + '-' +
+                                            cleanedValue.slice(20, 32);
+
+                    return formattedValue;
+                    } 
+                    function isValidUUID(value) {
+                            const pattern = /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/;
+                            return pattern.test(value);
                     }
                 });
+                $(".product-form").submit(function(e){
+                    var isValidated=true;
+                    $(".uuid").each(function(){
+                        let uuid=$(this).val().trim();
+                        if(!isValidUUID(uuid)){
+                            $(this).next().html("");
+                            $(this).next().html("Invalid uuid");
+                            isValidated = false;
+                        }
+                        function isValidUUID(uuid) {
+                            // Define the regular expression pattern
+                            const pattern = /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/;
+
+                            // Use the test method to check if the UUID matches the pattern
+                            return pattern.test(uuid);
+                        }
+                        if(uuid <= 0 || uuid.length < 36){
+                            $(this).next().html("");
+                             $(this).next().html("Invalid value");
+                             $(this).next().val("");
+                            isValidated = false;
+                        }
+                    });
+                    if(!isValidated){
+                    e.preventDefault();
+                    window.scrollTo(0, 0);
+                }
+            });
 
                     // function formatMAC(e) {
                     //     var r = /([a-f0-9]{2})([a-f0-9]{2})/i,
@@ -189,91 +245,8 @@
                     // };
                 // $(document).on('keyup','.macAddress',formatMAC);
 
-                    // UUID Fix Format Validation
-                    // $(document).on("input", ".uuid", function (e) {
-                    //     let value = $(this).val().trim();
-                    //         if (e.inputType === 'deleteContentBackward') {
-                    //             // Handle backspace event: remove hyphen before erasing
-                    //             if (value.length === 9 || value.length === 14 || value.length === 19 || value.length === 24) {
-                    //             value = value.substring(0, value.length - 1);
-                    //             }
-                    //         } else {
-                    //             // Handle normal input: add hyphen at specific positions
-                    //             if (value.length === 8 || value.length === 13 || value.length === 18 || value.length === 23) {
-                    //             value += '-';
-                    //         }
-                    //     }
-                    // });
-
                        // UUID Fix Format Validation
-                // $(document).on("keydown",".uuid", function (e) {
-                //     let keycode=e.keyCode|| e.which;
-                //          let ctrlKey = e.ctrlKey || e.metaKey;
-                //         if((keycode >= 65 && keycode <= 70) || (keycode >= 97 && keycode <= 102)){
-                //             let value=$(this).val().trim();
-                //             uuidinputFormat(value,this);
-                //             function uuidinputFormat(value,elm){
-                //                 if(value.length<=36){
-                //                     if(value.length==8||value.length==13||value.length==18||value.length==23){
-                //                             elm.value += '-';
-                //                     } 
-                //                     const lastChar = value.charAt(value.length - 1);
-                //                     if (lastChar === '-') {
-                //                     value = value.substring(0, value.length - 1);
-                //                     elm.value=value;
-                //                     }
-                //                 }     
-                //             } 
-                //         } else if ((keycode === 8 || keycode === 37 || keycode === 39 || keycode === 46)||(ctrlKey && (keycode === 67 || keycode === 86 || keycode === 82 || keycode === 88))) {
-                //             return true;
-                //         }
-                //         else{
-                //             return false;
-                //         }
-                // });
-                
-                // $(document).on("paste",".uuid", function (e) {
-                //     let elm = $(this);
-                //      setTimeout(function(){
-                //         let value=$(elm).val().trim();
-                //         let i;
-                //         for(i=0;i<value.length;i++){
-                //             let keycode=value[i].charCodeAt(0)
-                //             if((keycode < 65 && keycode > 70) || (keycode < 97 && keycode > 102)){
-                //                 $(elm).val("");
-                //                 break;
-                //             }
-                //             let ctrlKey = e.ctrlKey || e.metaKey;
-                //             if((keycode >= 65 && keycode <= 70) || (keycode >= 97 && keycode <= 102)){
-                //                 $(elm).val(uuidpestFormat(value));
-                //                 console.log(value[i]);
-                //             } else if ((keycode === 8 || keycode === 37 || keycode === 39 || keycode === 46)||(ctrlKey && (keycode === 67 || keycode === 86 || keycode === 82 || keycode === 88))) {
-                //             return true;
-                //             }else{
-                //                 $(elm).val("");
-                //             }
-                //         }
-                //      },10);
-                //     function uuidpestFormat(value){
-                //         if(value.length<=32){
-                //             if (value.length >= 8) {
-                //             value = value.substring(0, 8) + '-' + value.substring(8);
-                //             }
-                //             if (value.length >= 13) {
-                //             value = value.substring(0, 13) + '-' + value.substring(13);
-                //             }
-                //             if (value.length >= 18) {
-                //             value = value.substring(0, 18) + '-' + value.substring(18);
-                //             }
-                //             if (value.length >= 23) {
-                //             value = value.substring(0, 23) + '-' + value.substring(23);
-                //             }
-                //             return value;
-                //         }else if(value.length==36){
-                //             return value;
-                //         }
-                //     } 
-                // });
+                 
                    
 
         var cnt = (parseInt("{{$product_stock_cnt}}") - 1);

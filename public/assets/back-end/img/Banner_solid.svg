@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_22174" data-name="Rectangle 22174" width="24" height="24" transform="translate(-366 -7128)" fill="#fff"/>
+    </clipPath>
+  </defs>
+  <g id="Banner_solid" transform="translate(366 7128)" clip-path="url(#clip-path)">
+    <g id="image_739147" transform="translate(-366 -7128)">
+      <path id="Path_14649" data-name="Path 14649" d="M20.933,24H3.067A3.07,3.07,0,0,1,0,20.933V3.067A3.07,3.07,0,0,1,3.067,0H20.933A3.07,3.07,0,0,1,24,3.067V20.933A3.07,3.07,0,0,1,20.933,24Z" fill="#ebf0fa"/>
+      <path id="Path_14650" data-name="Path 14650" d="M20.933,0H12V24h8.933A3.07,3.07,0,0,0,24,20.933V3.067A3.07,3.07,0,0,0,20.933,0Z" fill="#dce1eb"/>
+      <path id="Path_14651" data-name="Path 14651" d="M19.226,8.981l0,0a1.871,1.871,0,0,0-2.777-.142L9.977,15.313,7.558,13.305a1.868,1.868,0,0,0-2.408.014l0,0L0,17.776v3.157A3.07,3.07,0,0,0,3.067,24H20.933A3.07,3.07,0,0,0,24,20.933V14.96Z" fill="#52d1dc"/>
+      <path id="Path_14652" data-name="Path 14652" d="M19.222,8.977a1.871,1.871,0,0,0-2.777-.142L12,13.286V24h8.933A3.07,3.07,0,0,0,24,20.933V14.96L19.226,8.981Z" fill="#4cbec8"/>
+      <path id="Path_14653" data-name="Path 14653" d="M7.555,9.77a3.408,3.408,0,1,1,3.408-3.408A3.412,3.412,0,0,1,7.555,9.77Z" fill="#52d1dc"/>
+    </g>
+  </g>
+</svg>
