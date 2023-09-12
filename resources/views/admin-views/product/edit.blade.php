@@ -282,53 +282,53 @@
     <script src="{{asset('public/assets/back-end/js/spartan-multi-image-picker.js')}}"></script>
     <script>
                 // UUID Fix Format Validation
-                // $("#uuid").on("keydown", function (e) {
-                //          let keycode=e.keyCode|| e.which;
-                //          let ctrlKey = e.ctrlKey || e.metaKey;
-                //         if(keycode >= 71 && keycode <= 90){
-                //           return false;
-                //         } else{
-                //              let value=$(this).val().trim();
-                //             uuidinputFormat(value,this);
-                //             function uuidinputFormat(value,elm){
-                //                     if(value.length==8||value.length==13||value.length==18||value.length==23){
-                //                             elm.value += '-';
-                //                     } 
-                //                     const lastChar = value.charAt(value.length - 1);
-                //                     if (lastChar === '-') {
-                //                     value = value.substring(0, value.length - 1);
-                //                     elm.value=value;
-                //                     }     
-                //             } 
-                //         }
-                // });
               
-                // $("#uuid").on("paste", function () {
-                //      let elm = $(this);
-                //      setTimeout(function(){
-                //         let value=$(elm).val().trim();
-                //         $(elm).val(uuidpestFormat(value));
-                //     },10);
-                //     function uuidpestFormat(value){
-                //         if(value.length<=32){
-                //             if (value.length >= 8) {
-                //             value = value.substring(0, 8) + '-' + value.substring(8);
-                //             }
-                //             if (value.length >= 13) {
-                //             value = value.substring(0, 13) + '-' + value.substring(13);
-                //             }
-                //             if (value.length >= 18) {
-                //             value = value.substring(0, 18) + '-' + value.substring(18);
-                //             }
-                //             if (value.length >= 23) {
-                //             value = value.substring(0, 23) + '-' + value.substring(23);
-                //             }
-                //             return value;
-                //         }else if(value.length==36){
-                //             return value;
-                //         }
-                //     } 
-                // });
+                $("#uuid").on("keydown", function (e) {
+                         let keycode=e.keyCode|| e.which;
+                         let ctrlKey = e.ctrlKey || e.metaKey;
+                         let value=$(this).val().trim();
+                            uuidinputFormat(value,this);
+                            function uuidinputFormat(value,elm){
+                                if(value.length<=36){
+                                    if(value.length==8||value.length==13||value.length==18||value.length==23){
+                                            elm.value += '-';
+                                    } 
+                                    const lastChar = value.charAt(value.length - 1);
+                                    if (lastChar === '-') {
+                                    value = value.substring(0, value.length - 1);
+                                    elm.value=value;
+                                    }
+                                }     
+                            } 
+                    });
+                
+                $("#uuid").on("paste", function (e) {
+                     let elm = $(this);
+                     setTimeout(function(){
+                        let value=$(elm).val().trim();
+                        if(!isValidUUID(value)){
+                            $(elm).val(convertToUUID(value));
+                        }else{
+                                $(elm).val(value);
+                        }
+                    },10);
+                    function convertToUUID(value) {
+                    // Remove any unwanted characters (e.g., spaces or dashes)
+                    const cleanedValue = value.replace(/[^0-9A-Fa-f]/g, '');
+                    // Ensure the cleaned value has the correct length
+                    const formattedValue = cleanedValue.slice(0, 8) + '-' +
+                                            cleanedValue.slice(8, 12) + '-' +
+                                            cleanedValue.slice(12, 16) + '-' +
+                                            cleanedValue.slice(16, 20) + '-' +
+                                            cleanedValue.slice(20, 32);
+
+                    return formattedValue;
+                    } 
+                    function isValidUUID(value) {
+                            const pattern = /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/;
+                            return pattern.test(value);
+                    }
+                });
 
             // Price, Rssi, Uuid is made mandatory non-zero & non negative 
             
@@ -378,6 +378,18 @@
                 const sum = array.reduce((accumulator, currentValue) => {
                     return accumulator + currentValue;
                 }, 0);
+                if(!isValidUUID(uuid)){
+                    $(".uuid_notice").html("");
+                    $(".uuid_notice").html("Invalid uuid");
+                    isValidated = false;
+                }
+                function isValidUUID(uuid) {
+                    // Define the regular expression pattern
+                    const pattern = /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/;
+
+                    // Use the test method to check if the UUID matches the pattern
+                    return pattern.test(uuid);
+                }
                 if(uuid <= 0 || uuid.length < 36||sum==0){
                         $(".uuid_notice").html("");
                         $(".uuid_notice").html("Invalid value");
