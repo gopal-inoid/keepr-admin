@@ -17,7 +17,7 @@
     <!-- Page Title -->
     <div class="mb-3">
         <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
-            <img src="{{asset('/assets/back-end/img/Tax_Solid.svg')}}" alt="">
+            <img src="{{asset('assets/back-end/img/Total_Products_Solid.svg')}}" alt="">
             {{\App\CPU\translate('Shipping_Method_Update')}} ( {{ $method['title'] ?? '' }} )
         </h2>
     </div>

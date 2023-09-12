@@ -131,19 +131,20 @@
                                                 </div>
                                             </div>
                                             
-                                            @if(!empty($order->customer['billing_phone_code']))
-                                                @php 
-                                                $phonecode = explode('+',$order->customer['billing_phone_code']);
-                                                if(!empty($phonecode[0])){
-                                                        $codeadded = '+'.$phonecode[0];
+                                          
+                                           @if(!empty($order->customer['billing_phone_code']))
+                                            @php 
+                                                $phonecode = $order->customer['billing_phone_code'];
+                                                // Check if $phonecode starts with '+', if not, add it
+                                                if (!Str::startsWith($phonecode, '+')) {
+                                                    $phonecode = '+' . $phonecode;
                                                 }
-                                                @endphp
+                                            @endphp
                                             @endif
-
                                             <div class="col-lg-2 col-md-3 col-sm-3">
                                                 <div class="form-group">
                                                     <label class="title-color d-flex">Phone Code</label>
-                                                    <input class="form-control txtPhone" name="billing_phone_code" type="tel" id="txtPhone" class="txtbox" value="{{($codeadded ?? '')}}" />
+                                                    <input class="form-control txtPhone" name="billing_phone_code" type="tel" id="txtPhone" class="txtbox" value="{{($phonecode ?? '+1')}}" />
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-md-3 col-sm-6">
@@ -229,16 +230,17 @@
 
                                             @if(!empty($order->customer['shipping_phone_code']))
                                                 @php 
-                                                $phonecode = explode('+',$order->customer['shipping_phone_code']);
-                                                    if(!empty($phonecode[1])){
-                                                        $codeadded = '+'.$phonecode[1];
+                                                    $shippingcode = $order->customer['shipping_phone_code'];
+                                                    // Check if $shippingcode starts with '+', if not, add it
+                                                    if (!Str::startsWith($shippingcode, '+')) {
+                                                        $shippingcode = '+' . $shippingcode;
                                                     }
                                                 @endphp
                                             @endif
                                             <div class="col-lg-2 col-md-3 col-sm-3">
                                                 <div class="form-group">
                                                     <label class="title-color d-flex">Phone Code</label>
-                                                    <input class="form-control txtPhone" name="shipping_phone_code" type="tel" id="txtPhone" class="txtbox" value="{{($codeadded ?? '')}}" />
+                                                    <input class="form-control txtPhone" name="shipping_phone_code" type="tel" id="txtPhone" class="txtbox" value="{{($shippingcode ?? '+1')}}" />
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-md-3 col-sm-6">
@@ -340,6 +342,7 @@
                             <h3 class="h4 mb-0">{{ \App\CPU\translate('Product Detail') }}</h3>
                         </div>
                         <div class="card-body">
+                            
                             <div class="table-responsive datatable-custom">
                                 <table class="table fz-12 table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
                                     <thead class="thead-light thead-50 text-capitalize">
@@ -373,7 +376,7 @@
                                                         <strong>UUID: </strong>{{$val['uuid']}}<br />
                                                         <strong>Major: </strong>{{$val['major']}}<br />
                                                         <strong>Minor: </strong>{{$val['minor']}}<br />
-                                                        <hr />
+                                                        <hr/>
                                                     @endforeach
                                                 @endif
                                             </td>
