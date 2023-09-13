@@ -515,7 +515,7 @@ class GeneralController extends Controller
         if(isset($test['status']) && $test['status'] == 2){
             return response()->json(['status'=>400,'message'=>$test['error']],200);
         }elseif(isset($test['status']) && $test['status'] == 1){
-            return response()->json(['status'=>200,'message'=>'Mail send successfully'],200);
+            return response()->json(['status'=>200,'message'=>'Mail sent successfully'],200);
         }else{
             return response()->json(['status'=>400,'message'=>'failed'],200);
         }
