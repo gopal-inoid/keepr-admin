@@ -133,7 +133,7 @@
                                     <th>{{\App\CPU\translate('customer')}} {{\App\CPU\translate('info')}}</th>
                                     <th>{{\App\CPU\translate('Total')}} {{\App\CPU\translate('Amount')}}</th>
                                     {{-- <th>{{\App\CPU\translate('Order')}} {{\App\CPU\translate('Status')}}</th> --}}
-                                    <th>{{\App\CPU\translate('Change Status')}}</th>
+                                    <th>{{\App\CPU\translate('Order Status')}}</th>
                                     <th>{{\App\CPU\translate('Action')}}</th>
                                 </tr>
                             </thead>

@@ -4,16 +4,19 @@
         <div class="navbar-nav-wrap">
             <div class="navbar-brand-wrapper">
                 <!-- Logo -->
-                @php($e_commerce_logo=\App\Model\BusinessSetting::where(['type'=>'company_web_logo'])->first()->value)
-                <a class="navbar-brand" href="{{route('admin.dashboard.index')}}" aria-label="">
+                <div class="hs-unfold">
+                    @php($e_commerce_logo=\App\Model\BusinessSetting::where(['type'=>'company_web_logo'])->first()->value)
+                <a class="navbar-brand" href="{{route('admin.dashboard.index')}}" aria-label="" >
                     <img class="navbar-brand-logo"
-                         onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                         onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'" style="height:42px !important;"
                          src="{{asset('/public/company/Artboard – 14.svg')}}" alt="Logo">
                     <img class="navbar-brand-logo-mini"
-                         onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                         onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'" style="height:42px !important;"
                          src="{{asset('/public/company/Artboard – 14.svg')}}"
                          alt="Logo">
-                </a>
+                </a> 
+                </div>
+               
                 <!-- End Logo -->
             </div>
 

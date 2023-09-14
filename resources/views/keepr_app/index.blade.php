@@ -9,6 +9,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('keepr_app_assets/style.css') }}">
     <link rel="icon" type="image/x-icon" href="{{asset("public/company/Keepr-logo-black.png")}}">
+    <style>
+        .nav-link:focus{
+            color:white !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -16,7 +21,7 @@
     <div class="Navbar-Section">
         <nav class="navbar container navbar-expand-lg navbar-dark p-3 p-lg-0">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="{{url()->current()}}">
                     <img src="{{ asset('keepr_app_assets/assests/Keepe_logo.png')}}" alt="">
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
