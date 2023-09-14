@@ -86,6 +86,45 @@
                                             <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{STATUS}">
                                                 {STATUS}
                                             </a>
+                                        </div> 
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{TOTAL_AMOUNT}">
+                                                {TOTAL_AMOUNT}
+                                            </a>
+                                        </div>  <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{TOTAL_QTY}">
+                                                {TOTAL_QTY}
+                                            </a>
+                                        </div> 
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{TAX_AMOUNT}">
+                                                {TAX_AMOUNT}
+                                            </a>
+                                        </div> 
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{PRICE}">
+                                                {PRICE}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{GRAND_TOTAL}">
+                                                {GRAND_TOTAL}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{SHIPPING_INFO}">
+                                                {SHIPPING_INFO}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{SHIPPING_AMOUNT}">
+                                                {SHIPPING_AMOUNT}
+                                            </a>
+                                        </div>
+                                        <div class="list-group mt-1">
+                                            <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{TAX_INFO}">
+                                                {TAX_INFO}
+                                            </a>
                                         </div>
                                         <div class="list-group mt-1">
                                             <a href="#" class="variable var-common mx-1 list-group-item list-group-item-action" data-value="{USERNAME}">

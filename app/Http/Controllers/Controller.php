@@ -204,6 +204,15 @@ class Controller extends BaseController
                     $email_temp->body = str_replace("{ESTIMATED_DELIVERY_DATE}", $user_data['estimated_delivery_date'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{TRACKING_ID}", $user_data['tracking_id'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{COMPANY_NAME}", 'Keepr', $email_temp->body);
+                    
+                    $email_temp->body = str_replace("{TOTAL_AMOUNT}", $user_data['total_amount'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{TOTAL_QTY}", $user_data['total_qty'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{TAX_AMOUNT}", $user_data['tax_amount'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{PRICE}", $user_data['price'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{GRAND_TOTAL}", $user_data['grand_total'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{SHIPPING_INFO}", $user_data['shipping_info'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{SHIPPING_AMOUNT}", $user_data['shipping_amount'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{TAX_INFO}", $user_data['tax_info'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{COMPANY_LOGO}", '<img src="'.url('/public/public/company/Keepe_logo.png').'" />', $email_temp->body);
                     $data['email'] = $user_data['email'] ?? "";
                     $data['subject'] = $email_temp->subject ?? "";

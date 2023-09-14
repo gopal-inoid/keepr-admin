@@ -85,7 +85,7 @@ class GeneralController extends Controller
             //echo "<pre>"; print_r($auth); die;
             $verifiedIdToken = $auth->verifyIdToken($token);
         } catch (FailedToVerifyToken $e) {
-            Common::addLog([]);
+            Common::addLog(['status'=>400,'message'=>$e->getMessage()]);
             return response()->json(['status'=>400,'message'=>$e->getMessage()],400);
         }
         $auth_token = '';
@@ -117,7 +117,7 @@ class GeneralController extends Controller
                 $auth_token = $this->auth_token($user_check->id,$user_check->auth_access_token,$fcm_token);
             }
 
-            Common::addLog([]);
+            Common::addLog(['status'=>200,'phone'=>$mobile_number,'phone_code'=>$phone_code,'auth_token'=>$auth_token,'message'=>'Success']);
             if($auth_token != ''){
                 return response()->json(['status'=>200,'phone'=>$mobile_number,'phone_code'=>$phone_code,'auth_token'=>$auth_token,'message'=>'Success'],200);
             }else{
@@ -125,7 +125,7 @@ class GeneralController extends Controller
             }
 
         }else{
-            Common::addLog([]);
+            Common::addLog(['status'=>401,'message'=>'Token not Authorized']);
             return response()->json(['status'=>401,'message'=>'Token not Authorized'],401);
         }
 
@@ -515,7 +515,7 @@ class GeneralController extends Controller
         if(isset($test['status']) && $test['status'] == 2){
             return response()->json(['status'=>400,'message'=>$test['error']],200);
         }elseif(isset($test['status']) && $test['status'] == 1){
-            return response()->json(['status'=>200,'message'=>'Mail send successfully'],200);
+            return response()->json(['status'=>200,'message'=>'Mail sent successfully'],200);
         }else{
             return response()->json(['status'=>400,'message'=>'failed'],200);
         }

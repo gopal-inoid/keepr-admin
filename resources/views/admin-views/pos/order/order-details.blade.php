@@ -283,7 +283,7 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="title-color">Estimated Delivery Date</label>
-                                                <input type="date" name="expected_delivery_date" class="form-control" value="{{date('Y-m-d',strtotime($order['expected_delivery_date']))}}" required>
+                                                <input type="date" name="expected_delivery_date" min="{{ date('Y-m-d') }}"  class="form-control" value="{{ isset($order['expected_delivery_date']) ? date('Y-m-d',strtotime($order['expected_delivery_date'])) : date('Y-m-d') }}" required>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -342,16 +342,15 @@
                             <h3 class="h4 mb-0">{{ \App\CPU\translate('Product Detail') }}</h3>
                         </div>
                         <div class="card-body">
-                            
-                            <div class="table-responsive datatable-custom">
-                                <table class="table fz-12 table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
+                        <div class="table-responsive datatable-custom orderResponsivemade">
+                                <table class="table container-fluid fz-12 table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100 overflow-hidden">
                                     <thead class="thead-light thead-50 text-capitalize">
                                         <tr>
                                             <th>{{\App\CPU\translate('SL')}}</th>
                                             <th>{{\App\CPU\translate('Product Name')}}</th>
                                             <th>Device Info</th>
+                                            <th>Qty</th> 
                                             <th>Price</th>
-                                            <th>Qty</th>
                                             <th>Total Amount</th>
                                         </tr>
                                     </thead>
@@ -380,6 +379,7 @@
                                                     @endforeach
                                                 @endif
                                             </td>
+                                            <td>{{count($detail['mac_ids'])}}</td>
                                             <td>
                                                 @php($total_price = 0)
                                                 @if(!empty($detail['mac_ids']))
@@ -389,7 +389,7 @@
                                                     @endforeach
                                                 @endif
                                             </td>
-                                            <td>{{count($detail['mac_ids'])}}</td>
+                                            
                                             <td>${{number_format($total_price,2)}}</td>
                                             @php($grand_total_qty += count($detail['mac_ids']))
                                             @php($grand_total_amt += $total_price)
@@ -398,14 +398,14 @@
                                     <tr>
                                         <td><strong>Total</strong></td>
                                         <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td></td> 
                                         <td><strong>{{$grand_total_qty}}</strong></td>
+                                        <td></td>
                                         <td><strong>${{number_format($grand_total_amt,2)}}</strong></td>
                                     </tr>
                                     </tbody>
                                 </table>
-                            </div>
+                            </div>                    
                             <div class="row justify-content-md-end mb-3">
                                 <div class="col-md-12 col-lg-12">
                                     <table class="table fz-12 table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">

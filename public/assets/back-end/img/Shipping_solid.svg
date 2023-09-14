@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_22178" data-name="Rectangle 22178" width="24" height="24" transform="translate(-366 -7038)" fill="#fff"/>
+    </clipPath>
+  </defs>
+  <g id="Shipping_solid" transform="translate(366 7038)" clip-path="url(#clip-path)">
+    <g id="fast-delivery_1670865" transform="translate(-366 -7033.102)">
+      <path id="Path_14680" data-name="Path 14680" d="M23.3,12.047H2.953a.7.7,0,0,1-.7-.7V.7a.7.7,0,0,1,.7-.7h12.9a5.232,5.232,0,0,1,4.59,2.608l1.379,2.314A2.206,2.206,0,0,1,24,7.125v4.219a.7.7,0,0,1-.7.7Zm0,0" fill="#62e3f8"/>
+      <path id="Path_14681" data-name="Path 14681" d="M21.825,4.922,20.446,2.608A5.232,5.232,0,0,0,15.856,0H13.125V12.047H23.3a.7.7,0,0,0,.7-.7V7.125A2.206,2.206,0,0,0,21.825,4.922Zm0,0" fill="#00c0f1"/>
+      <g id="Group_15434" data-name="Group 15434">
+        <path id="Path_14682" data-name="Path 14682" d="M2.953,9.234H.7a.7.7,0,0,1,0-1.406h2.25a.7.7,0,0,1,0,1.406Zm0,0" fill="#e1f6fd"/>
+        <path id="Path_14683" data-name="Path 14683" d="M7.031,6.422H.7a.7.7,0,0,1,0-1.406H7.031a.7.7,0,0,1,0,1.406Zm0,0" fill="#e1f6fd"/>
+        <path id="Path_14684" data-name="Path 14684" d="M4.949,3.656H1.406a.7.7,0,1,1,0-1.406H4.949a.7.7,0,0,1,0,1.406Zm0,0" fill="#e1f6fd"/>
+      </g>
+      <path id="Path_14685" data-name="Path 14685" d="M20.446,2.608A5.232,5.232,0,0,0,15.856,0H15.7V4.219a.7.7,0,0,0,.7.7h5.424Zm0,0" fill="#beebfa"/>
+      <path id="Path_14686" data-name="Path 14686" d="M7.008,13.5a1.992,1.992,0,1,0-1.992-1.992A2,2,0,0,0,7.008,13.5Zm0,0" fill="#e1f6fd" fill-rule="evenodd"/>
+      <path id="Path_14687" data-name="Path 14687" d="M7.008,14.2a2.7,2.7,0,1,1,2.7-2.7A2.7,2.7,0,0,1,7.008,14.2Zm0-3.984A1.289,1.289,0,1,0,8.3,11.508,1.29,1.29,0,0,0,7.008,10.219Zm0,0" fill="#1751a9"/>
+      <path id="Path_14688" data-name="Path 14688" d="M19.43,13.5a1.992,1.992,0,1,0-1.992-1.992A2,2,0,0,0,19.43,13.5Zm0,0" fill="#beebfa" fill-rule="evenodd"/>
+      <path id="Path_14689" data-name="Path 14689" d="M19.43,14.2a2.7,2.7,0,1,1,2.7-2.7A2.7,2.7,0,0,1,19.43,14.2Zm0-3.984a1.289,1.289,0,1,0,1.289,1.289A1.29,1.29,0,0,0,19.43,10.219Zm0,0" fill="#001a48"/>
+    </g>
+  </g>
+</svg>
