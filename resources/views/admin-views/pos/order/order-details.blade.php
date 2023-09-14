@@ -283,7 +283,7 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="title-color">Estimated Delivery Date</label>
-                                                <input type="date" name="expected_delivery_date" class="form-control" value="{{date('Y-m-d',strtotime($order['expected_delivery_date']))}}" required>
+                                                <input type="date" name="expected_delivery_date" min="{{ date('Y-m-d') }}"  class="form-control" value="{{ isset($order['expected_delivery_date']) ? date('Y-m-d',strtotime($order['expected_delivery_date'])) : date('Y-m-d') }}" required>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
