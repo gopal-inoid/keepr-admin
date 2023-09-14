@@ -64,14 +64,16 @@ class GeneralController extends Controller
         $mobile = $request->mobile;
         $phone_code = $request->phone_code;
         $user = User::select('id','phone','is_active')->where(['phone_code'=>$phone_code,'phone'=>$mobile])->first();
-        Common::addLog([]);
         if(!empty($user->id)){
             if($user->is_active != 1){
+                Common::addLog(['status'=>400,'message'=>'Not Activated']);
                 return response()->json(['status'=>400,'message'=>'Not Activated'],200);
             }else{
+                Common::addLog(['status'=>200,'message'=>'Success']);
                 return response()->json(['status'=>200,'message'=>'Success'],200);
             }
         }else{
+            Common::addLog(['status'=>200,'message'=>'Success']);
             return response()->json(['status'=>200,'message'=>'Success'],200);
         }
     }
