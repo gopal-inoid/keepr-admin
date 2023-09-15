@@ -342,9 +342,9 @@
                             <h3 class="h4 mb-0">{{ \App\CPU\translate('Product Detail') }}</h3>
                         </div>
                         <div class="card-body">
-                        <div class="table-responsive datatable-custom orderResponsivemade">
-                                <table class="table container-fluid fz-12 table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100 overflow-hidden">
-                                    <thead class="thead-light thead-50 text-capitalize">
+                        <div class="row table-responsive datatable-custom orderResponsivemade">
+                                <table class="table">
+                                    <thead class="thead-light text-capitalize">
                                         <tr>
                                             <th>{{\App\CPU\translate('SL')}}</th>
                                             <th>{{\App\CPU\translate('Product Name')}}</th>
@@ -405,7 +405,7 @@
                                     </tr>
                                     </tbody>
                                 </table>
-                            </div>                    
+                        </div>                    
                             <div class="row justify-content-md-end mb-3">
                                 <div class="col-md-12 col-lg-12">
                                     <table class="table fz-12 table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">

@@ -83,7 +83,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="col-md-2 form-group faq-add-main-btn">
-                                                        <i class="tio-delete-outlined text-danger remove-product-faq-btn"></i>
+                                                        {{-- <i class="tio-delete-outlined text-danger remove-product-faq-btn"></i> --}}
                                                     </div>
                                                 </td>
                                             </tr>
