@@ -266,7 +266,7 @@ class ProductController extends Controller
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
         if(!empty($user_details->id)){
-            $user_order = Order::where('customer_id',$user_details->id)->where('order_status','delivered')->first();
+            $user_order = Order::where('customer_id',$user_details->id)->where('order_status','shipped')->orderBy('id','asc')->first();
             if(!empty($user_order->id)){
                 $check_connected = ConnectedDevice::select('id')->where(['device_uuid'=>$device_uuid,'major'=>$major,'minor'=>$minor])->first();
                 if(!empty($check_connected->id)){
