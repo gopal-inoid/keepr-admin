@@ -308,8 +308,8 @@ class ProductController extends Controller
                                     ProductStock::where('product_id', $k)->where(['uuid' => $device_uuid, 'major' => $major, 'minor' => $minor])->update(['is_purchased' => 1]);
                                 }
 
-                                $user_order->mac_id = json_encode($mac_ids_array);
-                                $user_order->save();
+                                // $user_order->mac_id = json_encode($mac_ids_array);
+                                // $user_order->save();
                             }
                         }
                         Common::addLog(['status'=>200,'message'=>'Device connected successfully']);
