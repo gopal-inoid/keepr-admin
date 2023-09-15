@@ -296,11 +296,11 @@ class ProductController extends Controller
                         return response()->json(['status'=>200,'message'=>'Device connected successfully'],200);
                     }
                 }else{
-                    Common::addLog(['status'=>400,'message'=>'Device not found']);
+                    Common::addLog(['status'=>400,'message'=>'Device not found 1']);
                     return response()->json(['status'=>400,'message'=>'Device not found'],400);
                 }
             }else{
-                Common::addLog(['status'=>400,'message'=>'Device not found']);
+                Common::addLog(['status'=>400,'message'=>'Device not found 2']);
                 return response()->json(['status'=>400,'message'=>'Device not found'],400);
             }
         }
