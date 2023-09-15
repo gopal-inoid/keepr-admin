@@ -84,7 +84,7 @@ class OrderController extends Controller
             })->when($delivery_man_id, function ($q) use($delivery_man_id){
                 $q->where(['delivery_man_id'=> $delivery_man_id, 'seller_is'=>'admin']);
             })
-            ->latest()
+            ->orderBy('id','desc')
             ->paginate(Helpers::pagination_limit())
             ->appends(['search'=>$request['search'],'filter'=>$request['filter'],'from'=>$request['from'],'to'=>$request['to'],'delivery_man_id'=>$request['delivery_man_id']]);
             return view('admin-views.order.list',compact('orders','search','from', 'to', 'status','filter'));
