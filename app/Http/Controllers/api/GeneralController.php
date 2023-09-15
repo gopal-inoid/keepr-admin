@@ -75,14 +75,16 @@ class GeneralController extends Controller
         $mobile = $request->mobile;
         $phone_code = $request->phone_code;
         $user = User::select('id','phone','is_active')->where(['phone_code'=>$phone_code,'phone'=>$mobile])->first();
-        Common::addLog([]);
         if(!empty($user->id)){
             if($user->is_active != 1){
+                Common::addLog(['status'=>400,'message'=>'Not Activated']);
                 return response()->json(['status'=>400,'message'=>'Not Activated'],200);
             }else{
+                Common::addLog(['status'=>200,'message'=>'Success']);
                 return response()->json(['status'=>200,'message'=>'Success'],200);
             }
         }else{
+            Common::addLog(['status'=>200,'message'=>'Success']);
             return response()->json(['status'=>200,'message'=>'Success'],200);
         }
     }
@@ -97,7 +99,7 @@ class GeneralController extends Controller
             //echo "<pre>"; print_r($auth); die;
             $verifiedIdToken = $auth->verifyIdToken($token);
         } catch (FailedToVerifyToken $e) {
-            Common::addLog([]);
+            Common::addLog(['status'=>400,'message'=>$e->getMessage()]);
             return response()->json(['status'=>400,'message'=>$e->getMessage()],400);
         }
         $auth_token = '';
@@ -135,15 +137,16 @@ class GeneralController extends Controller
                 $auth_token = $this->auth_token($user_check->id, $user_check->auth_access_token, $fcm_token);
             }
 
-            Common::addLog([]);
             if($auth_token != ''){
+                Common::addLog(['status'=>200,'phone'=>$mobile_number,'phone_code'=>$phone_code,'auth_token'=>$auth_token,'message'=>'Success']);
                 return response()->json(['status'=>200,'phone'=>$mobile_number,'phone_code'=>$phone_code,'auth_token'=>$auth_token,'message'=>'Success'],200);
             }else{
+                Common::addLog(['status'=>401,'message'=>'Token not Authorized']);
                 return response()->json(['status'=>401,'message'=>'Token not Authorized'],401);
             }
 
         }else{
-            Common::addLog([]);
+            Common::addLog(['status'=>401,'message'=>'Token not Authorized']);
             return response()->json(['status'=>401,'message'=>'Token not Authorized'],401);
         }
 
