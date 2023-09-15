@@ -317,11 +317,8 @@ class CartController extends Controller
         }
 
         $product_info=[];
-        // echo "<pre>";echo $user_details->id;exit;
         if (!empty($user_details->id)) {
-
             $cart_info = Cart::select('id', 'customer_id', 'product_id', 'price', 'quantity')->where('quantity', '>', 0)->whereIn('id', $cart_ids)->get();
-            // echo "<pre>"; print_r($cart_info); die;
             $status=1;
             if (!empty($cart_info[0])) {
                 foreach ($cart_info as $cart) {                   
@@ -379,11 +376,14 @@ class CartController extends Controller
                 if (!empty($order->mac_ids)) {
                     $mac_ids = json_decode($order->mac_ids, true);
                     foreach ($mac_ids as $product_id => $mac_values) {
-                        foreach ($mac_values as $k => $macss) {
-                            foreach ($macss as $m => $macs) {
-                                ProductStock::where('product_id', $product_id)->where(['uuid' => $mac_values['uuid'][$m], 'major' => $mac_values['major'][$m], 'minor' => $mac_values['minor'][$m]])->update(['is_purchased' => 1]);
-                            }
-                        }
+
+                        //code commented for mark as purchased
+
+                        // foreach ($mac_values as $k => $macss) {
+                        //     foreach ($macss as $m => $macs) {
+                        //         ProductStock::where('product_id', $product_id)->where(['uuid' => $mac_values['uuid'][$m], 'major' => $mac_values['major'][$m], 'minor' => $mac_values['minor'][$m]])->update(['is_purchased' => 1]);
+                        //     }
+                        // }
                         Cart::where('customer_id', $user_details->id)->where('product_id', $product_id)->delete();
                     }
                 }

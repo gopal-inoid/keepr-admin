@@ -63,27 +63,27 @@
                                         <div class="row mac_id-individual">
                                             <div class="col-md-3">
                                                 <div class="form-group mb-0">
-                                                    <label class="title-color">{{ \App\CPU\translate('Device ID') }}</label>
+                                                    <label class="title-color">{{ \App\CPU\translate('Device ID') }}<span class="text-danger">*</span></label>
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-group mb-0">
-                                                    <label class="title-color">{{ \App\CPU\translate('UUID') }}</label>
+                                                    <label class="title-color">{{ \App\CPU\translate('UUID') }}<span class="text-danger">*</span></label>
                                                 </div>
                                             </div>
                                             <div class="col-md-1">
                                                 <div class="form-group mb-0">
-                                                <label class="title-color">{{ \App\CPU\translate('major') }}</label>
+                                                <label class="title-color">{{ \App\CPU\translate('major') }}<span class="text-danger">*</span></label>
                                                 </div>
                                             </div>
                                             <div class="col-md-1">
                                                 <div class="form-group mb-0">
-                                                <label class="title-color">{{ \App\CPU\translate('minor') }}</label>
+                                                <label class="title-color">{{ \App\CPU\translate('minor') }}<span class="text-danger">*</span></label>
                                                 </div>
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="form-group mb-0">
-                                                    <label class="title-color">{{ \App\CPU\translate('Color') }}</label>
+                                                    <label class="title-color">{{ \App\CPU\translate('Color') }}<span class="text-danger">*</span></label>
                                                 </div>
                                             </div>
                                         </div>

@@ -144,7 +144,7 @@
                                             <div class="col-lg-2 col-md-3 col-sm-3">
                                                 <div class="form-group">
                                                     <label class="title-color d-flex">Phone Code</label>
-                                                    <input class="form-control txtPhone" name="billing_phone_code" type="tel" id="txtPhone" class="txtbox" value="{{($phonecode ?? '+1')}}" />
+                                                    <input  class="form-control txtPhone" name="billing_phone_code" type="tel" id="txtPhone" class="txtbox" value="{{($phonecode ?? '+1')}}" />
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-md-3 col-sm-6">
@@ -240,13 +240,13 @@
                                             <div class="col-lg-2 col-md-3 col-sm-3">
                                                 <div class="form-group">
                                                     <label class="title-color d-flex">Phone Code</label>
-                                                    <input class="form-control txtPhone" name="shipping_phone_code" type="tel" id="txtPhone" class="txtbox" value="{{($shippingcode ?? '+1')}}" />
+                                                    <input  class="form-control txtPhone" name="shipping_phone_code" type="tel"  id="txtPhone" class="txtbox" value="{{($shippingcode ?? '+1')}}" />
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-md-3 col-sm-6">
                                                 <label class="title-color">Phone</label>
                                                 <div class="form-group">
-                                                <input type="number" class="form-control" value="{{$order->customer['shipping_phone'] ?? ''}}" name="shipping_phone" placeholder="{{ \App\CPU\translate('Phone') }}" />
+                                                <input readonly type="number" class="form-control" value="{{$order->customer['shipping_phone'] ?? ''}}" name="shipping_phone" placeholder="{{ \App\CPU\translate('Phone') }}" />
                                                 </div>
                                             </div>
                                         </div>
@@ -385,12 +385,12 @@
                                                 @if(!empty($detail['mac_ids']))
                                                     @foreach($detail['mac_ids'] as $val)
                                                     @php($total_price += $detail['price'])
-                                                    <br />US${{$detail['price'] ?? ''}}<br /><br /><hr />
+                                                    <br />US ${{$detail['price'] ?? ''}}<br /><br /><hr />
                                                     @endforeach
                                                 @endif
                                             </td>
                                             
-                                            <td>US${{number_format($total_price,2)}}</td>
+                                            <td>US ${{number_format($total_price,2)}}</td>
                                             @php($grand_total_qty += count($detail['mac_ids']))
                                             @php($grand_total_amt += $total_price)
                                         </tr>
@@ -401,7 +401,7 @@
                                         <td></td> 
                                         <td><strong>{{$grand_total_qty}}</strong></td>
                                         <td></td>
-                                        <td><strong>US${{number_format($grand_total_amt,2)}}</strong></td>
+                                        <td><strong>US ${{number_format($grand_total_amt,2)}}</strong></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -425,7 +425,7 @@
                                                         <strong>{{$taxes['title']}}</strong><br />
                                                     @endforeach
                                                 </td>
-                                                <td class="text-right"><strong>US${{number_format($tx_amt,2)}}</strong></td>
+                                                <td class="text-right"><strong>US ${{number_format($tx_amt,2)}}</strong></td>
                                             </tr>
                                             <tr>
                                                 <td>
@@ -435,13 +435,13 @@
                                                     <strong>Shipping Mode: {{$shipping_info['mode'] ?? ''}}</strong>
                                                 </td>
                                                 <td class="text-right">
-                                                    <strong>US${{number_format($shipping_info['amount'] ?? 0,2)}}</strong>
+                                                    <strong>US ${{number_format($shipping_info['amount'] ?? 0,2)}}</strong>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td><h4><strong>Grand Total</strong></h4></td>
                                                 <td class="text-right">
-                                                    <h4><strong>US${{number_format($total_order_amount,2)}}</strong></h4>
+                                                    <h4><strong>US ${{number_format($total_order_amount,2)}}</strong></h4>
                                                 </td>
                                             </tr>
                                         </tbody>

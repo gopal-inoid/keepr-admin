@@ -155,7 +155,7 @@
                     @csrf
                     <div class="card rest-part">
                         <div class="px-3 py-4 d-flex flex-wrap align-items-center gap-10 justify-content-center">
-                            <h4 class="mb-0">{{\App\CPU\translate("Don`t_have_the_template_?")}}</h4>
+                            <h4 class="mb-0">{{\App\CPU\translate("Do_not_have_the_template_?")}}</h4>
                             <a href="{{asset('public/assets/product_stocks_bulk_format.xlsx')}}" download=""
                             class="btn-link text-capitalize fz-16 font-weight-medium">{{\App\CPU\translate('download_here')}}</a>
                         </div>

@@ -265,25 +265,46 @@ class ProductController extends Controller
         $minor = $request->minor;
         $auth_token   = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token'=>$auth_token])->first();
-        Common::addLog([]);
         if(!empty($user_details->id)){
-            //$check_connected = ConnectedDevice::select('id')->where(['device_uuid'=>$device_uuid,'major'=>$major,'minor'=>$minor,'user_id'=>$user_details->id])->first();
-            $check_connected = ConnectedDevice::select('id')->where(['device_uuid'=>$device_uuid,'major'=>$major,'minor'=>$minor])->first();
-            if(!empty($check_connected->id)){
-                return response()->json(['status'=>400,'message'=>'You cannot connect to this device, it is already connected with another user.'],400);
-            }
-            $device_info = ProductStock::select('products.name')->join('products','product_stocks.product_id','products.id')->where(['product_stocks.uuid'=>$device_uuid,'product_stocks.major'=>$major,'product_stocks.minor'=>$minor])->first();
-            //$device_info = Product::select('name')->where('mac_id',$device_mac_id)->first();
-            if(!empty($device_info->name)){
-                $check = ConnectedDevice::insert(['device_name'=>$device_info->name,'mac_id'=>$device_mac_id,'user_id'=>$user_details->id,'device_uuid'=>$device_uuid,'distance'=>$distance,'major'=>$major,'minor'=>$minor]);
-                if($check){
-                    return response()->json(['status'=>200,'message'=>'Device connected successfully'],200);
+            $user_order = Order::where('customer_id',$user_details->id)->where('order_status','delivered')->first();
+            if(!empty($user_order->id)){
+                $check_connected = ConnectedDevice::select('id')->where(['device_uuid'=>$device_uuid,'major'=>$major,'minor'=>$minor])->first();
+                if(!empty($check_connected->id)){
+                    Common::addLog(['status'=>400,'message'=>'You cannot connect to this device, it is already connected with another user.']);
+                    return response()->json(['status'=>400,'message'=>'You cannot connect to this device, it is already connected with another user.'],400);
+                }
+                $device_info = ProductStock::select('products.id as pro_id','products.name')->join('products','product_stocks.product_id','products.id')
+                                            ->where(['product_stocks.uuid'=>$device_uuid,'product_stocks.major'=>$major,'product_stocks.minor'=>$minor])->first();
+                if(!empty($device_info->pro_id)){
+                    $check = ConnectedDevice::insert(['device_name'=>$device_info->name,'mac_id'=>$device_mac_id,'user_id'=>$user_details->id,'device_uuid'=>$device_uuid,'distance'=>$distance,'major'=>$major,'minor'=>$minor]);
+                    if($check){
+
+                        if(!empty($user_order->mac_ids)){
+                            $mac_ids = json_decode($user_order->mac_ids,true);
+                            if(!empty($mac_ids)){
+                                foreach($mac_ids as $k => $val){
+                                    if(!empty($val)){
+                                        foreach($val['uuid'] as $k1 => $val1){
+                                            ProductStock::where('product_id', $k)->where(['uuid' => $val1, 'major' => $val['major'][$k1], 'minor' => $val['minor'][$k1]])->update(['is_purchased' => 1]);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        Common::addLog(['status'=>200,'message'=>'Device connected successfully']);
+                        return response()->json(['status'=>200,'message'=>'Device connected successfully'],200);
+                    }
+                }else{
+                    Common::addLog(['status'=>400,'message'=>'Device not found']);
+                    return response()->json(['status'=>400,'message'=>'Device not found'],400);
                 }
             }else{
+                Common::addLog(['status'=>400,'message'=>'Device not found']);
                 return response()->json(['status'=>400,'message'=>'Device not found'],400);
             }
         }
-
+        Common::addLog(['status'=>400,'message'=>'Something Went Wrong, Please try again latter']);
         return response()->json(['status'=>400,'message'=>'Something Went Wrong, Please try again latter'],400);
     }
 
