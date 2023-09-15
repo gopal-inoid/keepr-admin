@@ -357,7 +357,7 @@ class CartController extends Controller
                         $status=0;
                     }
                 }
-                if ($status==0) {
+                if ($status==0 || $error == 1) {
                     return response()->json(['status' => 400, 'message' => 'Device not available'], 400);
                 }
                 $stripe_payment_create = $this->CreateCheckout($total_amount);
