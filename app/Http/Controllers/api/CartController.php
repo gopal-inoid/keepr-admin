@@ -450,7 +450,7 @@ class CartController extends Controller
             $this->save_invoice($order_id);
             $invoice_file_path = public_path('public/assets/orders/order_invoice_' . $order_id . '.pdf');
 
-            //$order_attribute = $this->getOrderAttr($update_order->mac_ids);
+            $order_attribute = $this->getOrderAttr($update_order->mac_ids);
             //$this->print_r($a);
             if (!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])) {
                 $product_names = implode(',', $order_attribute['product_name']);
