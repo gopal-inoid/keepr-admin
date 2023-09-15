@@ -46,15 +46,9 @@
                                 <span class="text">{{\App\CPU\translate('Import')}}</span>
                             </a>
                             <div>
-                                <button type="button" class="btn btn-outline--primary" data-toggle="dropdown">
-                                    <i class="tio-download-to"></i>
-                                    Export
-                                    <i class="tio-chevron-down"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a class="dropdown-item" href="{{route('admin.product.stocks.export-excel')}}">Excel</a></li>
-                                    <div class="dropdown-divider"></div>
-                                </ul>
+                                <a  href="{{route('admin.product.stocks.export-excel')}}" type="button" class="btn btn-outline--primary">
+                                         <i class="tio-download-to"></i>Export
+                                </a>
                             </div>
                             <a href="{{route('admin.product.stocks.add-new')}}" class="btn btn--primary">
                                 <i class="tio-add"></i>
@@ -170,7 +164,7 @@
                                 <div class="row justify-content-center">
                                     <div class="col-auto">
                                         <div class="upload-file">
-                                            <input type="file" name="products_file" accept=".xlsx, .xls" class="upload-file__input">
+                                            <input required type="file" name="products_file" accept=".xlsx, .xls" class="upload-file__input">
                                             <div class="upload-file__img_drag upload-file__img">
                                                 <img src="{{asset('/public/assets/back-end/img/drag-upload-file.png')}}" alt="">
                                             </div>
@@ -178,7 +172,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex flex-wrap gap-10 align-items-center justify-content-end">
+                            <div class="d-flex flex-wrap gap-10 align-items-center justify-content-between">
+                                <span class="text-danger">Note: Only Excel & Csv files allowed.</span>
                                 <button type="submit" class="btn btn--primary px-4">{{\App\CPU\translate('Submit')}}</button>
                             </div>
                         </div>
