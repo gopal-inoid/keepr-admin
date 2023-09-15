@@ -328,30 +328,36 @@ class CartController extends Controller
                         $price = $get_product_info->price ?? 0;
                         $product_info[$cart['product_id']]['product_name'] = $get_product_info->name ?? "";
                         $product_info[$cart['product_id']]['thumbnail'] = $get_product_info->thumbnail ?? "";
+                        $product_info[$cart['product_id']]['order_qty'] = $cart['quantity'] ?? 0;
+
                         $per_device_amount[$cart['product_id']] = $price;
-                        $total_price += ($price * $cart['quantity']);
-                        $get_random_stocks = ProductStock::select('mac_id','uuid', 'major', 'minor', 'product_id')->where('is_purchased', 0)
-                            ->where('product_id', $cart['product_id'])
-                            ->inRandomOrder()->limit($cart['quantity'])->get();
-                        if (!empty($get_random_stocks)) {
-                            foreach ($get_random_stocks as $m => $macid) {
-                                if (!empty($existed_mac_ids) && (in_array($macid['uuid'], $existed_mac_ids['uuid']) && in_array($macid['major'], $existed_mac_ids['major']) && in_array($macid['minor'], $existed_mac_ids['minor']))) {
-                                } else {
-                                    $mac_ids_array[$cart['product_id']]['device_id'][] = $macid['mac_id'];
-                                    $mac_ids_array[$cart['product_id']]['uuid'][] = $macid['uuid'];
-                                    $mac_ids_array[$cart['product_id']]['major'][] = $macid['major'];
-                                    $mac_ids_array[$cart['product_id']]['minor'][] = $macid['minor'];
-                                }
-                            }
-                        }
-                        if (!in_array($cart['product_id'], array_keys($mac_ids_array))) {
-                            $error = 1;
-                        }   
+                        // $total_price += ($price * $cart['quantity']);
+
+                        // $get_random_stocks = ProductStock::select('mac_id','uuid', 'major', 'minor', 'product_id')->where('is_purchased', 0)
+                        //     ->where('product_id', $cart['product_id'])
+                        //     ->inRandomOrder()->limit($cart['quantity'])->get();
+                        // if (!empty($get_random_stocks)) {
+                        //     foreach ($get_random_stocks as $m => $macid) {
+                        //         if (!empty($existed_mac_ids) && (in_array($macid['uuid'], $existed_mac_ids['uuid']) && in_array($macid['major'], $existed_mac_ids['major']) && in_array($macid['minor'], $existed_mac_ids['minor']))) {
+                        //         } else {
+
+                                    // $mac_ids_array[$cart['product_id']]['device_id'][] = $macid['mac_id'];
+                                    // $mac_ids_array[$cart['product_id']]['uuid'][] = $macid['uuid'];
+                                    // $mac_ids_array[$cart['product_id']]['major'][] = $macid['major'];
+                                    // $mac_ids_array[$cart['product_id']]['minor'][] = $macid['minor'];
+
+                                //}
+                            //}
+                       // }
+                        // if (!in_array($cart['product_id'], array_keys($mac_ids_array))) {
+                        //     $error = 1;
+                        // }
+
                     }else{
                         $status=0;
                     }
                 }
-                if ($error == 1||$status==0) {
+                if ($status==0) {
                     return response()->json(['status' => 400, 'message' => 'Device not available'], 400);
                 }
                 $stripe_payment_create = $this->CreateCheckout($total_amount);
@@ -369,7 +375,7 @@ class CartController extends Controller
                 $order->taxes = $taxes;
                 $order->shipping_rate_id = $shipping_rate_id;
                 $order->shipping_mode = $shipping_mode;
-                $order->mac_ids = json_encode($mac_ids_array);
+                //$order->mac_ids = json_encode($mac_ids_array);
                 $order->order_amount = $total_amount;
                 $order->product_info=json_encode($product_info);
                 $order->save();
@@ -385,6 +391,7 @@ class CartController extends Controller
                         //         ProductStock::where('product_id', $product_id)->where(['uuid' => $mac_values['uuid'][$m], 'major' => $mac_values['major'][$m], 'minor' => $mac_values['minor'][$m]])->update(['is_purchased' => 1]);
                         //     }
                         // }
+
                         Cart::where('customer_id', $user_details->id)->where('product_id', $product_id)->delete();
                     }
                 }
