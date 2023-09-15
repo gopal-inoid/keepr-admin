@@ -26,7 +26,7 @@
         <!-- Page Title -->
         <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
             <h2 class="h1 mb-0 d-flex gap-2">
-                <img src="{{asset('/public/assets/back-end/img/inhouse-product-list.png')}}" alt="">
+                <img src="{{asset('/assets/back-end/img/Stock_Management_Solid.svg')}}" alt="">
                 {{\App\CPU\translate('Product')}} {{\App\CPU\translate('Stocks')}} {{\App\CPU\translate('Edit')}}
             </h2>
         </div>
@@ -99,7 +99,8 @@
                                                 </div>
 												<div class="col-md-3">
                                                     <div class="form-group">
-                                                        <input type="text" @if(!empty($stocks->is_purchased)) disabled="disabled" @endif name="uuid[{{$k}}]" class="form-control " value="{{ $stocks->uuid }}" placeholder="{{ \App\CPU\translate('UUID') }}" required>
+                                                        <input type="text" style="text-transform: uppercase;" maxlength="36"  @if(!empty($stocks->is_purchased)) disabled="disabled" @endif name="uuid[{{$k}}]" class="form-control uuid" value="{{ $stocks->uuid }}" id="uuid" placeholder="{{ \App\CPU\translate('UUID') }}" required>
+                                                        <span class="uuid_notice v_notice text-danger" id="uuid_notice"></span>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-1">
@@ -159,15 +160,94 @@
     <script src="{{asset('public/assets/back-end/js/spartan-multi-image-picker.js')}}"></script>
     <script>
 
-    // function formatMAC(e) {
-    //     var r = /([a-f0-9]{2})([a-f0-9]{2})/i,
-    //         str = e.target.value.replace(/[^a-f0-9]/ig, "");
-    //     while (r.test(str)) {
-    //         str = str.replace(r, '$1' + ':' + '$2');
-    //     }
-    //     e.target.value = str.slice(0, 17);
-    // };
-    // $(document).on('keyup','.macAddress',formatMAC);
+$(document).on("keydown",".uuid", function (e) {
+                    let keycode=e.keyCode|| e.which;
+                         let ctrlKey = e.ctrlKey || e.metaKey;
+                         let value=$(this).val().trim();
+                            uuidinputFormat(value,this);
+                            function uuidinputFormat(value,elm){
+                                if(value.length<=36){
+                                    if(value.length==8||value.length==13||value.length==18||value.length==23){
+                                            elm.value += '-';
+                                    } 
+                                    const lastChar = value.charAt(value.length - 1);
+                                    if (lastChar === '-') {
+                                    value = value.substring(0, value.length - 1);
+                                    elm.value=value;
+                                    }
+                                }     
+                            }
+                });
+                
+                $(document).on("paste",".uuid", function (e) {
+                    let elm = $(this);
+                     setTimeout(function(){
+                        let value=$(elm).val().trim();
+                        if(!isValidUUID(value)){
+                            $(elm).val(convertToUUID(value));
+                        }else{
+                            $(elm).val(value);
+                        }
+                    },10);
+                    function convertToUUID(value) {
+                    // Remove any unwanted characters (e.g., spaces or dashes)
+                    const cleanedValue = value.replace(/[^0-9A-Fa-f]/g, '');
+                    // Ensure the cleaned value has the correct length
+                    const formattedValue = cleanedValue.slice(0, 8) + '-' +
+                                            cleanedValue.slice(8, 12) + '-' +
+                                            cleanedValue.slice(12, 16) + '-' +
+                                            cleanedValue.slice(16, 20) + '-' +
+                                            cleanedValue.slice(20, 32);
+
+                    return formattedValue;
+                    } 
+                    function isValidUUID(value) {
+                            const pattern = /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/;
+                            return pattern.test(value);
+                    }
+                });
+                $(".product-form").submit(function(e){
+                    var isValidated=true;
+                    $(".uuid").each(function(){
+                        let uuid=$(this).val().trim();
+                        if(!isValidUUID(uuid)){
+                            $(this).next().html("");
+                            $(this).next().html("Invalid uuid");
+                            isValidated = false;
+                        }
+                        function isValidUUID(uuid) {
+                            // Define the regular expression pattern
+                            const pattern = /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/;
+
+                            // Use the test method to check if the UUID matches the pattern
+                            return pattern.test(uuid);
+                        }
+                        if(uuid <= 0 || uuid.length < 36){
+                            $(this).next().html("");
+                             $(this).next().html("Invalid value");
+                             $(this).next().val("");
+                            isValidated = false;
+                        }
+                    });
+                    if(!isValidated){
+                    e.preventDefault();
+                    window.scrollTo(0, 0);
+                }
+            });
+
+                    // function formatMAC(e) {
+                    //     var r = /([a-f0-9]{2})([a-f0-9]{2})/i,
+                    //         str = e.target.value.replace(/[^a-f0-9]/ig, "");
+                    //     while (r.test(str)) {
+                    //         str = str.replace(r, '$1' + ':' + '$2');
+                    //     }
+                    //     e.target.value = str.slice(0, 17);
+                    // };
+                // $(document).on('keyup','.macAddress',formatMAC);
+
+                       // UUID Fix Format Validation
+                 
+                   
 
         var cnt = (parseInt("{{$product_stock_cnt}}") - 1);
 
@@ -184,8 +264,9 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <input type="text" name="uuid[`+(cnt+1)+`]" class="form-control " value="" placeholder="{{ \App\CPU\translate('UUID') }}" required>
-                        </div>
+                            <input type="text" name="uuid[`+(cnt+1)+`]" class="form-control uuid" style="text-transform:uppercase;" maxlength="36" id="uuid" value="" placeholder="{{ \App\CPU\translate('UUID') }}" required>
+                            <span class="uuid_notice v_notice text-danger" id="uuid_notice"></span>
+                             </div>
                     </div>
                     <div class="col-md-1">
                         <div class="form-group">

@@ -3,7 +3,7 @@
 @section('title', \App\CPU\translate('Order Details'))
 
 @push('css_or_js')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.8/css/intlTelInput.css" />
 @endpush
 
@@ -130,19 +130,21 @@
                                                     <input type="text" name="billing_zip" class="form-control" value="{{$order->customer['zip']}}" placeholder="{{ \App\CPU\translate('Name') }}">
                                                 </div>
                                             </div>
-                                            @if(!empty($order->customer['billing_phone_code']))
-                                                @php 
-                                                $phonecode = explode('+',$order->customer['billing_phone_code']);
-                                                    if(!empty($phonecode[1])){
-                                                        $codeadded = '+'.$phonecode[1];
-                                                    }
-                                                @endphp
-                                            @endif
                                             
+                                          
+                                           @if(!empty($order->customer['billing_phone_code']))
+                                            @php 
+                                                $phonecode = $order->customer['billing_phone_code'];
+                                                // Check if $phonecode starts with '+', if not, add it
+                                                if (!Str::startsWith($phonecode, '+')) {
+                                                    $phonecode = '+' . $phonecode;
+                                                }
+                                            @endphp
+                                            @endif
                                             <div class="col-lg-2 col-md-3 col-sm-3">
                                                 <div class="form-group">
                                                     <label class="title-color d-flex">Phone Code</label>
-                                                    <input class="form-control txtPhone" name="billing_phone_code" type="tel" id="txtPhone" class="txtbox" value="{{($codeadded ?? '')}}" />
+                                                    <input class="form-control txtPhone" name="billing_phone_code" type="tel" id="txtPhone" class="txtbox" value="{{($phonecode ?? '+1')}}" />
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-md-3 col-sm-6">
@@ -228,16 +230,17 @@
 
                                             @if(!empty($order->customer['shipping_phone_code']))
                                                 @php 
-                                                $phonecode = explode('+',$order->customer['shipping_phone_code']);
-                                                    if(!empty($phonecode[1])){
-                                                        $codeadded = '+'.$phonecode[1];
+                                                    $shippingcode = $order->customer['shipping_phone_code'];
+                                                    // Check if $shippingcode starts with '+', if not, add it
+                                                    if (!Str::startsWith($shippingcode, '+')) {
+                                                        $shippingcode = '+' . $shippingcode;
                                                     }
                                                 @endphp
                                             @endif
                                             <div class="col-lg-2 col-md-3 col-sm-3">
                                                 <div class="form-group">
                                                     <label class="title-color d-flex">Phone Code</label>
-                                                    <input class="form-control txtPhone" name="shipping_phone_code" type="tel" id="txtPhone" class="txtbox" value="{{($codeadded ?? '')}}" />
+                                                    <input class="form-control txtPhone" name="shipping_phone_code" type="tel" id="txtPhone" class="txtbox" value="{{($shippingcode ?? '+1')}}" />
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-md-3 col-sm-6">
@@ -280,7 +283,7 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="title-color">Estimated Delivery Date</label>
-                                                <input type="date" name="expected_delivery_date" class="form-control" value="{{date('Y-m-d',strtotime($order['expected_delivery_date']))}}" required>
+                                                <input type="date" name="expected_delivery_date" min="{{ date('Y-m-d') }}"  class="form-control" value="{{ isset($order['expected_delivery_date']) ? date('Y-m-d',strtotime($order['expected_delivery_date'])) : date('Y-m-d') }}" required>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -339,15 +342,15 @@
                             <h3 class="h4 mb-0">{{ \App\CPU\translate('Product Detail') }}</h3>
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive datatable-custom">
-                                <table class="table fz-12 table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
-                                    <thead class="thead-light thead-50 text-capitalize">
+                        <div class="row table-responsive datatable-custom orderResponsivemade">
+                                <table class="table">
+                                    <thead class="thead-light text-capitalize">
                                         <tr>
                                             <th>{{\App\CPU\translate('SL')}}</th>
                                             <th>{{\App\CPU\translate('Product Name')}}</th>
                                             <th>Device Info</th>
+                                            <th>Qty</th> 
                                             <th>Price</th>
-                                            <th>Qty</th>
                                             <th>Total Amount</th>
                                         </tr>
                                     </thead>
@@ -362,7 +365,7 @@
                                                 <div class="media align-items-center gap-10">
                                                     <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$detail['thumbnail']}}" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt="">
                                                     <div>
-                                                        <a href="#" class="title-color hover-c1"><h6>{{substr($detail['name'],0,30)}}{{strlen($detail['name'])>10?'...':''}}</h6></a>
+                                                        <a href="#" class="title-color hover-c1"><h1>{{substr($detail['name'],0,30)}}{{strlen($detail['name'])>10?'...':''}}</h1></a>
                                                     </div>
                                                 </div>
                                             </td>
@@ -372,10 +375,11 @@
                                                         <strong>UUID: </strong>{{$val['uuid']}}<br />
                                                         <strong>Major: </strong>{{$val['major']}}<br />
                                                         <strong>Minor: </strong>{{$val['minor']}}<br />
-                                                        <hr />
+                                                        <hr/>
                                                     @endforeach
                                                 @endif
                                             </td>
+                                            <td>{{count($detail['mac_ids'])}}</td>
                                             <td>
                                                 @php($total_price = 0)
                                                 @if(!empty($detail['mac_ids']))
@@ -385,7 +389,7 @@
                                                     @endforeach
                                                 @endif
                                             </td>
-                                            <td>{{count($detail['mac_ids'])}}</td>
+                                            
                                             <td>${{number_format($total_price,2)}}</td>
                                             @php($grand_total_qty += count($detail['mac_ids']))
                                             @php($grand_total_amt += $total_price)
@@ -394,14 +398,14 @@
                                     <tr>
                                         <td><strong>Total</strong></td>
                                         <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td></td> 
                                         <td><strong>{{$grand_total_qty}}</strong></td>
+                                        <td></td>
                                         <td><strong>${{number_format($grand_total_amt,2)}}</strong></td>
                                     </tr>
                                     </tbody>
                                 </table>
-                            </div>
+                        </div>                    
                             <div class="row justify-content-md-end mb-3">
                                 <div class="col-md-12 col-lg-12">
                                     <table class="table fz-12 table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">

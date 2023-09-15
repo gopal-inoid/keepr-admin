@@ -80,6 +80,7 @@ class SystemController extends Controller
     }
 
     public function update_pending_email(){
+        //DB::table('cron_log')->insert(['cron type'=>'order_status','data'=>json_encode(['success' => 1,'total_updated' => 1])]);
         $new_order = DB::table('orders')->where(['order_status' => 'pending','payment_status'=>'unpaid'])
         ->whereRaw('DATE(created_at) < CURDATE() - INTERVAL 5 minutes')->get();
         $total_status = 0;
@@ -159,7 +160,7 @@ class SystemController extends Controller
                 }
             }
         }
-        //DB::table('cron_log')->insert(['cron type'=>'order_status','data'=>json_encode(['success' => 1,'total_updated' => $total_status])]);
+        DB::table('cron_log')->insert(['cron type'=>'order_status','data'=>json_encode(['success' => 1,'total_updated' => $total_status])]);
         return response()->json([
             'success' => 1,
             'total_updated' => $total_status

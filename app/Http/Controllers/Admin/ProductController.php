@@ -34,29 +34,29 @@ class ProductController extends BaseController
         $cat = Category::where(['parent_id' => 0])->get();
         $br = Brand::orderBY('name', 'ASC')->get();
         $colors = Color::get();
-        
         $brand_setting = BusinessSetting::where('type', 'product_brand')->first()->value;
+
         $digital_product_setting = BusinessSetting::where('type', 'digital_product')->first()->value;
-        return view('admin-views.product.add-new', compact('cat','colors', 'br', 'brand_setting', 'digital_product_setting'));
+        return view('admin-views.product.add-new', compact('cat', 'colors', 'br', 'brand_setting', 'digital_product_setting'));
     }
 
     public function add_new_stock()
     {
-        $products = Product::select('id','name','colors')->where('status', 1)->orderBy('id','desc')->get();
+        $products = Product::select('id', 'name', 'colors')->where('status', 1)->orderBy('id', 'desc')->get();
         //$colors = Color::get();
         $product_options = [];
-        if(!empty($products)){
+        if (!empty($products)) {
             $i = 0;
-            foreach($products as $k => $pro){
-                $stockcount = ProductStock::where('product_id',$pro->id)->count();
-                if($stockcount == 0){
-                    $product_options[$pro->id]['product'] = '<option value="'.$pro->id.'">'.$pro->name.'</option>';
-                    if(!empty($pro->colors) && $i == 0){
-                        $productcolors = explode(",",$pro->colors);
-                        $pro_color = Color::select('id','name')->whereIn('id',$productcolors)->get();
-                        if(!empty($pro_color)){
-                            foreach($pro_color as $col){
-                                $product_options[$pro->id]['colors'][] = '<option value="'.$col->id.'">'.$col->name.'</option>';
+            foreach ($products as $k => $pro) {
+                $stockcount = ProductStock::where('product_id', $pro->id)->count();
+                if ($stockcount == 0) {
+                    $product_options[$pro->id]['product'] = '<option value="' . $pro->id . '">' . $pro->name . '</option>';
+                    if (!empty($pro->colors) && $i == 0) {
+                        $productcolors = explode(",", $pro->colors);
+                        $pro_color = Color::select('id', 'name')->whereIn('id', $productcolors)->get();
+                        if (!empty($pro_color)) {
+                            foreach ($pro_color as $col) {
+                                $product_options[$pro->id]['colors'][] = '<option value="' . $col->id . '">' . $col->name . '</option>';
                             }
                         }
                         $i++;
@@ -65,20 +65,20 @@ class ProductController extends BaseController
             }
         }
         //echo "<pre>"; print_r($product_options); die;
-        return view('admin-views.product.add-new-stock', compact('products','product_options'));
+        return view('admin-views.product.add-new-stock', compact('products', 'product_options'));
     }
 
     public function get_product_colors(Request $request)
     {
         $products = Product::find($request->product_id);
         $product_options['colors'] = '';
-        if(!empty($products)){
-            if(!empty($products->colors)){
-                $productcolors = explode(",",$products->colors);
-                $pro_color = Color::select('id','name')->whereIn('id',$productcolors)->get();
-                if(!empty($pro_color)){
-                    foreach($pro_color as $col){
-                        $product_options['colors'] .= '<option value="'.$col->id.'">'.$col->name.'</option>';
+        if (!empty($products)) {
+            if (!empty($products->colors)) {
+                $productcolors = explode(",", $products->colors);
+                $pro_color = Color::select('id', 'name')->whereIn('id', $productcolors)->get();
+                if (!empty($pro_color)) {
+                    foreach ($pro_color as $col) {
+                        $product_options['colors'] .= '<option value="' . $col->id . '">' . $col->name . '</option>';
                     }
                 }
             }
@@ -122,7 +122,7 @@ class ProductController extends BaseController
     }
 
     public function store(Request $request)
-    { 
+    {
         $validator = Validator::make($request->all(), [
             'name'                 => 'required',
             'purchase_price'       => 'required|numeric|min:1',
@@ -142,7 +142,8 @@ class ProductController extends BaseController
         if (is_null($request->name[array_search('en', $request->lang)])) {
             $validator->after(function ($validator) {
                 $validator->errors()->add(
-                    'name', 'Name field is required!'
+                    'name',
+                    'Name field is required!'
                 );
             });
         }
@@ -150,17 +151,17 @@ class ProductController extends BaseController
         if ($validator->errors()->count() > 0) {
             //echo "<pre>"; print_r(); die;
             $errors = Helpers::error_processor($validator);
-            if(!empty($errors)){
-                
-                foreach($errors as $k => $val){
+            if (!empty($errors)) {
+
+                foreach ($errors as $k => $val) {
                     //$val = 'Product updated successfully.';
                     // if($val['code'] == 'images'){
                     //     return 
                     // }
                     // $err_array .= $val['message'] . ",";
-                    Toastr::error($val['message']); return back();
+                    Toastr::error($val['message']);
+                    return back();
                 }
-                
             }
         }
 
@@ -181,20 +182,20 @@ class ProductController extends BaseController
 
         //echo "<pre>"; print_r($request->colors); die;
 
-        if(isset($request->colors) && count($request->colors) > 0){
-            $colors = implode(",",$request->colors);
+        if (isset($request->colors) && count($request->colors) > 0) {
+            $colors = implode(",", $request->colors);
         }
-        if(isset($request->spec) && count($request->spec) > 0){
+        if (isset($request->spec) && count($request->spec) > 0) {
             foreach ($request->spec['key'] as $k => $key) {
-                if($key != '' && $request->spec['value'][$k] != ''){
-                    $specifications[] = ['key'=>$key, 'value'=>$request->spec['value'][$k]];
+                if ($key != '' && $request->spec['value'][$k] != '') {
+                    $specifications[] = ['key' => $key, 'value' => $request->spec['value'][$k]];
                 }
             }
         }
-        if(isset($request->faq) && count($request->faq) > 0){
+        if (isset($request->faq) && count($request->faq) > 0) {
             foreach ($request->faq['question'] as $k => $question) {
                 if ($question != '' && $request->faq['answer'][$k] != '') {
-                    $faqs[] = ['question'=> $question, 'answer'=>$request->faq['answer'][$k]];
+                    $faqs[] = ['question' => $question, 'answer' => $request->faq['answer'][$k]];
                 }
             }
         }
@@ -202,7 +203,7 @@ class ProductController extends BaseController
         $p->colors = $colors;
         $p->specification = json_encode($specifications);
         $p->faq = json_encode($faqs);
-		
+
 
         if ($request->ajax()) {
             return response()->json([], 200);
@@ -215,7 +216,7 @@ class ProductController extends BaseController
             }
             $p->thumbnail = ImageManager::upload('product/thumbnail/', 'png', $request->image);
 
-            if($request->product_type == 'digital' && $request->digital_product_type == 'ready_product') {
+            if ($request->product_type == 'digital' && $request->digital_product_type == 'ready_product') {
                 $p->digital_file_ready = ImageManager::upload('product/digital-product/', $request->digital_file_ready->getClientOriginalExtension(), $request->digital_file_ready);
             }
             // $p->meta_title       = $request->meta_title;
@@ -227,8 +228,9 @@ class ProductController extends BaseController
         }
     }
 
-    function store_stock(Request $request){
-        
+    function store_stock(Request $request)
+    {
+
         $validator = Validator::make($request->all(), [
             'product_id'                 => 'required',
             'device_id'                 => 'required',
@@ -240,7 +242,8 @@ class ProductController extends BaseController
         if (is_null($request->product_id)) {
             $validator->after(function ($validator) {
                 $validator->errors()->add(
-                    'product_id', 'Product field is required!'
+                    'product_id',
+                    'Product field is required!'
                 );
             });
         }
@@ -250,23 +253,24 @@ class ProductController extends BaseController
         $major = $request->major;
         $minor = $request->minor;
 
-        if(!empty($request->device_id)){
-            foreach($request->device_id as $k => $mac_id){
-                $product = Product::where('uuid',$uuid[$k])->first();
-                if(!empty($product)){
-                    $check = ProductStock::where(['uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]])->count();
-                    if($check == 0){
-                        ProductStock::insert(['product_id'=>$product->id,'mac_id'=>$mac_id,'color'=>$colors[$k] ?? NULL,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]]);
+        if (!empty($request->device_id)) {
+            foreach ($request->device_id as $k => $mac_id) {
+                $product = Product::where('uuid', $uuid[$k])->first();
+                if (!empty($product)) {
+                    $check = ProductStock::where(['uuid' => $uuid[$k], 'major' => $major[$k], 'minor' => $minor[$k]])->count();
+                    if ($check == 0) {
+                        ProductStock::insert(['product_id' => $product->id, 'mac_id' => $mac_id, 'color' => $colors[$k] ?? NULL, 'uuid' => $uuid[$k], 'major' => $major[$k], 'minor' => $minor[$k]]);
                     }
                 }
             }
         }
-        
+
         Toastr::success(translate('Product Stocks added successfully!'));
         return redirect()->route('admin.product.stocks.list');
     }
 
-    function update_stock(Request $request,$id){
+    function update_stock(Request $request, $id)
+    {
         $validator = Validator::make($request->all(), [
             'product_id'                 => 'required',
             'device_id'                 => 'required',
@@ -278,33 +282,33 @@ class ProductController extends BaseController
         if (is_null($request->product_id)) {
             $validator->after(function ($validator) {
                 $validator->errors()->add(
-                    'product_id', 'Product field is required!'
+                    'product_id',
+                    'Product field is required!'
                 );
             });
         }
 
         $product_stock = $request->device_id;
-        ProductStock::where(['is_purchased'=>0,'product_id'=>$id])->delete();
+        ProductStock::where(['is_purchased' => 0, 'product_id' => $id])->delete();
         $colors = $request->colors;
         $uuid = $request->uuid;
         $major = $request->major;
         $minor = $request->minor;
 
-        if(!empty($product_stock)){
-            foreach($product_stock as $k => $mac_id){
-                $product = Product::where('uuid',$uuid[$k])->first();
-                if(!empty($product)){
-                    $check = ProductStock::where(['mac_id'=>$mac_id,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]])->count();
-                    if($check == 0){
-                        ProductStock::insert(['product_id'=>$product->id,'mac_id'=>$mac_id,'color'=>$colors[$k][0] ?? NULL,'uuid'=>$uuid[$k],'major'=>$major[$k],'minor'=>$minor[$k]]);
+        if (!empty($product_stock)) {
+            foreach ($product_stock as $k => $mac_id) {
+                $product = Product::where('uuid', $uuid[$k])->first();
+                if (!empty($product)) {
+                    $check = ProductStock::where(['mac_id' => $mac_id, 'uuid' => $uuid[$k], 'major' => $major[$k], 'minor' => $minor[$k]])->count();
+                    if ($check == 0) {
+                        ProductStock::insert(['product_id' => $product->id, 'mac_id' => $mac_id, 'color' => $colors[$k][0] ?? NULL, 'uuid' => $uuid[$k], 'major' => $major[$k], 'minor' => $minor[$k]]);
                     }
                 }
             }
         }
-        
+
         Toastr::success(translate('Product Stocks added successfully!'));
         return redirect()->route('admin.product.stocks.list');
-        
     }
 
     function list(Request $request)
@@ -330,7 +334,7 @@ class ProductController extends BaseController
     {
         $query_param = [];
         $search = $request['search'];
-        $pro = Product::select('products.name as product_name','products.id as product_id')->join('product_stocks','product_stocks.product_id','products.id');
+        $pro = Product::select('products.name as product_name', 'products.id as product_id')->join('product_stocks', 'product_stocks.product_id', 'products.id');
         $pro = $pro->groupBy('product_id')->orderBy('product_stocks.id', 'DESC')->paginate(Helpers::pagination_limit())->appends($query_param);
 
         // echo "<pre>"; print_r($pro); die;
@@ -342,14 +346,14 @@ class ProductController extends BaseController
     {
         $query_param = [];
         $search = $request['search'];
-        $pro = ConnectedDevice::where(['status'=>1]);
+        $pro = ConnectedDevice::where(['status' => 1]);
         if ($request->has('search')) {
             $key = explode(' ', $request['search']);
             $pro = $pro->where(function ($q) use ($key) {
                 foreach ($key as $value) {
                     $q->orWhere('mac_id', 'like', "%{$value}%")
-                      ->orWhere('device_name', 'like', "%{$value}%")
-                      ->orWhere('device_uuid', 'like', "%{$value}%");
+                        ->orWhere('device_name', 'like', "%{$value}%")
+                        ->orWhere('device_uuid', 'like', "%{$value}%");
                 }
             });
             $query_param = ['search' => $request['search']];
@@ -357,7 +361,6 @@ class ProductController extends BaseController
         $request_status = $request['status'];
         $pro = $pro->orderBy('id', 'DESC')->paginate(Helpers::pagination_limit())->appends(['status' => $request['status']])->appends($query_param);
         return view('admin-views.product.current-active-device', compact('pro', 'search', 'request_status'));
-
     }
 
     /**
@@ -365,10 +368,11 @@ class ProductController extends BaseController
      * @param Request $request
      * @param $type
      */
-    public function export_excel(Request $request, $type){
-        $products = Product::when($type == 'in_house', function ($q){
+    public function export_excel(Request $request, $type)
+    {
+        $products = Product::when($type == 'in_house', function ($q) {
             $q->where(['added_by' => 'admin']);
-        })->when($type != 'in_house',function ($q) use($request){
+        })->when($type != 'in_house', function ($q) use ($request) {
             $q->where(['added_by' => 'seller'])->where('request_status', $request->status);
         })->latest()->get();
         //export from product
@@ -405,7 +409,7 @@ class ProductController extends BaseController
                 'current_stock'         => $item->product_type == 'physical' ? $item->current_stock : null,
                 'details'               => $item->details,
                 'thumbnail'             => 'thumbnail/' . $item->thumbnail,
-                'Status'                => $item->status==1 ? 'Active':'Inactive',
+                'Status'                => $item->status == 1 ? 'Active' : 'Inactive',
             ];
         }
 
@@ -419,7 +423,7 @@ class ProductController extends BaseController
         if ($request->has('search')) {
             $key = explode(' ', $request['search']);
             $pro = Product::where(['added_by' => 'seller'])
-                ->where('is_shipping_cost_updated',0)
+                ->where('is_shipping_cost_updated', 0)
                 ->where(function ($q) use ($key) {
                     foreach ($key as $value) {
                         $q->Where('name', 'like', "%{$value}%");
@@ -427,7 +431,7 @@ class ProductController extends BaseController
                 });
             $query_param = ['search' => $request['search']];
         } else {
-            $pro = Product::where(['added_by' => 'seller'])->where('is_shipping_cost_updated',0);
+            $pro = Product::where(['added_by' => 'seller'])->where('is_shipping_cost_updated', 0);
         }
         $pro = $pro->orderBy('id', 'DESC')->paginate(Helpers::pagination_limit())->appends($query_param);
 
@@ -441,9 +445,9 @@ class ProductController extends BaseController
         $query_param = $request->all();
         $search = $request['search'];
         if ($type == 'in_house') {
-            $pro = Product::where(['added_by' => 'admin', 'product_type'=>'physical']);
+            $pro = Product::where(['added_by' => 'admin', 'product_type' => 'physical']);
         } else {
-            $pro = Product::where(['added_by' => 'seller', 'product_type'=>'physical'])->where('request_status', $request->status);
+            $pro = Product::where(['added_by' => 'seller', 'product_type' => 'physical'])->where('request_status', $request->status);
         }
 
         if ($request->has('search')) {
@@ -543,18 +547,15 @@ class ProductController extends BaseController
     {
 
         $product = Product::where(['id' => $request['product_id']])->first();
-        if($request->status == 1)
-        {
+        if ($request->status == 1) {
             $product->shipping_cost = $product->temp_shipping_cost;
             $product->is_shipping_cost_updated = $request->status;
-        }else{
+        } else {
             $product->is_shipping_cost_updated = $request->status;
         }
 
         $product->save();
-        return response()->json([
-
-        ], 200);
+        return response()->json([], 200);
     }
 
     public function get_categories(Request $request)
@@ -612,48 +613,61 @@ class ProductController extends BaseController
     {
         $product = Product::withoutGlobalScopes()->with('translations')->find($id);
         $product_category = json_decode($product->category_ids);
-      
+
         //$product->colors = json_decode($product->colors);
         $categories = Category::where(['parent_id' => 0])->get();
         $br = Brand::orderBY('name', 'ASC')->get();
-				$colors = Color::get();
+        $colors = Color::get();
         $brand_setting = BusinessSetting::where('type', 'product_brand')->first()->value;
         $digital_product_setting = BusinessSetting::where('type', 'digital_product')->first()->value;
 
-        return view('admin-views.product.edit', compact('categories', 'br' , 'colors', 'product', 'product_category','brand_setting','digital_product_setting'));
+        return view('admin-views.product.edit', compact('categories', 'br', 'colors', 'product', 'product_category', 'brand_setting', 'digital_product_setting'));
     }
 
     public function edit_stock($id)
     {
-		$colors = Color::get();
-        $product = Product::select('id','name','colors')
-									->where('status', 1)
-									->where('id', $id)
-									->get()[0] ?? [];
-        if(!empty($product)){
+        $colors = Color::get();
+        $product = Product::select('id', 'name', 'colors')
+            ->where('status', 1)
+            ->where('id', $id)
+            ->get()[0] ?? [];
+        if (!empty($product)) {
             $product_stock = Product::select('product_stocks.*')
-            ->join('product_stocks','product_stocks.product_id','products.id')
-            ->where('product_stocks.product_id',$id)
-            ->get();
+                ->join('product_stocks', 'product_stocks.product_id', 'products.id')
+                ->where('product_stocks.product_id', $id)
+                ->get();
 
-            return view('admin-views.product.edit-stock', compact('product','product_stock', 'colors','id'));
-        }else{
-            
-            return redirect()->back()->with('error','Product is Disabled!');
+            return view('admin-views.product.edit-stock', compact('product', 'product_stock', 'colors', 'id'));
+        } else {
+
+            return redirect()->back()->with('error', 'Product is Disabled!');
         }
     }
 
     public function update(Request $request, $id)
     {
-        $product = Product::find($id);
+        $count = Product::where('id', '!=', $request->id)
+            ->where(function ($query) use ($request) {
+                $query->where('uuid', '=', $request->uuid)
+                    ->orWhere('rssi', '=', $request->rssi)
+                    ->orWhere('code', '=', $request->code);
+            })
+            ->count();
+
+        if ($count != 0) {
+            Toastr::error('UUID or RSSI or CODE Already exists');
+            return back();
+        }
+        $product =  Product::find($id);
+
         $validator = Validator::make($request->all(), [
             'name'                 => 'required',
             'purchase_price'       => 'required|numeric|min:1',
             'images'               => 'required',
             'image'                => 'required',
-            'code'                 => 'required|numeric|min:1|digits_between:6,20|unique:products',
-            'rssi'                 => 'required|unique:products',
-            'uuid'                 => 'required|unique:products',
+            'code'                 => 'required|numeric|min:1|digits_between:6,20',
+            'rssi'                 => 'required',
+            'uuid'                 => 'required',
         ], [
             'images.required'                  => 'Product images is required!',
             'image.required'                   => 'Product thumbnail is required!',
@@ -665,30 +679,32 @@ class ProductController extends BaseController
         if (is_null($request->name[array_search('en', $request->lang)])) {
             $validator->after(function ($validator) {
                 $validator->errors()->add(
-                    'name', 'Name field is required!'
+                    'name',
+                    'Name field is required!'
                 );
             });
         }
 
+
+
         // if ($validator->errors()->count() > 0) {
         //     //echo "<pre>"; print_r(); die;
-        //     $errors = Helpers::error_processor($validator);
-        //     if(!empty($errors)){
-                
-        //         foreach($errors as $k => $val){
+        // $errors = Helpers::error_processor($validator);
+        // if(!empty($errors)){   
+        // foreach($errors as $k => $val){
         //             //$val = 'Product updated successfully.';
         //             // if($val['code'] == 'images'){
         //             //     return 
         //             // }
         //             // $err_array .= $val['message'] . ",";
-        //             Toastr::error($val['message']); return back();
-        //         }
-                
-        //     }
-           
+        // Toastr::error($val['message']); return back();
+        // }
+        // }
         // }
 
-        //echo "<pre>"; print_r($validator->errors()); die;
+        // echo "<pre>";
+        // print_r($validator->errors());
+        // die;
 
         $product->name = $request->name[array_search('en', $request->lang)];
         $product->code                  = $request->code;
@@ -697,26 +713,26 @@ class ProductController extends BaseController
         $product_images                 = json_decode($product->images);
         $product->details              = $request['description'] ?? '';
         $product->purchase_price     = BackEndHelper::currency_to_usd($request->purchase_price);
-				
+
         $colors = "";
         $specifications = [];
         $faqs = [];
 
-				if(isset($request->colors) && count($request->colors) > 0){
-            $colors = implode(",",$request->colors);
+        if (isset($request->colors) && count($request->colors) > 0) {
+            $colors = implode(",", $request->colors);
         }
 
-        if(isset($request->spec) && count($request->spec) > 0){
+        if (isset($request->spec) && count($request->spec) > 0) {
             foreach ($request->spec['key'] as $k => $key) {
-                if($key != '' && $request->spec['value'][$k] != ''){
-                    $specifications[] = ['key'=>$key, 'value'=>$request->spec['value'][$k]];
+                if ($key != '' && $request->spec['value'][$k] != '') {
+                    $specifications[] = ['key' => $key, 'value' => $request->spec['value'][$k]];
                 }
             }
         }
-        if(isset($request->faq) && count($request->faq) > 0){
+        if (isset($request->faq) && count($request->faq) > 0) {
             foreach ($request->faq['question'] as $k => $question) {
                 if ($question != '' && $request->faq['answer'][$k] != '') {
-                    $faqs[] = ['question'=> $question, 'answer'=>$request->faq['answer'][$k]];
+                    $faqs[] = ['question' => $question, 'answer' => $request->faq['answer'][$k]];
                 }
             }
         }
@@ -726,7 +742,7 @@ class ProductController extends BaseController
         $product->faq = json_encode($faqs);
 
         //echo "<pre>"; print_r($product->specification); die;
-        
+
         if ($request->ajax()) {
             return response()->json([], 200);
         } else {
@@ -740,14 +756,15 @@ class ProductController extends BaseController
             if ($request->file('image')) {
                 $product->thumbnail = ImageManager::update('product/thumbnail/', $product->thumbnail, 'png', $request->file('image'));
             }
-            
+
             $product->save();
             Toastr::success('Product updated successfully.');
             return back();
         }
     }
 
-    public function export_stocks_excel(Request $request){
+    public function export_stocks_excel(Request $request)
+    {
         $products = ProductStock::latest()->get();
         //export from product
         $data = [];
@@ -759,32 +776,32 @@ class ProductController extends BaseController
                 'uuid'        => $item->uuid,
                 'major'        => $item->major,
                 'minor'        => $item->minor,
-                'purchased'        => (($item->is_purchased == 1) ? 'Yes':'No')
+                'purchased'        => (($item->is_purchased == 1) ? 'Yes' : 'No')
             ];
         }
 
         return (new FastExcel($data))->download('product_stocks_list.xlsx');
     }
 
-    public function remove_image($id,$name)
+    public function remove_image($id, $name)
     {
         $product = Product::find($id);
         $array = [];
         if (count(json_decode($product['images'])) == 1) {
             Toastr::warning('You cannot delete all images!');
             return back();
-        }else{
+        } else {
             ImageManager::delete('/product/' . $name);
             $images = json_decode($product['images']);
-            if(count($images) > 0){
+            if (count($images) > 0) {
                 foreach ($images as $image) {
                     if ($image != $name) {
-                    array_push($array, $image);
+                        array_push($array, $image);
                     }
                 }
             }
             Product::where('id', $id)->update([
-            'images' => json_encode($array),
+                'images' => json_encode($array),
             ]);
             Toastr::success('Product image removed successfully!');
             return back();
@@ -804,14 +821,14 @@ class ProductController extends BaseController
         ImageManager::delete('/product/thumbnail/' . $product['thumbnail']);
         $product->delete();
         ProductStock::where(['product_id' => $id])->delete();
-        
+
         Toastr::success('Product removed successfully!');
         return back();
     }
 
     public function delete_stock($id)
     {
-        $product = ProductStock::where('product_id',$id);
+        $product = ProductStock::where('product_id', $id);
         $product->delete();
 
         // Cart::where('product_id', $product->id)->delete();
@@ -850,12 +867,12 @@ class ProductController extends BaseController
 
         foreach ($collections as $collection) {
             foreach ($collection as $key => $value) {
-                if ($key!="" && !in_array($key, $col_key)) {
+                if ($key != "" && !in_array($key, $col_key)) {
                     Toastr::error('Please upload the correct format file.');
                     return back();
                 }
 
-                if ($key!="" && $value === "" && !in_array($key, $skip)) {
+                if ($key != "" && $value === "" && !in_array($key, $skip)) {
                     Toastr::error('Please fill ' . $key . ' fields');
                     return back();
                 }
@@ -881,7 +898,7 @@ class ProductController extends BaseController
                 'video_provider' => 'youtube',
                 'video_url' => $collection['youtube_video_url'],
                 'images' => json_encode(['def.png']),
-                'thumbnail' => $thumbnail[1]??$thumbnail[0],
+                'thumbnail' => $thumbnail[1] ?? $thumbnail[0],
                 'status' => 1,
                 'request_status' => 1,
                 'colors' => json_encode([]),
@@ -908,33 +925,34 @@ class ProductController extends BaseController
         }
 
         $cnt = 0;
-        $col_key = ['product_uuid', 'device_id','color','major','minor'];
+        $col_key = ['product_uuid', 'device_id', 'color', 'major', 'minor'];
         foreach ($collections as $collection) {
             foreach ($collection as $key => $value) {
-                if ($key!="" && !in_array($key, $col_key)) {
+                if ($key != "" && !in_array($key, $col_key)) {
                     Toastr::error('Please upload the correct format file.');
                     return back();
                 }
 
-                if ($key!="" && $value === "") {
+                if ($key != "" && $value === "") {
                     Toastr::error('Please fill ' . $key . ' fields');
                     return back();
                 }
             }
 
-            $color = Color::select('id')->where('name',ucfirst($collection['color']))->first();
-            $product = Product::where('uuid',$collection['product_uuid'])->first();
-            if(!empty($product)){
-                $check = ProductStock::where(['uuid'=>$collection['product_uuid'],'major'=>$collection['major'],'minor'=>$collection['minor']])->count();
-                if($check == 0){ $cnt++;
-                    ProductStock::insert(['product_id'=>$product['id'],'mac_id'=>$collection['device_id'],'color'=>$color->id ?? null,'uuid'=>$collection['product_uuid'],'major'=>$collection['major'],'minor'=>$collection['minor']]);
+            $color = Color::select('id')->where('name', ucfirst($collection['color']))->first();
+            $product = Product::where('uuid', $collection['product_uuid'])->first();
+            if (!empty($product)) {
+                $check = ProductStock::where(['uuid' => $collection['product_uuid'], 'major' => $collection['major'], 'minor' => $collection['minor']])->count();
+                if ($check == 0) {
+                    $cnt++;
+                    ProductStock::insert(['product_id' => $product['id'], 'mac_id' => $collection['device_id'], 'color' => $color->id ?? null, 'uuid' => $collection['product_uuid'], 'major' => $collection['major'], 'minor' => $collection['minor']]);
                 }
             }
         }
-        
+
         //echo "<pre>"; print_r($data); die;
         //DB::table('product_stocks')->insert($data);
-        
+
         Toastr::success($cnt . ' - Product Stocks imported successfully!');
         return back();
     }
@@ -985,11 +1003,10 @@ class ProductController extends BaseController
 
         if ($request->limit > 270) {
             Toastr::warning(translate('You can not generate more than 270 barcode'));
-             return back();
+            return back();
         }
         $product = Product::findOrFail($id);
         $limit =  $request->limit ?? 4;
         return view('admin-views.product.barcode', compact('product', 'limit'));
     }
-
 }

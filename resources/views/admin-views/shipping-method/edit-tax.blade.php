@@ -19,7 +19,7 @@
     <!-- Page Title -->
     <div class="mb-3">
         <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
-            <img src="{{asset('/public/assets/back-end/img/business-setup.png')}}" alt="">
+            <img src="{{asset('/assets/back-end/img/Tax_Solid.svg')}}" alt="">
             {{\App\CPU\translate('edit_tax_calculations')}}
         </h2>
     </div>
@@ -83,7 +83,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="col-md-2 form-group faq-add-main-btn">
-                                                        <i class="tio-delete-outlined text-danger remove-product-faq-btn"></i>
+                                                        {{-- <i class="tio-delete-outlined text-danger remove-product-faq-btn"></i> --}}
                                                     </div>
                                                 </td>
                                             </tr>

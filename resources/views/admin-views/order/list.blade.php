@@ -50,7 +50,7 @@
             <!-- Page Title -->
             <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
                 <h2 class="h1 mb-0">
-                    <img src="{{asset('/public/assets/back-end/img/all-orders.png')}}" class="mb-1 mr-1" alt="">
+                    <img src="{{asset('/assets/back-end/img/Orders__Solid.svg')}}" class="mb-1 mr-1" alt="">
                     <span class="page-header-title">
                         @if($status =='processing')
                             {{ ucwords(str_replace('_',' ','Packaging' )) }}
@@ -133,7 +133,7 @@
                                     <th>{{\App\CPU\translate('customer')}} {{\App\CPU\translate('info')}}</th>
                                     <th>{{\App\CPU\translate('Total')}} {{\App\CPU\translate('Amount')}}</th>
                                     {{-- <th>{{\App\CPU\translate('Order')}} {{\App\CPU\translate('Status')}}</th> --}}
-                                    <th>{{\App\CPU\translate('Change Status')}}</th>
+                                    <th>{{\App\CPU\translate('Order Status')}}</th>
                                     <th>{{\App\CPU\translate('Action')}}</th>
                                 </tr>
                             </thead>

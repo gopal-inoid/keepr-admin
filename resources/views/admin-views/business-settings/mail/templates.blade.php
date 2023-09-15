@@ -11,7 +11,7 @@
     <!-- Page Title -->
     <div class="mb-3">
         <h2 class="h1 mb-0 text-capitalize d-flex gap-2">
-            <img src="{{asset('/public/assets/back-end/img/inhouse-product-list.png')}}" alt="">
+            <img src="{{asset('/assets/back-end/img/Email_Solid.svg')}}" alt="">
             Email Templates List
         </h2>
     </div>

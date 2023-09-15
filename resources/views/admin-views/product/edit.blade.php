@@ -27,7 +27,7 @@
         <!-- Page Title -->
         <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
             <h2 class="h1 mb-0 d-flex gap-2">
-                <img src="{{asset('/public/assets/back-end/img/inhouse-product-list.png')}}" alt="">
+                <img src="{{asset('/assets/back-end/img/Product_Solid.svg')}}" alt="">
                 {{\App\CPU\translate('Product')}} {{\App\CPU\translate('Edit')}}
             </h2>
         </div>
@@ -51,37 +51,44 @@
                                             <label class="title-color" for="english_name">{{ \App\CPU\translate('Device Name') }}
                                             </label>
                                             <input type="text" required name="name[]" id="english_name" value="{{$product['name']}}" class="form-control" placeholder="New Product">
+                                            <span class="name_notice v_notice text-danger" id="name_notice"></span>
                                         </div>
                                         <input type="hidden" name="lang[]" value="english">
                                     </div>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="title-color"
                                                for="exampleFormControlInput1">{{ \App\CPU\translate('product_code_sku') }}
                                             <span class="text-danger">*</span></label>
                                         <input type="text" id="generate_number" name="code"
                                                class="form-control"  value="{{ $product->code  }}" required>
+                                               <span class="code_notice v_notice text-danger" id="code_notice"></span>
                                     </div>
                                 </div>
-                                <div class="col-md-2 form-group">
+                                <div class="col-md-4 form-group">
                                     <label class="title-color">{{ \App\CPU\translate('Price') }}</label>
                                     <input type="number" min="0" step="0.01"
                                         placeholder="{{ \App\CPU\translate('Purchase price') }}"
                                         value="{{ $product->purchase_price }}" name="purchase_price"
                                         class="form-control" required>
+                                        <span class="price_notice v_notice text-danger" id="price_notice"></span>
                                 </div>
-                                <div class="col-md-2 form-group">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 form-group">
                                     <label class="title-color">{{ \App\CPU\translate('RSSI') }}</label>
                                     <input type="text" placeholder="{{ \App\CPU\translate('RSSI') }}"
                                         value="{{ $product->rssi }}" name="rssi"
-                                        class="form-control" required>
+                                        class="form-control" required id="rssi">
+                                        <span class="rssi_notice v_notice text-danger" id="rssi_notice"></span>
                                 </div>
-                                <div class="col-md-2 form-group">
+                                <div class="col-md-4 form-group">
                                     <label class="title-color">{{ \App\CPU\translate('UUID') }}</label>
                                     <input type="text" placeholder="{{ \App\CPU\translate('UUID') }}"
-                                        value="{{ $product->uuid }}" name="uuid"
+                                        value="{{ $product->uuid }}" name="uuid" id="uuid" maxlength="36" style="text-transform:uppercase;"
                                         class="form-control" required>
+                                        <span class="uuid_notice v_notice text-danger" id="uuid_notice"></span>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -274,6 +281,127 @@
     <script src="{{asset('public/assets/back-end')}}/js/tags-input.min.js"></script>
     <script src="{{asset('public/assets/back-end/js/spartan-multi-image-picker.js')}}"></script>
     <script>
+                // UUID Fix Format Validation
+              
+                $("#uuid").on("keydown", function (e) {
+                         let keycode=e.keyCode|| e.which;
+                         let ctrlKey = e.ctrlKey || e.metaKey;
+                         let value=$(this).val().trim();
+                            uuidinputFormat(value,this);
+                            function uuidinputFormat(value,elm){
+                                if(value.length<=36){
+                                    if(value.length==8||value.length==13||value.length==18||value.length==23){
+                                            elm.value += '-';
+                                    } 
+                                    const lastChar = value.charAt(value.length - 1);
+                                    if (lastChar === '-') {
+                                    value = value.substring(0, value.length - 1);
+                                    elm.value=value;
+                                    }
+                                }     
+                            } 
+                    });
+                
+                $("#uuid").on("paste", function (e) {
+                     let elm = $(this);
+                     setTimeout(function(){
+                        let value=$(elm).val().trim();
+                        if(!isValidUUID(value)){
+                            $(elm).val(convertToUUID(value));
+                        }else{
+                                $(elm).val(value);
+                        }
+                    },10);
+                    function convertToUUID(value) {
+                    // Remove any unwanted characters (e.g., spaces or dashes)
+                    const cleanedValue = value.replace(/[^0-9A-Fa-f]/g, '');
+                    // Ensure the cleaned value has the correct length
+                    const formattedValue = cleanedValue.slice(0, 8) + '-' +
+                                            cleanedValue.slice(8, 12) + '-' +
+                                            cleanedValue.slice(12, 16) + '-' +
+                                            cleanedValue.slice(16, 20) + '-' +
+                                            cleanedValue.slice(20, 32);
+
+                    return formattedValue;
+                    } 
+                    function isValidUUID(value) {
+                            const pattern = /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/;
+                            return pattern.test(value);
+                    }
+                });
+
+            // Price, Rssi, Uuid is made mandatory non-zero & non negative 
+            
+            $(".product-form").submit(function(e){
+              
+                var isValidated=true;
+                $(".v_notice").each(function(){
+                    $(this).html("");
+                });
+
+                let deviceName=$("#english_name").val();
+                let val1 = $.trim(deviceName);
+                if(val1.length<=0){ 
+                    $(".name_notice").html("");
+                    $(".name_notice").html("Empty field alert");
+                    $("#english_name").val("");
+                    isValidated = false;
+                }
+
+                let code=$("#generate_number").val();
+                let val2 = $.trim(code);
+                if(val2.length<=0){        
+                    $(".code_notice").html("");
+                    $(".code_notice").html("Empty field alert");
+                    $("#generate_number").val("");
+                    isValidated = false;
+                }
+
+                let price=$("#purchase_price").val();
+                if(price <= 0 || price == ""){ 
+                    $(".price_notice").html("");
+                    $(".price_notice").html("Invalid value");
+                    $("#purchase_price").val("");
+                    isValidated = false;
+                }
+
+                let rssi=$("#rssi").val().trim();
+                if(rssi.length <=0){ 
+                    $(".rssi_notice").html("");
+                    $(".rssi_notice").html("Invalid value");
+                    $("#rssi").val("");
+                    isValidated = false;
+                    }
+
+                let uuid=$("#uuid").val().trim();
+                let array=uuid.split('-');
+                const sum = array.reduce((accumulator, currentValue) => {
+                    return accumulator + currentValue;
+                }, 0);
+                if(!isValidUUID(uuid)){
+                    $(".uuid_notice").html("");
+                    $(".uuid_notice").html("Invalid uuid");
+                    isValidated = false;
+                }
+                function isValidUUID(uuid) {
+                    // Define the regular expression pattern
+                    const pattern = /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/;
+
+                    // Use the test method to check if the UUID matches the pattern
+                    return pattern.test(uuid);
+                }
+                if(uuid <= 0 || uuid.length < 36||sum==0){
+                        $(".uuid_notice").html("");
+                        $(".uuid_notice").html("Invalid value");
+                        $("#uuid").val("");
+                        isValidated = false;
+                }
+                if(!isValidated){
+                e.preventDefault();
+                window.scrollTo(0, 0);
+                }
+            });
+               
         imageCount = 0;
         @if(!empty($product->images))
         var imageCount = {{10-count(json_decode($product->images))}};

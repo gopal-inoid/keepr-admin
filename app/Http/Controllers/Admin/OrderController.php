@@ -149,7 +149,6 @@ class OrderController extends Controller
         if(!empty($order->mac_ids)){ // stocks
             $mac_ids = json_decode($order->mac_ids,true);
             if(!empty($mac_ids)){
-
                 if(!empty($order->taxes)){
                     $taxes = json_decode($order->taxes,true);
                     if(!empty($taxes)){
@@ -171,12 +170,12 @@ class OrderController extends Controller
                         $shipping_info['amount'] = $shipping_method_rates->express_rate ?? 0;
                     }
                 }
-
+                $product_info=json_decode($order->product_info,true);
                 foreach($mac_ids as $k => $val){
                     $total_orders += count($mac_ids[$k]['uuid']);
                     $prod = Product::select('name','thumbnail','purchase_price')->find($k);
-                    $products[$k]['name'] = $prod->name ?? "";
-                    $products[$k]['thumbnail'] = $prod->thumbnail ?? "";
+                    $products[$k]['name'] = $product_info[$k]['product_name'] ?? "";
+                    $products[$k]['thumbnail'] = $product_info[$k]['thumbnail'] ?? "";
                     if(!empty($order->per_device_amount)){
                         $perdevice_amount = json_decode($order->per_device_amount,true);
                         if(!empty($perdevice_amount)){
@@ -684,12 +683,12 @@ class OrderController extends Controller
                         $shipping_info['amount'] = $shipping_method_rates->express_rate ?? 0;
                     }
                 }
-
+                $product_info=json_decode($order->product_info,true);
                 foreach($mac_ids as $k => $val){
                     $total_orders += count($mac_ids[$k]['uuid']);
                     $prod = Product::select('name','thumbnail','purchase_price')->find($k);
-                    $products[$k]['name'] = $prod->name ?? "";
-                    $products[$k]['thumbnail'] = $prod->thumbnail ?? "";
+                    $products[$k]['name'] = $product_info[$k]['product_name'] ?? "";
+                    $products[$k]['thumbnail'] = $product_info[$k]['thumbnail'] ?? "";
                     if(!empty($order->per_device_amount)){
                         $perdevice_amount = json_decode($order->per_device_amount,true);
                         if(!empty($perdevice_amount)){

@@ -9,6 +9,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('keepr_app_assets/style.css') }}">
     <link rel="icon" type="image/x-icon" href="{{asset("public/company/Keepr-logo-black.png")}}">
+    <style>
+        .active-menu{
+            color:white !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -16,7 +21,7 @@
     <div class="Navbar-Section">
         <nav class="navbar container navbar-expand-lg navbar-dark p-3 p-lg-0">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="{{url()->current()}}">
                     <img src="{{ asset('keepr_app_assets/assests/Keepe_logo.png')}}" alt="">
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,19 +30,19 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto m-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="#home">Home</a>
+                            <a class="nav-link active-menu home" aria-current="page" href="#home">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#about">About</a>
+                            <a class="nav-link about" href="#about">About</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#features">Features</a>
+                            <a class="nav-link features" href="#features">Features</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#products">Products</a>
+                            <a class="nav-link products" href="#products">Products</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#faq">FAQ</a>
+                            <a class="nav-link faq" href="#faq">FAQ</a>
                         </li>
                     </ul>
                     <form class="d-flex m-3">
@@ -336,19 +341,19 @@
                                 <div class="text-center">
                                     <ul class="footer_menu justify-content-center">
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" aria-current="page" href="#home">Home</a>
+                                            <a class="nav-link" data="home" aria-current="page" href="#home">Home</a>
                                         </li>
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" href="#about">About</a>
+                                            <a class="nav-link" data="about" href="#about">About</a>
                                         </li>
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" href="#features">Features</a>
+                                            <a class="nav-link" data="features" href="#features">Features</a>
                                         </li>
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" href="#products">Products</a>
+                                            <a class="nav-link" data="products" href="#products">Products</a>
                                         </li>
                                         <li class="nav-item mx-3">
-                                            <a class="nav-link" href="#faq">FAQ</a>
+                                            <a class="nav-link" data="faq" href="#faq">FAQ</a>
                                         </li>
                                         <li class="nav-item mx-3">
                                             <a class="nav-link" href="{{route('terms-condition')}}">Terms of Service</a>
@@ -423,6 +428,22 @@
 </script>
 <script>
     $(document).ready(function() {
+
+        $(document).on('click','.nav-link',function(e){
+            $('.nav-link').each(function(e){
+                $(this).removeClass("active-menu");
+            });
+            $(this).addClass("active-menu");
+        });
+
+        $(document).on('click','.footer_menu .nav-item .nav-link',function(e){
+            let menu=$(this).attr("data");
+            $('.nav-link').each(function(e){
+                $(this).removeClass("active-menu");
+            });
+            $("."+menu).addClass('active-menu');
+        });
+
         $(".desc-1").hover(function() {
             $(this).addClass("active");
             $(".desc-2").removeClass("active");

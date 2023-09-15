@@ -26,7 +26,7 @@
                     <div class="row flex-between align-items-center g-2 mb-3">
                         <div class="col-sm-6">
                             <h4 class="d-flex align-items-center text-capitalize gap-10 mb-0">
-                                <img src="{{asset('/public/assets/back-end/img/business_analytics.png')}}" alt="">{{\App\CPU\translate('business_analytics')}}</h4>
+                                <img src="{{asset('/assets/back-end/img/Analytics_Solid.svg')}}" alt="">{{\App\CPU\translate('business_analytics')}}</h4>
                         </div>
                         {{-- <div class="col-sm-6 d-flex justify-content-sm-end">
                             <select class="custom-select w-auto" name="statistics_type"
