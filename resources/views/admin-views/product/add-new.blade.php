@@ -342,14 +342,14 @@
                     $(".spec-individual").eq(0).removeClass('d-none');
                 }
                 $('#parent-spec-div').append(
-                        `<div class="row spec-individual">
-                                <div class="col-md-4 form-group">
+                        `<div class=" spec-individual d-flex">
+                                <div class="col-md-4 p-xs-0 p-sm-0 form-group">
                                         <input type="text" value="" name="spec[key][]" class="form-control" placeholder="{{ \App\CPU\translate('Key') }}">
                                 </div>
-                                <div class="col-md-6 form-group">
+                                <div class="col-md-6 p-xs-0 p-sm-0 form-group">
                                         <input type="text" value="" name="spec[value][]" class="form-control" placeholder="{{ \App\CPU\translate('Value') }}">
                                 </div>
-                                <div class="col-md-2 form-group spec-add-main-btn">
+                                <div class="col-md-2 p-xs-0 p-sm-0 form-group spec-add-main-btn">
                                         <i class="tio-delete-outlined text-danger remove-product-spec-btn"></i>
                                 </div>
                         </div>`
