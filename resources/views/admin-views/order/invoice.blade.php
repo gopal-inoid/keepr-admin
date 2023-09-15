@@ -170,12 +170,12 @@
                         @if(!empty($detail['mac_ids']))
                             @foreach($detail['mac_ids'] as $val)
                                 @php($total_price += $detail['price'])
-                                US${{$detail['price'] ?? ''}}<br /><br /><br /><br />
+                                US ${{$detail['price'] ?? ''}}<br /><br /><br /><br />
                             @endforeach
                         @endif
                     </td>
                     <td style="text-align:center;">{{count($detail['mac_ids'])}}</td>
-                    <td style="text-align:center;">US${{number_format($total_price,2)}}</td>
+                    <td style="text-align:center;">US ${{number_format($total_price,2)}}</td>
                     @php($grand_total_qty += count($detail['mac_ids']))
                     @php($grand_total_amt += $total_price)
                 </tr>
@@ -186,7 +186,7 @@
                     <td></td>
                     <td></td>
                     <td style="text-align:center;"><strong>{{$grand_total_qty}}</strong></td>
-                    <td style="text-align:center;"><strong>US${{number_format($grand_total_amt,2)}}</strong></td>
+                    <td style="text-align:center;"><strong>US ${{number_format($grand_total_amt,2)}}</strong></td>
                 </tr>
             </tbody>
         </table>
@@ -210,7 +210,7 @@
                                 <strong>{{$taxes['title']}}</strong><br />
                             @endforeach
                     </td>
-                    <td style="text-align:center;"><strong>US${{number_format($tx_amt,2)}}</strong></td>
+                    <td style="text-align:center;"><strong>US ${{number_format($tx_amt,2)}}</strong></td>
                 </tr>
                 <tr>
                     <td>
@@ -220,13 +220,13 @@
                         <strong>Shipping Mode: {{$shipping_info['mode'] ?? ''}}</strong>
                     </td>
                     <td style="text-align:center;">
-                        <strong>US${{number_format($shipping_info['amount'] ?? 0,2)}}</strong>
+                        <strong>US ${{number_format($shipping_info['amount'] ?? 0,2)}}</strong>
                     </td>
                 </tr>
                 <tr>
                     <td><hr /><h4><strong>Grand Total</strong></h4></td>
                     <td style="text-align:center;"><hr />
-                        <h4><strong>US${{number_format($total_order_amount,2)}}</strong></h4>
+                        <h4><strong>US ${{number_format($total_order_amount,2)}}</strong></h4>
                     </td>
                 </tr>
             </tbody>

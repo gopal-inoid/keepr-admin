@@ -48,7 +48,7 @@
                                 <div class="col-md-4">
                                     <div class="lang_form" id="english-form">
                                         <div class="form-group">
-                                            <label class="title-color" for="english_name">{{ \App\CPU\translate('Device Name') }}
+                                            <label class="title-color" for="english_name">{{ \App\CPU\translate('Device Name') }}<span class="text-danger">*</span>
                                             </label>
                                             <input type="text" required name="name[]" id="english_name" value="{{$product['name']}}" class="form-control" placeholder="New Product">
                                             <span class="name_notice v_notice text-danger" id="name_notice"></span>
@@ -59,15 +59,14 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="title-color"
-                                               for="exampleFormControlInput1">{{ \App\CPU\translate('product_code_sku') }}
-                                            <span class="text-danger">*</span></label>
+                                               for="exampleFormControlInput1">{{ \App\CPU\translate('product_code_sku') }}<span class="text-danger">*</span></label>
                                         <input type="text" id="generate_number" name="code"
                                                class="form-control"  value="{{ $product->code  }}" required>
                                                <span class="code_notice v_notice text-danger" id="code_notice"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-4 form-group">
-                                    <label class="title-color">{{ \App\CPU\translate('Price') }}</label>
+                                    <label class="title-color">{{ \App\CPU\translate('Price') }}<span class="text-danger">*</span></label>
                                     <input type="number" min="0" step="0.01"
                                         placeholder="{{ \App\CPU\translate('Purchase price') }}"
                                         value="{{ $product->purchase_price }}" name="purchase_price"
@@ -77,14 +76,14 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-4 form-group">
-                                    <label class="title-color">{{ \App\CPU\translate('RSSI') }}</label>
+                                    <label class="title-color">{{ \App\CPU\translate('RSSI') }}<span class="text-danger">*</span></label>
                                     <input type="text" placeholder="{{ \App\CPU\translate('RSSI') }}"
                                         value="{{ $product->rssi }}" name="rssi"
                                         class="form-control" required id="rssi">
                                         <span class="rssi_notice v_notice text-danger" id="rssi_notice"></span>
                                 </div>
                                 <div class="col-md-4 form-group">
-                                    <label class="title-color">{{ \App\CPU\translate('UUID') }}</label>
+                                    <label class="title-color">{{ \App\CPU\translate('UUID') }}<span class="text-danger">*</span></label>
                                     <input type="text" placeholder="{{ \App\CPU\translate('UUID') }}"
                                         value="{{ $product->uuid }}" name="uuid" id="uuid" maxlength="36" style="text-transform:uppercase;"
                                         class="form-control" required>
@@ -191,7 +190,7 @@
 
                     <div class="card mt-2 rest-part physical_product_show">
                         <div class="card-header">
-                            <h4 class="mb-0">{{ \App\CPU\translate('Product colors') }}</h4>
+                            <h4 class="mb-0">{{ \App\CPU\translate('Product colors') }}<span class="text-danger">*</span></h4>
                         </div>
                         <div class="card-body">
                             <div class="row align-items-end">
