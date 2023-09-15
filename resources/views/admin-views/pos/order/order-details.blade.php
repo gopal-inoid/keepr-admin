@@ -373,6 +373,7 @@
                                                 @if(!empty($detail['mac_ids']))
                                                     @foreach($detail['mac_ids'] as $k => $val)
                                                         <strong>UUID: </strong>{{$val['uuid']}}<br />
+                                                        <strong>DEVICE ID: </strong>{{$val['device_id'] ?? ""}}<br />
                                                         <strong>Major: </strong>{{$val['major']}}<br />
                                                         <strong>Minor: </strong>{{$val['minor']}}<br />
                                                         <hr/>
