@@ -341,7 +341,7 @@ class CartController extends Controller
                                 if (!empty($existed_mac_ids) && (in_array($macid['uuid'], $existed_mac_ids['uuid']) && in_array($macid['major'], $existed_mac_ids['major']) && in_array($macid['minor'], $existed_mac_ids['minor']))) {
                                 } else {
 
-                                    $mac_ids_array[$cart['product_id']]['device_id'][] = $macid['mac_id'];
+                                    //$mac_ids_array[$cart['product_id']]['device_id'][] = $macid['mac_id'];
                                     $mac_ids_array[$cart['product_id']]['uuid'][] = $macid['uuid'];
                                     $mac_ids_array[$cart['product_id']]['major'][] = $macid['major'];
                                     $mac_ids_array[$cart['product_id']]['minor'][] = $macid['minor'];
