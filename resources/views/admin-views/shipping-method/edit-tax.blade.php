@@ -83,7 +83,9 @@
                                                 </td>
                                                 <td>
                                                     <div class="col-md-2 form-group faq-add-main-btn">
-                                                        <i class="tio-delete-outlined text-danger remove-product-faq-btn"></i>
+                                                        <a href="" class="delete_text_record">
+                                                            <i class="tio-delete-outlined text-danger remove-product-faq-btn"></i>
+                                                        </a>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -146,7 +148,6 @@ $(function() {
     $(document).on('click','.remove-product-faq-btn',function(){
         $(this).closest('.inner-faq-div').remove();
     });
-
 });
 </script>
 @endpush

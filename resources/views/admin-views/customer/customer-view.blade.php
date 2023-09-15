@@ -59,6 +59,7 @@
                         </div>
                     </div>
                     <!-- Table -->
+
                     <div class="table-responsive datatable-custom">
                         <table
                                class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
@@ -73,13 +74,14 @@
                             </thead>
 
                             <tbody>
+                               
                             @foreach($orders as $key=>$order)
                                 <tr>
                                     <td>{{$orders->firstItem()+$key}}</td>
                                     <td>
                                         <a href="{{route('admin.orders.details',['id'=>$order['id']])}}" class="title-color hover-c1">{{$order['id']}}</a>
                                     </td>
-                                    <td> {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order['order_amount']))}}</td>
+                                    <td>US ${{\App\CPU\BackEndHelper::usd_to_currency($order['order_amount'])}}</td>
 
                                     <td>
                                         <div class="d-flex justify-content-center gap-10">

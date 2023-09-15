@@ -44,7 +44,7 @@
                                 <div class="col-md-4">
                                     <div class="lang_form" id="english-form">
                                         <div class="form-group">
-                                            <label class="title-color" for="english_name">{{ \App\CPU\translate('Device Name') }}
+                                            <label class="title-color" for="english_name">{{ \App\CPU\translate('Device Name') }}<span class="text-danger">*</span>
                                             </label>
                                             <input type="text" required name="name[]" autocomplete="off" id="english_name" class="form-control" placeholder="New Product">
                                             <span class="name_notice v_notice text-danger" id="name_notice"></span>
@@ -147,7 +147,7 @@
 
                     <div class="card mt-2 rest-part physical_product_show">
                         <div class="card-header">
-                            <h4 class="mb-0">{{ \App\CPU\translate('Product colors') }}</h4>
+                            <h4 class="mb-0">{{ \App\CPU\translate('Product colors') }}<span class="text-danger">*</span></h4>
                         </div>
                         <div class="card-body">
                             <div class="row align-items-end">
@@ -173,7 +173,7 @@
                             <div class="row">
                                 <div class="col-md-8 form-group">
                                     <div class="mb-2">
-                                        <label class="title-color">{{ \App\CPU\translate('Upload product images') }}</label>
+                                        <label class="title-color">{{ \App\CPU\translate('Upload product images') }}<span class="text-danger">*</span></label>
                                         <span class="text-info">* ( {{ \App\CPU\translate('ratio') }} 1:1 )</span>
                                     </div>
                                     <div class="p-2 border border-dashed">
@@ -184,7 +184,7 @@
 
                                 <div class="col-md-4 form-group">
                                     <div class="mb-2">
-                                        <label for="name" class="title-color text-capitalize">{{ \App\CPU\translate('Upload thumbnail') }}</label>
+                                        <label for="name" class="title-color text-capitalize">{{ \App\CPU\translate('Upload thumbnail') }}<span class="text-danger">*</span></label>
                                         <span class="text-info">* ( {{ \App\CPU\translate('ratio') }} 1:1 )</span>
                                     </div>
                                     <div>

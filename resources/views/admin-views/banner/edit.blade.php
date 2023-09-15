@@ -109,13 +109,28 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <center>
+                                    <center class="mb-30 max-w-500 mx-auto">
+                                        <img class="ratio-4:1"
+                                         id="mbImageviewer"
+                                         src="{{asset('/banner')}}/{{$banner['photo']}}"
+                                         alt="banner image"
+                                         onerror="this.src='{{asset('public/assets/front-end/img/placeholder.png')}}'"
+                                         >
+                                         
+                                    </center>
+                                    {{-- <center>
+                                        <img  class="upload-img-view"
+                                        onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'" style="height:42px !important;"
+                                        src="{{asset('/banner')}}/{{$banner['photo']}}"
+                                        alt="Logo">
+                                    </center> --}}
+                                    {{-- <center>
                                         <img
                                             class="upload-img-view"
                                             id="mbImageviewer"
                                             src="{{asset('/banner')}}/{{$banner['photo']}}"
                                             alt=""/>
-                                    </center>
+                                    </center> --}}
                                 </div>
 
                                 <div class="col-md-12 mt-3 d-flex justify-content-end gap-3">

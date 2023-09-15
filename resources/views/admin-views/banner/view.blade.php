@@ -36,8 +36,6 @@
                                                class="title-color text-capitalize">{{ \App\CPU\translate('banner_URL')}}</label>
                                         <input type="text" name="url" class="form-control" id="url" required>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="name"
                                                class="title-color text-capitalize">{{\App\CPU\translate('banner_type')}}</label>
@@ -52,25 +50,27 @@
                                                 value="Main Section Banner">{{ \App\CPU\translate('Main Section Banner')}}</option>
                                         </select>
                                     </div>
+                                    <div class="form-group">
+                                        <label for="name"
+                                        class="title-color text-capitalize">{{ \App\CPU\translate('Image')}}</label>
+                                 <span class="text-info">( {{\App\CPU\translate('ratio')}} 4:1 )</span>
+                                 <div class="custom-file text-left">
+                                     <input type="file" name="image" id="mbimageFileUploader"
+                                            class="custom-file-input"
+                                            accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                     <label class="custom-file-label title-color"
+                                            for="mbimageFileUploader">{{\App\CPU\translate('choose')}} {{\App\CPU\translate('file')}}</label>
+                                 </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-12 mt-5 mt-lg-0">
-                                    <center class="mb-30 max-w-500 mx-auto">
+                                <div class="col-md-6 d-flex justify-content-center align-items-center">
+                                     <center class="mb-30 max-w-500 mx-auto">
                                         <img
                                             class="ratio-4:1"
                                             id="mbImageviewer"
                                             src="{{asset('public/assets/front-end/img/placeholder.png')}}"
                                             alt="banner image"/>
                                     </center>
-                                    <label for="name"
-                                           class="title-color text-capitalize">{{ \App\CPU\translate('Image')}}</label>
-                                    <span class="text-info">( {{\App\CPU\translate('ratio')}} 4:1 )</span>
-                                    <div class="custom-file text-left">
-                                        <input type="file" name="image" id="mbimageFileUploader"
-                                               class="custom-file-input"
-                                               accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                        <label class="custom-file-label title-color"
-                                               for="mbimageFileUploader">{{\App\CPU\translate('choose')}} {{\App\CPU\translate('file')}}</label>
-                                    </div>
                                 </div>
                             </div>
                             <div class="mt-3 d-flex justify-content-end flex-wrap gap-10">
@@ -106,7 +106,7 @@
                                         <div class="input-group input-group-merge input-group-custom">
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text">
-                                                    <i class="tio-search"></i>
+                                                  <i class="tio-search"></i>
                                                 </div>
                                             </div>
                                             <input id="datatableSearch_" type="search" name="search"
@@ -149,7 +149,7 @@
                                 <tr id="data-{{$banner->id}}">
                                     <td class="pl-xl-5">{{$banners->firstItem()+$key}}</td>
                                     <td>
-                                        <img class="ratio-4:1" width="80"
+                                        <img class="ratio-4:1" width="80" height="50"
                                              onerror="this.src='{{asset('public/assets/front-end/img/placeholder.png')}}'"
                                              src="{{asset('banner')}}/{{$banner['photo']}}">
                                     </td>
@@ -284,11 +284,13 @@
     <script>
         $('#main-banner-add').on('click', function () {
             $('#main-banner').show();
+            $("#banner-table").addClass("d-none");
         });
 
         $('.cancel').on('click', function () {
             $('.banner_form').attr('action', "{{route('admin.banner.store')}}");
             $('#main-banner').hide();
+            $("#banner-table").removeClass("d-none");
         });
 
         $(document).on('change', '.status', function () {

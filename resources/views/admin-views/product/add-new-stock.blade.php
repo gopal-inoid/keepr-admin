@@ -70,33 +70,33 @@
                                     <div class="row">
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label class="title-color">{{ \App\CPU\translate('Device ID') }}</label>
+                                                <label class="title-color">{{ \App\CPU\translate('Device ID') }}<span class="text-danger">*</span></label>
                                                 <input type="text" name="device_id[]" maxlength="17" class="form-control" value="{{ old('device_id') }}" placeholder="{{ \App\CPU\translate('Device MAC ID') }}" required>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label class="title-color">{{ \App\CPU\translate('UUID') }}</label>
+                                                <label class="title-color">{{ \App\CPU\translate('UUID') }}<span class="text-danger">*</span></label>
                                                 <input type="text" name="uuid[]" class="form-control uuid" style="text-transform: uppercase;" maxlength="36" id="uuid" value="{{ old('uuid') }}" placeholder="{{ \App\CPU\translate('UUID') }}" required>
                                                 <span class="uuid_notice v_notice text-danger" id="uuid_notice"></span>
                                             </div>
                                         </div>
                                         <div class="col-md-1">
                                             <div class="form-group">
-                                                <label class="title-color">{{ \App\CPU\translate('major') }}</label>
+                                                <label class="title-color">{{ \App\CPU\translate('major') }}<span class="text-danger">*</span></label>
                                                 <input type="number" name="major[]" class="form-control " value="{{ old('major') }}" placeholder="{{ \App\CPU\translate('major') }}" required>
                                             </div>
                                         </div>
                                         <div class="col-md-1">
                                             <div class="form-group">
-                                                <label class="title-color">{{ \App\CPU\translate('minor') }}</label>
+                                                <label class="title-color">{{ \App\CPU\translate('minor') }}<span class="text-danger">*</span></label>
                                                 <input type="number" name="minor[]" class="form-control " value="{{ old('minor') }}" placeholder="{{ \App\CPU\translate('minor') }}" required>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
                                             <?php //echo "<pre>"; print_r($productcolors); die; ?>
                                             <div class="form-group">
-                                                <label class="title-color">{{ \App\CPU\translate('Color') }}</label>
+                                                <label class="title-color">{{ \App\CPU\translate('Color') }}<span class="text-danger">*</span></label>
                                                 <select name="colors[]" id="prodcolors-first" class="form-control prodcolors">
                                                     @if(!empty($product_options))
                                                         @foreach($product_options as $prod_id => $val)

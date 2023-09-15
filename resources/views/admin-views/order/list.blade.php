@@ -164,7 +164,7 @@
                                     </td>
                                     
                                     <td>
-                                        <div>${{number_format($order->order_amount,2)}}</div>
+                                        <div>US ${{number_format($order->order_amount,2)}}</div>
 
                                         @if($order->payment_status=='paid')
                                             <span class="badge text-success fz-12 px-0">
