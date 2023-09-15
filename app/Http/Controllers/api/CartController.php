@@ -267,10 +267,10 @@ class CartController extends Controller
             $data['total_order'] = $total_order;
             $data['sub_total'] = number_format($total_price, 2);
             $data['taxes'] = $tax_arr;
-            Common::addLog([]);
+            Common::addLog(['status' => 200, 'message' => 'Success', 'data' => $data]);
             return response()->json(['status' => 200, 'message' => 'Success', 'data' => $data], 200);
         } else {
-            Common::addLog([]);
+            Common::addLog(['status' => 400, 'message' => 'User not found']);
             return response()->json(['status' => 400, 'message' => 'User not found'], 400);
         }
     }
@@ -388,14 +388,14 @@ class CartController extends Controller
                     }
                 }
 
-                Common::addLog([]);
+                Common::addLog(['status' => 200, 'message' => 'Success', 'stripe_intent' => $intent_data, 'order_id' => $order->id ?? NULL]);
                 return response()->json(['status' => 200, 'message' => 'Success', 'stripe_intent' => $intent_data, 'order_id' => $order->id ?? NULL], 200);
             } else {
-                Common::addLog([]);
+                Common::addLog(['status' => 400, 'message' => 'No device found in cart']);
                 return response()->json(['status' => 400, 'message' => 'No device found in cart'], 200);
             }
         } else {
-            Common::addLog([]);
+            Common::addLog(['status' => 400, 'message' => 'User not found']);
             return response()->json(['status' => 400, 'message' => 'User not found'], 200);
         }
     }
@@ -430,6 +430,7 @@ class CartController extends Controller
         $transaction_id = $request->transaction_id;
         $is_verified = $this->verify_payment_intent($transaction_id);
         if (empty($is_verified)) {
+            Common::addLog(['status' => 400, 'message' => 'Payment failed']);
             return response()->json(['status' => 400, 'message' => 'Payment failed'], 200);
         }
         $update_order = Order::where(['id' => $order_id])->first();
@@ -465,10 +466,10 @@ class CartController extends Controller
             $msg = "Your Order has been confirmed with Order ID #" . $payload['order_id'];
             
             $this->sendNotification($user_details->fcm_token, $msg, $payload);
-            Common::addLog([]);
+            Common::addLog(['status' => 200, 'message' => 'Order Successfully Confirmed', 'order_id' => (int)$order_id]);
             return response()->json(['status' => 200, 'message' => 'Order Successfully Confirmed', 'order_id' => (int)$order_id], 200);
         } else {
-            Common::addLog([]);
+            Common::addLog(['status' => 400, 'message' => 'Order not Confirmed,something went wrong']);
             return response()->json(['status' => 400, 'message' => 'Order not Confirmed,something went wrong'], 200);
         }
     }
