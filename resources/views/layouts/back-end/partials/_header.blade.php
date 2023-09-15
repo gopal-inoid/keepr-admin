@@ -4,7 +4,7 @@
         <div class="navbar-nav-wrap">
             <div class="navbar-brand-wrapper">
                 <!-- Logo -->
-                <div class="hs-unfold">
+                {{-- <div class="hs-unfold">
                     @php($e_commerce_logo=\App\Model\BusinessSetting::where(['type'=>'company_web_logo'])->first()->value)
                 <a class="navbar-brand" href="{{route('admin.dashboard.index')}}" aria-label="" >
                     <img class="navbar-brand-logo"
@@ -15,7 +15,7 @@
                          src="{{asset('/public/company/Artboard – 14.svg')}}"
                          alt="Logo">
                 </a> 
-                </div>
+                </div> --}}
                
                 <!-- End Logo -->
             </div>
