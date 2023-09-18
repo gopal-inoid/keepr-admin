@@ -80,6 +80,22 @@ class Controller extends BaseController
         return [];
     }
 
+    public function getOrderProductAttr($product_info){
+        $attr = [];
+        if(!empty($product_info)){
+            $product_info = json_decode($product_info,true);
+            if(!empty($product_info)){
+                foreach($product_info as $k => $val){
+                    $attr['product_name'][] = $val['product_name'] ?? "";
+                    $attr['total_orders'][] = $val['order_qty'] ?? 0;
+                }
+                return $attr;
+            }
+        }
+
+        return [];
+    }
+
     public function getProductAttr($product_id,$type){
         $products_attr = Product::select($type)->where('id',$product_id)->first();
         return $products_attr->$type ?? "";
