@@ -146,6 +146,7 @@ class OrderController extends Controller
         $products = $tax_info = $shipping_info = [];
         $total_orders = 0;
         $total_order_amount = $order->order_amount ?? 0;
+
         if(!empty($order->mac_ids)){ // stocks
             $mac_ids = json_decode($order->mac_ids,true);
             if(!empty($mac_ids)){
