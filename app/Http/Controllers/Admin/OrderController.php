@@ -142,35 +142,12 @@ class OrderController extends Controller
         $shipping_method = Helpers::get_business_settings('shipping_method');
         $countries = \DB::table('country')->select('name','id')->get();
         $states = \DB::table('states')->select('name','id')->get();
-
         $products = $tax_info = $shipping_info = [];
         $total_orders = 0;
         $total_order_amount = $order->order_amount ?? 0;
-
         if(!empty($order->mac_ids)){ // stocks
             $mac_ids = json_decode($order->mac_ids,true);
             if(!empty($mac_ids)){
-                if(!empty($order->taxes)){
-                    $taxes = json_decode($order->taxes,true);
-                    if(!empty($taxes)){
-                        $tax_info = $taxes;
-                    }
-                }
-
-                if(!empty($order->shipping_method_id) && !empty($order->shipping_mode)){
-                    $shipping = ShippingMethod::where(['id' => $order->shipping_method_id])->first();
-                    $shipping_method_rates = ShippingMethodRates::select('normal_rate','express_rate')->where('shipping_id',$order->shipping_method_id)->where('country_code',$this->getCountryName($order->customer->country))->first();
-                    $shipping_info['title'] = $shipping->title ?? "";
-                    if($order->shipping_mode == 'normal_rate'){
-                        $shipping_info['duration'] = $shipping->normal_duration ?? "";
-                        $shipping_info['mode'] = 'Regular Rate';
-                        $shipping_info['amount'] = $shipping_method_rates->normal_rate ?? 0;
-                    }elseif($order->shipping_mode == 'express_rate'){
-                        $shipping_info['duration'] = $shipping->express_duration ?? "";
-                        $shipping_info['mode'] = 'Express Rate';
-                        $shipping_info['amount'] = $shipping_method_rates->express_rate ?? 0;
-                    }
-                }
                 $product_info=json_decode($order->product_info,true);
                 foreach($mac_ids as $k => $val){
                     $total_orders += count($mac_ids[$k]['uuid']);
@@ -195,6 +172,28 @@ class OrderController extends Controller
                         }
                     }
                 }
+            }
+        }
+
+        if(!empty($order->taxes)){
+            $taxes = json_decode($order->taxes,true);
+            if(!empty($taxes)){
+                $tax_info = $taxes;
+            }
+        }
+
+        if(!empty($order->shipping_method_id) && !empty($order->shipping_mode)){
+            $shipping = ShippingMethod::where(['id' => $order->shipping_method_id])->first();
+            $shipping_method_rates = ShippingMethodRates::select('normal_rate','express_rate')->where('shipping_id',$order->shipping_method_id)->where('country_code',$this->getCountryName($order->customer->country))->first();
+            $shipping_info['title'] = $shipping->title ?? "";
+            if($order->shipping_mode == 'normal_rate'){
+                $shipping_info['duration'] = $shipping->normal_duration ?? "";
+                $shipping_info['mode'] = 'Regular Rate';
+                $shipping_info['amount'] = $shipping_method_rates->normal_rate ?? 0;
+            }elseif($order->shipping_mode == 'express_rate'){
+                $shipping_info['duration'] = $shipping->express_duration ?? "";
+                $shipping_info['mode'] = 'Express Rate';
+                $shipping_info['amount'] = $shipping_method_rates->express_rate ?? 0;
             }
         }
        
@@ -670,28 +669,6 @@ class OrderController extends Controller
         if(!empty($order->mac_ids)){ // stocks
             $mac_ids = json_decode($order->mac_ids,true);
             if(!empty($mac_ids)){
-
-                if(!empty($order->taxes)){
-                    $taxes = json_decode($order->taxes,true);
-                    if(!empty($taxes)){
-                        $tax_info = $taxes;
-                    }
-                }
-
-                if(!empty($order->shipping_method_id) && !empty($order->shipping_mode)){
-                    $shipping = ShippingMethod::where(['id' => $order->shipping_method_id])->first();
-                    $shipping_method_rates = ShippingMethodRates::select('normal_rate','express_rate')->where('shipping_id',$order->shipping_method_id)->where('country_code',$this->getCountryName($order->customer->country))->first();
-                    $shipping_info['title'] = $shipping->title ?? "";
-                    if($order->shipping_mode == 'normal_rate'){
-                        $shipping_info['duration'] = $shipping->normal_duration ?? "";
-                        $shipping_info['mode'] = 'Regular Rate';
-                        $shipping_info['amount'] = $shipping_method_rates->normal_rate ?? 0;
-                    }elseif($order->shipping_mode == 'express_rate'){
-                        $shipping_info['duration'] = $shipping->express_duration ?? "";
-                        $shipping_info['mode'] = 'Express Rate';
-                        $shipping_info['amount'] = $shipping_method_rates->express_rate ?? 0;
-                    }
-                }
                 $product_info=json_decode($order->product_info,true);
                 foreach($mac_ids as $k => $val){
                     $total_orders += count($mac_ids[$k]['uuid']);
@@ -716,6 +693,28 @@ class OrderController extends Controller
                         }
                     }
                 }
+            }
+        }
+
+        if(!empty($order->taxes)){
+            $taxes = json_decode($order->taxes,true);
+            if(!empty($taxes)){
+                $tax_info = $taxes;
+            }
+        }
+
+        if(!empty($order->shipping_method_id) && !empty($order->shipping_mode)){
+            $shipping = ShippingMethod::where(['id' => $order->shipping_method_id])->first();
+            $shipping_method_rates = ShippingMethodRates::select('normal_rate','express_rate')->where('shipping_id',$order->shipping_method_id)->where('country_code',$this->getCountryName($order->customer->country))->first();
+            $shipping_info['title'] = $shipping->title ?? "";
+            if($order->shipping_mode == 'normal_rate'){
+                $shipping_info['duration'] = $shipping->normal_duration ?? "";
+                $shipping_info['mode'] = 'Regular Rate';
+                $shipping_info['amount'] = $shipping_method_rates->normal_rate ?? 0;
+            }elseif($order->shipping_mode == 'express_rate'){
+                $shipping_info['duration'] = $shipping->express_duration ?? "";
+                $shipping_info['mode'] = 'Express Rate';
+                $shipping_info['amount'] = $shipping_method_rates->express_rate ?? 0;
             }
         }
 
