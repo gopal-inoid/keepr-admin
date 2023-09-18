@@ -381,7 +381,7 @@ class GeneralController extends Controller
                 } else {
                     $order_list[$k]['delivery_message'] = "";
                 }
-                $mac_ids = 0;
+                $mac_ids = [];
                 if (!empty($order['mac_ids'])) {
                     $mac_ids = json_decode($order['mac_ids'], true);
                 }
