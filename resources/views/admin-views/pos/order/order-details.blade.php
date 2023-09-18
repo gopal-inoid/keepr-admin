@@ -402,8 +402,8 @@
                                             @php($product_info = json_decode($order->product_info,true));
                                             @if(!empty($product_info))
                                                 @foreach($product_info as $k => $val)
-                                                    @php($i++)
-                                                    <tr>
+                                                @php($i++)
+                                                <tr>
                                                     <td>{{$i}}</td>
                                                     <td>
                                                         <div class="media align-items-center gap-10">
