@@ -771,11 +771,11 @@ class ProductController extends BaseController
         foreach ($products as $item) {
             $data[] = [
                 'product_id' => $item->product_id,
-                'device_id'        => $item->mac_id,
-                'color'        => $item->color,
+                'device_id'   => $item->mac_id,
                 'uuid'        => $item->uuid,
                 'major'        => $item->major,
                 'minor'        => $item->minor,
+                'color'        => $item->color,
                 'purchased'        => (($item->is_purchased == 1) ? 'Yes' : 'No')
             ];
         }
@@ -925,7 +925,7 @@ class ProductController extends BaseController
         }
 
         $cnt = 0;
-        $col_key = ['product_uuid', 'device_id', 'color', 'major', 'minor'];
+        $col_key = ['device_id','product_uuid','major','minor','color'];
         foreach ($collections as $collection) {
             foreach ($collection as $key => $value) {
                 if ($key != "" && !in_array($key, $col_key)) {
