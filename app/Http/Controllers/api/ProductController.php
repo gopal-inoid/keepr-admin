@@ -281,35 +281,32 @@ class ProductController extends Controller
                             $mac_ids_array = $existed_mac_ids = [];
                             $product_info = json_decode($user_order->product_info,true);
                             if(!empty($product_info)){
-                                $mac_id_arr = json_decode($user_order['mac_ids'], true);
-                                // if (!empty($mac_id_arr)) {
-                                //     foreach ($mac_id_arr as $product_id => $mac_values) {
-                                //         foreach ($mac_values as $k => $mac_ids) {
-                                //             $existed_mac_ids[$k][] = $mac_ids;
+
+                                // if(!empty($user_order['mac_ids'])){
+                                //     $mac_id_arr = json_decode($user_order['mac_ids'], true);
+                                //     if (!empty($mac_id_arr)) {
+                                //         foreach ($mac_id_arr as $product_id => $mac_values) {
+                                //             foreach ($mac_values as $k => $mac_ids) {
+                                //                 $existed_mac_ids[$k][] = $mac_ids;
+                                //             }
                                 //         }
                                 //     }
                                 // }
 
                                 foreach($product_info as $k => $val){
-                                    // $get_random_stocks = ProductStock::select('mac_id','uuid', 'major', 'minor', 'product_id')->where('is_purchased', 0)
-                                    //     ->where('product_id', $k)
-                                    //     ->inRandomOrder()->limit($val['order_qty'])->get();
-                                    // if (!empty($get_random_stocks)) {
-                                    //     foreach ($get_random_stocks as $m => $macid) {
-                                    //         if (!empty($existed_mac_ids) && (in_array($macid['uuid'], $existed_mac_ids['uuid']) && in_array($macid['major'], $existed_mac_ids['major']) && in_array($macid['minor'], $existed_mac_ids['minor']))) {
-                                    //         } else {
-                                    //             $mac_ids_array[$k]['device_id'][] = $macid['mac_id'];
-                                    //             $mac_ids_array[$k]['uuid'][] = $macid['uuid'];
-                                    //             $mac_ids_array[$k]['major'][] = $macid['major'];
-                                    //             $mac_ids_array[$k]['minor'][] = $macid['minor'];
-                                    //         }
-                                    //     }
-                                    // }
-                                    ProductStock::where('product_id', $k)->where(['uuid' => $device_uuid, 'major' => $major, 'minor' => $minor])->update(['is_purchased' => 1]);
+                                    $check_stock = ProductStock::select('mac_id','uuid', 'major', 'minor', 'product_id')->where('is_purchased', 0)
+                                        ->where(['product_id'=>$k,'uuid' => $device_uuid, 'major' => $major, 'minor' => $minor])->first();
+                                    if(!empty($check_stock->product_id)){
+                                        $mac_ids_array[$k]['device_id'][] = $check_stock->mac_id;
+                                        $mac_ids_array[$k]['uuid'][] = $device_uuid;
+                                        $mac_ids_array[$k]['major'][] = $major;
+                                        $mac_ids_array[$k]['minor'][] = $minor;
+                                        ProductStock::where('product_id', $k)->where(['uuid' => $device_uuid, 'major' => $major, 'minor' => $minor])->update(['is_purchased' => 1]);
+                                    }
                                 }
 
-                                // $user_order->mac_id = json_encode($mac_ids_array);
-                                // $user_order->save();
+                                $user_order->mac_id = json_encode($mac_ids_array);
+                                $user_order->save();
                             }
                         }
                         Common::addLog(['status'=>200,'message'=>'Device connected successfully']);

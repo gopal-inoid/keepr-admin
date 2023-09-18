@@ -301,20 +301,20 @@ class CartController extends Controller
         }
         $existed_mac_ids =  $mac_ids_array = $per_device_amount = [];
         $total_price = $error = 0;
-        $check_mac_ids = Order::select('mac_ids')->get();
-        if (!empty($check_mac_ids)) {
-            foreach ($check_mac_ids as $mac_ids) {
-                $mac_id_arr = json_decode($mac_ids['mac_ids'], true);
-                if (!empty($mac_id_arr)) {
-                    foreach ($mac_id_arr as $product_id => $mac_values) {
-                        foreach ($mac_values as $k => $mac_ids) {
-                            //array_push($existed_mac_ids,$mac_ids['uuid']);
-                            $existed_mac_ids[$k][] = $mac_ids;
-                        }
-                    }
-                }
-            }
-        }
+        // $check_mac_ids = Order::select('mac_ids')->get();
+        // if (!empty($check_mac_ids)) {
+        //     foreach ($check_mac_ids as $mac_ids) {
+        //         $mac_id_arr = json_decode($mac_ids['mac_ids'], true);
+        //         if (!empty($mac_id_arr)) {
+        //             foreach ($mac_id_arr as $product_id => $mac_values) {
+        //                 foreach ($mac_values as $k => $mac_ids) {
+        //                     //array_push($existed_mac_ids,$mac_ids['uuid']);
+        //                     $existed_mac_ids[$k][] = $mac_ids;
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
         $product_info=[];
         if (!empty($user_details->id)) {
@@ -329,35 +329,33 @@ class CartController extends Controller
                         $product_info[$cart['product_id']]['product_name'] = $get_product_info->name ?? "";
                         $product_info[$cart['product_id']]['thumbnail'] = $get_product_info->thumbnail ?? "";
                         $product_info[$cart['product_id']]['order_qty'] = $cart['quantity'] ?? 0;
-
                         $per_device_amount[$cart['product_id']] = $price;
-                        $total_price += ($price * $cart['quantity']);
 
-                        $get_random_stocks = ProductStock::select('mac_id','uuid', 'major', 'minor', 'product_id')->where('is_purchased', 0)
-                            ->where('product_id', $cart['product_id'])
-                            ->inRandomOrder()->limit($cart['quantity'])->get();
-                        if (!empty($get_random_stocks)) {
-                            foreach ($get_random_stocks as $m => $macid) {
-                                if (!empty($existed_mac_ids) && (in_array($macid['uuid'], $existed_mac_ids['uuid']) && in_array($macid['major'], $existed_mac_ids['major']) && in_array($macid['minor'], $existed_mac_ids['minor']))) {
-                                } else {
+                        //$total_price += ($price * $cart['quantity']);
 
-                                    //$mac_ids_array[$cart['product_id']]['device_id'][] = $macid['mac_id'];
-                                    $mac_ids_array[$cart['product_id']]['uuid'][] = $macid['uuid'];
-                                    $mac_ids_array[$cart['product_id']]['major'][] = $macid['major'];
-                                    $mac_ids_array[$cart['product_id']]['minor'][] = $macid['minor'];
+                        // $get_random_stocks = ProductStock::select('mac_id','uuid', 'major', 'minor', 'product_id')->where('is_purchased', 0)
+                        //     ->where('product_id', $cart['product_id'])
+                        //     ->inRandomOrder()->limit($cart['quantity'])->get();
+                        // if (!empty($get_random_stocks)) {
+                        //     foreach ($get_random_stocks as $m => $macid) {
+                        //         if (!empty($existed_mac_ids) && (in_array($macid['uuid'], $existed_mac_ids['uuid']) && in_array($macid['major'], $existed_mac_ids['major']) && in_array($macid['minor'], $existed_mac_ids['minor']))) {
+                        //         } else {
 
-                                }
-                            }
-                       }
-                        if (!in_array($cart['product_id'], array_keys($mac_ids_array))) {
-                            $error = 1;
-                        }
+                        //             //$mac_ids_array[$cart['product_id']]['device_id'][] = $macid['mac_id'];
+                        //             $mac_ids_array[$cart['product_id']]['uuid'][] = $macid['uuid'];
+                        //             $mac_ids_array[$cart['product_id']]['major'][] = $macid['major'];
+                        //             $mac_ids_array[$cart['product_id']]['minor'][] = $macid['minor'];
 
-                    }else{
-                        $status=0;
+                        //         }
+                        //     }
+                        // }
+                        // if (!in_array($cart['product_id'], array_keys($mac_ids_array))) {
+                        //     $error = 1;
+                        // }
+
                     }
                 }
-                if ($status==0 || $error == 1) {
+                if (empty($product_info)) {
                     return response()->json(['status' => 400, 'message' => 'Device not available'], 400);
                 }
                 $stripe_payment_create = $this->CreateCheckout($total_amount);
@@ -375,7 +373,7 @@ class CartController extends Controller
                 $order->taxes = $taxes;
                 $order->shipping_rate_id = $shipping_rate_id;
                 $order->shipping_mode = $shipping_mode;
-                $order->mac_ids = json_encode($mac_ids_array);
+                //$order->mac_ids = json_encode($mac_ids_array);
                 $order->order_amount = $total_amount;
                 $order->product_info=json_encode($product_info);
                 $order->save();
@@ -449,24 +447,31 @@ class CartController extends Controller
             $update_order->save();
             $this->save_invoice($order_id);
             $invoice_file_path = public_path('public/assets/orders/order_invoice_' . $order_id . '.pdf');
+     
+            $order_attribute = $this->getOrderProductAttr($update_order->product_info ?? "");
 
-            $order_attribute = $this->getOrderAttr($update_order->mac_ids);
+            //$order_attribute = $this->getOrderAttr($update_order->mac_ids ?? "");
             //$this->print_r($a);
+
             if (!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])) {
                 $product_names = implode(',', $order_attribute['product_name']);
             }
-            if (!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])) {
-                $product_uuid = implode(',', $order_attribute['uuid']);
+            if (!empty($order_attribute['total_orders']) && is_array($order_attribute['total_orders'])) {
+                $product_qty = implode(',', $order_attribute['total_orders']);
             }
+
+            // if (!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])) {
+            //     $product_uuid = implode(',', $order_attribute['uuid']);
+            // }
 
             $userData['username'] = $user_details['name'] ?? "Keepr User";
             $userData['order_id'] = $order_id;
-            $userData['product_name'] = $product_names;
-            $userData['device_id'] = $product_uuid;
-            $userData['qty'] = $order_attribute['total_orders'] ?? 0;
+            $userData['product_name'] = $product_names ?? "";
+            $userData['qty'] = $product_qty ?? 0;
             $userData['total_price'] = $update_order->order_amount ?? "";
             $userData['email'] = $user_details->email ?? "";
             $this->sendKeeprEmail('order-confirmed-customer',$userData,$invoice_file_path);
+            //$this->sendKeeprEmail('order-confirmed-customer',$userData);
             $userData['username'] = $this->getAdminDetail('company_name') ?? "Keepr Admin";
             $userData['email'] = $this->getAdminDetail('company_email') ?? "";
             $this->sendKeeprEmail('order-confirmed-admin',$userData);
