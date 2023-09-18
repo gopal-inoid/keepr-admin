@@ -191,7 +191,7 @@
                                 <td>{{$i}}</td>
                                 <td>
                                     <div class="media align-items-center gap-10">
-                                        <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$val['thumbnail']}}" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt="">
+                                        {{-- <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$val['thumbnail']}}" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt=""> --}}
                                         <div>
                                             <a href="#" class="title-color hover-c1"><h1>{{substr($val['product_name'],0,30)}}{{strlen($val['product_name'])>10?'...':''}}</h1></a>
                                         </div>
