@@ -378,9 +378,8 @@ class CartController extends Controller
                 $order->product_info=json_encode($product_info);
                 $order->save();
     
-                if (!empty($order->mac_ids)) {
-                    $mac_ids = json_decode($order->mac_ids, true);
-                    foreach ($mac_ids as $product_id => $mac_values) {
+                if (!empty($product_info)) {
+                    foreach ($product_info as $product_id => $mac_values) {
 
                         //code commented for mark as purchased
 
