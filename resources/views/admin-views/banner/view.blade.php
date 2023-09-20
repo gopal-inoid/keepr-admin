@@ -13,6 +13,7 @@
             <h2 class="h1 mb-1 text-capitalize d-flex align-items-center gap-2">
                 <img width="20" src="{{ asset('/assets/back-end/img/Banner_solid.svg') }}" alt="">
                 {{ \App\CPU\translate('banner') }}
+                <span class="badge badge-soft-dark radius-50 fz-12">{{ $banners->total() }}</span>
             </h2>
         </div>
         <!-- End Page Title -->
@@ -92,7 +93,7 @@
                             <div class="col-md-4 col-lg-6 mb-2 mb-md-0">
                                 <h5 class="mb-0 text-capitalize d-flex gap-2">
                                     {{ \App\CPU\translate('banner_table') }}
-                                    <span class="badge badge-soft-dark radius-50 fz-12">{{ $banners->total() }}</span>
+                                   
                                 </h5>
                             </div>
                             <div class="col-md-8 col-lg-6">

@@ -45,7 +45,7 @@
                                                     <option {{($order['order_status'] == 'pending' ? 'selected' : '')}} value="pending">Pending</option>
                                                     <option {{($order['order_status'] == 'processing' ? 'selected' : '')}} value="processing">Processing</option>
                                                     <option {{($order['order_status'] == 'shipped' ? 'selected' : '')}} value="shipped">Shipped</option>
-                                                    <option {{($order['order_status'] == 'delivered' ? 'selected' : '')}} value="delivered">Delivered</option>
+                                                    <option {{($order['order_status'] == 'delivered' ? 'selected' : '')}} value="delivered" disabled class="delivered">Delivered</option>
                                                     <option {{($order['order_status'] == 'cancelled' ? 'selected' : '')}} value="cancelled">Cancelled</option>
                                                     <option {{($order['order_status'] == 'refunded' ? 'selected' : '')}} value="refunded">Refunded</option>
                                                     <option {{($order['order_status'] == 'failed' ? 'selected' : '')}} value="failed">Failed</option>
@@ -690,6 +690,14 @@
             });
             var code = $('.txtPhone').val();
             $('.txtPhone').val(code).intlTelInput();
+        });
+
+        $("#change_order_status").on("change",function(){
+            if(this.value=="shipped"||this.value=="delivered"){
+               $(".delivered").removeAttr("disabled");
+            }else{
+                $(".delivered").attr("disabled", "disabled");
+            }
         });
 
     </script>

@@ -26,20 +26,20 @@ class ShippingMethodController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title'    => 'required|max:200',
+            'title' => 'required|max:200',
             'duration' => 'required',
-            'cost'     => 'numeric',
+            'cost' => 'numeric',
         ]);
 
         DB::table('shipping_methods')->insert([
-            'creator_id'   => auth('admin')->id(),
+            'creator_id' => auth('admin')->id(),
             'creator_type' => 'admin',
-            'title'        => $request['title'],
-            'duration'     => $request['duration'],
-            'cost'         => BackEndHelper::currency_to_usd($request['cost']),
-            'status'       => 1,
-            'created_at'   => now(),
-            'updated_at'   => now(),
+            'title' => $request['title'],
+            'duration' => $request['duration'],
+            'cost' => BackEndHelper::currency_to_usd($request['cost']),
+            'status' => 1,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         Toastr::success('Successfully added.');
@@ -61,9 +61,9 @@ class ShippingMethodController extends Controller
         if ($id != 1) {
             //$countries_list = DB::table('countries')->get();
             $method = ShippingMethod::where(['id' => $id])->first();
-            $countries_list = ShippingMethodRates::where('shipping_id',$id)->get();
+            $countries_list = ShippingMethodRates::where('shipping_id', $id)->get();
             //echo "<pre>"; print_r($countries_list); die;
-            return view('admin-views.shipping-method.edit', compact('method','countries_list'));
+            return view('admin-views.shipping-method.edit', compact('method', 'countries_list'));
         }
         return back();
     }
@@ -72,13 +72,13 @@ class ShippingMethodController extends Controller
     {
         $countries = $request->input('country');
         //echo "<pre>"; print_r($countries); die;
-        foreach($countries as $k => $val){
-           $status = $val['status'] ?? 0;
-           if(!empty($val['name'])){
-                ShippingMethodRates::where(['shipping_id'=>$id,'country_code'=>$val['name']])->update(['normal_rate'=>$val['normal_rate'] ?? '','express_rate'=>$val['express_rate'] ?? '','status'=>$status]);
-           }
+        foreach ($countries as $k => $val) {
+            $status = $val['status'] ?? 0;
+            if (!empty($val['name'])) {
+                ShippingMethodRates::where(['shipping_id' => $id, 'country_code' => $val['name']])->update(['normal_rate' => $val['normal_rate'] ?? '', 'express_rate' => $val['express_rate'] ?? '', 'status' => $status]);
+            }
         }
-        ShippingMethod::where('id',$id)->update(['title'=>$request->title,'normal_duration'=>$request->normal_duration,'express_duration'=>$request->express_duration]);
+        ShippingMethod::where('id', $id)->update(['title' => $request->title, 'normal_duration' => $request->normal_duration, 'express_duration' => $request->express_duration]);
         Toastr::success('Successfully updated.');
         return redirect()->back();
     }
@@ -87,12 +87,10 @@ class ShippingMethodController extends Controller
     {
         $shipping_methods = ShippingMethod::where(['creator_type' => 'admin'])->get();
         $all_category_ids = Category::where(['position' => 0])->pluck('id')->toArray();
-        $category_shipping_cost_ids = CategoryShippingCost::where('seller_id',0)->pluck('category_id')->toArray();
-        
-        foreach($all_category_ids as $id)
-        {
-            if(!in_array($id,$category_shipping_cost_ids))
-            {
+        $category_shipping_cost_ids = CategoryShippingCost::where('seller_id', 0)->pluck('category_id')->toArray();
+
+        foreach ($all_category_ids as $id) {
+            if (!in_array($id, $category_shipping_cost_ids)) {
                 $new_category_shipping_cost = new CategoryShippingCost;
                 $new_category_shipping_cost->seller_id = 0;
                 $new_category_shipping_cost->category_id = $id;
@@ -100,47 +98,84 @@ class ShippingMethodController extends Controller
                 $new_category_shipping_cost->save();
             }
         }
-        $all_category_shipping_cost = CategoryShippingCost::where('seller_id',0)->get();
-        return view('admin-views.shipping-method.setting',compact('all_category_shipping_cost','shipping_methods'));
+        $all_category_shipping_cost = CategoryShippingCost::where('seller_id', 0)->get();
+        return view('admin-views.shipping-method.setting', compact('all_category_shipping_cost', 'shipping_methods'));
     }
 
     public function tax_calculation()
     {
-        $tax_data =   TaxCalculation::select('id','country','type')->get();
-        return view('admin-views.shipping-method.tax-setting',compact('tax_data'));
+        $tax_data = TaxCalculation::select('id', 'country', 'type')->get();
+        return view('admin-views.shipping-method.tax-setting', compact('tax_data'));
     }
     public function edit_tax($id)
     {
-        $tax_data =   TaxCalculation::select('id','country','type','tax_amt')->where('id',$id)->first();
-        $tx_amt = json_decode($tax_data->tax_amt,true);
-        $country = \DB::table('country')->select('id')->where('name',$tax_data->country)->first();
-        $states = \DB::table('states')->select('id','name')->where('country_id',$country->id)->get();
+        $tax_data = TaxCalculation::select('id', 'country', 'type', 'tax_amt')->where('id', $id)->first();
+        $tx_amt = json_decode($tax_data->tax_amt, true);
+
+        $country = \DB::table('country')->select('id')->where('name', $tax_data->country)->first();
+        $states = \DB::table('states')->select('id', 'name')->where('country_id', $country->id)->get();
+        $statesarray = [];
+        $taxarray = [];
+        $finalarray = [];
+        foreach ($states as $k => $state) {
+            $statesarray[$k] = $state->name;
+        }
+        foreach ($tx_amt as $k => $tax) {
+            $taxarray[$k] = $tax['state'];
+        }
+        foreach ($statesarray as $k => $value) {
+            if (!in_array($value, $taxarray)) {
+                $finalarray[$k] = $value;
+            }
+        }
         //echo "<pre>"; print_r($tx_amt);  die;
-        return view('admin-views.shipping-method.edit-tax', compact('tax_data','tx_amt','states'));
+        return view('admin-views.shipping-method.edit-tax', compact('tax_data', 'tx_amt', 'states', 'finalarray'));
+    }
+    public function delete_tax($id, $city)
+    {
+        $array = [];
+        $tax_data = TaxCalculation::select("tax_amt")->where('id', $id)->first();
+        if (!empty($tax_data)) {
+            $tax_amt = json_decode($tax_data['tax_amt'], true);
+            foreach ($tax_amt as $k => $value) {
+                if (!empty($value) && $value['state'] != $city) {
+                    $array[$k] = $value;
+                }
+            }
+            $result = TaxCalculation::where('id', $id)->update(['tax_amt' => json_encode($array)]);
+            if (isset($result)) {
+                Toastr::success('Tax successfully deleted.');
+                return back();
+            } else {
+                Toastr::error('Tax delitation failed.');
+                return back();
+            }
+        }
+
     }
 
     public function tax_calculation_update(Request $request, $id)
     {
         $tax = [];
-        if($request->tax){
-            foreach($request->tax as $key => $val){
-                foreach($val as $k => $v){
-                    if(!empty($v)){
+        if ($request->tax) {
+            foreach ($request->tax as $key => $val) {
+                foreach ($val as $k => $v) {
+                    if (!empty($v)) {
                         $tax[$k][$key] = $v;
                     }
-                    if($key == "state" && empty($val[$k])){
+                    if ($key == "state" && empty($val[$k])) {
                         $tax[$k][$key] = "";
                     }
                 }
             }
 
             $tax_calculation = json_encode($tax);
-            TaxCalculation::where('id',$id)->update(['tax_amt'=>$tax_calculation]);
+            TaxCalculation::where('id', $id)->update(['tax_amt' => $tax_calculation]);
             Toastr::success('Successfully updated.');
-        }else{
+        } else {
             Toastr::error('Error Occured.');
         }
-        
+
         return redirect()->back();
     }
 
