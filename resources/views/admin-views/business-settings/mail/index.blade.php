@@ -46,7 +46,7 @@
                                                 <label for="inputPassword2"
                                                        class="sr-only">{{\App\CPU\translate('mail')}}</label>
                                                 <input type="email" id="test-email" class="form-control"
-                                                       placeholder="Ex : jhon@email.com">
+                                                       placeholder="Ex : john@gmail.com">
                                             </div>
                                         </div>
                                         <div class="col-4">

@@ -6,7 +6,7 @@
     <div class="mb-4 pb-2">
         <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
             <img src="{{asset('/assets/back-end/img/Tax_Solid.svg')}}" alt="">
-            {{\App\CPU\translate('Tax Calculations')}}
+            {{\App\CPU\translate('Tax Calculations')}}   <span class="badge badge-soft-dark radius-50 fz-12">{{-- $shipping_methods->count() --}} 2</span>
         </h2>
     </div>
     <!-- End Page Title -->
@@ -20,16 +20,7 @@
             <div class="row mt-3">
                 <div class="col-md-12">
                     <div class="card">
-                        <div class="px-3 py-4">
-                            <div class="row justify-content-between align-items-center flex-grow-1">
-                                <div class="col-sm-4 col-md-6 col-lg-8 mb-2 mb-sm-0">
-                                    <h5 class="mb-0 text-capitalize d-flex align-items-center gap-2">
-                                        {{\App\CPU\translate('Tax Calculations')}}
-                                        <span class="badge badge-soft-dark radius-50 fz-12">{{-- $shipping_methods->count() --}} 2</span>
-                                    </h5>
-                                </div>
-                            </div>
-                        </div>
+                      
                         <div class="table-responsive pb-3">
                             <table class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" cellspacing="0">
                                 <thead class="thead-light thead-50 text-capitalize">

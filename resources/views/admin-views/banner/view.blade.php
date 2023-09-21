@@ -11,8 +11,9 @@
         <!-- Page Title -->
         <div class="mb-3">
             <h2 class="h1 mb-1 text-capitalize d-flex align-items-center gap-2">
-                <img width="20" src="{{asset('/assets/back-end/img/Banner_solid.svg')}}" alt="">
-                {{\App\CPU\translate('banner')}}
+                <img width="20" src="{{ asset('/assets/back-end/img/Banner_solid.svg') }}" alt="">
+                {{ \App\CPU\translate('banner') }}
+                <span class="badge badge-soft-dark radius-50 fz-12">{{ $banners->total() }}</span>
             </h2>
         </div>
         <!-- End Page Title -->
@@ -22,63 +23,61 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="mb-0 text-capitalize">{{ \App\CPU\translate('banner_form')}}</h5>
+                        <h5 class="mb-0 text-capitalize">{{ \App\CPU\translate('banner_form') }}</h5>
                     </div>
                     <div class="card-body">
-                        <form action="{{route('admin.banner.store')}}" method="post" enctype="multipart/form-data"
-                              class="banner_form">
+                        <form action="{{ route('admin.banner.store') }}" method="post" enctype="multipart/form-data"
+                            class="banner_form">
                             @csrf
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <input type="hidden" id="id" name="id">
                                         <label for="name"
-                                               class="title-color text-capitalize">{{ \App\CPU\translate('banner_URL')}}</label>
+                                            class="title-color text-capitalize">{{ \App\CPU\translate('banner_URL') }}</label>
                                         <input type="text" name="url" class="form-control" id="url" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="name"
-                                               class="title-color text-capitalize">{{\App\CPU\translate('banner_type')}}</label>
-                                        <select class="js-example-responsive form-control w-100"
-                                                name="banner_type" required>
-                                            <option value="Main Banner">{{ \App\CPU\translate('Main Banner')}}</option>
-                                            <option
-                                                value="Footer Banner">{{ \App\CPU\translate('Footer Banner')}}</option>
-                                            <option
-                                                value="Popup Banner">{{ \App\CPU\translate('Popup Banner')}}</option>
-                                            <option
-                                                value="Main Section Banner">{{ \App\CPU\translate('Main Section Banner')}}</option>
+                                            class="title-color text-capitalize">{{ \App\CPU\translate('banner_type') }}</label>
+                                        <select class="js-example-responsive form-control w-100" name="banner_type"
+                                            required>
+                                            <option value="Main Banner">{{ \App\CPU\translate('Main Banner') }}</option>
+                                            <option value="Footer Banner">{{ \App\CPU\translate('Footer Banner') }}</option>
+                                            <option value="Popup Banner">{{ \App\CPU\translate('Popup Banner') }}</option>
+                                            <option value="Main Section Banner">
+                                                {{ \App\CPU\translate('Main Section Banner') }}</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="name"
-                                        class="title-color text-capitalize">{{ \App\CPU\translate('Image')}}</label>
-                                 <span class="text-info">( {{\App\CPU\translate('ratio')}} 4:1 )</span>
-                                 <div class="custom-file text-left">
-                                     <input type="file" name="image" id="mbimageFileUploader"
-                                            class="custom-file-input"
-                                            accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                     <label class="custom-file-label title-color"
-                                            for="mbimageFileUploader">{{\App\CPU\translate('choose')}} {{\App\CPU\translate('file')}}</label>
-                                 </div>
+                                            class="title-color text-capitalize">{{ \App\CPU\translate('Image') }}</label>
+                                        <span class="text-info">( {{ \App\CPU\translate('ratio') }} 4:1 )</span>
+                                        <div class="custom-file text-left">
+                                            <input type="file" name="image" id="mbimageFileUploader"
+                                                class="custom-file-input"
+                                                accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                            <label class="custom-file-label title-color"
+                                                for="mbimageFileUploader">{{ \App\CPU\translate('choose') }}
+                                                {{ \App\CPU\translate('file') }}</label>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 d-flex justify-content-center align-items-center">
-                                     <center class="mb-30 max-w-500 mx-auto">
-                                        <img
-                                            class="ratio-4:1"
-                                            id="mbImageviewer"
-                                            src="{{asset('public/assets/front-end/img/placeholder.png')}}"
-                                            alt="banner image"/>
+                                    <center class="mb-30 max-w-500 mx-auto">
+                                        <img class="ratio-4:1" id="mbImageviewer"
+                                            src="{{ asset('public/assets/front-end/img/placeholder.png') }}"
+                                            alt="banner image" />
                                     </center>
                                 </div>
                             </div>
                             <div class="mt-3 d-flex justify-content-end flex-wrap gap-10">
-                                <button class="btn btn-secondary cancel px-4" type="reset">{{ \App\CPU\translate('reset')}}</button>
+                                <button class="btn btn-secondary cancel px-4"
+                                    type="reset">{{ \App\CPU\translate('reset') }}</button>
                                 <button id="add" type="submit"
-                                        class="btn btn--primary px-4">{{ \App\CPU\translate('save')}}</button>
+                                    class="btn btn--primary px-4">{{ \App\CPU\translate('save') }}</button>
                                 <button id="update"
-                                   class="btn btn--primary d--none text-white">{{ \App\CPU\translate('update')}}</button>
+                                    class="btn btn--primary d--none text-white">{{ \App\CPU\translate('update') }}</button>
                             </div>
                         </form>
                     </div>
@@ -93,9 +92,8 @@
                         <div class="row align-items-center">
                             <div class="col-md-4 col-lg-6 mb-2 mb-md-0">
                                 <h5 class="mb-0 text-capitalize d-flex gap-2">
-                                    {{ \App\CPU\translate('banner_table')}}
-                                    <span
-                                        class="badge badge-soft-dark radius-50 fz-12">{{ $banners->total() }}</span>
+                                    {{ \App\CPU\translate('banner_table') }}
+                                   
                                 </h5>
                             </div>
                             <div class="col-md-8 col-lg-6">
@@ -106,15 +104,14 @@
                                         <div class="input-group input-group-merge input-group-custom">
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text">
-                                                  <i class="tio-search"></i>
+                                                    <i class="tio-search"></i>
                                                 </div>
                                             </div>
-                                            <input id="datatableSearch_" type="search" name="search"
-                                                   class="form-control"
-                                                   placeholder="{{ \App\CPU\translate('Search_by_Banner_Type')}}"
-                                                   aria-label="Search orders" value="{{ $search }}">
+                                            <input id="datatableSearch_" type="search" name="search" class="form-control"
+                                                placeholder="{{ \App\CPU\translate('Search_by_Banner_Type') }}"
+                                                aria-label="Search orders" value="{{ $search }}">
                                             <button type="submit" class="btn btn--primary">
-                                                {{ \App\CPU\translate('Search')}}
+                                                {{ \App\CPU\translate('Search') }}
                                             </button>
                                         </div>
                                     </form>
@@ -123,7 +120,7 @@
                                     <div id="banner-btn">
                                         <button id="main-banner-add" class="btn btn--primary text-nowrap">
                                             <i class="tio-add"></i>
-                                            {{ \App\CPU\translate('add_banner')}}
+                                            {{ \App\CPU\translate('add_banner') }}
                                         </button>
                                     </div>
                                 </div>
@@ -133,49 +130,50 @@
 
                     <div class="table-responsive">
                         <table id="columnSearchDatatable"
-                               style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};"
-                               class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
+                            style="text-align: {{ Session::get('direction') === 'rtl' ? 'right' : 'left' }};"
+                            class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
                             <thead class="thead-light thead-50 text-capitalize">
-                            <tr>
-                                <th class="pl-xl-5">{{\App\CPU\translate('SL')}}</th>
-                                <th>{{\App\CPU\translate('image')}}</th>
-                                <th>{{\App\CPU\translate('banner_type')}}</th>
-                                <th>{{\App\CPU\translate('published')}}</th>
-                                <th class="text-center">{{\App\CPU\translate('action')}}</th>
-                            </tr>
-                            </thead>
-                            @foreach($banners as $key=>$banner)
-                                <tbody>
-                                <tr id="data-{{$banner->id}}">
-                                    <td class="pl-xl-5">{{$banners->firstItem()+$key}}</td>
-                                    <td>
-                                        <img class="ratio-4:1" width="80" height="50"
-                                             onerror="this.src='{{asset('public/assets/front-end/img/placeholder.png')}}'"
-                                             src="{{asset('banner')}}/{{$banner['photo']}}">
-                                    </td>
-                                    <td>{{$banner->banner_type}}</td>
-                                    <td>
-                                        <label class="switcher">
-                                            <input type="checkbox" class="switcher_input status"
-                                                   id="{{$banner->id}}" <?php if ($banner->published == 1) echo "checked" ?>>
-                                            <span class="switcher_control"></span>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex gap-10 justify-content-center">
-                                            <a class="btn btn-outline--primary btn-sm cursor-pointer edit"
-                                               title="{{ \App\CPU\translate('Edit')}}"
-                                               href="{{route('admin.banner.edit',[$banner['id']])}}">
-                                                <i class="tio-edit"></i>
-                                            </a>
-                                            <a class="btn btn-outline-danger btn-sm cursor-pointer delete"
-                                               title="{{ \App\CPU\translate('Delete')}}"
-                                               id="{{$banner['id']}}">
-                                                <i class="tio-delete"></i>
-                                            </a>
-                                        </div>
-                                    </td>
+                                <tr>
+                                    <th class="pl-xl-5">{{ \App\CPU\translate('SL') }}</th>
+                                    <th>{{ \App\CPU\translate('image') }}</th>
+                                    <th>{{ \App\CPU\translate('banner_type') }}</th>
+                                    <th>{{ \App\CPU\translate('published') }}</th>
+                                    <th class="text-center">{{ \App\CPU\translate('action') }}</th>
                                 </tr>
+                            </thead>
+                            @foreach ($banners as $key => $banner)
+                                <tbody>
+                                    <tr id="data-{{ $banner->id }}">
+                                        <td class="pl-xl-5">{{ $banners->firstItem() + $key }}</td>
+                                        <td>
+                                            <img class="ratio-4:1" width="80" height="50"
+                                                onerror="this.src='{{ asset('public/assets/front-end/img/placeholder.png') }}'"
+                                                src="{{ asset('banner') }}/{{ $banner['photo'] }}">
+                                        </td>
+                                        <td>{{ $banner->banner_type }}</td>
+                                        <td>
+                                            <label class="switcher">
+                                                <input type="checkbox" class="switcher_input status"
+                                                    id="{{ $banner->id }}" <?php if ($banner->published == 1) {
+                                                        echo 'checked';
+                                                    } ?>>
+                                                <span class="switcher_control"></span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-10 justify-content-center">
+                                                <a class="btn btn-outline--primary btn-sm cursor-pointer edit"
+                                                    title="{{ \App\CPU\translate('Edit') }}"
+                                                    href="{{ route('admin.banner.edit', [$banner['id']]) }}">
+                                                    <i class="tio-edit"></i>
+                                                </a>
+                                                <a class="btn btn-outline-danger btn-sm cursor-pointer delete"
+                                                    title="{{ \App\CPU\translate('Delete') }}" id="{{ $banner['id'] }}">
+                                                    <i class="tio-delete"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             @endforeach
                         </table>
@@ -184,16 +182,16 @@
                     <div class="table-responsive mt-4">
                         <div class="px-4 d-flex justify-content-lg-end">
                             <!-- Pagination -->
-                            {{$banners->links()}}
+                            {{ $banners->links() }}
                         </div>
                     </div>
 
-                    @if(count($banners)==0)
+                    @if (count($banners) == 0)
                         <div class="text-center p-4">
                             <img class="mb-3 w-160"
-                                 src="{{asset('public/assets/back-end')}}/svg/illustrations/sorry.svg"
-                                 alt="Image Description">
-                            <p class="mb-0">{{ \App\CPU\translate('No_data_to_show')}}</p>
+                                src="{{ asset('public/assets/back-end') }}/svg/illustrations/sorry.svg"
+                                alt="Image Description">
+                            <p class="mb-0">{{ \App\CPU\translate('No_data_to_show') }}</p>
                         </div>
                     @endif
                 </div>
@@ -236,7 +234,7 @@
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
 
-                reader.onload = function (e) {
+                reader.onload = function(e) {
                     $('#mbImageviewer').attr('src', e.target.result);
                 }
 
@@ -244,7 +242,7 @@
             }
         }
 
-        $("#mbimageFileUploader").change(function () {
+        $("#mbimageFileUploader").change(function() {
             mbimagereadURL(this);
         });
 
@@ -252,7 +250,7 @@
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
 
-                reader.onload = function (e) {
+                reader.onload = function(e) {
                     $('#fbImageviewer').attr('src', e.target.result);
                 }
 
@@ -260,7 +258,7 @@
             }
         }
 
-        $("#fbimageFileUploader").change(function () {
+        $("#fbimageFileUploader").change(function() {
             fbimagereadURL(this);
         });
 
@@ -268,7 +266,7 @@
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
 
-                reader.onload = function (e) {
+                reader.onload = function(e) {
                     $('#pbImageviewer').attr('src', e.target.result);
                 }
 
@@ -276,24 +274,23 @@
             }
         }
 
-        $("#pbimageFileUploader").change(function () {
+        $("#pbimageFileUploader").change(function() {
             pbimagereadURL(this);
         });
-
     </script>
     <script>
-        $('#main-banner-add').on('click', function () {
+        $('#main-banner-add').on('click', function() {
             $('#main-banner').show();
             $("#banner-table").addClass("d-none");
         });
 
-        $('.cancel').on('click', function () {
-            $('.banner_form').attr('action', "{{route('admin.banner.store')}}");
+        $('.cancel').on('click', function() {
+            $('.banner_form').attr('action', "{{ route('admin.banner.store') }}");
             $('#main-banner').hide();
             $("#banner-table").removeClass("d-none");
         });
 
-        $(document).on('change', '.status', function () {
+        $(document).on('change', '.status', function() {
             var id = $(this).attr("id");
             if ($(this).prop("checked") === true) {
                 var status = 1;
@@ -307,31 +304,31 @@
                 }
             });
             $.ajax({
-                url: "{{route('admin.banner.status')}}",
+                url: "{{ route('admin.banner.status') }}",
                 method: 'POST',
                 data: {
                     id: id,
                     status: status
                 },
-                success: function (data) {
+                success: function(data) {
                     if (data == 1) {
-                        toastr.success('{{\App\CPU\translate('Banner_published_successfully')}}');
+                        toastr.success('{{ \App\CPU\translate('Banner_published_successfully') }}');
                     } else {
-                        toastr.success('{{\App\CPU\translate('Banner_unpublished_successfully')}}');
+                        toastr.success('{{ \App\CPU\translate('Banner_unpublished_successfully') }}');
                     }
                 }
             });
         });
 
-        $(document).on('click', '.delete', function () {
+        $(document).on('click', '.delete', function() {
             var id = $(this).attr("id");
             Swal.fire({
-                title: "{{\App\CPU\translate('Are_you_sure_delete_this_banner')}}?",
-                text: "{{\App\CPU\translate('You_will_not_be_able_to_revert_this')}}!",
+                title: "{{ \App\CPU\translate('Are_you_sure_delete_this_banner') }}?",
+                text: "{{ \App\CPU\translate('You_will_not_be_able_to_revert_this') }}!",
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: '{{\App\CPU\translate('Yes')}}, {{\App\CPU\translate('delete_it')}}!',
+                confirmButtonText: '{{ \App\CPU\translate('Yes') }}, {{ \App\CPU\translate('delete_it') }}!',
                 type: 'warning',
                 reverseButtons: true
             }).then((result) => {
@@ -342,17 +339,29 @@
                         }
                     });
                     $.ajax({
-                        url: "{{route('admin.banner.delete')}}",
+                        url: "{{ route('admin.banner.delete') }}",
                         method: 'POST',
-                        data: {id: id},
-                        success: function (response) {
+                        data: {
+                            id: id
+                        },
+                        success: function(response) {
                             console.log(response)
-                            toastr.success('{{\App\CPU\translate('Banner_deleted_successfully')}}');
+                            toastr.success(
+                                '{{ \App\CPU\translate('Banner_deleted_successfully') }}');
                             $('#data-' + id).hide();
                         }
                     });
                 }
             })
+        });
+
+
+        $('#datatableSearch_').on("input", function() {
+            if (this.value.length == 0) {
+                let url = location.href;
+                let splited = url.split('?');
+                window.location = splited[0];
+            }
         });
     </script>
     <!-- Page level plugins -->

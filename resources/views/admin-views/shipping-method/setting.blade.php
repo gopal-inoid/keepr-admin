@@ -7,6 +7,7 @@
         <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
             <img src="{{asset('assets/back-end/img/Shipping_solid.svg')}}" alt="">
             {{\App\CPU\translate('Shipping Method')}}
+            <span class="badge badge-soft-dark radius-50 fz-12">{{-- $shipping_methods->count() --}} 2</span>
         </h2>
     </div>
     <!-- End Page Title -->
@@ -25,7 +26,7 @@
                                 <div class="col-sm-4 col-md-6 col-lg-8 mb-2 mb-sm-0">
                                     <h5 class="mb-0 text-capitalize d-flex align-items-center gap-2">
                                         {{\App\CPU\translate('Shipping Methods')}}
-                                        <span class="badge badge-soft-dark radius-50 fz-12">{{-- $shipping_methods->count() --}} 2</span>
+                                       
                                     </h5>
                                 </div>
                             </div>
