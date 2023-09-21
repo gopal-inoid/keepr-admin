@@ -69,7 +69,7 @@
                             <div class="h4 montserrat-normal-600">
                                 <p>{{$order->customer !=null? $order->customer['shipping_name']:\App\CPU\translate('name_not_found')}}</p>
                                 <p>{{$order->customer !=null? $order->customer['shipping_email']:\App\CPU\translate('email_not_found')}}</p>
-                                <p>{{$order->customer !=null? $order->customer['shipping_phone']:\App\CPU\translate('phone_not_found')}}</p>
+                                <p>{{$order->customer['shipping_phone_code'] ? $order->customer['shipping_phone_code'] : ""}} &nbsp;{{$order->customer !=null? $order->customer['shipping_phone']:\App\CPU\translate('phone_not_found')}}</p>
                                 <p>{{$order->customer ? $order->customer['add_shipping_address'] : ""}}</p>
                                 <p>{{$order->customer ? $order->customer['shipping_city'] : ""}} {{$order->customer ? $order->customer['shipping_zip'] : ""}}</p>
                             </div>
@@ -89,12 +89,13 @@
 
                     </td>
                     <td width="30%">
+                       
                         <div class="col-sm-6 order-sm-0">
                             @if (!empty($order->customer->street_address))
                             <span class="h2">{{\App\CPU\translate('billing_address')}} </span>
                             <div class="h4 montserrat-normal-600">
                                 <p>{{$order->customer['name'] ? $order->customer['name'] : ""}}</p>
-                                <p>{{$order->customer['billing_phone'] ? $order->customer['billing_phone'] : ""}}</p>
+                                <p>{{$order->customer['billing_phone_code'] ? $order->customer['billing_phone_code'] : ""}} &nbsp;{{$order->customer['billing_phone'] ? $order->customer['billing_phone'] : ""}}</p>
                                 <p>{{$order->customer['street_address'] ? $order->customer['street_address'] : ""}}</p>
                                 <p>{{$order->customer['city'] ? $order->customer['city'] : ""}} {{$order->customer['zip'] ? $order->customer['zip'] : ""}}</p>
                             </div>
@@ -131,7 +132,7 @@
                     </th>
                     <th align="right" style="border-top: 1px solid #eee; padding: 5px;">
                         <strong>
-                            Qty
+                            Qty.
                         </strong>
                     </th>
                     <th align="right" style="border-top: 1px solid #eee; padding: 5px;">
@@ -269,6 +270,6 @@
             </tbody>
         </table>
     </div>
-    <div style="border-top: 1px solid #eee;"></div>
+    <div style="border-top: 1px solid #eee;">{{$order->order_note?$order->order_note:""}}</div>
 </body>
 </html>

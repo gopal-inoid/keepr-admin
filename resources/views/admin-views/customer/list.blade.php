@@ -34,7 +34,7 @@
                                     </div>
                                 </div>
                                 <input id="datatableSearch_" type="search" name="search" class="form-control"
-                                       placeholder="{{\App\CPU\translate('Search by Name or Email or Phone')}}"
+                                       placeholder="{{\App\CPU\translate('Ex: Name, Email or Phone')}}"
                                        aria-label="Search orders" value="{{ $search }}">
                                 <button type="submit" class="btn btn--primary">{{\App\CPU\translate('search')}}</button>
                             </div>
@@ -177,6 +177,13 @@
                     });
                 }
             })
+        });
+        $('#datatableSearch_').on("input", function() {
+            if (this.value.length == 0) {
+                let url = location.href;
+                let splited = url.split('?');
+                window.location = splited[0];
+            }
         });
     </script>
 @endpush

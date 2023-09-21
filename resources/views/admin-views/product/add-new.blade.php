@@ -171,10 +171,10 @@
                     <div class="card mt-2 rest-part">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-8 form-group">
+                                <div class="col-md-7 form-group">
                                     <div class="mb-2">
                                         <label class="title-color">{{ \App\CPU\translate('Upload product images') }}<span class="text-danger">*</span></label>
-                                        <span class="text-info">* ( {{ \App\CPU\translate('ratio') }} 1:1 )</span>
+                                        <span class="text-info">( {{ \App\CPU\translate('ratio') }} 1:1 )</span>
                                     </div>
                                     <div class="p-2 border border-dashed">
                                         <div class="row" id="coba"></div>
@@ -182,10 +182,10 @@
 
                                 </div>
 
-                                <div class="col-md-4 form-group">
+                                <div class="col-md-5 form-group">
                                     <div class="mb-2">
                                         <label for="name" class="title-color text-capitalize">{{ \App\CPU\translate('Upload thumbnail') }}<span class="text-danger">*</span></label>
-                                        <span class="text-info">* ( {{ \App\CPU\translate('ratio') }} 1:1 )</span>
+                                        <span class="text-info">( {{ \App\CPU\translate('ratio') }} 1:1 )</span>
                                     </div>
                                     <div>
                                         <div class="row" id="thumbnail"></div>

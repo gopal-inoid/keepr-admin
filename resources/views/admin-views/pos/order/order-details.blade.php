@@ -694,6 +694,7 @@
 
         $("#change_order_status").on("change",function(){
             if(this.value=="shipped"||this.value=="delivered"){
+               $("#change_order_status option").attr("disabled",'disabled');
                $(".delivered").removeAttr("disabled");
             }else{
                 $(".delivered").attr("disabled", "disabled");
