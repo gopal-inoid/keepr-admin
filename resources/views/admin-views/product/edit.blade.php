@@ -69,7 +69,7 @@
                                     <label class="title-color">{{ \App\CPU\translate('Price') }}<span class="text-danger">*</span></label>
                                     <input type="number" min="0" step="0.01"
                                         placeholder="{{ \App\CPU\translate('Purchase price') }}"
-                                        value="{{ $product->purchase_price }}" name="purchase_price"
+                                        value="{{ $product->purchase_price }}" id="purchase_price" name="purchase_price"
                                         class="form-control" required>
                                         <span class="price_notice v_notice text-danger" id="price_notice"></span>
                                 </div>
