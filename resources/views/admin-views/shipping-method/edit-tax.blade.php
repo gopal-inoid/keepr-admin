@@ -108,7 +108,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="col-md-2 form-group faq-add-main-btn">
-                                                            <a href="{{ route('admin.business-settings.shipping-method.delete-tax', [$tax_data['id'], $val['state']]) }}"
+                                                            <a href=""
                                                                 class="delete_text_record" data="{{!empty($val['state']) ? $val['state'] : '' }}">
                                                                 <i
                                                                     class="tio-delete-outlined text-danger remove-product-faq-btn"></i>
