@@ -53,9 +53,9 @@
                                         <tr>
                                             <th>States</th>
                                             <th>Tax Percentage</th>
-                                            <th>Tax Type</th> 
+                                            <th>Tax Type</th>
                                             <th>Tax Percentage</th>
-                                            <th>Tax Type</th> 
+                                            <th>Tax Type</th>
                                             <th>
                                                 <div class="faq-add-main-btn">
                                                     <label class="title-color">&nbsp;</label>
@@ -71,15 +71,17 @@
                                                 <tr>
                                                     <td>
                                                         <select name="tax[state][]" class="form-control">
-                                                            <option selected value="Choose State">Select States</option>
+                                                            <option value="Choose State">Select States</option>
                                                             @foreach ($states as $k => $state)
                                                                 @php
-                                                                    $status = !in_array($state->name, $finalarray) ? 'disabled' : '';
-                                                                   
+                                                                    $FromTax = !empty($val['state']) ? $val['state'] : '';
+                                                                    $FromState=!empty($state->name) ? $state->name : '';
+                                                                    $disabled = (!in_array($FromState, $finalarray) ? 'disabled' : '');
                                                                 @endphp
-                                                                <option {{ $status }}
-                                                                    {{ ((!empty($val['state']) ? $val['state'] : '') == $state->name) ? 'selected' : '' }}
-                                                                    value="{{ $state->name }}">{{ $state->name }}
+                                                                <option {{$disabled }}
+                                                                {{((!empty($FromTax) && !empty($FromState) && $FromTax === $FromState) ? 'selected' : '') }}
+                                                                    value="{{ !empty($state->name) ? $state->name : '' }}">
+                                                                    {{ !empty($state->name) ? $state->name : '' }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
@@ -108,8 +110,9 @@
                                                     </td>
                                                     <td>
                                                         <div class="col-md-2 form-group faq-add-main-btn">
-                                                            <a href=""
-                                                                class="delete_text_record" data="{{!empty($val['state']) ? $val['state'] : '' }}">
+                                                            <a href="" class="delete_text_record"
+                                                                data="
+                                                                {{ !empty($val['state']) ? $val['state'] : '' }}">
                                                                 <i
                                                                     class="tio-delete-outlined text-danger remove-product-faq-btn"></i>
                                                             </a>
@@ -145,17 +148,12 @@
                     `<tr class="inner-faq-div">
             <td>
                 <select name="tax[state][]" class="form-control dynoselect">
-                    <option id="dynoption" selected value="Choose State">Select States</option>
+                    <option selected  value="Choose State">Select States</option>
                     @foreach ($states as $k => $state)
-                        @php
-                            $status = !in_array($state->name, $finalarray) ? 'disabled' : '';
-                            $active = in_array($state->name, $finalarray) ? false : true; 
-                        @endphp
-                        <option {{ $status }} {{$active}}
-                        {{ ((!empty($val['state']) ? $val['state'] : '') == $state->name) ? 'selected' : '' }}
+                        <option
                             value="{{ $state->name }}">{{ $state->name }}
                         </option>
-                    @endforeach                                                                                                                         
+                    @endforeach                                                                                                                        
                 </select>
             </td>
             <td>
@@ -178,9 +176,6 @@
             </td></tr>
             `
                 );
-
-
-                $(".dynoselect").val($("#dynoption").val());
             });
 
             $(document).on('click', '.remove-product-faq-btn', function() {

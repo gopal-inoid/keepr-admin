@@ -128,8 +128,8 @@ class ShippingMethodController extends Controller
                 $finalarray[$k] = $value;
             }
         }
-        //echo "<pre>"; print_r($tx_amt);  die;
-        return view('admin-views.shipping-method.edit-tax', compact('tax_data', 'tx_amt', 'states', 'finalarray'));
+        // echo "<pre>"; print_r($finalarray);  die;
+        return view('admin-views.shipping-method.edit-tax', compact('tax_data', 'tx_amt', 'states','finalarray'));
     }
     public function delete_tax($id, $city)
     {
