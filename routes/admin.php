@@ -397,7 +397,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
                 Route::get('tax-calculation', 'ShippingMethodController@tax_calculation')->name('tax-calculation');
                 Route::get('edit-tax/{id}', 'ShippingMethodController@edit_tax')->name('edit-tax');
 
-                Route::get('delete-tax/{id}/{state}', 'ShippingMethodController@delete_tax')->name('delete-tax');
+                // Route::get('delete-tax/{id}/{state}', 'ShippingMethodController@delete_tax')->name('delete-tax');
 
                 Route::put('tax-calculation-update/{id}', 'ShippingMethodController@tax_calculation_update')->name('tax-calculation-update');
             });
