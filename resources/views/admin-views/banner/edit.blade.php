@@ -33,7 +33,7 @@
                                         <label for="name" class="title-color text-capitalize">{{ \App\CPU\translate('banner_URL')}}</label>
                                         <input type="text" name="url" class="form-control" value="{{$banner['url']}}" required>
                                     </div>
-
+{{-- 
                                     <div class="form-group">
                                         <label for="name" class="title-color text-capitalize">{{\App\CPU\translate('banner_type')}}</label>
                                         <select class="js-example-responsive form-control w-100"
@@ -55,7 +55,7 @@
                                             <option value="shop" {{$banner['resource_type']=='shop'?'selected':''}}>Shop</option>
                                             <option value="brand" {{$banner['resource_type']=='brand'?'selected':''}}>Brand</option>
                                         </select>
-                                    </div>
+                                    </div> --}}
 
                                     <div class="form-group" id="resource-product" style="display: {{$banner['resource_type']=='product'?'block':'none'}}">
                                         <label for="product_id" class="title-color text-capitalize">{{\App\CPU\translate('product')}}</label>

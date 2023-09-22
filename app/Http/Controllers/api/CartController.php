@@ -71,7 +71,7 @@ class CartController extends Controller
 
     public function get_cart(Request $request)
     {
-        $auth_token   = $request->headers->get('X-Access-Token');
+        $auth_token = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
         $cart = Cart::select('id', 'quantity', 'product_id', 'quantity', 'name', 'thumbnail', 'color')->where(['customer_id' => $user_details->id])->where('quantity', '>', 0)->get();
         $total_cart_price = 0;
@@ -85,9 +85,9 @@ class CartController extends Controller
                     $cart_data->delete();
                 }
                 if (Product::where('id', $value->product_id)->where('status', 1)->count() > 0) {
-                    $cart[$key]['is_product_available']='1';
+                    $cart[$key]['is_product_available'] = '1';
                 } else {
-                    $cart[$key]['is_product_available']='0';
+                    $cart[$key]['is_product_available'] = '0';
                 }
                 $price = $value['product']['purchase_price'] ?? 0;
                 unset($value['product']);
@@ -99,7 +99,7 @@ class CartController extends Controller
             Common::addLog([]);
             return response()->json(['status' => 200, 'message' => 'Success', 'total_price' => number_format($total_cart_price, 2), 'data' => $cart], 200);
         } else {
-            return response()->json(['status' => 200, 'message' => 'Cart is Empty.', 'total_price'=> '0','data'=>[]], 200);
+            return response()->json(['status' => 200, 'message' => 'Cart is Empty.', 'total_price' => '0', 'data' => []], 200);
         }
     }
 
@@ -118,7 +118,7 @@ class CartController extends Controller
         }
 
         $colorStocks = Color::select('id')->where('name', $request->color)->first();
-        $auth_token   = $request->headers->get('X-Access-Token');
+        $auth_token = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
         $product = Product::find($request->product_id);
         $cart = Cart::where(['product_id' => $request->product_id, 'color' => $colorStocks->id ?? NULL, 'customer_id' => $user_details->id])->first();
@@ -180,7 +180,7 @@ class CartController extends Controller
 
         $cart = Cart::find($request->id);
         if (isset($cart['quantity']) && $cart['quantity'] > 0) {
-            $cart->quantity  = ($cart['quantity'] - 1);
+            $cart->quantity = ($cart['quantity'] - 1);
             $cart->save();
             Common::addLog([]);
             return response()->json(['status' => 1, 'message' => translate('successfully_removed')], 200);
@@ -210,7 +210,7 @@ class CartController extends Controller
         $device_ids = [];
         $total_order = 0;
         $total_price = 0;
-        $auth_token   = $request->headers->get('X-Access-Token');
+        $auth_token = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
         if (!empty($user_details->id)) {
 
@@ -278,7 +278,7 @@ class CartController extends Controller
     public function place_order(Request $request)
     {
 
-        $auth_token   = $request->headers->get('X-Access-Token');
+        $auth_token = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
         $cart_id = $request->cart_id;
         $shipping_id = $request->shipping_id ?? "";
@@ -299,7 +299,7 @@ class CartController extends Controller
                 array_push($cart_ids, $val['id']);
             }
         }
-        $existed_mac_ids =  $mac_ids_array = $per_device_amount = [];
+        $existed_mac_ids = $mac_ids_array = $per_device_amount = [];
         $total_price = $error = 0;
         // $check_mac_ids = Order::select('mac_ids')->get();
         // if (!empty($check_mac_ids)) {
@@ -316,14 +316,14 @@ class CartController extends Controller
         //     }
         // }
 
-        $product_info=[];
+        $product_info = [];
         if (!empty($user_details->id)) {
             $cart_info = Cart::select('id', 'customer_id', 'product_id', 'price', 'quantity')->where('quantity', '>', 0)->whereIn('id', $cart_ids)->get();
-            $status=1;
+            $status = 1;
             if (!empty($cart_info[0])) {
-                foreach ($cart_info as $cart) {                   
-                    $get_product_info = Product::select('purchase_price as price','name','thumbnail','status')->where('id', $cart['product_id'])->first();
-                    if(!empty($get_product_info->status)){
+                foreach ($cart_info as $cart) {
+                    $get_product_info = Product::select('purchase_price as price', 'name', 'thumbnail', 'status')->where('id', $cart['product_id'])->first();
+                    if (!empty($get_product_info->status)) {
 
                         $price = $get_product_info->price ?? 0;
                         $product_info[$cart['product_id']]['product_name'] = $get_product_info->name ?? "";
@@ -375,9 +375,9 @@ class CartController extends Controller
                 $order->shipping_mode = $shipping_mode;
                 //$order->mac_ids = json_encode($mac_ids_array);
                 $order->order_amount = $total_amount;
-                $order->product_info=json_encode($product_info);
+                $order->product_info = json_encode($product_info);
                 $order->save();
-    
+
                 if (!empty($product_info)) {
                     foreach ($product_info as $product_id => $mac_values) {
 
@@ -429,11 +429,12 @@ class CartController extends Controller
 
     public function confirm_order(Request $request)
     {
-        $auth_token   = $request->headers->get('X-Access-Token');
+        $auth_token = $request->headers->get();
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
         $order_id = $request->order_id;
         $transaction_id = $request->transaction_id;
         $is_verified = $this->verify_payment_intent($transaction_id);
+
         if (empty($is_verified)) {
             Common::addLog(['status' => 400, 'message' => 'Payment failed']);
             return response()->json(['status' => 400, 'message' => 'Payment failed'], 200);
@@ -446,7 +447,7 @@ class CartController extends Controller
             $update_order->save();
             $this->save_invoice($order_id);
             $invoice_file_path = public_path('public/assets/orders/order_invoice_' . $order_id . '.pdf');
-     
+
             $order_attribute = $this->getOrderProductAttr($update_order->product_info ?? "");
 
             //$order_attribute = $this->getOrderAttr($update_order->mac_ids ?? "");
@@ -469,17 +470,17 @@ class CartController extends Controller
             $userData['qty'] = $product_qty ?? 0;
             $userData['total_price'] = $update_order->order_amount ?? "";
             $userData['email'] = $user_details->email ?? "";
-            $this->sendKeeprEmail('order-confirmed-customer',$userData,$invoice_file_path);
+            $this->sendKeeprEmail('order-confirmed-customer', $userData, $invoice_file_path);
             //$this->sendKeeprEmail('order-confirmed-customer',$userData);
             $userData['username'] = $this->getAdminDetail('company_name') ?? "Keepr Admin";
             $userData['email'] = $this->getAdminDetail('company_email') ?? "";
-            $this->sendKeeprEmail('order-confirmed-admin',$userData);
+            $this->sendKeeprEmail('order-confirmed-admin', $userData);
             $payload['order_id'] = $update_order->id ?? NULL;
             $msg = "Your Order has been confirmed with Order ID #" . $payload['order_id'];
-            
+
             $this->sendNotification($user_details->fcm_token, $msg, $payload);
-            Common::addLog(['status' => 200, 'message' => 'Order Successfully Confirmed', 'order_id' => (int)$order_id]);
-            return response()->json(['status' => 200, 'message' => 'Order Successfully Confirmed', 'order_id' => (int)$order_id], 200);
+            Common::addLog(['status' => 200, 'message' => 'Order Successfully Confirmed', 'order_id' => (int) $order_id]);
+            return response()->json(['status' => 200, 'message' => 'Order Successfully Confirmed', 'order_id' => (int) $order_id], 200);
         } else {
             Common::addLog(['status' => 400, 'message' => 'Order not Confirmed,something went wrong']);
             return response()->json(['status' => 400, 'message' => 'Order not Confirmed,something went wrong'], 200);
@@ -535,10 +536,10 @@ class CartController extends Controller
     public function sendNotification($fcm_token, $msg, $payload)
     {
         $SERVER_ID = env('FIREBASE_NOTIF_SERVER_ID');
-        $FCM_URL   = env('FCM_URL');
+        $FCM_URL = env('FCM_URL');
 
         $registrationIds[] = $fcm_token; //$registration_id;
-        $title             = 'Keepr';
+        $title = 'Keepr';
         // prep the bundle
         $notification = [
             'title' => $title,
@@ -588,10 +589,10 @@ class CartController extends Controller
     public function sendNotification1($fcm_token, $msg, $payload)
     {
         $SERVER_ID = env('FIREBASE_NOTIF_SERVER_ID');
-        $FCM_URL   = env('FCM_URL');
+        $FCM_URL = env('FCM_URL');
 
         $registrationIds[] = $fcm_token; //$registration_id;
-        $title             = 'Keepr';
+        $title = 'Keepr';
         // prep the bundle
         $notification = [
             'title' => $title,
