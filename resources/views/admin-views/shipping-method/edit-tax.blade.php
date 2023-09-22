@@ -78,7 +78,7 @@
                                                                    
                                                                 @endphp
                                                                 <option {{ $status }}
-                                                                    {{ $val['state'] == $state->name ? 'selected' : '' }}
+                                                                    {{ ((!empty($val['state']) ? $val['state'] : '') == $state->name) ? 'selected' : '' }}
                                                                     value="{{ $state->name }}">{{ $state->name }}
                                                                 </option>
                                                             @endforeach
@@ -109,7 +109,7 @@
                                                     <td>
                                                         <div class="col-md-2 form-group faq-add-main-btn">
                                                             <a href="{{ route('admin.business-settings.shipping-method.delete-tax', [$tax_data['id'], $val['state']]) }}"
-                                                                class="delete_text_record" data="{{ $val['state'] }}">
+                                                                class="delete_text_record" data="{{!empty($val['state']) ? $val['state'] : '' }}">
                                                                 <i
                                                                     class="tio-delete-outlined text-danger remove-product-faq-btn"></i>
                                                             </a>
@@ -152,7 +152,7 @@
                             $active = in_array($state->name, $finalarray) ? false : true; 
                         @endphp
                         <option {{ $status }} {{$active}}
-                            {{ $val['state'] == $state->name ? 'selected' : '' }}
+                        {{ ((!empty($val['state']) ? $val['state'] : '') == $state->name) ? 'selected' : '' }}
                             value="{{ $state->name }}">{{ $state->name }}
                         </option>
                     @endforeach                                                                                                                         
