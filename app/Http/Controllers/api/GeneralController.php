@@ -74,18 +74,18 @@ class GeneralController extends Controller
     {
         $mobile = $request->mobile;
         $phone_code = $request->phone_code;
-        $user = User::select('id','phone','is_active')->where(['phone_code'=>$phone_code,'phone'=>$mobile])->first();
-        if(!empty($user->id)){
-            if($user->is_active != 1){
-                Common::addLog(['status'=>400,'message'=>'Not Activated']);
-                return response()->json(['status'=>400,'message'=>'Not Activated'],200);
-            }else{
-                Common::addLog(['status'=>200,'message'=>'Success']);
-                return response()->json(['status'=>200,'message'=>'Success'],200);
+        $user = User::select('id', 'phone', 'is_active')->where(['phone_code' => $phone_code, 'phone' => $mobile])->first();
+        if (!empty($user->id)) {
+            if ($user->is_active != 1) {
+                Common::addLog(['status' => 400, 'message' => 'Not Activated']);
+                return response()->json(['status' => 400, 'message' => 'Not Activated'], 200);
+            } else {
+                Common::addLog(['status' => 200, 'message' => 'Success']);
+                return response()->json(['status' => 200, 'message' => 'Success'], 200);
             }
-        }else{
-            Common::addLog(['status'=>200,'message'=>'Success']);
-            return response()->json(['status'=>200,'message'=>'Success'],200);
+        } else {
+            Common::addLog(['status' => 200, 'message' => 'Success']);
+            return response()->json(['status' => 200, 'message' => 'Success'], 200);
         }
     }
 
@@ -99,8 +99,8 @@ class GeneralController extends Controller
             //echo "<pre>"; print_r($auth); die;
             $verifiedIdToken = $auth->verifyIdToken($token);
         } catch (FailedToVerifyToken $e) {
-            Common::addLog(['status'=>400,'message'=>$e->getMessage()]);
-            return response()->json(['status'=>400,'message'=>$e->getMessage()],400);
+            Common::addLog(['status' => 400, 'message' => $e->getMessage()]);
+            return response()->json(['status' => 400, 'message' => $e->getMessage()], 400);
         }
         $auth_token = '';
         $uid = $verifiedIdToken->claims()->get('sub');
@@ -137,17 +137,17 @@ class GeneralController extends Controller
                 $auth_token = $this->auth_token($user_check->id, $user_check->auth_access_token, $fcm_token);
             }
 
-            if($auth_token != ''){
-                Common::addLog(['status'=>200,'phone'=>$mobile_number,'phone_code'=>$phone_code,'auth_token'=>$auth_token,'message'=>'Success']);
-                return response()->json(['status'=>200,'phone'=>$mobile_number,'phone_code'=>$phone_code,'auth_token'=>$auth_token,'message'=>'Success'],200);
-            }else{
-                Common::addLog(['status'=>401,'message'=>'Token not Authorized']);
-                return response()->json(['status'=>401,'message'=>'Token not Authorized'],401);
+            if ($auth_token != '') {
+                Common::addLog(['status' => 200, 'phone' => $mobile_number, 'phone_code' => $phone_code, 'auth_token' => $auth_token, 'message' => 'Success']);
+                return response()->json(['status' => 200, 'phone' => $mobile_number, 'phone_code' => $phone_code, 'auth_token' => $auth_token, 'message' => 'Success'], 200);
+            } else {
+                Common::addLog(['status' => 401, 'message' => 'Token not Authorized']);
+                return response()->json(['status' => 401, 'message' => 'Token not Authorized'], 401);
             }
 
-        }else{
-            Common::addLog(['status'=>401,'message'=>'Token not Authorized']);
-            return response()->json(['status'=>401,'message'=>'Token not Authorized'],401);
+        } else {
+            Common::addLog(['status' => 401, 'message' => 'Token not Authorized']);
+            return response()->json(['status' => 401, 'message' => 'Token not Authorized'], 401);
         }
 
     }
@@ -545,7 +545,6 @@ class GeneralController extends Controller
         // $body = $request->body;
         $order = Order::latest()->first();
         $userdata = User::find($order->customer_id);
-
         $order_attribute = $this->getOrderAttr($order->mac_ids);
         //$this->print_r($a);
         if (!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])) {
@@ -554,14 +553,6 @@ class GeneralController extends Controller
         if (!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])) {
             $product_uuid = implode(',', $order_attribute['uuid']);
         }
-        
-        $userData['username'] = $userdata['name'] ?? "Keepr User";
-        $userData['order_id'] = $order->id;
-        $userData['product_name'] = $product_names;
-        $userData['device_id'] = $product_uuid;
-        $userData['qty'] = $order_attribute['total_orders'] ?? 0;
-        $userData['total_price'] =  $order->order_amount ?? "";
-        $userData['email'] = $userdata->email ?? "";
 
         $products = $tax_info = $shipping_info = [];
         $total_orders = 0;
@@ -616,17 +607,55 @@ class GeneralController extends Controller
             }
         }
 
-        $alldata = ['products' => $products, 'tax_info' => $tax_info, 'shipping_info' => $shipping_info];
-        print_r($alldata);
-        //    $test = $this->sendKeeprEmail($to, $subject, $body);
-        //    if (isset($test['status']) && $test['status'] == 2) {
-        //        return response()->json(['status' => 400, 'message' => $test['error']], 200);
-        //    } elseif (isset($test['status']) && $test['status'] == 1) {
-        //        return response()->json(['status' => 200, 'message' => 'Mail sent successfully'], 200);
-        //    } else {
-        //        return response()->json(['status' => 400, 'message' => 'failed'], 200);
-        //    }
+        $userData['username'] = $userdata['name'] ?? "Keepr User";
+        $userData['order_id'] = $order->id;
+        $userData['order_status'] = $order->order_status;
+        $userData['product_name'] = $product_names;
+        $userData['device_id'] = $product_uuid;
+        $userData['qty'] = $order_attribute['total_orders'] ?? 0;
+        $userData['total_price'] = $order->order_amount ?? "";
+        $userData['email'] = $userdata->email ?? "";
+        foreach ($products as $product) {
+            $userData['name'] = $product['name'] ?? "";
+            $userData['thumbnail'] = $product['thumbnail'] ?? "";
+            $userData['price'] = $product['price'] ?? "";
+            $userData['mac_ids'] = $product['mac_ids'] ?? "";
+            $userData['total_amount'] = $product['price'] ?? "";
+            $userData['total_qty'] = 1;
+
+
+        }
+
+        foreach ($tax_info as $tax) {
+            $userData['tax_title'] = $tax['title'] ?? "";
+            $userData['amount'] = $tax['amount'] ?? "";
+            $userData['percent'] = $tax['percent'] ?? "";
+            $userData['tax_amount'] = $tax['amount'] ?? "";
+        }
+        $userData['shipping_title'] = $shipping_info['title'] ?? "";
+        $userData['duration'] = $shipping_info['duration'] ?? "";
+        $userData['mode'] = $shipping_info['mode'] ?? "";
+        $userData['shipping_amount'] = $shipping_info['amount'] ?? "";
+        $userData['grand_total'] = $userData['price'] + $userData['tax_amount'] + $shipping_info['amount'];
+        $userData['shipping_info'] = $userData['shipping_title'] . " " . $userData['duration'] . " " . $userData['mode'];
+        $userData['tax_info'] = $userData['tax_title'] . " " . $userData['amount'] . " " . $userData['percent'];
+
+        // $alldata = ['products' => $products, 'tax_info' => $tax_info, 'shipping_info' => $shipping_info, 'userdata' => $userData];
+        // $this->sendKeeprEmail('order-confirmed-customer', $userData);
+
+        $test = $this->sendKeeprEmail('order-confirmed-customer', $userData);
+        print_r($test);
+        exit;
+        if (isset($test['status']) && $test['status'] == 2) {
+            return response()->json(['status' => 400, 'message' => $test['error']], 200);
+        } elseif (isset($test['status']) && $test['status'] == 1) {
+            return response()->json(['status' => 200, 'message' => 'Mail sent successfully'], 200);
+        } else {
+            return response()->json(['status' => 400, 'message' => 'failed'], 200);
+        }
 
     }
+
+
 
 }

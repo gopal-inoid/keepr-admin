@@ -121,7 +121,7 @@ class ShippingMethodController extends Controller
             $statesarray[$k] = $state->name;
         }
         foreach ($tx_amt as $k => $tax) {
-            $taxarray[$k] = $tax['state'];
+            $taxarray[$k] = $tax['state'] ?? '';
         }
         foreach ($statesarray as $k => $value) {
             if (!in_array($value, $taxarray)) {
