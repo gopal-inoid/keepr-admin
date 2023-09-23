@@ -30,9 +30,15 @@
                                 <div class="col-md-6 mb-5 mb-lg-0">
                                     <div class="form-group">
                                         <input type="hidden" id="id" name="id">
-                                        <label for="name" class="title-color text-capitalize">{{ \App\CPU\translate('banner_URL')}}</label>
-                                        <input type="text" name="url" class="form-control" value="{{$banner['url']}}" required>
+                                        <label for="name" class="title-color text-capitalize">{{ \App\CPU\translate('banner_URL')}}</label><span class="text-danger">*</span>
+                                        <input type="text" name="url" class="form-control" value="{{$banner['url']}}" required pattern="https?://.+" 
+                                        title="Please enter a valid URL (start with http:// or https://)">
                                     </div>
+                                    <div class="form-group">
+                                    <label for="name"
+                                            class="title-color text-capitalize">{{ \App\CPU\translate('banner_type') }}</label><span class="text-danger">*</span>
+                                            <input type="text" name="banner_type" readonly class="form-control" id="banner_type" value="Main Banner" required>
+                                        </div>
 {{-- 
                                     <div class="form-group">
                                         <label for="name" class="title-color text-capitalize">{{\App\CPU\translate('banner_type')}}</label>
@@ -59,7 +65,7 @@
 
                                     <div class="form-group" id="resource-product" style="display: {{$banner['resource_type']=='product'?'block':'none'}}">
                                         <label for="product_id" class="title-color text-capitalize">{{\App\CPU\translate('product')}}</label>
-                                        <select class="js-example-responsive form-control w-100"
+                                        <select  class="js-example-responsive form-control w-100"
                                                 name="product_id">
                                             @foreach(\App\Model\Product::active()->get() as $product)
                                                 <option value="{{$product['id']}}" {{$banner['resource_id']==$product['id']?'selected':''}}>{{$product['name']}}</option>
@@ -97,16 +103,17 @@
                                         </select>
                                     </div>
 
-                                    <label for="name">{{ \App\CPU\translate('Image')}}</label><span
+                                    <label for="name">{{ \App\CPU\translate('Image')}}</label><span class="text-danger">*</span><span
                                         class="ml-1 text-info">( {{\App\CPU\translate('ratio')}} 4:1 )</span>
                                     <br>
                                     <div class="custom-file text-left">
-                                        <input type="file" name="image" id="mbimageFileUploader"
+                                        <input required type="file" name="image" id="mbimageFileUploader"
                                                 class="custom-file-input"
                                                 accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                         <label class="custom-file-label"
                                                 for="mbimageFileUploader">{{\App\CPU\translate('choose')}} {{\App\CPU\translate('file')}}</label>
                                     </div>
+                                    <span class="text-secodary">Allowed file formats: .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff</span>
                                 </div>
                                 <div class="col-md-6">
                                     <center class="mb-30 max-w-500 mx-auto">
