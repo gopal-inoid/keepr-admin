@@ -30,7 +30,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <form
+                    <form class="update_tax"
                         action="{{ route('admin.business-settings.shipping-method.tax-calculation-update', [$tax_data['id']]) }}"
                         method="post">
                         @csrf
@@ -70,16 +70,16 @@
                                             @foreach ($tx_amt as $k => $val)
                                                 <tr>
                                                     <td>
-                                                        <select name="tax[state][]" class="form-control">
+                                                        <select name="tax[state][]" class="form-control preselect">
                                                             <option value="Choose State">Select States</option>
                                                             @foreach ($states as $k => $state)
                                                                 @php
                                                                     $FromTax = !empty($val['state']) ? $val['state'] : '';
-                                                                    $FromState=!empty($state->name) ? $state->name : '';
-                                                                    $disabled = (!in_array($FromState, $finalarray) ? 'disabled' : '');
+                                                                    $FromState = !empty($state->name) ? $state->name : '';
+                                                                    $disabled = !in_array($FromState, $finalarray) ? 'disabled' : '';
                                                                 @endphp
-                                                                <option {{$disabled }}
-                                                                {{((!empty($FromTax) && !empty($FromState) && $FromTax === $FromState) ? 'selected' : '') }}
+                                                                <option
+                                                                    {{ !empty($FromTax) && !empty($FromState) && $FromTax === $FromState ? 'selected' : '' }}
                                                                     value="{{ !empty($state->name) ? $state->name : '' }}">
                                                                     {{ !empty($state->name) ? $state->name : '' }}
                                                                 </option>
@@ -110,12 +110,10 @@
                                                     </td>
                                                     <td>
                                                         <div class="col-md-2 form-group faq-add-main-btn">
-                                                            <a href="" class="delete_text_record"
-                                                                data="
-                                                                {{ !empty($val['state']) ? $val['state'] : '' }}">
-                                                                <i
-                                                                    class="tio-delete-outlined text-danger remove-product-faq-btn"></i>
-                                                            </a>
+                                                            {{-- <a href="" class="delete_text_record" data="{{ !empty($val['state']) ? $val['state'] : '' }}"> --}}
+                                                            <i
+                                                                class="tio-delete-outlined text-danger remove-product-faq-btn"></i>
+                                                            {{-- </a> --}}
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -147,14 +145,22 @@
                 $('#parent-faq-div').append(
                     `<tr class="inner-faq-div">
             <td>
-                <select name="tax[state][]" class="form-control dynoselect">
-                    <option selected  value="Choose State">Select States</option>
-                    @foreach ($states as $k => $state)
-                        <option
-                            value="{{ $state->name }}">{{ $state->name }}
-                        </option>
-                    @endforeach                                                                                                                        
-                </select>
+                <select name="tax[state][]" class="form-control dynoselect" id="dynoselect">
+                                                            <option value="Choose State" class="choose">Select States</option>
+ 
+                @foreach ($states as $k => $state)
+                    @php
+                        $FromTax = !empty($val['state']) ? $val['state'] : '';
+                        $FromState = !empty($state->name) ? $state->name : '';
+                        $disabled = !in_array($FromState, $finalarray) ? 'disabled' : '';
+                    @endphp
+                    <option {{ $disabled }} class="dynamic"
+                    {{ !empty($FromTax) && !empty($FromState) && $FromTax === $FromState ? 'selected' : '' }}
+                        value="{{ !empty($state->name) ? $state->name : '' }}">
+                        {{ !empty($state->name) ? $state->name : '' }}
+                    </option>
+                @endforeach
+            </select>
             </td>
             <td>
                 <input type="number" value="" min="0" step="0.001" name="tax[tax1][]" class="form-control" placeholder="10">
@@ -179,8 +185,21 @@
             });
 
             $(document).on('click', '.remove-product-faq-btn', function() {
-                $(this).closest('.inner-faq-div').remove();
+                // $(this).closest('.inner-faq-div').remove();
+                this.parentElement.parentElement.parentElement.remove();
             });
+            $(document).on("click", ".add-product-faq-btn", function() {
+                $(".dynoselect").val($(".choose").val());
+            });
+            $(document).on("submit", ".update_tax", function(e) {
+                $(".dynoselect, .preselect").each(function() {
+                    if (this.value == "Choose State") {
+                        e.preventDefault();
+                        toastr.error('Empty field alert!');
+                    }
+                });
+            });
+
         });
     </script>
 @endpush

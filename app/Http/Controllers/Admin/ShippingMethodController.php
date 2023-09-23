@@ -129,54 +129,71 @@ class ShippingMethodController extends Controller
             }
         }
         // echo "<pre>"; print_r($finalarray);  die;
-        return view('admin-views.shipping-method.edit-tax', compact('tax_data', 'tx_amt', 'states','finalarray'));
+        return view('admin-views.shipping-method.edit-tax', compact('tax_data', 'tx_amt', 'states', 'finalarray'));
     }
-    public function delete_tax($id, $city)
-    {
-        $array = [];
-        $tax_data = TaxCalculation::select("tax_amt")->where('id', $id)->first();
-        if (!empty($tax_data)) {
-            $tax_amt = json_decode($tax_data['tax_amt'], true);
-            foreach ($tax_amt as $k => $value) {
-                if (!empty($value) && $value['state'] != $city) {
-                    $array[$k] = $value;
-                }
-            }
-            $result = TaxCalculation::where('id', $id)->update(['tax_amt' => json_encode($array)]);
-            if (isset($result)) {
-                Toastr::success('Tax successfully deleted.');
-                return back();
-            } else {
-                Toastr::error('Tax delitation failed.');
-                return back();
-            }
-        }
+    // public function delete_tax($id, $city)
+    // {
+    //     $array = [];
+    //     $tax_data = TaxCalculation::select("tax_amt")->where('id', $id)->first();
+    //     if (!empty($tax_data)) {
+    //         $tax_amt = json_decode($tax_data['tax_amt'], true);
+    //         foreach ($tax_amt as $k => $value) {
+    //             if (!empty($value) && $value['state'] != $city) {
+    //                 $array[$k] = $value;
+    //             }
+    //         }
+    //         $result = TaxCalculation::where('id', $id)->update(['tax_amt' => json_encode($array)]);
+    //         if (isset($result)) {
+    //             Toastr::success('Tax successfully deleted.');
+    //             return back();
+    //         } else {
+    //             Toastr::error('Tax delitation failed.');
+    //             return back();
+    //         }
+    //     }
 
-    }
+    // }
 
     public function tax_calculation_update(Request $request, $id)
     {
-        $tax = [];
-        if ($request->tax) {
-            foreach ($request->tax as $key => $val) {
-                foreach ($val as $k => $v) {
-                    if (!empty($v)) {
-                        $tax[$k][$key] = $v;
-                    }
-                    if ($key == "state" && empty($val[$k])) {
-                        $tax[$k][$key] = "";
+        function hasDuplicates($array) {
+            $valueCounts = array();
+            foreach ($array as $item) {
+                if (isset($valueCounts[$item])) {
+                    return true; // Found a duplicate
+                }
+                $valueCounts[$item] = true;
+            }
+            return false; // No duplicates found
+        }
+        $myArray = $request->tax['state'];
+        $hasDuplicate = hasDuplicates($myArray);
+        if($hasDuplicate){
+            Toastr::error('Error: Duplicate state found.');
+            return redirect()->back();
+        }else{
+            $tax = [];
+            if ($request->tax) {
+                foreach ($request->tax as $key => $val) {
+                    foreach ($val as $k => $v) {
+                        if (!empty($v)) {
+                            $tax[$k][$key] = $v;
+                        }
+                        if ($key == "state" && empty($val[$k])) {
+                            $tax[$k][$key] = "";
+                        }
                     }
                 }
+     
+                $tax_calculation = json_encode($tax);
+                TaxCalculation::where('id', $id)->update(['tax_amt' => $tax_calculation]);
+                Toastr::success('Successfully updated.');
+            } else {
+                Toastr::error('Error Occured.');
             }
-
-            $tax_calculation = json_encode($tax);
-            TaxCalculation::where('id', $id)->update(['tax_amt' => $tax_calculation]);
-            Toastr::success('Successfully updated.');
-        } else {
-            Toastr::error('Error Occured.');
+    
+            return redirect()->back();
         }
-
-        return redirect()->back();
     }
 
     public function shippingStore(Request $request)
