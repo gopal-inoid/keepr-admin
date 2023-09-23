@@ -237,7 +237,7 @@ class Controller extends BaseController
                     $email_temp->body = str_replace("{TOTAL_QTY}", $user_data['total_qty'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{TAX_AMOUNT}", $user_data['tax_amount'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{PRICE}", $user_data['price'] ?? "", $email_temp->body);
-                    $email_temp->body = str_replace("{GRAND_TOTAL}", $user_data['total_price'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{GRAND_TOTAL}", $user_data['grand_total_price'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{SHIPPING_INFO}", $user_data['shipping_info'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{SHIPPING_AMOUNT}", $user_data['shipping_amount'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{TAX_INFO}", $user_data['tax_info'] ?? "", $email_temp->body);
