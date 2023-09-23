@@ -30,7 +30,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <form
+                    <form class="update_tax"
                         action="{{ route('admin.business-settings.shipping-method.tax-calculation-update', [$tax_data['id']]) }}"
                         method="post">
                         @csrf
@@ -53,9 +53,9 @@
                                         <tr>
                                             <th>States</th>
                                             <th>Tax Percentage</th>
-                                            <th>Tax Type</th> 
+                                            <th>Tax Type</th>
                                             <th>Tax Percentage</th>
-                                            <th>Tax Type</th> 
+                                            <th>Tax Type</th>
                                             <th>
                                                 <div class="faq-add-main-btn">
                                                     <label class="title-color">&nbsp;</label>
@@ -71,15 +71,17 @@
                                                 <tr>
                                                     <td>
                                                         <select name="tax[state][]" class="form-control">
-                                                            <option selected value="Choose State">Select States</option>
+                                                            <option value="Choose State">Select States</option>
                                                             @foreach ($states as $k => $state)
                                                                 @php
-                                                                    $status = !in_array($state->name, $finalarray) ? 'disabled' : '';
-                                                                   
+                                                                    $FromTax = !empty($val['state']) ? $val['state'] : '';
+                                                                    $FromState = !empty($state->name) ? $state->name : '';
+                                                                    $disabled = !in_array($FromState, $finalarray) ? 'disabled' : '';
                                                                 @endphp
-                                                                <option {{ $status }}
-                                                                    {{ ((!empty($val['state']) ? $val['state'] : '') == $state->name) ? 'selected' : '' }}
-                                                                    value="{{ $state->name }}">{{ $state->name }}
+                                                                <option
+                                                                    {{ !empty($FromTax) && !empty($FromState) && $FromTax === $FromState ? 'selected' : '' }}
+                                                                    value="{{ !empty($state->name) ? $state->name : '' }}">
+                                                                    {{ !empty($state->name) ? $state->name : '' }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
@@ -108,11 +110,10 @@
                                                     </td>
                                                     <td>
                                                         <div class="col-md-2 form-group faq-add-main-btn">
-                                                            <a href=""
-                                                                class="delete_text_record" data="{{!empty($val['state']) ? $val['state'] : '' }}">
-                                                                <i
-                                                                    class="tio-delete-outlined text-danger remove-product-faq-btn"></i>
-                                                            </a>
+                                                            {{-- <a href="" class="delete_text_record" data="{{ !empty($val['state']) ? $val['state'] : '' }}"> --}}
+                                                            <i
+                                                                class="tio-delete-outlined text-danger remove-product-faq-btn"></i>
+                                                            {{-- </a> --}}
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -144,19 +145,22 @@
                 $('#parent-faq-div').append(
                     `<tr class="inner-faq-div">
             <td>
-                <select name="tax[state][]" class="form-control dynoselect">
-                    <option id="dynoption" selected value="Choose State">Select States</option>
-                    @foreach ($states as $k => $state)
-                        @php
-                            $status = !in_array($state->name, $finalarray) ? 'disabled' : '';
-                            $active = in_array($state->name, $finalarray) ? false : true; 
-                        @endphp
-                        <option {{ $status }} {{$active}}
-                        {{ ((!empty($val['state']) ? $val['state'] : '') == $state->name) ? 'selected' : '' }}
-                            value="{{ $state->name }}">{{ $state->name }}
-                        </option>
-                    @endforeach                                                                                                                         
-                </select>
+                <select name="tax[state][]" class="form-control dynoselect" id="dynoselect">
+                                                            <option value="Choose State" class="choose">Select States</option>
+ 
+                @foreach ($states as $k => $state)
+                    @php
+                        $FromTax = !empty($val['state']) ? $val['state'] : '';
+                        $FromState = !empty($state->name) ? $state->name : '';
+                        $disabled = !in_array($FromState, $finalarray) ? 'disabled' : '';
+                    @endphp
+                    <option {{ $disabled }} class="dynamic"
+                    {{ !empty($FromTax) && !empty($FromState) && $FromTax === $FromState ? 'selected' : '' }}
+                        value="{{ !empty($state->name) ? $state->name : '' }}">
+                        {{ !empty($state->name) ? $state->name : '' }}
+                    </option>
+                @endforeach
+            </select>
             </td>
             <td>
                 <input type="number" value="" min="0" step="0.001" name="tax[tax1][]" class="form-control" placeholder="10">
@@ -178,14 +182,24 @@
             </td></tr>
             `
                 );
-
-
-                $(".dynoselect").val($("#dynoption").val());
             });
 
             $(document).on('click', '.remove-product-faq-btn', function() {
                 $(this).closest('.inner-faq-div').remove();
+                this.parentElement.parentElement.parentElement.remove();
             });
+            $(document).on("click", ".add-product-faq-btn", function() {
+                $(".dynoselect").val($(".choose").val());
+            });
+            $(document).on("submit", ".update_tax", function(e) {
+                $(".dynoselect").each(function() {
+                    if (this.value == "Choose State") {
+                        e.preventDefault();
+                        toastr.error('Empty field alert!');
+                    }
+                });
+            });
+
         });
     </script>
 @endpush
