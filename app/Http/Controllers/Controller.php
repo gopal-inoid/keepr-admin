@@ -16,6 +16,8 @@ use App\Model\ShippingMethod;
 use App\Model\ShippingMethodRates;
 use Illuminate\Support\Facades\View;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Mail\Message;
+
 use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
@@ -201,8 +203,10 @@ class Controller extends BaseController
         if ($attachment != null) {
             $files = [$attachment];
         }
+       
         if ($emailServices_smtp['status'] == 1) {
-            try {
+            try {  
+             
                 $email_temp = EmailTemplates::where(['name' => $template_type])->where('status', 1)->first();
                 if (!empty($email_temp->id)) {
                     $email_temp->subject = str_replace("{STATUS}", $user_data['order_status'] ?? "", $email_temp->subject);
@@ -211,6 +215,7 @@ class Controller extends BaseController
                     $email_temp->body = str_replace("{PRODUCT_NAME}", $user_data['product_name'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{DEVICE_UUID}", $user_data['device_id'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{QTY}", $user_data['qty'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{EMAIL}", $user_data['email'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{TOTAL_PRICE}", $user_data['total_price'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{ORDER_DATE}", $user_data['order_date'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{ORDER_NOTE}", $user_data['order_note'] ?? "", $email_temp->body);
@@ -233,21 +238,25 @@ class Controller extends BaseController
                     $email_temp->body = str_replace("{TRACKING_ID}", $user_data['tracking_id'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{COMPANY_NAME}", 'Keepr', $email_temp->body);
 
-                    $email_temp->body = str_replace("{TOTAL_AMOUNT}", $user_data['total_amount'] ?? "", $email_temp->body);
-                    $email_temp->body = str_replace("{TOTAL_QTY}", $user_data['total_qty'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{TOTAL_AMOUNT}", $user_data['total_price'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{TOTAL_QTY}", $user_data['qty'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{TAX_AMOUNT}", $user_data['tax_amount'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{PRICE}", $user_data['price'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{GRAND_TOTAL}", $user_data['grand_total_price'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{GRAND_TOTAL_QTY}", $user_data['grand_total_qty'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{SHIPPING_INFO}", $user_data['shipping_info'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{SHIPPING_TITLE}", $user_data['shipping_title'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{SHIPPING_DURATION}", $user_data['shipping_duration'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{SHIPPING_MODE}", $user_data['shipping_mode'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{SHIPPING_AMOUNT}", $user_data['shipping_amount'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{TAX_INFO}", $user_data['tax_info'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{COMPANY_LOGO}", '<img src="' . url('/public/public/company/Keepe_logo.png') . '" />', $email_temp->body);
-                  
+
                     $data['email'] = $user_data['email'] ?? "";
                     $data['subject'] = $email_temp->subject ?? "";
                     $data["body"] = $email_temp->body ?? "";
                     if (!empty($data['email'])) {
-                        Mail::send('email-templates.mail-tester', $data, function ($message) use ($data, $files) {
+                       Mail::send('email-templates.mail-tester', $data, function ($message) use ($data, $files) {
                             $message->to($data["email"])
                                 ->subject($data["subject"]);
                             if ($files != null) {
@@ -255,20 +264,18 @@ class Controller extends BaseController
                                     $message->attach($file);
                                 }
                             }
-                        });
+                        });            
                     }
-
                 }
             } catch (\Exception $e) {
-                $error = $e->getMessage();
-            }
+                $error = $e->getMessage();   
+            }   
             if (isset($error)) {
                 return false;
             } else {
                 return true;
             }
-        }
-
+        } 
         return true;
     }
 

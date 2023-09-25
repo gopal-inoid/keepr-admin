@@ -542,7 +542,7 @@ class GeneralController extends Controller
     {
         $order = Order::latest()->first();
         $userdata = User::find($order->customer_id);
-        
+
         $order_attribute = $this->getOrderProductAttr($order->product_info ?? "");
         if (!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])) {
             $product_names = implode(',', $order_attribute['product_name']);
@@ -550,9 +550,6 @@ class GeneralController extends Controller
         if (!empty($order_attribute['total_orders']) && is_array($order_attribute['total_orders'])) {
             $product_qty = implode(',', $order_attribute['total_orders']);
         }
-
-        echo "<pre>"; print_r($order); die;
-
         $products = $tax_info = $shipping_info = [];
         $total_orders = 0;
         $total_order_amount = $order->order_amount ?? 0;
@@ -585,7 +582,6 @@ class GeneralController extends Controller
                 }
             }
         }
-
         if (!empty($order->taxes)) {
             $taxes = json_decode($order->taxes, true);
             if (!empty($taxes)) {
@@ -607,85 +603,59 @@ class GeneralController extends Controller
             }
         }
 
-        if(!empty($order->product_info)){
-            $product_info = json_decode($order->product_info,true);
-            if(!empty($product_info)){
+        if (!empty($order->product_info)) {
+            $product_info = json_decode($order->product_info, true);
+            if (!empty($product_info)) {
                 $i = $total_price = $grand_total_qty = $grand_total_amt = 0;
-                foreach($product_info as $k => $val){
+                foreach ($product_info as $k => $val) {
                     $i++;
-                    $thumbnail_path = \App\CPU\ProductManager::product_image_path('thumbnail') . '/' .$val['thumbnail'];
-                    $product_name = substr($val['product_name'],0,30);
+                    $thumbnail_path = \App\CPU\ProductManager::product_image_path('thumbnail') . '/' . $val['thumbnail'];
+                    $product_name = substr($val['product_name'], 0, 30);
                     $order_qty = $val['order_qty'] ?? 0;
-                    if(!empty($order->per_device_amount)){
-                        $perdevice_amount = json_decode($order->per_device_amount,true);
-                        if(!empty($perdevice_amount)){
+                    if (!empty($order->per_device_amount)) {
+                        $perdevice_amount = json_decode($order->per_device_amount, true);
+                        if (!empty($perdevice_amount)) {
+                            $price = $perdevice_amount[$k] ?? 0;
                             $total_price += ($perdevice_amount[$k] ?? 0);
                         }
-                       $total_price_show = $perdevice_amount[$k] ?? 0;
+                        $total_price_show = $perdevice_amount[$k] ?? 0;
                     }
-
                     $grand_total_qty += $val['order_qty'] ?? 0;
                     $grand_total_amt += $total_price;
                 }
-                $total_main_price = number_format($total_price,2);
+                $total_main_price = number_format($total_price, 2);
             }
         }
-            
-
         $userData['username'] = $userdata['name'] ?? "Keepr User";
         $userData['order_id'] = $order->id;
         $userData['order_status'] = $order->order_status;
-        $userData['product_name'] = $product_names;
-        $userData['qty'] = $product_qty;
-        $userData['total_price'] = $total_main_price ?? 0; // total of all device price
+        $userData['product_name'] = $product_names ?? "";
+        $userData['qty'] = $total_orders ?? "";
+        $userData['grand_total_qty'] = $total_orders ?? ""; // total of all device price
         $userData['email'] = $userdata->email ?? "";
-
-        $userData['total_amount'] = "";
-        $userData['total_qty'] = "";
-        $userData['tax_amount'] = "";
-        $userData['price'] = "";
-        $userData['tracking_id'] = "";
-
+        $userData['total_price'] = number_format($price * $total_orders);
+        $userData['price'] = $price;
         $userData['shipping_title'] = $shipping_info['title'] ?? "";
         $userData['duration'] = $shipping_info['duration'] ?? "";
         $userData['mode'] = $shipping_info['mode'] ?? "";
         $userData['shipping_amount'] = $shipping_info['amount'] ?? "";
-        $userData['grand_total_price'] = number_format($order->order_amount,2);
-        $userData['shipping_info'] = $userData['shipping_title'] . " " . $userData['duration'] . " " . $userData['mode'];
-        $userData['tax_info'] = $userData['tax_title'] . " " . $userData['amount'] . " " . $userData['percent'];
-
-        //variables
-        
-        estimated_delivery_date
-        shipment_information
-        shipping_zip
-        shipping_country
-        shipping_state
-        shipping_city
-        shipping_address
-        shipping_email
-        shipping_name
-        billing_zip
-        billing_country
-        billing_state
-        billing_city
-        billing_address
-        billing_email
-        billing_name
-        order_note
-        order_date
-        
-
+        $userData['grand_total_price'] = number_format($order->order_amount, 2);
+        $userData['shipping_info'] = $shipping_info['title'] ?? "" . " " . $shipping_info['duration'] ?? "" . " " . $shipping_info['mode'] ?? "";
+        $userData['shipping_title'] = $shipping_info['title'] ?? "";
+        $userData['shipping_duration'] = $shipping_info['duration'] ?? "";
+        $userData['shipping_mode'] = $shipping_info['mode'] ?? "";
+        $userData['tax_info'] = $tax_info[0]['title'] ?? "" . " " . $tax_info[0]['percent'] ?? "";
+        $userData['tax_amount'] = $tax_info[0]['amount'] ?? "";
         $test = $this->sendKeeprEmail('order-confirmed-customer', $userData);
-        if (isset($test['status']) && $test['status'] == 2) {
-            return response()->json(['status' => 400, 'message' => $test['error']], 200);
-        } elseif (isset($test['status']) && $test['status'] == 1) {
+        if (isset($test) && $test == true) {
             return response()->json(['status' => 200, 'message' => 'Mail sent successfully'], 200);
+        } elseif (isset($test) && $test == 2) {
+            return response()->json(['status' => 400, 'message' => 'Something went wrong.'], 200);
         } else {
             return response()->json(['status' => 400, 'message' => 'failed'], 200);
         }
-
     }
+
 
 
 
