@@ -208,7 +208,7 @@ class OrderController extends Controller
 
     public function update_order_details(Request $request)
     {
-        // echo "<pre>"; print_r($request->all()); die;
+        // echo "<pre>"; print_r($request->all()); die();
 
         $order_id = $request->order_id;
         $user_id = $request->user_id;

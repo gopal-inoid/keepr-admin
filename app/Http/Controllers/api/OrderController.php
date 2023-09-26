@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Admin;
 use App\Model\Cart;
 use App\Model\Order;
+use App\User;
 use App\Model\OrderDetail;
 use App\Model\Seller;
 use App\Model\ShippingAddress;
@@ -21,6 +22,8 @@ use App\Model\RefundRequest;
 use App\CPU\ImageManager;
 use App\Model\DeliveryMan;
 use App\CPU\CustomerManager;
+use App\Model\ShippingMethodRates;
+use App\Model\ShippingMethod;
 
 class OrderController extends Controller
 {
@@ -65,13 +68,13 @@ class OrderController extends Controller
         $carts = Cart::whereIn('cart_group_id', $cart_group_ids)->get();
 
         $physical_product = false;
-        foreach($carts as $cart){
-            if($cart->product_type == 'physical'){
+        foreach ($carts as $cart) {
+            if ($cart->product_type == 'physical') {
                 $physical_product = true;
             }
         }
 
-        if($physical_product) {
+        if ($physical_product) {
             $zip_restrict_status = Helpers::get_business_settings('delivery_zip_code_area_restriction');
             $country_restrict_status = Helpers::get_business_settings('delivery_country_restriction');
 
@@ -80,8 +83,7 @@ class OrderController extends Controller
 
                 if (!$shipping_address) {
                     return response()->json(['message' => translate('address_not_found')], 200);
-                }
-                elseif ($country_restrict_status && !self::delivery_country_exist_check($shipping_address->country)) {
+                } elseif ($country_restrict_status && !self::delivery_country_exist_check($shipping_address->country)) {
                     return response()->json(['message' => translate('Delivery_unavailable_for_this_country')], 403);
 
                 } elseif ($zip_restrict_status && !self::delivery_zipcode_exist_check($shipping_address->zip)) {
@@ -107,7 +109,7 @@ class OrderController extends Controller
 
             $order = Order::find($order_id);
             $order->billing_address = ($request['billing_address_id'] != null) ? $request['billing_address_id'] : $order['billing_address'];
-            $order->billing_address_data = ($request['billing_address_id'] != null) ?  ShippingAddress::find($request['billing_address_id']) : $order['billing_address_data'];
+            $order->billing_address_data = ($request['billing_address_id'] != null) ? ShippingAddress::find($request['billing_address_id']) : $order['billing_address_data'];
             $order->order_note = ($request['order_note'] != null) ? $request['order_note'] : $order['order_note'];
             $order->save();
 
@@ -126,29 +128,26 @@ class OrderController extends Controller
 
 
         $loyalty_point_status = Helpers::get_business_settings('loyalty_point_status');
-        if($loyalty_point_status == 1)
-        {
+        if ($loyalty_point_status == 1) {
             $loyalty_point = CustomerManager::count_loyalty_point_for_amount($request->order_details_id);
 
-            if($user->loyalty_point < $loyalty_point)
-            {
-                return response()->json(['message'=>translate('you have not sufficient loyalty point to refund this order!!')], 202);
+            if ($user->loyalty_point < $loyalty_point) {
+                return response()->json(['message' => translate('you have not sufficient loyalty point to refund this order!!')], 202);
             }
         }
 
-        if($order_details->delivery_status == 'delivered')
-        {
+        if ($order_details->delivery_status == 'delivered') {
             $order = Order::find($order_details->order_id);
             $total_product_price = 0;
             $refund_amount = 0;
             $data = [];
             foreach ($order->details as $key => $or_d) {
-                $total_product_price += ($or_d->qty*$or_d->price) + $or_d->tax - $or_d->discount;
+                $total_product_price += ($or_d->qty * $or_d->price) + $or_d->tax - $or_d->discount;
             }
 
             $subtotal = ($order_details->price * $order_details->qty) - $order_details->discount + $order_details->tax;
 
-            $coupon_discount = ($order->discount_amount*$subtotal)/$total_product_price;
+            $coupon_discount = ($order->discount_amount * $subtotal) / $total_product_price;
 
             $refund_amount = $subtotal - $coupon_discount;
 
@@ -166,17 +165,15 @@ class OrderController extends Controller
             $length = $order_details_date->diffInDays($current);
             $expired = false;
             $already_requested = false;
-            if($order_details->refund_request != 0)
-            {
+            if ($order_details->refund_request != 0) {
                 $already_requested = true;
             }
-            if($length > $refund_day_limit )
-            {
+            if ($length > $refund_day_limit) {
                 $expired = true;
             }
-            return response()->json(['already_requested'=>$already_requested,'expired'=>$expired,'refund'=>$data], 200);
-        }else{
-            return response()->json(['message'=>translate('You_can_request_for_refund_after_order_delivered')], 200);
+            return response()->json(['already_requested' => $already_requested, 'expired' => $expired, 'refund' => $data], 200);
+        } else {
+            return response()->json(['message' => translate('You_can_request_for_refund_after_order_delivered')], 200);
         }
 
     }
@@ -189,17 +186,15 @@ class OrderController extends Controller
 
 
         $loyalty_point_status = Helpers::get_business_settings('loyalty_point_status');
-        if($loyalty_point_status == 1)
-        {
+        if ($loyalty_point_status == 1) {
             $loyalty_point = CustomerManager::count_loyalty_point_for_amount($request->order_details_id);
 
-            if($user->loyalty_point < $loyalty_point)
-            {
+            if ($user->loyalty_point < $loyalty_point) {
                 return response()->json(translate('you have not sufficient loyalty point to refund this order!!'), 200);
             }
         }
 
-        if($order_details->refund_request == 0){
+        if ($order_details->refund_request == 0) {
 
             $validator = Validator::make($request->all(), [
                 'order_details_id' => 'required',
@@ -231,7 +226,7 @@ class OrderController extends Controller
             $order_details->save();
 
             return response()->json(translate('refunded_request_updated_successfully!!'), 200);
-        }else{
+        } else {
             return response()->json(translate('already_applied_for_refund_request!!'), 302);
         }
 
@@ -239,37 +234,155 @@ class OrderController extends Controller
     public function refund_details(Request $request)
     {
         $order_details = OrderDetail::find($request->id);
-        $refund = RefundRequest::where('customer_id',$request->user()->id)
-                                ->where('order_details_id',$order_details->id )->get();
-        $refund = $refund->map(function($query){
+        $refund = RefundRequest::where('customer_id', $request->user()->id)
+            ->where('order_details_id', $order_details->id)->get();
+        $refund = $refund->map(function ($query) {
             $query['images'] = json_decode($query['images']);
             return $query;
         });
 
         $order = Order::find($order_details->order_id);
 
-            $total_product_price = 0;
-            $refund_amount = 0;
-            $data = [];
-            foreach ($order->details as $key => $or_d) {
-                $total_product_price += ($or_d->qty*$or_d->price) + $or_d->tax - $or_d->discount;
-            }
+        $total_product_price = 0;
+        $refund_amount = 0;
+        $data = [];
+        foreach ($order->details as $key => $or_d) {
+            $total_product_price += ($or_d->qty * $or_d->price) + $or_d->tax - $or_d->discount;
+        }
 
-            $subtotal = ($order_details->price * $order_details->qty) - $order_details->discount + $order_details->tax;
+        $subtotal = ($order_details->price * $order_details->qty) - $order_details->discount + $order_details->tax;
 
-            $coupon_discount = ($order->discount_amount*$subtotal)/$total_product_price;
+        $coupon_discount = ($order->discount_amount * $subtotal) / $total_product_price;
 
-            $refund_amount = $subtotal - $coupon_discount;
+        $refund_amount = $subtotal - $coupon_discount;
 
-            $data['product_price'] = $order_details->price;
-            $data['quntity'] = $order_details->qty;
-            $data['product_total_discount'] = $order_details->discount;
-            $data['product_total_tax'] = $order_details->tax;
-            $data['subtotal'] = $subtotal;
-            $data['coupon_discount'] = $coupon_discount;
-            $data['refund_amount'] = $refund_amount;
-            $data['refund_request']=$refund;
+        $data['product_price'] = $order_details->price;
+        $data['quntity'] = $order_details->qty;
+        $data['product_total_discount'] = $order_details->discount;
+        $data['product_total_tax'] = $order_details->tax;
+        $data['subtotal'] = $subtotal;
+        $data['coupon_discount'] = $coupon_discount;
+        $data['refund_amount'] = $refund_amount;
+        $data['refund_request'] = $refund;
 
         return response()->json($data, 200);
+    }
+
+    public function update_order_details(Request $request)
+    {
+        // echo "<pre>"; print_r($request->all()); die();
+        $order_id = $request->order_id;
+        $user_id = $request->user_id;
+        if (!empty($order_id)) {
+            $user_details = User::where(['id' => $user_id])->first();
+            // if (!empty($user_id)) {
+            //     $user_details = User::where(['id' => $user_id])->first();
+            //     $user_data['name'] = $request->billing_name;
+            //     $user_data['email'] = $request->email;
+            //     $user_data['street_address'] = $request->street_address;
+            //     $user_data['city'] = $request->billing_city;
+            //     $user_data['state'] = $request->billing_state;
+            //     $user_data['country'] = $request->billing_country;
+            //     $user_data['zip'] = $request->billing_zip;
+            //     // $user_data['phone'] = $request->billing_phone;
+            //     $user_data['billing_phone'] = $request->billing_phone;
+            //     $user_data['billing_phone_code'] = $request->billing_phone_code;
+            //     $user_data['shipping_name'] = $request->shipping_name;
+            //     $user_data['shipping_email'] = $request->shipping_email;
+            //     $user_data['add_shipping_address'] = $request->add_shipping_address;
+            //     $user_data['shipping_city'] = $request->shipping_city;
+            //     $user_data['shipping_state'] = $request->shipping_state;
+            //     $user_data['shipping_country'] = $request->shipping_country;
+            //     $user_data['shipping_zip'] = $request->shipping_zip;
+            //     $user_data['shipping_phone'] = $request->shipping_phone;
+            //     $user_data['shipping_phone_code'] = $request->shipping_phone_code;
+            //     if (!empty($request->is_billing_address_same) && $request->is_billing_address_same == 'on') {
+            //         $user_data['is_billing_address_same'] = 1;
+            //     }
+            //     // User::where('id', $user_id)->update($user_data);
+            //     //SEND PUSH NOTIFICATION
+            //     // $msg = "Your Order has been " . $request->change_order_status . ", Order ID #" . $order_id;
+            //     // $payload['order_id'] = $order_id;
+            //     // $this->sendNotification($user_details->fcm_token, $msg, $payload);
+            //     //
+            // }
+
+            $order_data['order_status'] = $request->change_order_status;
+            $order_data['created_at'] = date('Y-m-d h:i:s', strtotime($request->order_date));
+            $order_data['order_note'] = $request->order_note;
+            $order_data['expected_delivery_date'] = date('Y-m-d h:i:s', strtotime($request->expected_delivery_date));
+            $order_data['shipment_info'] = $request->shipment_info;
+            $order_data['transaction_ref'] = $request->transaction_ref;
+            $order_data['payment_method'] = $request->payment_method;
+            $order_data['payment_status'] = $request->payment_status;
+            $order_data['tracking_id'] = $request->tracking_id;
+            $order_data['shipping_mode'] = $request->shipping_mode;
+            $get_order = Order::where('id', $order_id)->first();
+
+            $order_attribute = $this->getOrderProductAttr($get_order->product_info ?? "");
+            //$order_attribute = $this->getOrderAttr($get_order->mac_ids);
+
+            if (!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])) {
+                $product_names = implode(',', $order_attribute['product_name']);
+            }
+            if (!empty($order_attribute['total_orders']) && is_array($order_attribute['total_orders'])) {
+                $product_qty = implode(',', $order_attribute['total_orders']);
+            }
+
+            //$this->print_r($a);
+            // if(!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])){
+            //     $product_names = implode(',',$order_attribute['product_name']);
+            // }
+            // if(!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])){
+            //     $product_uuid = implode(',',$order_attribute['uuid']);
+            // }
+
+            // if($request->change_order_status == 'cancelled' || $request->change_order_status == 'failed'){
+            //     if(!empty($get_order->mac_ids)){
+            //         $mac_ids = json_decode($get_order->mac_ids,true);
+            //         if(!empty($mac_ids)){
+            //             foreach($mac_ids as $k => $val){
+            //                 if(!empty($val)){
+            //                     foreach($val['uuid'] as $k1 => $val1){
+            //                         ProductStock::where(['product_id'=>$k,'uuid'=>$val1,'major'=>$val['major'][$k1],'minor'=>$val['minor'][$k1]])->update(['is_purchased'=>0]);
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
+
+            //SEND ORDER EMAIL
+            //$this->save_invoice($request->id);
+            //$invoice_file_path = public_path('public/assets/orders/order_invoice_'.$request->id.'.pdf');
+
+            //////////////////////////////////
+            $userData = $this->getDataforEmail($order_id);
+            $userData['username'] = $user_details['name'] ?? "Keepr User";
+            $userData['email'] = $user_details->email ?? "";
+            //////////////////////////////////
+
+            if ($userData['order_status'] == 'shipped') {
+                $userData['email'] = $user_details->shipping_email ?? "";
+                $this->sendKeeprEmail('order-shipped-customer', $userData);
+            } elseif ($userData['order_status'] == 'cancelled') {
+                $this->sendKeeprEmail('order-cancelled-customer', $userData);
+            } elseif ($userData['order_status'] == 'refunded') {
+                $this->sendKeeprEmail('order-refunded-customer', $userData);
+            } elseif ($userData['order_status'] == 'delivered') {
+                $this->sendKeeprEmail('order-delivered-customer', $userData);
+            } else {
+                $this->sendKeeprEmail('order-status-changed-customer', $userData);
+            }
+
+            $userData['username'] = $this->getAdminDetail('company_name') ?? "Keepr Admin";
+            $userData['email'] = $this->getAdminDetail('company_email') ?? "";
+
+            $this->sendKeeprEmail('order-status-changed-admin', $userData);
+            Order::where('id', $order_id)->update($order_data);
+            return response()->json(['status' => 200, 'message' => 'Order Status Successfully Changed'], 200);
+        } else {
+            return response()->json(['status' => 400, 'message' => 'Order Status Change failed'], 200);
+        }
     }
 }

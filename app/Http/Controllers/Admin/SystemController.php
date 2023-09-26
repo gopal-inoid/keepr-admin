@@ -11,6 +11,8 @@ use App\Model\WithdrawRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+
+
 class SystemController extends Controller
 {
     public function search_function(Request $request)
@@ -86,6 +88,7 @@ class SystemController extends Controller
         $total_status = 0;
         if(!empty($new_order)){
             foreach($new_order as $val){
+                $val->customer_id;
                 $total_status++;
                 $user_details = DB::table('users')->where('id',$val->customer_id)->first();
                 if(!empty($user_details->id)){
@@ -112,6 +115,7 @@ class SystemController extends Controller
                     $this->sendKeeprEmail('order-pending-customer',$email_data);
                 }
             }
+
         }
         return response()->json([
             'success' => 1,

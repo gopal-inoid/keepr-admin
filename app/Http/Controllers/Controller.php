@@ -10,6 +10,7 @@ use App\Model\EmailTemplates;
 use App\Model\BusinessSetting;
 use App\Model\ProductStock;
 use App\Model\Order;
+use App\User;
 use App\Model\Product;
 use App\Model\Admin;
 use App\Model\ShippingMethod;
@@ -196,6 +197,11 @@ class Controller extends BaseController
         Helpers::save_mpdf($mpdf_view, 'order_invoice_', $order->id);
     }
 
+    public function getProductDetailsForEmail($customer_id)
+    {
+
+    }
+
     public function sendKeeprEmail($template_type, $user_data, $attachment = null)
     {
         $emailServices_smtp = Helpers::get_business_settings('mail_config');
@@ -203,10 +209,10 @@ class Controller extends BaseController
         if ($attachment != null) {
             $files = [$attachment];
         }
-       
+
         if ($emailServices_smtp['status'] == 1) {
-            try {  
-             
+            try {
+
                 $email_temp = EmailTemplates::where(['name' => $template_type])->where('status', 1)->first();
                 if (!empty($email_temp->id)) {
                     $email_temp->subject = str_replace("{STATUS}", $user_data['order_status'] ?? "", $email_temp->subject);
@@ -256,7 +262,7 @@ class Controller extends BaseController
                     $data['subject'] = $email_temp->subject ?? "";
                     $data["body"] = $email_temp->body ?? "";
                     if (!empty($data['email'])) {
-                       Mail::send('email-templates.mail-tester', $data, function ($message) use ($data, $files) {
+                        Mail::send('email-templates.mail-tester', $data, function ($message) use ($data, $files) {
                             $message->to($data["email"])
                                 ->subject($data["subject"]);
                             if ($files != null) {
@@ -264,18 +270,18 @@ class Controller extends BaseController
                                     $message->attach($file);
                                 }
                             }
-                        });            
+                        });
                     }
                 }
             } catch (\Exception $e) {
-                $error = $e->getMessage();   
-            }   
+                $error = $e->getMessage();
+            }
             if (isset($error)) {
                 return false;
             } else {
                 return true;
             }
-        } 
+        }
         return true;
     }
 
@@ -364,5 +370,57 @@ class Controller extends BaseController
             return [];
         }
     }
+
+    public function getDataforEmail($order_id)
+    {
+        $update_order = Order::where(['id' => $order_id])->first();
+        $product_id = array_keys(json_decode($update_order['mac_ids'], true))[0];
+        $product_info = json_decode($update_order->product_info, true);
+        $product_qty_info = json_decode($update_order->mac_ids, true);
+        $price_info = json_decode($update_order->per_device_amount, true);
+        $product_name = $product_info[$product_id]['product_name'];
+        $product_qty = count($product_qty_info[$product_id]['uuid']);
+        $price = $price_info[$product_id];
+        $total_price = $price * $product_qty;
+        $shipping_info = [];
+        if (!empty($update_order->shipping_method_id) && !empty($update_order->shipping_mode)) {
+            $shipping = ShippingMethod::where(['id' => $update_order->shipping_method_id])->first();
+            $shipping_method_rates = ShippingMethodRates::select('normal_rate', 'express_rate')->where('shipping_id', $update_order->shipping_method_id)->where('country_code', $this->getCountryName($update_order->customer->country))->first();
+            $shipping_info['title'] = $shipping->title ?? "";
+            if ($update_order->shipping_mode == 'normal_rate') {
+                $shipping_info['duration'] = $shipping->normal_duration ?? "";
+                $shipping_info['mode'] = 'Regular Rate';
+                $shipping_info['amount'] = $shipping_method_rates->normal_rate ?? 0;
+            } elseif ($update_order->shipping_mode == 'express_rate') {
+                $shipping_info['duration'] = $shipping->express_duration ?? "";
+                $shipping_info['mode'] = 'Express Rate';
+                $shipping_info['amount'] = $shipping_method_rates->express_rate ?? 0;
+            }
+        }
+        //   $userData['username'] = $user_details['name'] ?? "Keepr User";
+        $userData['order_id'] = $update_order->id;
+        $userData['order_status'] = $update_order->order_status;
+        $userData['product_name'] = $product_name ?? "";
+        $userData['qty'] = $product_qty ?? "";
+        $userData['grand_total_qty'] = $product_qty ?? ""; // total of all device price
+        //   $userData['email'] = $user_details->email ?? "";
+        $userData['total_price'] = number_format($total_price);
+        $userData['price'] = $price;
+        $userData['shipping_title'] = $shipping_info['title'] ?? "";
+        $userData['duration'] = $shipping_info['duration'] ?? "";
+        $userData['mode'] = $shipping_info['mode'] ?? "";
+        $userData['shipping_amount'] = $shipping_info['amount'] ?? "";
+        $userData['grand_total_price'] = number_format($update_order->order_amount, 2);
+        $userData['shipping_info'] = $shipping_info['title'] ?? "" . " " . $shipping_info['duration'] ?? "" . " " . $shipping_info['mode'] ?? "";
+        $userData['shipping_title'] = $shipping_info['title'] ?? "";
+        $userData['shipping_duration'] = $shipping_info['duration'] ?? "";
+        $userData['shipping_mode'] = $shipping_info['mode'] ?? "";
+        $userData['tax_info'] = json_decode($update_order->taxes, true)[0]['title'] ?? "" . " " . json_decode($update_order->taxes, true)[0]['percent'] ?? "";
+        $userData['tax_amount'] = json_decode($update_order->taxes, true)[0]['amount'] ?? "";
+        return $userData;
+        //////////////////////////////////
+
+    }
+
 
 }
