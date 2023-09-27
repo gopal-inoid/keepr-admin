@@ -31,7 +31,7 @@ Route::group(['namespace' => 'api'], function () {
     // Testing Pending Emails
     // Route::post('send-test-email', 'GeneralController@send_test_email');
     // Route::post('update-pending-email', 'SystemController@update_pending_email');
-    // Route::post('update-order-details', 'OrderController@update_order_details');
+    Route::post('update-order-details', 'OrderController@update_order_details');
 
 
     Route::group(['middleware' => ['api_auth']], function () {

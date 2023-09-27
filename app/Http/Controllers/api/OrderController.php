@@ -275,37 +275,37 @@ class OrderController extends Controller
         $user_id = $request->user_id;
         if (!empty($order_id)) {
             $user_details = User::where(['id' => $user_id])->first();
-            // if (!empty($user_id)) {
-            //     $user_details = User::where(['id' => $user_id])->first();
-            //     $user_data['name'] = $request->billing_name;
-            //     $user_data['email'] = $request->email;
-            //     $user_data['street_address'] = $request->street_address;
-            //     $user_data['city'] = $request->billing_city;
-            //     $user_data['state'] = $request->billing_state;
-            //     $user_data['country'] = $request->billing_country;
-            //     $user_data['zip'] = $request->billing_zip;
-            //     // $user_data['phone'] = $request->billing_phone;
-            //     $user_data['billing_phone'] = $request->billing_phone;
-            //     $user_data['billing_phone_code'] = $request->billing_phone_code;
-            //     $user_data['shipping_name'] = $request->shipping_name;
-            //     $user_data['shipping_email'] = $request->shipping_email;
-            //     $user_data['add_shipping_address'] = $request->add_shipping_address;
-            //     $user_data['shipping_city'] = $request->shipping_city;
-            //     $user_data['shipping_state'] = $request->shipping_state;
-            //     $user_data['shipping_country'] = $request->shipping_country;
-            //     $user_data['shipping_zip'] = $request->shipping_zip;
-            //     $user_data['shipping_phone'] = $request->shipping_phone;
-            //     $user_data['shipping_phone_code'] = $request->shipping_phone_code;
-            //     if (!empty($request->is_billing_address_same) && $request->is_billing_address_same == 'on') {
-            //         $user_data['is_billing_address_same'] = 1;
-            //     }
-            //     // User::where('id', $user_id)->update($user_data);
-            //     //SEND PUSH NOTIFICATION
-            //     // $msg = "Your Order has been " . $request->change_order_status . ", Order ID #" . $order_id;
-            //     // $payload['order_id'] = $order_id;
-            //     // $this->sendNotification($user_details->fcm_token, $msg, $payload);
-            //     //
-            // }
+            if (!empty($user_id)) {
+                $user_details = User::where(['id' => $user_id])->first();
+                $user_data['name'] = $request->billing_name;
+                $user_data['email'] = $request->email;
+                $user_data['street_address'] = $request->street_address;
+                $user_data['city'] = $request->billing_city;
+                $user_data['state'] = $request->billing_state;
+                $user_data['country'] = $request->billing_country;
+                $user_data['zip'] = $request->billing_zip;
+                // $user_data['phone'] = $request->billing_phone;
+                $user_data['billing_phone'] = $request->billing_phone;
+                $user_data['billing_phone_code'] = $request->billing_phone_code;
+                $user_data['shipping_name'] = $request->shipping_name;
+                $user_data['shipping_email'] = $request->shipping_email;
+                $user_data['add_shipping_address'] = $request->add_shipping_address;
+                $user_data['shipping_city'] = $request->shipping_city;
+                $user_data['shipping_state'] = $request->shipping_state;
+                $user_data['shipping_country'] = $request->shipping_country;
+                $user_data['shipping_zip'] = $request->shipping_zip;
+                $user_data['shipping_phone'] = $request->shipping_phone;
+                $user_data['shipping_phone_code'] = $request->shipping_phone_code;
+                if (!empty($request->is_billing_address_same) && $request->is_billing_address_same == 'on') {
+                    $user_data['is_billing_address_same'] = 1;
+                }
+                User::where('id', $user_id)->update($user_data);
+                //SEND PUSH NOTIFICATION
+                // $msg = "Your Order has been " . $request->change_order_status . ", Order ID #" . $order_id;
+                // $payload['order_id'] = $order_id;
+                // $this->sendNotification($user_details->fcm_token, $msg, $payload);
+                //
+            }
 
             $order_data['order_status'] = $request->change_order_status;
             $order_data['created_at'] = date('Y-m-d h:i:s', strtotime($request->order_date));
@@ -355,7 +355,9 @@ class OrderController extends Controller
             // $invoice_file_path = public_path('public/assets/orders/order_invoice_'.$request->id.'.pdf');
 
             //////////////////////////////////
-            $userData = $this->getDataforEmail($order_id);
+            $userData = $user_data+$this->getDataforEmail($order_id);
+            // print_r($order_data);
+            // print_r($userData);exit;
             if (!empty($userData)) {
                 $userData['username'] = $user_details['name'] ?? "Keepr User";
                 $userData['email'] = $user_details->email ?? "";
