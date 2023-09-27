@@ -540,20 +540,17 @@ class GeneralController extends Controller
 
     public function send_test_email(Request $request)
     {
-        $order = Order::latest()->first();
-        $userdata = User::find($order->customer_id);
-        $order_id = $order->id;
-        $order_attribute = $this->getOrderProductAttr($order->product_info ?? "");
-        if (!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])) {
-            $product_names = implode(',', $order_attribute['product_name']);
-        }
-        if (!empty($order_attribute['total_orders']) && is_array($order_attribute['total_orders'])) {
-            $product_qty = implode(',', $order_attribute['total_orders']);
-        }
-        $products = $tax_info = $shipping_info = [];
-        $total_orders = 0;
-        $total_order_amount = $order->order_amount ?? 0;
-
+        // $order_id = $order->id;
+        // $order_attribute = $this->getOrderProductAttr($order->product_info ?? "");
+        // if (!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])) {
+        //     $product_names = implode(',', $order_attribute['product_name']);
+        // }
+        // if (!empty($order_attribute['total_orders']) && is_array($order_attribute['total_orders'])) {
+        //     $product_qty = implode(',', $order_attribute['total_orders']);
+        // }
+        // $products = $tax_info = $shipping_info = [];
+        // $total_orders = 0;
+        // $total_order_amount = $order->order_amount ?? 0;
         // if (!empty($order->mac_ids)) { // stocks
         //     $mac_ids = json_decode($order->mac_ids, true);
         //     if (!empty($mac_ids)) {
@@ -630,18 +627,20 @@ class GeneralController extends Controller
         //     }
         // }
 
-        $userData = $this->getDataforEmail($order_id);
-        $userData['username'] = $userdata['name'] ?? "Keepr User";
-        $userData['email'] = $userdata->email ?? "";
-        ////////////////////////////////
-
-        $test = $this->sendKeeprEmail('order-confirmed-customer', $userData);
-        if (isset($test) && $test == true) {
-            return response()->json(['status' => 200, 'message' => 'Mail sent successfully'], 200);
-        } elseif (isset($test) && $test == 2) {
-            return response()->json(['status' => 400, 'message' => 'Something went wrong.'], 200);
-        } else {
-            return response()->json(['status' => 400, 'message' => 'failed'], 200);
+        $userData = $this->getDataforEmail($order_id = null);
+        if (!empty($userData)) {
+            $userdata = User::find($userData['customer_id']);
+            $userData['username'] = $userdata['name'] ?? "Keepr User";
+            $userData['email'] = $userdata->email ?? "";
+            $test = $this->sendKeeprEmail('order-confirmed-customer', $userData);
+            if (isset($test) && $test == true) {
+                return response()->json(['status' => 200, 'message' => 'Mail sent successfully'], 200);
+            } elseif (isset($test) && $test == 2) {
+                return response()->json(['status' => 400, 'message' => 'Something went wrong.'], 200);
+            } else {
+                return response()->json(['status' => 400, 'message' => 'failed'], 200);
+            }
         }
+
     }
 }

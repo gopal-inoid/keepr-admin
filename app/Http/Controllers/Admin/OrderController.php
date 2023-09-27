@@ -720,7 +720,8 @@ class OrderController extends Controller
                 $shipping_info['amount'] = $shipping_method_rates->express_rate ?? 0;
             }
         }
-
+        // return view('admin-views.order.invoice', compact('order', 'company_phone', 'total_orders', 'products', 'company_name', 'company_email', 'company_web_logo', 'total_order_amount', 'shipping_info', 'tax_info'));
+        // exit;
         $mpdf_view = View::make(
             'admin-views.order.invoice',
             compact('order', 'company_phone', 'total_orders', 'products', 'company_name', 'company_email', 'company_web_logo', 'total_order_amount', 'shipping_info', 'tax_info')

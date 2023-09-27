@@ -27,11 +27,12 @@ Route::group(['namespace' => 'api'], function () {
     Route::post('get-pages', 'GeneralController@get_pages');
 
     Route::post('force_update', 'GeneralController@force_update');
-    Route::post('send-test-email', 'GeneralController@send_test_email');
+
     // Testing Pending Emails
-    Route::post('update-pending-email', 'SystemController@update_pending_email');
-    Route::post('update-order-details', 'OrderController@update_order_details');
-    
+    // Route::post('send-test-email', 'GeneralController@send_test_email');
+    // Route::post('update-pending-email', 'SystemController@update_pending_email');
+    // Route::post('update-order-details', 'OrderController@update_order_details');
+
 
     Route::group(['middleware' => ['api_auth']], function () {
 
@@ -44,7 +45,7 @@ Route::group(['namespace' => 'api'], function () {
 
         Route::get('sendNotification', 'GeneralController@sendNotification');
         Route::post('changeOrderStatus', 'CartController@changeOrderStatus');
-        
+
         //DEVICE
         Route::post('connect-device', 'ProductController@connect_device');
         Route::post('edit-device', 'ProductController@edit_device');
@@ -71,7 +72,7 @@ Route::group(['namespace' => 'api'], function () {
         Route::get('get-cart', 'CartController@get_cart');
         Route::post('add-cart', 'CartController@add_to_cart');
         Route::post('remove-cart', 'CartController@remove_from_cart');
-        Route::post('remove-all-cart','CartController@remove_all_from_cart');
+        Route::post('remove-all-cart', 'CartController@remove_all_from_cart');
         //
 
         //CHECKOUT
@@ -81,7 +82,7 @@ Route::group(['namespace' => 'api'], function () {
         Route::post('confirm-order', 'CartController@confirm_order');
         Route::post('get-paymentIntent', 'CartController@getPaymentIntent');
         Route::post('get-confirmed_payment_intent', 'CartController@confirmed_payment_intent');
-        
+
     });
 
     //#KEEPR END
@@ -94,10 +95,10 @@ Route::group(['namespace' => 'api'], function () {
         Route::get('info', 'CustomerController@info');
         Route::put('update-profile', 'CustomerController@update_profile');
         Route::put('cm-firebase-token', 'CustomerController@update_cm_firebase_token');
-        Route::get('account-delete/{id}','CustomerController@account_delete');
+        Route::get('account-delete/{id}', 'CustomerController@account_delete');
 
-        Route::get('get-restricted-country-list','CustomerController@get_restricted_country_list');
-        Route::get('get-restricted-zip-list','CustomerController@get_restricted_zip_list');
+        Route::get('get-restricted-country-list', 'CustomerController@get_restricted_country_list');
+        Route::get('get-restricted-zip-list', 'CustomerController@get_restricted_zip_list');
 
         Route::group(['prefix' => 'address'], function () {
             Route::get('list', 'CustomerController@address_list');
@@ -149,7 +150,7 @@ Route::group(['namespace' => 'api'], function () {
 
     Route::group(['prefix' => 'order'], function () {
         Route::get('track', 'OrderController@track_order');
-        Route::get('cancel-order','OrderController@order_cancel');
+        Route::get('cancel-order', 'OrderController@order_cancel');
     });
 
     Route::group(['prefix' => 'seller'], function () {
@@ -160,7 +161,7 @@ Route::group(['namespace' => 'api'], function () {
         Route::get('all', 'SellerController@get_all_sellers');
     });
 
-    Route::group(['prefix' => 'coupon','middleware' => 'auth:api'], function () {
+    Route::group(['prefix' => 'coupon', 'middleware' => 'auth:api'], function () {
         Route::get('apply', 'CouponController@apply');
     });
 

@@ -336,7 +336,6 @@ class OrderController extends Controller
             // if(!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])){
             //     $product_uuid = implode(',',$order_attribute['uuid']);
             // }
-
             // if($request->change_order_status == 'cancelled' || $request->change_order_status == 'failed'){
             //     if(!empty($get_order->mac_ids)){
             //         $mac_ids = json_decode($get_order->mac_ids,true);
@@ -351,38 +350,37 @@ class OrderController extends Controller
             //         }
             //     }
             // }
-
             //SEND ORDER EMAIL
-            //$this->save_invoice($request->id);
-            //$invoice_file_path = public_path('public/assets/orders/order_invoice_'.$request->id.'.pdf');
+            // $this->save_invoice($request->id);
+            // $invoice_file_path = public_path('public/assets/orders/order_invoice_'.$request->id.'.pdf');
 
             //////////////////////////////////
             $userData = $this->getDataforEmail($order_id);
-            $userData['username'] = $user_details['name'] ?? "Keepr User";
-            $userData['email'] = $user_details->email ?? "";
-            //////////////////////////////////
+            if (!empty($userData)) {
+                $userData['username'] = $user_details['name'] ?? "Keepr User";
+                $userData['email'] = $user_details->email ?? "";
 
-            if ($userData['order_status'] == 'shipped') {
-                $userData['email'] = $user_details->shipping_email ?? "";
-                $this->sendKeeprEmail('order-shipped-customer', $userData);
-            } elseif ($userData['order_status'] == 'cancelled') {
-                $this->sendKeeprEmail('order-cancelled-customer', $userData);
-            } elseif ($userData['order_status'] == 'refunded') {
-                $this->sendKeeprEmail('order-refunded-customer', $userData);
-            } elseif ($userData['order_status'] == 'delivered') {
-                $this->sendKeeprEmail('order-delivered-customer', $userData);
-            } else {
-                $this->sendKeeprEmail('order-status-changed-customer', $userData);
+                if ($userData['order_status'] == 'shipped') {
+                    $userData['email'] = $user_details->shipping_email ?? "";
+                    $this->sendKeeprEmail('order-shipped-customer', $userData);
+                } elseif ($userData['order_status'] == 'cancelled') {
+                    $this->sendKeeprEmail('order-cancelled-customer', $userData);
+                } elseif ($userData['order_status'] == 'refunded') {
+                    $this->sendKeeprEmail('order-refunded-customer', $userData);
+                } elseif ($userData['order_status'] == 'delivered') {
+                    $this->sendKeeprEmail('order-delivered-customer', $userData);
+                } else {
+                    $this->sendKeeprEmail('order-status-changed-customer', $userData);
+                }
+                $userData['username'] = $this->getAdminDetail('company_name') ?? "Keepr Admin";
+                $userData['email'] = $this->getAdminDetail('company_email') ?? "";
+                $this->sendKeeprEmail('order-status-changed-admin', $userData);
+                Order::where('id', $order_id)->update($order_data);
+                return response()->json(['status' => 200, 'message' => 'Order Status Successfully Changed'], 200);
             }
-
-            $userData['username'] = $this->getAdminDetail('company_name') ?? "Keepr Admin";
-            $userData['email'] = $this->getAdminDetail('company_email') ?? "";
-
-            $this->sendKeeprEmail('order-status-changed-admin', $userData);
-            Order::where('id', $order_id)->update($order_data);
-            return response()->json(['status' => 200, 'message' => 'Order Status Successfully Changed'], 200);
         } else {
             return response()->json(['status' => 400, 'message' => 'Order Status Change failed'], 200);
         }
+
     }
 }

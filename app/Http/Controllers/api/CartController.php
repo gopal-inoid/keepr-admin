@@ -278,7 +278,6 @@ class CartController extends Controller
 
     public function place_order(Request $request)
     {
-
         $auth_token = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
         $cart_id = $request->cart_id;
@@ -319,6 +318,7 @@ class CartController extends Controller
 
         $product_info = [];
         if (!empty($user_details->id)) {
+
             $cart_info = Cart::select('id', 'customer_id', 'product_id', 'price', 'quantity')->where('quantity', '>', 0)->whereIn('id', $cart_ids)->get();
             $status = 1;
             if (!empty($cart_info[0])) {
@@ -442,7 +442,7 @@ class CartController extends Controller
         }
         $update_order = Order::where(['id' => $order_id])->first();
         $userData = $this->getDataforEmail($order_id);
-       
+
         if ($update_order) {
             $update_order->transaction_ref = $transaction_id;
             $update_order->payment_status = 'paid';
@@ -467,21 +467,23 @@ class CartController extends Controller
             //     $product_uuid = implode(',', $order_attribute['uuid']);
             // }
             $userData = $this->getDataforEmail($order_id);
-            $userData['username'] = $user_details['name'] ?? "Keepr User";
-            $userData['email'] = $user_details->email ?? "";
+            if (!empty($userData)) {
+                $userData['username'] = $user_details['name'] ?? "Keepr User";
+                $userData['email'] = $user_details->email ?? "";
 
-            $this->sendKeeprEmail('order-confirmed-customer', $userData, $invoice_file_path);
-            //$this->sendKeeprEmail('order-confirmed-customer',$userData);
-            $userData['username'] = $this->getAdminDetail('company_name') ?? "Keepr Admin";
-            $userData['email'] = $this->getAdminDetail('company_email') ?? "";
-            $this->sendKeeprEmail('order-confirmed-admin', $userData);
+                $this->sendKeeprEmail('order-confirmed-customer', $userData, $invoice_file_path);
+                //$this->sendKeeprEmail('order-confirmed-customer',$userData);
+                $userData['username'] = $this->getAdminDetail('company_name') ?? "Keepr Admin";
+                $userData['email'] = $this->getAdminDetail('company_email') ?? "";
+                $this->sendKeeprEmail('order-confirmed-admin', $userData);
 
-            $payload['order_id'] = $update_order->id ?? NULL;
-            $msg = "Your Order has been confirmed with Order ID #" . $payload['order_id'];
+                $payload['order_id'] = $update_order->id ?? NULL;
+                $msg = "Your Order has been confirmed with Order ID #" . $payload['order_id'];
 
-            $this->sendNotification($user_details->fcm_token, $msg, $payload);
-            Common::addLog(['status' => 200, 'message' => 'Order Successfully Confirmed', 'order_id' => (int) $order_id]);
-            return response()->json(['status' => 200, 'message' => 'Order Successfully Confirmed', 'order_id' => (int) $order_id], 200);
+                $this->sendNotification($user_details->fcm_token, $msg, $payload);
+                Common::addLog(['status' => 200, 'message' => 'Order Successfully Confirmed', 'order_id' => (int) $order_id]);
+                return response()->json(['status' => 200, 'message' => 'Order Successfully Confirmed', 'order_id' => (int) $order_id], 200);
+            }
         } else {
             Common::addLog(['status' => 400, 'message' => 'Order not Confirmed,something went wrong']);
             return response()->json(['status' => 400, 'message' => 'Order not Confirmed,something went wrong'], 200);

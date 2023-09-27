@@ -216,6 +216,7 @@ class Controller extends BaseController
                 $email_temp = EmailTemplates::where(['name' => $template_type])->where('status', 1)->first();
                 if (!empty($email_temp->id)) {
                     $email_temp->subject = str_replace("{STATUS}", $user_data['order_status'] ?? "", $email_temp->subject);
+                    $email_temp->body = str_replace("{STATUS}", $user_data['order_status'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{USERNAME}", $user_data['username'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{ORDER_ID}", $user_data['order_id'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{PRODUCT_NAME}", $user_data['product_name'] ?? "", $email_temp->body);
@@ -373,7 +374,12 @@ class Controller extends BaseController
 
     public function getDataforEmail($order_id)
     {
-        $update_order = Order::where(['id' => $order_id])->first();
+        if($order_id==null){
+            // return false;
+            $update_order = Order::latest()->first();
+        }else if($order_id!=null){
+            $update_order = Order::where(['id' => $order_id])->first();
+        }
         $product_id = array_keys(json_decode($update_order['mac_ids'], true))[0];
         $product_info = json_decode($update_order->product_info, true);
         $product_qty_info = json_decode($update_order->mac_ids, true);
@@ -384,6 +390,7 @@ class Controller extends BaseController
         $total_price = $price * $product_qty;
         $shipping_info = [];
         if (!empty($update_order->shipping_method_id) && !empty($update_order->shipping_mode)) {
+           
             $shipping = ShippingMethod::where(['id' => $update_order->shipping_method_id])->first();
             $shipping_method_rates = ShippingMethodRates::select('normal_rate', 'express_rate')->where('shipping_id', $update_order->shipping_method_id)->where('country_code', $this->getCountryName($update_order->customer->country))->first();
             $shipping_info['title'] = $shipping->title ?? "";
@@ -397,13 +404,12 @@ class Controller extends BaseController
                 $shipping_info['amount'] = $shipping_method_rates->express_rate ?? 0;
             }
         }
-        //   $userData['username'] = $user_details['name'] ?? "Keepr User";
         $userData['order_id'] = $update_order->id;
+        $userData['customer_id'] = $update_order->customer_id;
         $userData['order_status'] = $update_order->order_status;
         $userData['product_name'] = $product_name ?? "";
         $userData['qty'] = $product_qty ?? "";
         $userData['grand_total_qty'] = $product_qty ?? ""; // total of all device price
-        //   $userData['email'] = $user_details->email ?? "";
         $userData['total_price'] = number_format($total_price);
         $userData['price'] = $price;
         $userData['shipping_title'] = $shipping_info['title'] ?? "";
@@ -418,9 +424,5 @@ class Controller extends BaseController
         $userData['tax_info'] = json_decode($update_order->taxes, true)[0]['title'] ?? "" . " " . json_decode($update_order->taxes, true)[0]['percent'] ?? "";
         $userData['tax_amount'] = json_decode($update_order->taxes, true)[0]['amount'] ?? "";
         return $userData;
-        //////////////////////////////////
-
     }
-
-
 }
