@@ -346,7 +346,7 @@
                                 <table class="table fz-12 table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
                                     <thead class="thead-light thead-50 text-capitalize">
                                         <tr>
-                                            <th>{{\App\CPU\translate('SL')}}</th>
+                                            <th>{{\App\CPU\translate('Sl')}}</th>
                                             <th>{{\App\CPU\translate('Product Name')}}</th>
                                             <th>Device Info</th>
                                             <th>Price</th>

@@ -34,33 +34,36 @@
                                     <div class="form-group">
                                         <input type="hidden" id="id" name="id">
                                         <label for="name"
-                                            class="title-color text-capitalize">{{ \App\CPU\translate('banner_URL') }}</label>
-                                        <input type="text" name="url" class="form-control" id="url" required>
+                                            class="title-color text-capitalize">{{ \App\CPU\translate('banner_URL') }}</label><span class="text-danger">*</span>
+                                        <input type="text" name="url" class="form-control" id="url" required pattern="https?://.+" 
+                                        title="Please enter a valid URL (start with http:// or https://)">
                                     </div>
                                     <div class="form-group">
                                         <label for="name"
-                                            class="title-color text-capitalize">{{ \App\CPU\translate('banner_type') }}</label>
-                                        <select class="js-example-responsive form-control w-100" name="banner_type"
+                                            class="title-color text-capitalize">{{ \App\CPU\translate('banner_type') }}</label><span class="text-danger">*</span>
+                                            <input type="text" name="banner_type" readonly class="form-control" id="banner_type" value="Main Banner" required>
+                                        {{-- <select class="js-example-responsive form-control w-100" name="banner_type"
                                             required>
                                             <option value="Main Banner">{{ \App\CPU\translate('Main Banner') }}</option>
                                             <option value="Footer Banner">{{ \App\CPU\translate('Footer Banner') }}</option>
                                             <option value="Popup Banner">{{ \App\CPU\translate('Popup Banner') }}</option>
                                             <option value="Main Section Banner">
                                                 {{ \App\CPU\translate('Main Section Banner') }}</option>
-                                        </select>
+                                        </select> --}}
                                     </div>
                                     <div class="form-group">
                                         <label for="name"
-                                            class="title-color text-capitalize">{{ \App\CPU\translate('Image') }}</label>
+                                            class="title-color text-capitalize">{{ \App\CPU\translate('Image') }}</label><span class="text-danger">*</span>
                                         <span class="text-info">( {{ \App\CPU\translate('ratio') }} 4:1 )</span>
                                         <div class="custom-file text-left">
-                                            <input type="file" name="image" id="mbimageFileUploader"
+                                            <input required type="file" name="image" id="mbimageFileUploader"
                                                 class="custom-file-input"
                                                 accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                             <label class="custom-file-label title-color"
                                                 for="mbimageFileUploader">{{ \App\CPU\translate('choose') }}
                                                 {{ \App\CPU\translate('file') }}</label>
                                         </div>
+                                        <span class="text-secodary">Allowed file formats: .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6 d-flex justify-content-center align-items-center">
@@ -73,7 +76,7 @@
                             </div>
                             <div class="mt-3 d-flex justify-content-end flex-wrap gap-10">
                                 <button class="btn btn-secondary cancel px-4"
-                                    type="reset">{{ \App\CPU\translate('reset') }}</button>
+                                    type="reset">{{ \App\CPU\translate('Back') }}</button>
                                 <button id="add" type="submit"
                                     class="btn btn--primary px-4">{{ \App\CPU\translate('save') }}</button>
                                 <button id="update"
@@ -91,16 +94,16 @@
                     <div class="px-3 py-4">
                         <div class="row align-items-center">
                             <div class="col-md-4 col-lg-6 mb-2 mb-md-0">
-                                <h5 class="mb-0 text-capitalize d-flex gap-2">
+                                {{-- <h5 class="mb-0 text-capitalize d-flex gap-2">
                                     {{ \App\CPU\translate('banner_table') }}
                                    
-                                </h5>
+                                </h5> --}}
                             </div>
                             <div class="col-md-8 col-lg-6">
                                 <div
                                     class="d-flex align-items-center justify-content-md-end flex-wrap flex-sm-nowrap gap-2">
                                     <!-- Search -->
-                                    <form action="{{ url()->current() }}" method="GET">
+                                    {{-- <form action="{{ url()->current() }}" method="GET">
                                         <div class="input-group input-group-merge input-group-custom">
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text">
@@ -114,7 +117,7 @@
                                                 {{ \App\CPU\translate('Search') }}
                                             </button>
                                         </div>
-                                    </form>
+                                    </form> --}}
                                     <!-- End Search -->
 
                                     <div id="banner-btn">

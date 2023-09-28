@@ -11,6 +11,8 @@ use App\Model\WithdrawRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+
+
 class SystemController extends Controller
 {
     public function search_function(Request $request)
@@ -86,30 +88,17 @@ class SystemController extends Controller
         $total_status = 0;
         if(!empty($new_order)){
             foreach($new_order as $val){
+                $val->customer_id;
                 $total_status++;
                 $user_details = DB::table('users')->where('id',$val->customer_id)->first();
                 if(!empty($user_details->id)){
-                    $order_attribute = $this->getOrderProductAttr($val->product_info ?? "");
-                    //$order_attribute = $this->getOrderAttr($val->mac_ids ?? "");
-                    if(!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])){
-                        $product_names = implode(',',$order_attribute['product_name']);
+                    $email_data = $this->getDataforEmail($val->id);
+                    if(!empty($email_data)){
+                        $email_data['email'] = $user_details->email ?? "";
+                        $email_data['username'] = $user_details->name ?? "Keepr User";
+                        $email_data['order_id'] = $val->id;
+                        $this->sendKeeprEmail('order-pending-customer',$email_data);
                     }
-                    if (!empty($order_attribute['total_orders']) && is_array($order_attribute['total_orders'])) {
-                        $product_qty = implode(',', $order_attribute['total_orders']);
-                    }
-
-                    // if(!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])){
-                    //     $product_uuid = implode(',',$order_attribute['uuid']);
-                    // }
-                    
-                    $email_data['email'] = $user_details->email ?? "";
-                    $email_data['order_status'] = $val->order_status ?? "";
-                    $email_data['username'] = $user_details->name ?? "Keepr User";
-                    $email_data['order_id'] = $val->id;
-                    $email_data['product_name'] = $product_names ?? "";
-                    $email_data['qty'] = $product_qty ?? 0;
-                    $email_data['total_price'] = $val->order_amount ?? "";
-                    $this->sendKeeprEmail('order-pending-customer',$email_data);
                 }
             }
         }
@@ -131,43 +120,14 @@ class SystemController extends Controller
                 $user_details = DB::table('users')->where('id',$val->customer_id)->first();
                 if(!empty($user_details->id)){
 
-                    $order_attribute = $this->getOrderProductAttr($val->product_info ?? "");
-                    //$order_attribute = $this->getOrderAttr($val->mac_ids ?? "");
-                    if(!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])){
-                        $product_names = implode(',',$order_attribute['product_name']);
+                    $email_data = $this->getDataforEmail($val->id);
+                    if(!empty($email_data)){
+                        $email_data['email'] = $user_details->email ?? "";
+                        $email_data['username'] = $user_details->name ?? "Keepr User";
+                        $email_data['order_id'] = $val->id;
+                        $this->sendKeeprEmail('order-payment-failed-customer',$email_data);
                     }
-                    if (!empty($order_attribute['total_orders']) && is_array($order_attribute['total_orders'])) {
-                        $product_qty = implode(',', $order_attribute['total_orders']);
-                    }
-
-                    // if(!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])){
-                    //     $product_uuid = implode(',',$order_attribute['uuid']);
-                    // }
-
-                    $email_data['email'] = $user_details->email ?? "";
-                    $email_data['order_status'] = $val->order_status ?? "";
-                    $email_data['username'] = $user_details->name ?? "Keepr User";
-                    $email_data['order_id'] = $val->id;
-                    $email_data['product_name'] = $product_names ?? "";
-                    $email_data['qty'] = $product_qty ?? 0;
-                    $email_data['total_price'] = $val->order_amount ?? "";
-                    $this->sendKeeprEmail('order-payment-failed-customer',$email_data);
-
                 }
-                
-                // if(!empty($val->mac_ids)){
-                //     $mac_ids = json_decode($val->mac_ids,true);
-                //     if(!empty($mac_ids)){
-                //         foreach($mac_ids as $k => $inner_val){
-                //             if(!empty($inner_val)){
-                //                 foreach($inner_val['uuid'] as $k1 => $inner_val1){
-                //                     ProductStock::where(['product_id'=>$k,'uuid'=>$inner_val1,'major'=>$inner_val['major'][$k1],'minor'=>$inner_val['minor'][$k1]])->update(['is_purchased'=>0]);
-                //                 }
-                //             }
-                //         }
-                //     }
-                // }
-
             }
         }
         DB::table('cron_log')->insert(['cron type'=>'order_status','data'=>json_encode(['success' => 1,'total_updated' => $total_status])]);

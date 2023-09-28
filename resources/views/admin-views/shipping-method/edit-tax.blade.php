@@ -70,7 +70,7 @@
                                             @foreach ($tx_amt as $k => $val)
                                                 <tr>
                                                     <td>
-                                                        <select name="tax[state][]" class="form-control">
+                                                        <select name="tax[state][]" class="form-control preselect">
                                                             <option value="Choose State">Select States</option>
                                                             @foreach ($states as $k => $state)
                                                                 @php
@@ -185,14 +185,14 @@
             });
 
             $(document).on('click', '.remove-product-faq-btn', function() {
-                $(this).closest('.inner-faq-div').remove();
+                // $(this).closest('.inner-faq-div').remove();
                 this.parentElement.parentElement.parentElement.remove();
             });
             $(document).on("click", ".add-product-faq-btn", function() {
                 $(".dynoselect").val($(".choose").val());
             });
             $(document).on("submit", ".update_tax", function(e) {
-                $(".dynoselect").each(function() {
+                $(".dynoselect, .preselect").each(function() {
                     if (this.value == "Choose State") {
                         e.preventDefault();
                         toastr.error('Empty field alert!');

@@ -10,12 +10,15 @@ use App\Model\EmailTemplates;
 use App\Model\BusinessSetting;
 use App\Model\ProductStock;
 use App\Model\Order;
+use App\User;
 use App\Model\Product;
 use App\Model\Admin;
 use App\Model\ShippingMethod;
 use App\Model\ShippingMethodRates;
 use Illuminate\Support\Facades\View;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Mail\Message;
+
 use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
@@ -194,6 +197,11 @@ class Controller extends BaseController
         Helpers::save_mpdf($mpdf_view, 'order_invoice_', $order->id);
     }
 
+    public function getProductDetailsForEmail($customer_id)
+    {
+
+    }
+
     public function sendKeeprEmail($template_type, $user_data, $attachment = null)
     {
         $emailServices_smtp = Helpers::get_business_settings('mail_config');
@@ -201,16 +209,20 @@ class Controller extends BaseController
         if ($attachment != null) {
             $files = [$attachment];
         }
+
         if ($emailServices_smtp['status'] == 1) {
             try {
+
                 $email_temp = EmailTemplates::where(['name' => $template_type])->where('status', 1)->first();
                 if (!empty($email_temp->id)) {
                     $email_temp->subject = str_replace("{STATUS}", $user_data['order_status'] ?? "", $email_temp->subject);
+                    $email_temp->body = str_replace("{STATUS}", $user_data['order_status'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{USERNAME}", $user_data['username'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{ORDER_ID}", $user_data['order_id'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{PRODUCT_NAME}", $user_data['product_name'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{DEVICE_UUID}", $user_data['device_id'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{QTY}", $user_data['qty'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{EMAIL}", $user_data['email'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{TOTAL_PRICE}", $user_data['total_price'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{ORDER_DATE}", $user_data['order_date'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{ORDER_NOTE}", $user_data['order_note'] ?? "", $email_temp->body);
@@ -233,16 +245,20 @@ class Controller extends BaseController
                     $email_temp->body = str_replace("{TRACKING_ID}", $user_data['tracking_id'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{COMPANY_NAME}", 'Keepr', $email_temp->body);
 
-                    $email_temp->body = str_replace("{TOTAL_AMOUNT}", $user_data['total_amount'] ?? "", $email_temp->body);
-                    $email_temp->body = str_replace("{TOTAL_QTY}", $user_data['total_qty'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{TOTAL_AMOUNT}", $user_data['total_price'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{TOTAL_QTY}", $user_data['qty'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{TAX_AMOUNT}", $user_data['tax_amount'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{PRICE}", $user_data['price'] ?? "", $email_temp->body);
-                    $email_temp->body = str_replace("{GRAND_TOTAL}", $user_data['total_price'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{GRAND_TOTAL}", $user_data['grand_total_price'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{GRAND_TOTAL_QTY}", $user_data['grand_total_qty'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{SHIPPING_INFO}", $user_data['shipping_info'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{SHIPPING_TITLE}", $user_data['shipping_title'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{SHIPPING_DURATION}", $user_data['shipping_duration'] ?? "", $email_temp->body);
+                    $email_temp->body = str_replace("{SHIPPING_MODE}", $user_data['shipping_mode'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{SHIPPING_AMOUNT}", $user_data['shipping_amount'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{TAX_INFO}", $user_data['tax_info'] ?? "", $email_temp->body);
                     $email_temp->body = str_replace("{COMPANY_LOGO}", '<img src="' . url('/public/public/company/Keepe_logo.png') . '" />', $email_temp->body);
-                  
+
                     $data['email'] = $user_data['email'] ?? "";
                     $data['subject'] = $email_temp->subject ?? "";
                     $data["body"] = $email_temp->body ?? "";
@@ -257,7 +273,6 @@ class Controller extends BaseController
                             }
                         });
                     }
-
                 }
             } catch (\Exception $e) {
                 $error = $e->getMessage();
@@ -268,7 +283,6 @@ class Controller extends BaseController
                 return true;
             }
         }
-
         return true;
     }
 
@@ -358,4 +372,64 @@ class Controller extends BaseController
         }
     }
 
+    public function getDataforEmail($order_id)
+    {
+        $update_order = Order::where(['id' => $order_id])->first();
+        if(!empty($update_order->id)){
+
+            // $order_attribute = $this->getOrderProductAttr($update_order->product_info ?? "");
+            // if (!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])) {
+            //     $product_names = implode(',', $order_attribute['product_name']);
+            // }
+            // if (!empty($order_attribute['total_orders']) && is_array($order_attribute['total_orders'])) {
+            //     $product_qty = implode(',', $order_attribute['total_orders']);
+            // }
+
+            $product_id = array_keys(json_decode($update_order['mac_ids'], true))[0] ?? 0;
+            $product_info = json_decode($update_order->product_info, true);
+            $product_qty_info = json_decode($update_order->mac_ids, true);
+            $price_info = json_decode($update_order->per_device_amount, true);
+            $product_name = $product_info[$product_id]['product_name'] ?? "";
+            $product_qty = !empty($product_qty_info[$product_id]['uuid']) ? count($product_qty_info[$product_id]['uuid']) : 0;
+            $price = $price_info[$product_id] ?? 0;
+            $total_price = $price * $product_qty;
+            $shipping_info = [];
+            if (!empty($update_order->shipping_method_id) && !empty($update_order->shipping_mode)) {
+                $shipping = ShippingMethod::where(['id' => $update_order->shipping_method_id])->first();
+                $shipping_method_rates = ShippingMethodRates::select('normal_rate', 'express_rate')->where('shipping_id', $update_order->shipping_method_id)->where('country_code', $this->getCountryName($update_order->customer->country))->first();
+                $shipping_info['title'] = $shipping->title ?? "";
+                if ($update_order->shipping_mode == 'normal_rate') {
+                    $shipping_info['duration'] = $shipping->normal_duration ?? "";
+                    $shipping_info['mode'] = 'Regular Rate';
+                    $shipping_info['amount'] = $shipping_method_rates->normal_rate ?? 0;
+                } elseif ($update_order->shipping_mode == 'express_rate') {
+                    $shipping_info['duration'] = $shipping->express_duration ?? "";
+                    $shipping_info['mode'] = 'Express Rate';
+                    $shipping_info['amount'] = $shipping_method_rates->express_rate ?? 0;
+                }
+            }
+            $userData['order_id'] = $update_order->id;
+            $userData['customer_id'] = $update_order->customer_id;
+            $userData['order_status'] = $update_order->order_status;
+            $userData['product_name'] = $product_name ?? "";
+            $userData['qty'] = $product_qty ?? "";
+            $userData['grand_total_qty'] = $product_qty ?? "";
+            $userData['total_price'] = number_format($total_price);
+            $userData['price'] = $price;
+            $userData['shipping_title'] = $shipping_info['title'] ?? "";
+            $userData['duration'] = $shipping_info['duration'] ?? "";
+            $userData['mode'] = $shipping_info['mode'] ?? "";
+            $userData['shipping_amount'] = $shipping_info['amount'] ?? "";
+            $userData['grand_total_price'] = number_format($update_order->order_amount, 2);
+            $userData['shipping_info'] = $shipping_info['title'] ?? "" . " " . $shipping_info['duration'] ?? "" . " " . $shipping_info['mode'] ?? "";
+            $userData['shipping_title'] = $shipping_info['title'] ?? "";
+            $userData['shipping_duration'] = $shipping_info['duration'] ?? "";
+            $userData['shipping_mode'] = $shipping_info['mode'] ?? "";
+            $userData['tax_info'] = json_decode($update_order->taxes, true)[0]['title'] ?? "" . " " . json_decode($update_order->taxes, true)[0]['percent'] ?? "";
+            $userData['tax_amount'] = json_decode($update_order->taxes, true)[0]['amount'] ?? "";
+            return $userData;
+        }else{
+            return false;
+        }
+    }
 }

@@ -540,122 +540,19 @@ class GeneralController extends Controller
 
     public function send_test_email(Request $request)
     {
-        // $to = $request->to;
-        // $subject = $request->subject;
-        // $body = $request->body;
-        $order = Order::latest()->first();
-        $userdata = User::find($order->customer_id);
-        $order_attribute = $this->getOrderAttr($order->mac_ids);
-        //$this->print_r($a);
-        if (!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])) {
-            $product_names = implode(',', $order_attribute['product_name']);
-        }
-        if (!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])) {
-            $product_uuid = implode(',', $order_attribute['uuid']);
-        }
-
-        $products = $tax_info = $shipping_info = [];
-        $total_orders = 0;
-        $total_order_amount = $order->order_amount ?? 0;
-        if (!empty($order->mac_ids)) { // stocks
-            $mac_ids = json_decode($order->mac_ids, true);
-            if (!empty($mac_ids)) {
-                if (!empty($order->taxes)) {
-                    $taxes = json_decode($order->taxes, true);
-                    if (!empty($taxes)) {
-                        $tax_info = $taxes;
-                    }
-                }
-                if (!empty($order->shipping_method_id) && !empty($order->shipping_mode)) {
-                    $shipping = ShippingMethod::where(['id' => $order->shipping_method_id])->first();
-                    $shipping_method_rates = ShippingMethodRates::select('normal_rate', 'express_rate')->where('shipping_id', $order->shipping_method_id)->where('country_code', $this->getCountryName($order->customer->country))->first();
-                    $shipping_info['title'] = $shipping->title ?? "";
-                    if ($order->shipping_mode == 'normal_rate') {
-                        $shipping_info['duration'] = $shipping->normal_duration ?? "";
-                        $shipping_info['mode'] = 'Regular Rate';
-                        $shipping_info['amount'] = $shipping_method_rates->normal_rate ?? 0;
-                    } elseif ($order->shipping_mode == 'express_rate') {
-                        $shipping_info['duration'] = $shipping->express_duration ?? "";
-                        $shipping_info['mode'] = 'Express Rate';
-                        $shipping_info['amount'] = $shipping_method_rates->express_rate ?? 0;
-                    }
-                }
-                $product_info = json_decode($order->product_info, true);
-                foreach ($mac_ids as $k => $val) {
-                    $total_orders += count($mac_ids[$k]['uuid']);
-                    $prod = Product::select('name', 'thumbnail', 'purchase_price')->find($k);
-                    $products[$k]['name'] = $product_info[$k]['product_name'] ?? "";
-                    $products[$k]['thumbnail'] = $product_info[$k]['thumbnail'] ?? "";
-                    if (!empty($order->per_device_amount)) {
-                        $perdevice_amount = json_decode($order->per_device_amount, true);
-                        if (!empty($perdevice_amount)) {
-                            $products[$k]['price'] = $perdevice_amount[$k] ?? 0;
-                        } else {
-                            $products[$k]['price'] = $prod->purchase_price ?? 0;
-                        }
-                    } else {
-                        $products[$k]['price'] = $prod->purchase_price ?? 0;
-                    }
-                    if (!empty($val)) {
-                        foreach ($val['uuid'] as $k1 => $val1) {
-                            $products[$k]['mac_ids'][$k1]['uuid'] = $val1;
-                            $products[$k]['mac_ids'][$k1]['major'] = $val['major'][$k1];
-                            $products[$k]['mac_ids'][$k1]['minor'] = $val['minor'][$k1];
-                        }
-                    }
-                }
+        $userData = $this->getDataforEmail($order_id = null);
+        if (!empty($userData)) {
+            $userdata = User::find($userData['customer_id']);
+            $userData['username'] = $userdata['name'] ?? "Keepr User";
+            $userData['email'] = $userdata->email ?? "";
+            $test = $this->sendKeeprEmail('order-confirmed-customer', $userData);
+            if (isset($test) && $test == true) {
+                return response()->json(['status' => 200, 'message' => 'Mail sent successfully'], 200);
+            } elseif (isset($test) && $test == 2) {
+                return response()->json(['status' => 400, 'message' => 'Something went wrong.'], 200);
+            } else {
+                return response()->json(['status' => 400, 'message' => 'failed'], 200);
             }
         }
-
-        $userData['username'] = $userdata['name'] ?? "Keepr User";
-        $userData['order_id'] = $order->id;
-        $userData['order_status'] = $order->order_status;
-        $userData['product_name'] = $product_names;
-        $userData['device_id'] = $product_uuid;
-        $userData['qty'] = $order_attribute['total_orders'] ?? 0;
-        $userData['total_price'] = $order->order_amount ?? "";
-        $userData['email'] = $userdata->email ?? "";
-        foreach ($products as $product) {
-            $userData['name'] = $product['name'] ?? "";
-            $userData['thumbnail'] = $product['thumbnail'] ?? "";
-            $userData['price'] = $product['price'] ?? "";
-            $userData['mac_ids'] = $product['mac_ids'] ?? "";
-            $userData['total_amount'] = $product['price'] ?? "";
-            $userData['total_qty'] = 1;
-
-
-        }
-
-        foreach ($tax_info as $tax) {
-            $userData['tax_title'] = $tax['title'] ?? "";
-            $userData['amount'] = $tax['amount'] ?? "";
-            $userData['percent'] = $tax['percent'] ?? "";
-            $userData['tax_amount'] = $tax['amount'] ?? "";
-        }
-        $userData['shipping_title'] = $shipping_info['title'] ?? "";
-        $userData['duration'] = $shipping_info['duration'] ?? "";
-        $userData['mode'] = $shipping_info['mode'] ?? "";
-        $userData['shipping_amount'] = $shipping_info['amount'] ?? "";
-        $userData['grand_total'] = $userData['price'] + $userData['tax_amount'] + $shipping_info['amount'];
-        $userData['shipping_info'] = $userData['shipping_title'] . " " . $userData['duration'] . " " . $userData['mode'];
-        $userData['tax_info'] = $userData['tax_title'] . " " . $userData['amount'] . " " . $userData['percent'];
-
-        // $alldata = ['products' => $products, 'tax_info' => $tax_info, 'shipping_info' => $shipping_info, 'userdata' => $userData];
-        // $this->sendKeeprEmail('order-confirmed-customer', $userData);
-
-        $test = $this->sendKeeprEmail('order-confirmed-customer', $userData);
-        print_r($test);
-        exit;
-        if (isset($test['status']) && $test['status'] == 2) {
-            return response()->json(['status' => 400, 'message' => $test['error']], 200);
-        } elseif (isset($test['status']) && $test['status'] == 1) {
-            return response()->json(['status' => 200, 'message' => 'Mail sent successfully'], 200);
-        } else {
-            return response()->json(['status' => 400, 'message' => 'failed'], 200);
-        }
-
     }
-
-
-
 }
