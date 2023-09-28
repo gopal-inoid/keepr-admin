@@ -52,9 +52,9 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost/keepr-admin'),
+    'url' => env('APP_URL', 'https://keepr.inoidsolutions.in/'),
 
-    'asset_url' => env('ASSET_URL', 'http://localhost/keepr-admin/public'),
+    'asset_url' => env('ASSET_URL', 'https://keepr.inoidsolutions.in/public'),
 
     /*
     |--------------------------------------------------------------------------

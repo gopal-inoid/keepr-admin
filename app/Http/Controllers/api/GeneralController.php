@@ -540,93 +540,6 @@ class GeneralController extends Controller
 
     public function send_test_email(Request $request)
     {
-        // $order_id = $order->id;
-        // $order_attribute = $this->getOrderProductAttr($order->product_info ?? "");
-        // if (!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])) {
-        //     $product_names = implode(',', $order_attribute['product_name']);
-        // }
-        // if (!empty($order_attribute['total_orders']) && is_array($order_attribute['total_orders'])) {
-        //     $product_qty = implode(',', $order_attribute['total_orders']);
-        // }
-        // $products = $tax_info = $shipping_info = [];
-        // $total_orders = 0;
-        // $total_order_amount = $order->order_amount ?? 0;
-        // if (!empty($order->mac_ids)) { // stocks
-        //     $mac_ids = json_decode($order->mac_ids, true);
-        //     if (!empty($mac_ids)) {
-        //         $product_info = json_decode($order->product_info, true);
-        //         foreach ($mac_ids as $k => $val) {
-        //             $total_orders += count($mac_ids[$k]['uuid']);
-        //             // $prod = Product::select('name', 'thumbnail', 'purchase_price')->find($k);
-        //             // $products[$k]['name'] = $product_info[$k]['product_name'] ?? "";
-        //             // $products[$k]['thumbnail'] = $product_info[$k]['thumbnail'] ?? "";
-        //             if (!empty($order->per_device_amount)) {
-        //                 $perdevice_amount = json_decode($order->per_device_amount, true);
-        //                 if (!empty($perdevice_amount)) {
-        //                     $products[$k]['price'] = $perdevice_amount[$k] ?? 0;
-        //                 } else {
-        //                     $products[$k]['price'] = $prod->purchase_price ?? 0;
-        //                 }
-        //             } else {
-        //                 $products[$k]['price'] = $prod->purchase_price ?? 0;
-        //             }
-        //             if (!empty($val)) {
-        //                 foreach ($val['uuid'] as $k1 => $val1) {
-        //                     $products[$k]['mac_ids'][$k1]['uuid'] = $val1;
-        //                     $products[$k]['mac_ids'][$k1]['major'] = $val['major'][$k1];
-        //                     $products[$k]['mac_ids'][$k1]['minor'] = $val['minor'][$k1];
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-
-        // if (!empty($order->taxes)) {
-        //     $taxes = json_decode($order->taxes, true);
-        //     if (!empty($taxes)) {
-        //         $tax_info = $taxes;
-        //     }
-        // }
-
-        // if (!empty($order->shipping_method_id) && !empty($order->shipping_mode)) {
-        //     $shipping = ShippingMethod::where(['id' => $order->shipping_method_id])->first();
-        //     $shipping_method_rates = ShippingMethodRates::select('normal_rate', 'express_rate')->where('shipping_id', $order->shipping_method_id)->where('country_code', $this->getCountryName($order->customer->country))->first();
-        //     $shipping_info['title'] = $shipping->title ?? "";
-        //     if ($order->shipping_mode == 'normal_rate') {
-        //         $shipping_info['duration'] = $shipping->normal_duration ?? "";
-        //         $shipping_info['mode'] = 'Regular Rate';
-        //         $shipping_info['amount'] = $shipping_method_rates->normal_rate ?? 0;
-        //     } elseif ($order->shipping_mode == 'express_rate') {
-        //         $shipping_info['duration'] = $shipping->express_duration ?? "";
-        //         $shipping_info['mode'] = 'Express Rate';
-        //         $shipping_info['amount'] = $shipping_method_rates->express_rate ?? 0;
-        //     }
-        // }
-
-        // if (!empty($order->product_info)) {
-        //     $product_info = json_decode($order->product_info, true);
-        //     if (!empty($product_info)) {
-        //         $i = $total_price = $grand_total_qty = $grand_total_amt = 0;
-        //         foreach ($product_info as $k => $val) {
-        //             $i++;
-        //             $thumbnail_path = \App\CPU\ProductManager::product_image_path('thumbnail') . '/' . $val['thumbnail'];
-        //             $product_name = substr($val['product_name'], 0, 30);
-        //             $order_qty = $val['order_qty'] ?? 0;
-        //             if (!empty($order->per_device_amount)) {
-        //                 $perdevice_amount = json_decode($order->per_device_amount, true);
-        //                 if (!empty($perdevice_amount)) {
-        //                     $price = $perdevice_amount[$k] ?? 0;
-        //                     $total_price += ($perdevice_amount[$k] ?? 0);
-        //                 }
-        //                 $total_price_show = $perdevice_amount[$k] ?? 0;
-        //             }
-        //             $grand_total_qty += $val['order_qty'] ?? 0;
-        //             $grand_total_amt += $total_price;
-        //         }
-        //         $total_main_price = number_format($total_price, 2);
-        //     }
-        // }
-
         $userData = $this->getDataforEmail($order_id = null);
         if (!empty($userData)) {
             $userdata = User::find($userData['customer_id']);
@@ -641,6 +554,5 @@ class GeneralController extends Controller
                 return response()->json(['status' => 400, 'message' => 'failed'], 200);
             }
         }
-
     }
 }

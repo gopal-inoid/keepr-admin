@@ -410,7 +410,7 @@ class CartController extends Controller
     {
 
         $trans_id = $request->trans_id;
-        $stripe = new \Stripe\StripeClient('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
         $data = $stripe->paymentIntents->retrieve($trans_id);
         echo "<pre>";
         print_r($data);
@@ -419,7 +419,7 @@ class CartController extends Controller
 
     public function verify_payment_intent($trans_id)
     {
-        $stripe = new \Stripe\StripeClient('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
         $data = $stripe->paymentIntents->retrieve($trans_id);
         if (!empty($data->status) && $data->status == 'succeeded') {
             return true;
@@ -441,8 +441,6 @@ class CartController extends Controller
             return response()->json(['status' => 400, 'message' => 'Payment failed'], 200);
         }
         $update_order = Order::where(['id' => $order_id])->first();
-        $userData = $this->getDataforEmail($order_id);
-
         if ($update_order) {
             $update_order->transaction_ref = $transaction_id;
             $update_order->payment_status = 'paid';
@@ -450,40 +448,23 @@ class CartController extends Controller
             $update_order->save();
             $this->save_invoice($order_id);
             $invoice_file_path = public_path('public/assets/orders/order_invoice_' . $order_id . '.pdf');
-
-            $order_attribute = $this->getOrderProductAttr($update_order->product_info ?? "");
-            //$order_attribute = $this->getOrderAttr($update_order->mac_ids ?? "");
-            //$this->print_r($a);
-
-            if (!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])) {
-                $product_names = implode(',', $order_attribute['product_name']);
-            }
-
-            if (!empty($order_attribute['total_orders']) && is_array($order_attribute['total_orders'])) {
-                $product_qty = implode(',', $order_attribute['total_orders']);
-            }
-
-            // if (!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])) {
-            //     $product_uuid = implode(',', $order_attribute['uuid']);
-            // }
+            //Send Email and Notification
             $userData = $this->getDataforEmail($order_id);
             if (!empty($userData)) {
                 $userData['username'] = $user_details['name'] ?? "Keepr User";
                 $userData['email'] = $user_details->email ?? "";
-
                 $this->sendKeeprEmail('order-confirmed-customer', $userData, $invoice_file_path);
-                //$this->sendKeeprEmail('order-confirmed-customer',$userData);
                 $userData['username'] = $this->getAdminDetail('company_name') ?? "Keepr Admin";
                 $userData['email'] = $this->getAdminDetail('company_email') ?? "";
                 $this->sendKeeprEmail('order-confirmed-admin', $userData);
-
-                $payload['order_id'] = $update_order->id ?? NULL;
-                $msg = "Your Order has been confirmed with Order ID #" . $payload['order_id'];
-
-                $this->sendNotification($user_details->fcm_token, $msg, $payload);
-                Common::addLog(['status' => 200, 'message' => 'Order Successfully Confirmed', 'order_id' => (int) $order_id]);
-                return response()->json(['status' => 200, 'message' => 'Order Successfully Confirmed', 'order_id' => (int) $order_id], 200);
             }
+
+            $payload['order_id'] = $update_order->id ?? NULL;
+            $msg = "Your Order has been confirmed with Order ID #" . $payload['order_id'];
+            $this->sendNotification($user_details->fcm_token, $msg, $payload);
+            Common::addLog(['status' => 200, 'message' => 'Order Successfully Confirmed', 'order_id' => (int) $order_id]);
+            return response()->json(['status' => 200, 'message' => 'Order Successfully Confirmed', 'order_id' => (int) $order_id], 200);
+
         } else {
             Common::addLog(['status' => 400, 'message' => 'Order not Confirmed,something went wrong']);
             return response()->json(['status' => 400, 'message' => 'Order not Confirmed,something went wrong'], 200);
@@ -492,7 +473,7 @@ class CartController extends Controller
 
     public function CreateCheckout($amount)
     {
-        $stripe = new \Stripe\StripeClient('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
         $paymentIntents = $stripe->paymentIntents->create([
             'amount' => round($amount, 2) * 100,
             'currency' => 'usd',

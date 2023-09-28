@@ -270,7 +270,6 @@ class OrderController extends Controller
 
     public function update_order_details(Request $request)
     {
-        // echo "<pre>"; print_r($request->all()); die();
         $order_id = $request->order_id;
         $user_id = $request->user_id;
         if (!empty($order_id)) {
@@ -284,7 +283,6 @@ class OrderController extends Controller
                 $user_data['state'] = $request->billing_state;
                 $user_data['country'] = $request->billing_country;
                 $user_data['zip'] = $request->billing_zip;
-                // $user_data['phone'] = $request->billing_phone;
                 $user_data['billing_phone'] = $request->billing_phone;
                 $user_data['billing_phone_code'] = $request->billing_phone_code;
                 $user_data['shipping_name'] = $request->shipping_name;
@@ -300,11 +298,6 @@ class OrderController extends Controller
                     $user_data['is_billing_address_same'] = 1;
                 }
                 User::where('id', $user_id)->update($user_data);
-                //SEND PUSH NOTIFICATION
-                // $msg = "Your Order has been " . $request->change_order_status . ", Order ID #" . $order_id;
-                // $payload['order_id'] = $order_id;
-                // $this->sendNotification($user_details->fcm_token, $msg, $payload);
-                //
             }
 
             $order_data['order_status'] = $request->change_order_status;
@@ -317,51 +310,12 @@ class OrderController extends Controller
             $order_data['payment_status'] = $request->payment_status;
             $order_data['tracking_id'] = $request->tracking_id;
             $order_data['shipping_mode'] = $request->shipping_mode;
-            $get_order = Order::where('id', $order_id)->first();
-
-            $order_attribute = $this->getOrderProductAttr($get_order->product_info ?? "");
-            //$order_attribute = $this->getOrderAttr($get_order->mac_ids);
-
-            if (!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])) {
-                $product_names = implode(',', $order_attribute['product_name']);
-            }
-            if (!empty($order_attribute['total_orders']) && is_array($order_attribute['total_orders'])) {
-                $product_qty = implode(',', $order_attribute['total_orders']);
-            }
-
-            //$this->print_r($a);
-            // if(!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])){
-            //     $product_names = implode(',',$order_attribute['product_name']);
-            // }
-            // if(!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])){
-            //     $product_uuid = implode(',',$order_attribute['uuid']);
-            // }
-            // if($request->change_order_status == 'cancelled' || $request->change_order_status == 'failed'){
-            //     if(!empty($get_order->mac_ids)){
-            //         $mac_ids = json_decode($get_order->mac_ids,true);
-            //         if(!empty($mac_ids)){
-            //             foreach($mac_ids as $k => $val){
-            //                 if(!empty($val)){
-            //                     foreach($val['uuid'] as $k1 => $val1){
-            //                         ProductStock::where(['product_id'=>$k,'uuid'=>$val1,'major'=>$val['major'][$k1],'minor'=>$val['minor'][$k1]])->update(['is_purchased'=>0]);
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
-            //SEND ORDER EMAIL
-            // $this->save_invoice($request->id);
-            // $invoice_file_path = public_path('public/assets/orders/order_invoice_'.$request->id.'.pdf');
-
-            //////////////////////////////////
+      
+            //Send Email code
             $userData = $user_data+$this->getDataforEmail($order_id);
-            // print_r($order_data);
-            // print_r($userData);exit;
             if (!empty($userData)) {
                 $userData['username'] = $user_details['name'] ?? "Keepr User";
                 $userData['email'] = $user_details->email ?? "";
-
                 if ($userData['order_status'] == 'shipped') {
                     $userData['email'] = $user_details->shipping_email ?? "";
                     $this->sendKeeprEmail('order-shipped-customer', $userData);
