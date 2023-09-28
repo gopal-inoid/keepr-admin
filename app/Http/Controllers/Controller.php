@@ -374,55 +374,62 @@ class Controller extends BaseController
 
     public function getDataforEmail($order_id)
     {
-        if($order_id==null){
-            // return false;
-            $update_order = Order::latest()->first();
-        }else if($order_id!=null){
-            $update_order = Order::where(['id' => $order_id])->first();
-        }
-        $product_id = array_keys(json_decode($update_order['mac_ids'], true))[0];
-        $product_info = json_decode($update_order->product_info, true);
-        $product_qty_info = json_decode($update_order->mac_ids, true);
-        $price_info = json_decode($update_order->per_device_amount, true);
-        $product_name = $product_info[$product_id]['product_name'];
-        $product_qty = count($product_qty_info[$product_id]['uuid']);
-        $price = $price_info[$product_id];
-        $total_price = $price * $product_qty;
-        $shipping_info = [];
-        if (!empty($update_order->shipping_method_id) && !empty($update_order->shipping_mode)) {
-           
-            $shipping = ShippingMethod::where(['id' => $update_order->shipping_method_id])->first();
-            $shipping_method_rates = ShippingMethodRates::select('normal_rate', 'express_rate')->where('shipping_id', $update_order->shipping_method_id)->where('country_code', $this->getCountryName($update_order->customer->country))->first();
-            $shipping_info['title'] = $shipping->title ?? "";
-            if ($update_order->shipping_mode == 'normal_rate') {
-                $shipping_info['duration'] = $shipping->normal_duration ?? "";
-                $shipping_info['mode'] = 'Regular Rate';
-                $shipping_info['amount'] = $shipping_method_rates->normal_rate ?? 0;
-            } elseif ($update_order->shipping_mode == 'express_rate') {
-                $shipping_info['duration'] = $shipping->express_duration ?? "";
-                $shipping_info['mode'] = 'Express Rate';
-                $shipping_info['amount'] = $shipping_method_rates->express_rate ?? 0;
+        $update_order = Order::where(['id' => $order_id])->first();
+        if(!empty($update_order->id)){
+
+            // $order_attribute = $this->getOrderProductAttr($update_order->product_info ?? "");
+            // if (!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])) {
+            //     $product_names = implode(',', $order_attribute['product_name']);
+            // }
+            // if (!empty($order_attribute['total_orders']) && is_array($order_attribute['total_orders'])) {
+            //     $product_qty = implode(',', $order_attribute['total_orders']);
+            // }
+
+            $product_id = array_keys(json_decode($update_order['mac_ids'], true))[0] ?? 0;
+            $product_info = json_decode($update_order->product_info, true);
+            $product_qty_info = json_decode($update_order->mac_ids, true);
+            $price_info = json_decode($update_order->per_device_amount, true);
+            $product_name = $product_info[$product_id]['product_name'] ?? "";
+            $product_qty = !empty($product_qty_info[$product_id]['uuid']) ? count($product_qty_info[$product_id]['uuid']) : 0;
+            $price = $price_info[$product_id] ?? 0;
+            $total_price = $price * $product_qty;
+            $shipping_info = [];
+            if (!empty($update_order->shipping_method_id) && !empty($update_order->shipping_mode)) {
+                $shipping = ShippingMethod::where(['id' => $update_order->shipping_method_id])->first();
+                $shipping_method_rates = ShippingMethodRates::select('normal_rate', 'express_rate')->where('shipping_id', $update_order->shipping_method_id)->where('country_code', $this->getCountryName($update_order->customer->country))->first();
+                $shipping_info['title'] = $shipping->title ?? "";
+                if ($update_order->shipping_mode == 'normal_rate') {
+                    $shipping_info['duration'] = $shipping->normal_duration ?? "";
+                    $shipping_info['mode'] = 'Regular Rate';
+                    $shipping_info['amount'] = $shipping_method_rates->normal_rate ?? 0;
+                } elseif ($update_order->shipping_mode == 'express_rate') {
+                    $shipping_info['duration'] = $shipping->express_duration ?? "";
+                    $shipping_info['mode'] = 'Express Rate';
+                    $shipping_info['amount'] = $shipping_method_rates->express_rate ?? 0;
+                }
             }
+            $userData['order_id'] = $update_order->id;
+            $userData['customer_id'] = $update_order->customer_id;
+            $userData['order_status'] = $update_order->order_status;
+            $userData['product_name'] = $product_name ?? "";
+            $userData['qty'] = $product_qty ?? "";
+            $userData['grand_total_qty'] = $product_qty ?? "";
+            $userData['total_price'] = number_format($total_price);
+            $userData['price'] = $price;
+            $userData['shipping_title'] = $shipping_info['title'] ?? "";
+            $userData['duration'] = $shipping_info['duration'] ?? "";
+            $userData['mode'] = $shipping_info['mode'] ?? "";
+            $userData['shipping_amount'] = $shipping_info['amount'] ?? "";
+            $userData['grand_total_price'] = number_format($update_order->order_amount, 2);
+            $userData['shipping_info'] = $shipping_info['title'] ?? "" . " " . $shipping_info['duration'] ?? "" . " " . $shipping_info['mode'] ?? "";
+            $userData['shipping_title'] = $shipping_info['title'] ?? "";
+            $userData['shipping_duration'] = $shipping_info['duration'] ?? "";
+            $userData['shipping_mode'] = $shipping_info['mode'] ?? "";
+            $userData['tax_info'] = json_decode($update_order->taxes, true)[0]['title'] ?? "" . " " . json_decode($update_order->taxes, true)[0]['percent'] ?? "";
+            $userData['tax_amount'] = json_decode($update_order->taxes, true)[0]['amount'] ?? "";
+            return $userData;
+        }else{
+            return false;
         }
-        $userData['order_id'] = $update_order->id;
-        $userData['customer_id'] = $update_order->customer_id;
-        $userData['order_status'] = $update_order->order_status;
-        $userData['product_name'] = $product_name ?? "";
-        $userData['qty'] = $product_qty ?? "";
-        $userData['grand_total_qty'] = $product_qty ?? ""; // total of all device price
-        $userData['total_price'] = number_format($total_price);
-        $userData['price'] = $price;
-        $userData['shipping_title'] = $shipping_info['title'] ?? "";
-        $userData['duration'] = $shipping_info['duration'] ?? "";
-        $userData['mode'] = $shipping_info['mode'] ?? "";
-        $userData['shipping_amount'] = $shipping_info['amount'] ?? "";
-        $userData['grand_total_price'] = number_format($update_order->order_amount, 2);
-        $userData['shipping_info'] = $shipping_info['title'] ?? "" . " " . $shipping_info['duration'] ?? "" . " " . $shipping_info['mode'] ?? "";
-        $userData['shipping_title'] = $shipping_info['title'] ?? "";
-        $userData['shipping_duration'] = $shipping_info['duration'] ?? "";
-        $userData['shipping_mode'] = $shipping_info['mode'] ?? "";
-        $userData['tax_info'] = json_decode($update_order->taxes, true)[0]['title'] ?? "" . " " . json_decode($update_order->taxes, true)[0]['percent'] ?? "";
-        $userData['tax_amount'] = json_decode($update_order->taxes, true)[0]['amount'] ?? "";
-        return $userData;
     }
 }
