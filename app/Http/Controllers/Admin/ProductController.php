@@ -124,19 +124,19 @@ class ProductController extends BaseController
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name'                 => 'required',
-            'purchase_price'       => 'required|numeric|min:1',
-            'images'               => 'required',
-            'image'                => 'required',
-            'code'                 => 'required|numeric|min:1|digits_between:6,20|unique:products',
-            'rssi'                 => 'required|unique:products',
-            'uuid'                 => 'required|unique:products',
+            'name' => 'required',
+            'purchase_price' => 'required|numeric|min:1',
+            'images' => 'required',
+            'image' => 'required',
+            'code' => 'required|numeric|min:1|digits_between:6,20|unique:products',
+            'rssi' => 'required|unique:products',
+            'uuid' => 'required|unique:products',
         ], [
-            'images.required'                  => 'Product images is required!',
-            'image.required'                   => 'Product thumbnail is required!',
-            'code.min'                         => 'Code must be positive!',
-            'code.digits_between'              => 'Code must be minimum 6 digits!',
-            'uuid.unique'                      => 'UUID should be unique',
+            'images.required' => 'Product images is required!',
+            'image.required' => 'Product thumbnail is required!',
+            'code.min' => 'Code must be positive!',
+            'code.digits_between' => 'Code must be minimum 6 digits!',
+            'uuid.unique' => 'UUID should be unique',
         ]);
 
         if (is_null($request->name[array_search('en', $request->lang)])) {
@@ -166,15 +166,15 @@ class ProductController extends BaseController
         }
 
         $p = new Product();
-        $p->user_id  = auth('admin')->id();
+        $p->user_id = auth('admin')->id();
         $p->added_by = "admin";
-        $p->name     = $request->name[array_search('en', $request->lang)];
-        $p->code     = $request->code;
-        $p->rssi                  = $request->rssi;
-        $p->uuid                  = $request->uuid;
-        $p->slug     = Str::slug($request->name[array_search('en', $request->lang)], '-') . '-' . Str::random(6);
-        $p->details              = $request['description'] ?? '';
-        $p->purchase_price     = BackEndHelper::currency_to_usd($request->purchase_price);
+        $p->name = $request->name[array_search('en', $request->lang)];
+        $p->code = $request->code;
+        $p->rssi = $request->rssi;
+        $p->uuid = $request->uuid;
+        $p->slug = Str::slug($request->name[array_search('en', $request->lang)], '-') . '-' . Str::random(6);
+        $p->details = $request['description'] ?? '';
+        $p->purchase_price = BackEndHelper::currency_to_usd($request->purchase_price);
 
         $colors = "";
         $specifications = [];
@@ -232,11 +232,11 @@ class ProductController extends BaseController
     {
 
         $validator = Validator::make($request->all(), [
-            'product_id'                 => 'required',
-            'device_id'                 => 'required',
-            'uuid'                 => 'required',
-            'major'                 => 'required',
-            'minor'                 => 'required'
+            'product_id' => 'required',
+            'device_id' => 'required',
+            'uuid' => 'required',
+            'major' => 'required',
+            'minor' => 'required'
         ]);
 
         if (is_null($request->product_id)) {
@@ -271,12 +271,30 @@ class ProductController extends BaseController
 
     function update_stock(Request $request, $id)
     {
+        $deletedData = $request['deleted'];
+        $stringArray = explode('/', $deletedData);
+        foreach ($stringArray as $string) {
+            $array = explode(',', $string);
+            if (!empty($array)) {
+                $final_array = [];
+                foreach ($array as $k => $arr) {
+                    if (!empty($arr)) {
+                        $final_array[$k] = $arr;
+                    }
+                }
+                if (!empty($final_array)) {
+                    $arrayone = array(0 => 0,1 => 1,2 => 2,3 => 3);
+                    $dltData = array_combine($arrayone, $final_array);
+                    ProductStock::where(['mac_id' => $dltData[0], 'uuid' => $dltData[1] , 'major' => $dltData[2] , 'minor' => $dltData[3]])->delete();
+                }
+            }
+        }
         $validator = Validator::make($request->all(), [
-            'product_id'                 => 'required',
-            'device_id'                 => 'required',
-            'uuid'                 => 'required',
-            'major'                 => 'required',
-            'minor'                 => 'required'
+            'product_id' => 'required',
+            'device_id' => 'required',
+            'uuid' => 'required',
+            'major' => 'required',
+            'minor' => 'required'
         ]);
 
         if (is_null($request->product_id)) {
@@ -287,9 +305,9 @@ class ProductController extends BaseController
                 );
             });
         }
-
         $product_stock = $request->device_id;
-        ProductStock::where(['is_purchased' => 0, 'product_id' => $id])->delete();
+
+        // ProductStock::where(['is_purchased' => 0, 'product_id' => $id])->delete();
         $colors = $request->colors;
         $uuid = $request->uuid;
         $major = $request->major;
@@ -306,7 +324,6 @@ class ProductController extends BaseController
                 }
             }
         }
-
         Toastr::success(translate('Product Stocks added successfully!'));
         return redirect()->route('admin.product.stocks.list');
     }
@@ -392,24 +409,24 @@ class ProductController extends BaseController
             }
             $data[] = [
                 'name' => $item->name,
-                'Product Type'          => $item->product_type,
-                'category_id'           => $category_id,
-                'sub_category_id'       => $sub_category_id,
-                'sub_sub_category_id'   => $sub_sub_category_id,
-                'brand_id'              => $item->brand_id,
-                'unit'                  => $item->unit,
-                'min_qty'               => $item->min_qty,
-                'refundable'            => $item->refundable,
-                'youtube_video_url'     => $item->video_url,
-                'unit_price'            => $item->unit_price,
-                'purchase_price'        => $item->purchase_price,
-                'tax'                   => $item->tax,
-                'discount'              => $item->discount,
-                'discount_type'         => $item->discount_type,
-                'current_stock'         => $item->product_type == 'physical' ? $item->current_stock : null,
-                'details'               => $item->details,
-                'thumbnail'             => 'thumbnail/' . $item->thumbnail,
-                'Status'                => $item->status == 1 ? 'Active' : 'Inactive',
+                'Product Type' => $item->product_type,
+                'category_id' => $category_id,
+                'sub_category_id' => $sub_category_id,
+                'sub_sub_category_id' => $sub_sub_category_id,
+                'brand_id' => $item->brand_id,
+                'unit' => $item->unit,
+                'min_qty' => $item->min_qty,
+                'refundable' => $item->refundable,
+                'youtube_video_url' => $item->video_url,
+                'unit_price' => $item->unit_price,
+                'purchase_price' => $item->purchase_price,
+                'tax' => $item->tax,
+                'discount' => $item->discount,
+                'discount_type' => $item->discount_type,
+                'current_stock' => $item->product_type == 'physical' ? $item->current_stock : null,
+                'details' => $item->details,
+                'thumbnail' => 'thumbnail/' . $item->thumbnail,
+                'Status' => $item->status == 1 ? 'Active' : 'Inactive',
             ];
         }
 
@@ -635,8 +652,9 @@ class ProductController extends BaseController
             $product_stock = Product::select('product_stocks.*')
                 ->join('product_stocks', 'product_stocks.product_id', 'products.id')
                 ->where('product_stocks.product_id', $id)
-                ->get();
-
+                ->orderBy('id', 'DESC')
+                ->paginate(20);
+            // ->get();
             return view('admin-views.product.edit-stock', compact('product', 'product_stock', 'colors', 'id'));
         } else {
 
@@ -658,22 +676,22 @@ class ProductController extends BaseController
             Toastr::error('UUID or RSSI or CODE Already exists');
             return back();
         }
-        $product =  Product::find($id);
+        $product = Product::find($id);
 
         $validator = Validator::make($request->all(), [
-            'name'                 => 'required',
-            'purchase_price'       => 'required|numeric|min:1',
-            'images'               => 'required',
-            'image'                => 'required',
-            'code'                 => 'required|numeric|min:1|digits_between:6,20',
-            'rssi'                 => 'required',
-            'uuid'                 => 'required',
+            'name' => 'required',
+            'purchase_price' => 'required|numeric|min:1',
+            'images' => 'required',
+            'image' => 'required',
+            'code' => 'required|numeric|min:1|digits_between:6,20',
+            'rssi' => 'required',
+            'uuid' => 'required',
         ], [
-            'images.required'                  => 'Product images is required!',
-            'image.required'                   => 'Product thumbnail is required!',
-            'code.min'                         => 'Code must be positive!',
-            'code.digits_between'              => 'Code must be minimum 6 digits!',
-            'uuid.unique'                      => 'UUID should be unique',
+            'images.required' => 'Product images is required!',
+            'image.required' => 'Product thumbnail is required!',
+            'code.min' => 'Code must be positive!',
+            'code.digits_between' => 'Code must be minimum 6 digits!',
+            'uuid.unique' => 'UUID should be unique',
         ]);
 
         if (is_null($request->name[array_search('en', $request->lang)])) {
@@ -707,12 +725,12 @@ class ProductController extends BaseController
         // die;
 
         $product->name = $request->name[array_search('en', $request->lang)];
-        $product->code                  = $request->code;
-        $product->rssi                  = $request->rssi;
-        $product->uuid                  = $request->uuid;
-        $product_images                 = json_decode($product->images);
-        $product->details              = $request['description'] ?? '';
-        $product->purchase_price     = BackEndHelper::currency_to_usd($request->purchase_price);
+        $product->code = $request->code;
+        $product->rssi = $request->rssi;
+        $product->uuid = $request->uuid;
+        $product_images = json_decode($product->images);
+        $product->details = $request['description'] ?? '';
+        $product->purchase_price = BackEndHelper::currency_to_usd($request->purchase_price);
 
         $colors = "";
         $specifications = [];
@@ -771,12 +789,12 @@ class ProductController extends BaseController
         foreach ($products as $item) {
             $data[] = [
                 'product_id' => $item->product_id,
-                'device_id'   => $item->mac_id,
-                'uuid'        => $item->uuid,
-                'major'        => $item->major,
-                'minor'        => $item->minor,
-                'color'        => $item->color,
-                'purchased'        => (($item->is_purchased == 1) ? 'Yes' : 'No')
+                'device_id' => $item->mac_id,
+                'uuid' => $item->uuid,
+                'major' => $item->major,
+                'minor' => $item->minor,
+                'color' => $item->color,
+                'purchased' => (($item->is_purchased == 1) ? 'Yes' : 'No')
             ];
         }
 
@@ -828,6 +846,7 @@ class ProductController extends BaseController
 
     public function delete_stock($id)
     {
+        print_r($id);
         $product = ProductStock::where('product_id', $id);
         $product->delete();
 
@@ -883,7 +902,7 @@ class ProductController extends BaseController
             array_push($data, [
                 'name' => $collection['name'],
                 'slug' => Str::slug($collection['name'], '-') . '-' . Str::random(6),
-                'category_ids' => json_encode([['id' => (string)$collection['category_id'], 'position' => 1], ['id' => (string)$collection['sub_category_id'], 'position' => 2], ['id' => (string)$collection['sub_sub_category_id'], 'position' => 3]]),
+                'category_ids' => json_encode([['id' => (string) $collection['category_id'], 'position' => 1], ['id' => (string) $collection['sub_category_id'], 'position' => 2], ['id' => (string) $collection['sub_sub_category_id'], 'position' => 3]]),
                 'brand_id' => $collection['brand_id'],
                 'unit' => $collection['unit'],
                 'min_qty' => $collection['min_qty'],
@@ -925,7 +944,7 @@ class ProductController extends BaseController
         }
 
         $cnt = 0;
-        $col_key = ['device_id','product_uuid','major','minor','color'];
+        $col_key = ['device_id', 'product_uuid', 'major', 'minor', 'color'];
         foreach ($collections as $collection) {
             foreach ($collection as $key => $value) {
                 if ($key != "" && !in_array($key, $col_key)) {
@@ -1006,7 +1025,7 @@ class ProductController extends BaseController
             return back();
         }
         $product = Product::findOrFail($id);
-        $limit =  $request->limit ?? 4;
+        $limit = $request->limit ?? 4;
         return view('admin-views.product.barcode', compact('product', 'limit'));
     }
 }

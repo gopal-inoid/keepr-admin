@@ -278,7 +278,6 @@ class CartController extends Controller
 
     public function place_order(Request $request)
     {
-
         $auth_token = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
         $cart_id = $request->cart_id;
@@ -319,6 +318,7 @@ class CartController extends Controller
 
         $product_info = [];
         if (!empty($user_details->id)) {
+
             $cart_info = Cart::select('id', 'customer_id', 'product_id', 'price', 'quantity')->where('quantity', '>', 0)->whereIn('id', $cart_ids)->get();
             $status = 1;
             if (!empty($cart_info[0])) {
@@ -448,152 +448,23 @@ class CartController extends Controller
             $update_order->save();
             $this->save_invoice($order_id);
             $invoice_file_path = public_path('public/assets/orders/order_invoice_' . $order_id . '.pdf');
-
-            $order_attribute = $this->getOrderProductAttr($update_order->product_info ?? "");
-            //$order_attribute = $this->getOrderAttr($update_order->mac_ids ?? "");
-            //$this->print_r($a);
-
-            if (!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])) {
-                $product_names = implode(',', $order_attribute['product_name']);
+            //Send Email and Notification
+            $userData = $this->getDataforEmail($order_id);
+            if (!empty($userData)) {
+                $userData['username'] = $user_details['name'] ?? "Keepr User";
+                $userData['email'] = $user_details->email ?? "";
+                $this->sendKeeprEmail('order-confirmed-customer', $userData, $invoice_file_path);
+                $userData['username'] = $this->getAdminDetail('company_name') ?? "Keepr Admin";
+                $userData['email'] = $this->getAdminDetail('company_email') ?? "";
+                $this->sendKeeprEmail('order-confirmed-admin', $userData);
             }
-
-            if (!empty($order_attribute['total_orders']) && is_array($order_attribute['total_orders'])) {
-                $product_qty = implode(',', $order_attribute['total_orders']);
-            }
-
-            // if (!empty($order_attribute['uuid']) && is_array($order_attribute['uuid'])) {
-            //     $product_uuid = implode(',', $order_attribute['uuid']);
-            // }
-            //////////////////////////////////
-            $order_attribute = $this->getOrderProductAttr($update_order->product_info ?? "");
-            if (!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])) {
-                $product_names = implode(',', $order_attribute['product_name']);
-            }
-            if (!empty($order_attribute['total_orders']) && is_array($order_attribute['total_orders'])) {
-                $product_qty = implode(',', $order_attribute['total_orders']);
-            }
-            $products = $tax_info = $shipping_info = [];
-            $total_orders = 0;
-            $total_order_amount = $update_order->order_amount ?? 0;
-            if (!empty($update_order->mac_ids)) { // stocks
-                $mac_ids = json_decode($update_order->mac_ids, true);
-                if (!empty($mac_ids)) {
-                    $product_info = json_decode($update_order->product_info, true);
-                    foreach ($mac_ids as $k => $val) {
-                        $total_orders += count($mac_ids[$k]['uuid']);
-                        $prod = Product::select('name', 'thumbnail', 'purchase_price')->find($k);
-                        $products[$k]['name'] = $product_info[$k]['product_name'] ?? "";
-                        $products[$k]['thumbnail'] = $product_info[$k]['thumbnail'] ?? "";
-                        if (!empty($update_order->per_device_amount)) {
-                            $perdevice_amount = json_decode($update_order->per_device_amount, true);
-                            if (!empty($perdevice_amount)) {
-                                $products[$k]['price'] = $perdevice_amount[$k] ?? 0;
-                            } else {
-                                $products[$k]['price'] = $prod->purchase_price ?? 0;
-                            }
-                        } else {
-                            $products[$k]['price'] = $prod->purchase_price ?? 0;
-                        }
-                        if (!empty($val)) {
-                            foreach ($val['uuid'] as $k1 => $val1) {
-                                $products[$k]['mac_ids'][$k1]['uuid'] = $val1;
-                                $products[$k]['mac_ids'][$k1]['major'] = $val['major'][$k1];
-                                $products[$k]['mac_ids'][$k1]['minor'] = $val['minor'][$k1];
-                            }
-                        }
-                    }
-                }
-            }
-            if (!empty($update_order->taxes)) {
-                $taxes = json_decode($update_order->taxes, true);
-                if (!empty($taxes)) {
-                    $tax_info = $taxes;
-                }
-            }
-            if (!empty($update_order->shipping_method_id) && !empty($update_order->shipping_mode)) {
-                $shipping = ShippingMethod::where(['id' => $update_order->shipping_method_id])->first();
-                $shipping_method_rates = ShippingMethodRates::select('normal_rate', 'express_rate')->where('shipping_id', $update_order->shipping_method_id)->where('country_code', $this->getCountryName($update_order->customer->country))->first();
-                $shipping_info['title'] = $shipping->title ?? "";
-                if ($update_order->shipping_mode == 'normal_rate') {
-                    $shipping_info['duration'] = $shipping->normal_duration ?? "";
-                    $shipping_info['mode'] = 'Regular Rate';
-                    $shipping_info['amount'] = $shipping_method_rates->normal_rate ?? 0;
-                } elseif ($update_order->shipping_mode == 'express_rate') {
-                    $shipping_info['duration'] = $shipping->express_duration ?? "";
-                    $shipping_info['mode'] = 'Express Rate';
-                    $shipping_info['amount'] = $shipping_method_rates->express_rate ?? 0;
-                }
-            }
-
-            foreach ($products as $k => $val) {
-                $price = $val['price'];
-            }
-            if (!empty($update_order->product_info)) {
-                $product_info = json_decode($update_order->product_info, true);
-                if (!empty($product_info)) {
-                    $i = $total_price = $grand_total_qty = $grand_total_amt = 0;
-                    foreach ($product_info as $k => $val) {
-                        $i++;
-                        $thumbnail_path = \App\CPU\ProductManager::product_image_path('thumbnail') . '/' . $val['thumbnail'];
-                        $product_name = substr($val['product_name'], 0, 30);
-                        $order_qty = $val['order_qty'] ?? 0;
-                        if (!empty($update_order->per_device_amount)) {
-                            $perdevice_amount = json_decode($update_order->per_device_amount, true);
-                            if (!empty($perdevice_amount)) {
-                                // $price = $perdevice_amount[$k] ?? 0;
-                                $total_price += ($perdevice_amount[$k] ?? 0);
-                            }
-                            $total_price_show = $perdevice_amount[$k] ?? 0;
-                        }
-                        $grand_total_qty += $val['order_qty'] ?? 0;
-                        $grand_total_amt += $total_price;
-                    }
-                    $total_main_price = number_format($total_price, 2);
-                }
-            }
-            
-            ///////////////////////////////////
-            $userData['username'] = $user_details['name'] ?? "Keepr User";
-            $userData['order_id'] = $update_order->id;
-            $userData['order_status'] = $update_order->order_status;
-            $userData['product_name'] = $product_name ?? "";
-            $userData['qty'] = $total_orders ?? "";
-            $userData['grand_total_qty'] = $total_orders ?? ""; // total of all device price
-            $userData['email'] = $user_details->email ?? "";
-            $userData['total_price'] = number_format($price * $total_orders);
-            $userData['price'] = $price ?? "";
-            $userData['shipping_title'] = $shipping_info['title'] ?? "";
-            $userData['duration'] = $shipping_info['duration'] ?? "";
-            $userData['mode'] = $shipping_info['mode'] ?? "";
-            $userData['shipping_amount'] = $shipping_info['amount'] ?? "";
-            $userData['grand_total_price'] = number_format($update_order->order_amount, 2);
-            $userData['shipping_info'] = $shipping_info['title'] ?? "" . " " . $shipping_info['duration'] ?? "" . " " . $shipping_info['mode'] ?? "";
-            $userData['shipping_title'] = $shipping_info['title'] ?? "";
-            $userData['shipping_duration'] = $shipping_info['duration'] ?? "";
-            $userData['shipping_mode'] = $shipping_info['mode'] ?? "";
-            $userData['tax_info'] = $tax_info[0]['title'] ?? "" . " " . $tax_info[0]['percent'] ?? "";
-            $userData['tax_amount'] = $tax_info[0]['amount'] ?? "";
-
-            //////////////////////////////////
-
-            // $userData['username'] = $user_details['name'] ?? "Keepr User";
-            // $userData['order_id'] = $order_id;
-            // $userData['product_name'] = $product_names ?? "";
-            // $userData['qty'] = $product_qty ?? 0;
-            // $userData['total_price'] = $update_order->order_amount ?? "";
-            // $userData['email'] = $user_details->email ?? "";
-            $this->sendKeeprEmail('order-confirmed-customer', $userData, $invoice_file_path);
-            //$this->sendKeeprEmail('order-confirmed-customer',$userData);
-            $userData['username'] = $this->getAdminDetail('company_name') ?? "Keepr Admin";
-            $userData['email'] = $this->getAdminDetail('company_email') ?? "";
-            $admin = $this->sendKeeprEmail('order-confirmed-admin', $userData);
 
             $payload['order_id'] = $update_order->id ?? NULL;
             $msg = "Your Order has been confirmed with Order ID #" . $payload['order_id'];
-
             $this->sendNotification($user_details->fcm_token, $msg, $payload);
             Common::addLog(['status' => 200, 'message' => 'Order Successfully Confirmed', 'order_id' => (int) $order_id]);
             return response()->json(['status' => 200, 'message' => 'Order Successfully Confirmed', 'order_id' => (int) $order_id], 200);
+
         } else {
             Common::addLog(['status' => 400, 'message' => 'Order not Confirmed,something went wrong']);
             return response()->json(['status' => 400, 'message' => 'Order not Confirmed,something went wrong'], 200);

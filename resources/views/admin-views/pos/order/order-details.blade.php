@@ -23,7 +23,7 @@
                 id="order_detail_form">
                 @csrf
                 <input type="hidden" name="order_id" value="{{ $order['id'] }}">
-                <input type="hidden" name="user_id" value="{{ $order->customer->id }}">
+                <input type="hidden" name="user_id" value="{{ $order->customer->id ?? '' }}">
                 <div class="col-lg-12 col-xl-12 mb-3">
                     <div class="card h-100">
                         <div class="card-header">
