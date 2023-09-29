@@ -410,7 +410,7 @@ class CartController extends Controller
     {
 
         $trans_id = $request->trans_id;
-        $stripe = new \Stripe\StripeClient('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
         $data = $stripe->paymentIntents->retrieve($trans_id);
         echo "<pre>";
         print_r($data);
@@ -419,7 +419,7 @@ class CartController extends Controller
 
     public function verify_payment_intent($trans_id)
     {
-        $stripe = new \Stripe\StripeClient('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
         $data = $stripe->paymentIntents->retrieve($trans_id);
         if (!empty($data->status) && $data->status == 'succeeded') {
             return true;
@@ -602,7 +602,7 @@ class CartController extends Controller
 
     public function CreateCheckout($amount)
     {
-        $stripe = new \Stripe\StripeClient('sk_test_51MprMPC6n3N1q7nDsYGlAYsLmkhVVQ2LAQqbInlthpU9FoUdqsNy9jT8uhMRrg1e6KtptrHJhY5iwJc3ASXxALeg005ync97Mg');
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
         $paymentIntents = $stripe->paymentIntents->create([
             'amount' => round($amount, 2) * 100,
             'currency' => 'usd',
