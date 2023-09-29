@@ -435,7 +435,6 @@ class CartController extends Controller
         $order_id = $request->order_id;
         $transaction_id = $request->transaction_id;
         $is_verified = $this->verify_payment_intent($transaction_id);
-
         if (empty($is_verified)) {
             Common::addLog(['status' => 400, 'message' => 'Payment failed']);
             return response()->json(['status' => 400, 'message' => 'Payment failed'], 200);
@@ -458,13 +457,11 @@ class CartController extends Controller
                 $userData['email'] = $this->getAdminDetail('company_email') ?? "";
                 $this->sendKeeprEmail('order-confirmed-admin', $userData);
             }
-
             $payload['order_id'] = $update_order->id ?? NULL;
             $msg = "Your Order has been confirmed with Order ID #" . $payload['order_id'];
             $this->sendNotification($user_details->fcm_token, $msg, $payload);
             Common::addLog(['status' => 200, 'message' => 'Order Successfully Confirmed', 'order_id' => (int) $order_id]);
             return response()->json(['status' => 200, 'message' => 'Order Successfully Confirmed', 'order_id' => (int) $order_id], 200);
-
         } else {
             Common::addLog(['status' => 400, 'message' => 'Order not Confirmed,something went wrong']);
             return response()->json(['status' => 400, 'message' => 'Order not Confirmed,something went wrong'], 200);
