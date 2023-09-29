@@ -271,24 +271,24 @@ class ProductController extends BaseController
 
     function update_stock(Request $request, $id)
     {
-
-        // $deletedData = $request['deleted'];
-        // $stringArray = explode('/', $deletedData);
-        // foreach ($stringArray as $string) {
-        //     $array = explode(',', $string);
-        //     if (!empty($array)) {
-        //         // echo"<pre>";print_r($array);
-        //         foreach ($array as $arr) {
-        //             // $device_id = $arr[0];
-        //             // $uuid = $arr[1];
-        //             // $major = $arr[2];
-        //             // $miner = $arr[3];
-        //             // ProductStock::where(['mac_id' => $device_id, 'uuid' => $uuid, 'major'=>$major, 'minor'=>$miner])->delete();  
-        //         }
-        //         // print_r($array);
-        //     }
-        // }
-        // exit;
+        $deletedData = $request['deleted'];
+        $stringArray = explode('/', $deletedData);
+        foreach ($stringArray as $string) {
+            $array = explode(',', $string);
+            if (!empty($array)) {
+                $final_array = [];
+                foreach ($array as $k => $arr) {
+                    if (!empty($arr)) {
+                        $final_array[$k] = $arr;
+                    }
+                }
+                if (!empty($final_array)) {
+                    $arrayone = array(0 => 0,1 => 1,2 => 2,3 => 3);
+                    $dltData = array_combine($arrayone, $final_array);
+                    ProductStock::where(['mac_id' => $dltData[0], 'uuid' => $dltData[1] , 'major' => $dltData[2] , 'minor' => $dltData[3]])->delete();
+                }
+            }
+        }
         $validator = Validator::make($request->all(), [
             'product_id' => 'required',
             'device_id' => 'required',
@@ -306,6 +306,7 @@ class ProductController extends BaseController
             });
         }
         $product_stock = $request->device_id;
+
         // ProductStock::where(['is_purchased' => 0, 'product_id' => $id])->delete();
         $colors = $request->colors;
         $uuid = $request->uuid;
