@@ -299,61 +299,20 @@ class CartController extends Controller
                 array_push($cart_ids, $val['id']);
             }
         }
-        $existed_mac_ids = $mac_ids_array = $per_device_amount = [];
-        $total_price = $error = 0;
-        // $check_mac_ids = Order::select('mac_ids')->get();
-        // if (!empty($check_mac_ids)) {
-        //     foreach ($check_mac_ids as $mac_ids) {
-        //         $mac_id_arr = json_decode($mac_ids['mac_ids'], true);
-        //         if (!empty($mac_id_arr)) {
-        //             foreach ($mac_id_arr as $product_id => $mac_values) {
-        //                 foreach ($mac_values as $k => $mac_ids) {
-        //                     //array_push($existed_mac_ids,$mac_ids['uuid']);
-        //                     $existed_mac_ids[$k][] = $mac_ids;
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-
+        
         $product_info = [];
         if (!empty($user_details->id)) {
-
             $cart_info = Cart::select('id', 'customer_id', 'product_id', 'price', 'quantity')->where('quantity', '>', 0)->whereIn('id', $cart_ids)->get();
             $status = 1;
             if (!empty($cart_info[0])) {
                 foreach ($cart_info as $cart) {
                     $get_product_info = Product::select('purchase_price as price', 'name', 'thumbnail', 'status')->where('id', $cart['product_id'])->first();
                     if (!empty($get_product_info->status)) {
-
                         $price = $get_product_info->price ?? 0;
                         $product_info[$cart['product_id']]['product_name'] = $get_product_info->name ?? "";
                         $product_info[$cart['product_id']]['thumbnail'] = $get_product_info->thumbnail ?? "";
                         $product_info[$cart['product_id']]['order_qty'] = $cart['quantity'] ?? 0;
                         $per_device_amount[$cart['product_id']] = $price;
-
-                        //$total_price += ($price * $cart['quantity']);
-
-                        // $get_random_stocks = ProductStock::select('mac_id','uuid', 'major', 'minor', 'product_id')->where('is_purchased', 0)
-                        //     ->where('product_id', $cart['product_id'])
-                        //     ->inRandomOrder()->limit($cart['quantity'])->get();
-                        // if (!empty($get_random_stocks)) {
-                        //     foreach ($get_random_stocks as $m => $macid) {
-                        //         if (!empty($existed_mac_ids) && (in_array($macid['uuid'], $existed_mac_ids['uuid']) && in_array($macid['major'], $existed_mac_ids['major']) && in_array($macid['minor'], $existed_mac_ids['minor']))) {
-                        //         } else {
-
-                        //             //$mac_ids_array[$cart['product_id']]['device_id'][] = $macid['mac_id'];
-                        //             $mac_ids_array[$cart['product_id']]['uuid'][] = $macid['uuid'];
-                        //             $mac_ids_array[$cart['product_id']]['major'][] = $macid['major'];
-                        //             $mac_ids_array[$cart['product_id']]['minor'][] = $macid['minor'];
-
-                        //         }
-                        //     }
-                        // }
-                        // if (!in_array($cart['product_id'], array_keys($mac_ids_array))) {
-                        //     $error = 1;
-                        // }
-
                     }
                 }
                 if (empty($product_info)) {
@@ -374,22 +333,12 @@ class CartController extends Controller
                 $order->taxes = $taxes;
                 $order->shipping_rate_id = $shipping_rate_id;
                 $order->shipping_mode = $shipping_mode;
-                //$order->mac_ids = json_encode($mac_ids_array);
                 $order->order_amount = $total_amount;
                 $order->product_info = json_encode($product_info);
                 $order->save();
 
                 if (!empty($product_info)) {
                     foreach ($product_info as $product_id => $mac_values) {
-
-                        //code commented for mark as purchased
-
-                        // foreach ($mac_values as $k => $macss) {
-                        //     foreach ($macss as $m => $macs) {
-                        //         ProductStock::where('product_id', $product_id)->where(['uuid' => $mac_values['uuid'][$m], 'major' => $mac_values['major'][$m], 'minor' => $mac_values['minor'][$m]])->update(['is_purchased' => 1]);
-                        //     }
-                        // }
-
                         Cart::where('customer_id', $user_details->id)->where('product_id', $product_id)->delete();
                     }
                 }
@@ -507,8 +456,6 @@ class CartController extends Controller
         $order = Order::find($request->order_id);
         $order->order_status = $request->status;
         $order->save();
-        $data = $request->order_status;
-
         $user = User::select('fcm_token')->where('id', $order->customer_id)->first();
         $msg = "Your Order is " . $request->order_status;
         $payload['order_id'] = $request->order_id;
@@ -521,7 +468,6 @@ class CartController extends Controller
     {
         $SERVER_ID = env('FIREBASE_NOTIF_SERVER_ID');
         $FCM_URL = env('FCM_URL');
-
         $registrationIds[] = $fcm_token; //$registration_id;
         $title = 'Keepr';
         // prep the bundle
@@ -531,7 +477,6 @@ class CartController extends Controller
             'vibrate' => '1',
             'sound' => 'default',
         ];
-
         $data1 = [
             'title' => $title,
             'message' => $msg,
@@ -540,13 +485,11 @@ class CartController extends Controller
             'type' => 'order_placed',
             'order_id' => $payload['order_id']
         ];
-
         $fields = array(
             'data' => $data1,
             'notification' => $notification,
             'registration_ids' => $registrationIds,
         );
-
         $headers = array(
             'Authorization: key=' . $SERVER_ID,
             'Content-Type: application/json',
