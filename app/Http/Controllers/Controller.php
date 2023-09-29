@@ -197,11 +197,6 @@ class Controller extends BaseController
         Helpers::save_mpdf($mpdf_view, 'order_invoice_', $order->id);
     }
 
-    public function getProductDetailsForEmail($customer_id)
-    {
-
-    }
-
     public function sendKeeprEmail($template_type, $user_data, $attachment = null)
     {
         $emailServices_smtp = Helpers::get_business_settings('mail_config');
