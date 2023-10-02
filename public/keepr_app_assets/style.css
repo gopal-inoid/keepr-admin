@@ -338,6 +338,7 @@ body {
     text-align: center;
     border-radius: 14px;
     margin: 40px;
+    height: fit-content;
 }
 
 .Product-1 img,
@@ -491,6 +492,7 @@ ul li {
     /* height: 100%; */
     object-fit: contain;
     max-height: 500px;
+    
 }
 
 .overlaping_div_content h1 {
@@ -936,6 +938,7 @@ ul li {
 
     .overlaping_div {
         top: -58%;
+        margin-top:140px;
     }
 
     .step_section {

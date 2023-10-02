@@ -448,126 +448,135 @@
                                 <div class="card-header">
                                     <h3 class="h4 mb-0">{{ \App\CPU\translate('Product Detail') }}</h3>
                                 </div>
-                                <div class="card-body">
-                                    <div class="row table-responsive datatable-custom orderResponsivemade">
-                                        <table class="table">
-                                            <thead class="thead-light text-capitalize">
-                                                <tr>
-                                                    <th>{{ \App\CPU\translate('Sl') }}</th>
-                                                    <th>{{ \App\CPU\translate('Product Name') }}</th>
-                                                    <th>Device Info</th>
-                                                    <th>Qty</th>
-                                                    <th>Price</th>
-                                                    <th>Total Amount</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @php($i = 0)
-                                                @php($grand_total_qty = $grand_total_amt = 0)
-                                                @if (!empty($products))
-                                                    @foreach ($products as $key => $detail)
-                                                        @php($i++)
-                                                        <tr>
-                                                            <td>{{ $i }}</td>
-                                                            <td>
-                                                                <div class="media align-items-center gap-10">
-                                                                    <img src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $detail['thumbnail'] }}"
-                                                                        onerror="this.src='{{ asset('public/assets/back-end/img/160x160/img2.jpg') }}'"
-                                                                        class="avatar avatar-60 rounded" alt="">
-                                                                    <div>
-                                                                        <a href="#" class="title-color hover-c1">
-                                                                            <h1>{{ substr($detail['name'], 0, 30) }}{{ strlen($detail['name']) > 10 ? '...' : '' }}
-                                                                            </h1>
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                @if (!empty($detail['mac_ids']))
-                                                                    @foreach ($detail['mac_ids'] as $k => $val)
-                                                                        <strong>UUID: </strong>{{ $val['uuid'] }}<br />
-                                                                        <strong>DEVICE ID:
-                                                                        </strong>{{ $val['device_id'] ?? '' }}<br />
-                                                                        <strong>Major: </strong>{{ $val['major'] }}<br />
-                                                                        <strong>Minor: </strong>{{ $val['minor'] }}<br />
-                                                                        <hr />
-                                                                    @endforeach
-                                                                @endif
-                                                            </td>
-                                                            <td>{{ count($detail['mac_ids']) }}</td>
-                                                            <td>
-                                                                @php($total_price = 0)
-                                                                @if (!empty($detail['mac_ids']))
-                                                                    @foreach ($detail['mac_ids'] as $val)
-                                                                        @php($total_price += $detail['price'])
-                                                                        <br />US ${{ $detail['price'] ?? '' }}<br /><br />
-                                                                        <hr />
-                                                                    @endforeach
-                                                                @endif
-                                                            </td>
-
-                                                            <td>US ${{ number_format($total_price, 2) }}</td>
-                                                            @php($grand_total_qty += count($detail['mac_ids']))
-                                                            @php($grand_total_amt += $total_price)
-                                                        </tr>
-                                                    @endforeach
-                                                @else
-                                                    @if (!empty($order->product_info))
-                                                        @php($product_info = json_decode($order->product_info, true))
-
-                                                        @if (!empty($product_info))
-                                                            @foreach ($product_info as $k => $val)
-                                                                @php($i++)
-                                                                <tr>
-                                                                    <td>{{ $i }}</td>
-                                                                    <td>
-                                                                        <div class="media align-items-center gap-10">
-                                                                            <img src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $val['thumbnail'] }}"
-                                                                                onerror="this.src='{{ asset('public/assets/back-end/img/160x160/img2.jpg') }}'"
-                                                                                class="avatar avatar-60 rounded"
-                                                                                alt="">
-                                                                            <div>
-                                                                                <a href="#"
-                                                                                    class="title-color hover-c1">
-                                                                                    <h1>{{ substr($val['product_name'], 0, 30) }}{{ strlen($val['product_name']) > 10 ? '...' : '' }}
-                                                                                    </h1>
-                                                                                </a>
-                                                                            </div>
+                                <div class="card-body p-0">
+                                    <div class="container-fluid table-responsive datatable-custom p-0">
+                                        <div class="col-md-12 col-lg-12 p-0">
+                                            <table class="table">
+                                                <thead class="thead-light text-capitalize">
+                                                    <tr>
+                                                        <th>{{ \App\CPU\translate('Sl') }}</th>
+                                                        <th>{{ \App\CPU\translate('Product Name') }}</th>
+                                                        <th>Device Info</th>
+                                                        <th>Qty</th>
+                                                        <th>Price</th>
+                                                        <th>Total Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @php($i = 0)
+                                                    @php($grand_total_qty = $grand_total_amt = 0)
+                                                    @if (!empty($products))
+                                                        @foreach ($products as $key => $detail)
+                                                            @php($i++)
+                                                            <tr>
+                                                                <td>{{ $i }}</td>
+                                                                <td>
+                                                                    <div class="media align-items-center gap-10">
+                                                                        <img src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $detail['thumbnail'] }}"
+                                                                            onerror="this.src='{{ asset('public/assets/back-end/img/160x160/img2.jpg') }}'"
+                                                                            class="avatar avatar-60 rounded"
+                                                                            alt="">
+                                                                        <div>
+                                                                            <a href="#"
+                                                                                class="title-color hover-c1">
+                                                                                <h1>{{ substr($detail['name'], 0, 30) }}{{ strlen($detail['name']) > 10 ? '...' : '' }}
+                                                                                </h1>
+                                                                            </a>
                                                                         </div>
-                                                                    </td>
-                                                                    <td>--</td>
-                                                                    <td>{{ $val['order_qty'] ?? 0 }}</td>
-                                                                    <td>
-                                                                        @php($total_price = 0)
-                                                                        @if (!empty($order->per_device_amount))
-                                                                            @php($perdevice_amount = json_decode($order->per_device_amount, true))
-                                                                            @if (!empty($perdevice_amount))
-                                                                                @php($total_price += $perdevice_amount[$k] ?? 0)
-                                                                                US ${{ $perdevice_amount[$k] ?? 0 }}
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    @if (!empty($detail['mac_ids']))
+                                                                        @foreach ($detail['mac_ids'] as $k => $val)
+                                                                            <strong>UUID:
+                                                                            </strong>{{ $val['uuid'] }}<br />
+                                                                            <strong>DEVICE ID:
+                                                                            </strong>{{ $val['device_id'] ?? '' }}<br />
+                                                                            <strong>Major:
+                                                                            </strong>{{ $val['major'] }}<br />
+                                                                            <strong>Minor:
+                                                                            </strong>{{ $val['minor'] }}<br />
+                                                                            <hr />
+                                                                        @endforeach
+                                                                    @endif
+                                                                </td>
+                                                                <td>{{ count($detail['mac_ids']) }}</td>
+                                                                <td>
+                                                                    @php($total_price = 0)
+                                                                    @if (!empty($detail['mac_ids']))
+                                                                        @foreach ($detail['mac_ids'] as $val)
+                                                                            @php($total_price += $detail['price'])
+                                                                            <br />US
+                                                                            ${{ $detail['price'] ?? '' }}<br /><br />
+                                                                            <hr />
+                                                                        @endforeach
+                                                                    @endif
+                                                                </td>
+
+                                                                <td>US ${{ number_format($total_price, 2) }}</td>
+                                                                @php($grand_total_qty += count($detail['mac_ids']))
+                                                                @php($grand_total_amt += $total_price)
+                                                            </tr>
+                                                        @endforeach
+                                                    @else
+                                                        @if (!empty($order->product_info))
+                                                            @php($product_info = json_decode($order->product_info, true))
+
+                                                            @if (!empty($product_info))
+                                                                @foreach ($product_info as $k => $val)
+                                                                    @php($i++)
+                                                                    <tr>
+                                                                        <td>{{ $i }}</td>
+                                                                        <td>
+                                                                            <div class="media align-items-center gap-10">
+                                                                                <img src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $val['thumbnail'] }}"
+                                                                                    onerror="this.src='{{ asset('public/assets/back-end/img/160x160/img2.jpg') }}'"
+                                                                                    class="avatar avatar-60 rounded"
+                                                                                    alt="">
+                                                                                <div>
+                                                                                    <a href="#"
+                                                                                        class="title-color hover-c1">
+                                                                                        <h1>{{ substr($val['product_name'], 0, 30) }}{{ strlen($val['product_name']) > 10 ? '...' : '' }}
+                                                                                        </h1>
+                                                                                    </a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>--</td>
+                                                                        <td>{{ $val['order_qty'] ?? 0 }}</td>
+                                                                        <td>
+                                                                            @php($total_price = 0)
+                                                                            @if (!empty($order->per_device_amount))
+                                                                                @php($perdevice_amount = json_decode($order->per_device_amount, true))
+                                                                                @if (!empty($perdevice_amount))
+                                                                                    @php($total_price += $perdevice_amount[$k] ?? 0)
+                                                                                    US ${{ $perdevice_amount[$k] ?? 0 }}
+                                                                                @endif
                                                                             @endif
-                                                                        @endif
-                                                                    </td>
-                                                                    <td>US ${{ number_format($total_price, 2) }}</td>
-                                                                    @php($grand_total_qty += $val['order_qty'] ?? 0)
-                                                                    @php($grand_total_amt += $total_price)
-                                                                </tr>
-                                                            @endforeach
+                                                                        </td>
+                                                                        <td>US ${{ number_format($total_price, 2) }}</td>
+                                                                        @php($grand_total_qty += $val['order_qty'] ?? 0)
+                                                                        @php($grand_total_amt += $total_price)
+                                                                    </tr>
+                                                                @endforeach
+                                                            @endif
                                                         @endif
                                                     @endif
-                                                @endif
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><strong>{{ $grand_total_qty }}</strong></td>
-                                                    <td></td>
-                                                    <td><strong>US ${{ number_format($grand_total_amt, 2) }}</strong></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td><strong>{{ $grand_total_qty }}</strong></td>
+                                                        <td></td>
+                                                        <td><strong>US ${{ number_format($grand_total_amt, 2) }}</strong>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
-                                    <div class="row table-responsive datatable-custom orderResponsivemade">
-                                        <div class="col-md-12 col-lg-12">
+                                    <div class="container-fluid table-responsive datatable-custom  p-0">
+                                        <div class="col-md-12 col-lg-12 p-0">
                                             <table class="table">
                                                 <thead class="thead-light thead-50 text-capitalize">
                                                     <tr>
@@ -595,15 +604,15 @@
                                                             <label><strong>{{ \App\CPU\translate('Shipping info') }}</strong>:
                                                             </label><br />
                                                             <strong>Shipping Co.:
-                                                                {{ json_decode($order->shipping_mode,true)[0]['Shipping_name'] ?? '' }}</strong><br />
+                                                                {{ json_decode($order->shipping_mode, true)[0]['Shipping_name'] ?? '' }}</strong><br />
                                                             <strong>Duration:
-                                                                {{ json_decode($order->shipping_mode,true)[0]['shipping_duration'] ?? '' }}</strong><br />
+                                                                {{ json_decode($order->shipping_mode, true)[0]['shipping_duration'] ?? '' }}</strong><br />
                                                             <strong>Shipping Mode:
-                                                                 {{ json_decode($order->shipping_mode,true)[0]['Shipping_mode'] ?? '' }}</strong>
+                                                                {{ json_decode($order->shipping_mode, true)[0]['Shipping_mode'] ?? '' }}</strong>
                                                         </td>
                                                         <td class="text-right">
                                                             <strong>US
-                                                                ${{ number_format(json_decode($order->shipping_mode,true)[0]['shipping_rate'] ?? 0, 2) }}</strong>
+                                                                ${{ number_format(json_decode($order->shipping_mode, true)[0]['shipping_rate'] ?? 0, 2) }}</strong>
                                                         </td>
                                                     </tr>
                                                     <tr>
