@@ -221,7 +221,7 @@
                                     <td>
                                         <div class="media align-items-center gap-10">
                                             {{-- <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$val['thumbnail']}}" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt=""> --}}
-                                            <div> <a href="#" class="title-color hover-c1">
+                                            <div> <a href="#" class="title-color hover-c1" style="text-decoration:none !important; color:black !important;">
                                                     <h1>{{ substr($val['product_name'], 0, 30) }}{{ strlen($val['product_name']) > 10 ? '...' : '' }}
                                                     </h1>
                                                 </a>
@@ -282,13 +282,17 @@
                 </tr>
                 <tr>
                     <td>
-                        <label><strong>{{ \App\CPU\translate('Shipping info') }}</strong>: </label><br />
-                        <strong>Shipping Co.: {{ $shipping_info['title'] ?? '' }}</strong><br />
-                        <strong>Duration: {{ $shipping_info['duration'] ?? '' }}</strong><br />
-                        <strong>Shipping Mode: {{ $shipping_info['mode'] ?? '' }}</strong>
+                        <label><strong>{{ \App\CPU\translate('Shipping info') }}</strong>:
+                        </label><br />
+                        <strong>Shipping Co.:
+                            {{ json_decode($order->shipping_mode,true)[0]['Shipping_name'] ?? '' }}</strong><br />
+                        <strong>Duration:
+                            {{ json_decode($order->shipping_mode,true)[0]['shipping_duration'] ?? '' }}</strong><br />
+                        <strong>Shipping Mode:
+                             {{ json_decode($order->shipping_mode,true)[0]['Shipping_mode'] ?? '' }}</strong>
                     </td>
                     <td style="text-align:center;">
-                        <strong>US ${{ number_format($shipping_info['amount'] ?? 0, 2) }}</strong>
+                        <strong>US ${{ number_format(json_decode($order->shipping_mode,true)[0]['shipping_rate'] ?? 0, 2) }}</strong>
                     </td>
                 </tr>
                 <tr>
@@ -305,6 +309,7 @@
         </table>
         <div style="border-top: 1px solid #eee;">Order Note:- {{ $order->order_note ? $order->order_note : '' }}</div>
     </div>
+
 
 </body>
 

@@ -261,10 +261,10 @@ class OrderController extends Controller
             $order_data['payment_status'] = $request->payment_status;
             $order_data['tracking_id'] = $request->tracking_id;
             $order_data['shipping_mode'] = $request->shipping_mode;
-            
+
             //Send Email
             $email_data = $this->getDataforEmail($order_id);
-            if(!empty($email_data)){
+            if (!empty($email_data)) {
                 $email_data['email'] = $user_details->email ?? "";
                 $email_data['username'] = $user_data['name'] ?? "Keepr User";
                 $email_data['order_id'] = $order_id;
@@ -284,7 +284,7 @@ class OrderController extends Controller
                 $email_data['email'] = $this->getAdminDetail('company_email') ?? "";
                 $this->sendKeeprEmail('order-status-changed-admin', $email_data);
             }
-            
+
             Order::where('id', $order_id)->update($order_data);
             return redirect()->back()->with('success', 'Order Details Updated Successfully');
         } else {
@@ -518,10 +518,10 @@ class OrderController extends Controller
             //$this->save_invoice($request->id);
             //$invoice_file_path = public_path('public/assets/orders/order_invoice_'.$request->id.'.pdf');
             $this->sendNotification($user->fcm_token ?? "", $msg, $payload);
-           
+
             //Send Email
             $userData = $this->getDataforEmail($request->id);
-            if(!empty($userData)){
+            if (!empty($userData)) {
                 $userData['username'] = $user->name ?? "Keepr User";
                 $userData['order_id'] = $request->id;
                 $userData['email'] = $order->customer->email ?? "";
@@ -640,21 +640,21 @@ class OrderController extends Controller
                 $tax_info = $taxes;
             }
         }
-
-        if (!empty($order->shipping_method_id) && !empty($order->shipping_mode)) {
-            $shipping = ShippingMethod::where(['id' => $order->shipping_method_id])->first();
-            $shipping_method_rates = ShippingMethodRates::select('normal_rate', 'express_rate')->where('shipping_id', $order->shipping_method_id)->where('country_code', $this->getCountryName($order->customer->country))->first();
-            $shipping_info['title'] = $shipping->title ?? "";
-            if ($order->shipping_mode == 'normal_rate') {
-                $shipping_info['duration'] = $shipping->normal_duration ?? "";
-                $shipping_info['mode'] = 'Regular Rate';
-                $shipping_info['amount'] = $shipping_method_rates->normal_rate ?? 0;
-            } elseif ($order->shipping_mode == 'express_rate') {
-                $shipping_info['duration'] = $shipping->express_duration ?? "";
-                $shipping_info['mode'] = 'Express Rate';
-                $shipping_info['amount'] = $shipping_method_rates->express_rate ?? 0;
-            }
-        }
+        
+        // if (!empty($order->shipping_method_id) && !empty($order->shipping_mode)) {
+        //     $shipping = ShippingMethod::where(['id' => $order->shipping_method_id])->first();
+        //     $shipping_method_rates = ShippingMethodRates::select('normal_rate', 'express_rate')->where('shipping_id', $order->shipping_method_id)->where('country_code', $this->getCountryName($order->customer->country))->first();
+        //     $shipping_info['title'] = $shipping->title ?? "";
+        //     if ($order->shipping_mode == 'normal_rate') {
+        //         $shipping_info['duration'] = $shipping->normal_duration ?? "";
+        //         $shipping_info['mode'] = 'Regular Rate';
+        //         $shipping_info['amount'] = $shipping_method_rates->normal_rate ?? 0;
+        //     } elseif ($order->shipping_mode == 'express_rate') {
+        //         $shipping_info['duration'] = $shipping->express_duration ?? "";
+        //         $shipping_info['mode'] = 'Express Rate';
+        //         $shipping_info['amount'] = $shipping_method_rates->express_rate ?? 0;
+        //     }
+        // }
         // return view('admin-views.order.invoice', compact('order', 'company_phone', 'total_orders', 'products', 'company_name', 'company_email', 'company_web_logo', 'total_order_amount', 'shipping_info', 'tax_info'));
         // exit;
         $mpdf_view = View::make(

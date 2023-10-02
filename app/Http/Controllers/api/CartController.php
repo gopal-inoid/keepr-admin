@@ -286,6 +286,7 @@ class CartController extends Controller
         $shipping_rate_id = $request->shipping_rate_id;
         $shipping_mode = $request->shipping_mode;
         $total_amount = $request->total_amount ?? 0;
+
         if ($total_amount == 0) {
             return response()->json(['status' => 400, 'message' => 'Order amount required'], 400);
         }
@@ -316,6 +317,18 @@ class CartController extends Controller
         //     }
         // }
 
+        $shipping_info = array();
+        foreach ($cart_ids as $ids) {
+            $shippRateInfo = ShippingMethodRates::where('id', $shipping_rate_id)->first();
+            $shippingInfo = ShippingMethod::where('id', $shippRateInfo->shipping_id)->first();
+            $shipping_info[] = array(
+                'Shipping_name' => $shippingInfo['title'] ?? '',
+                'Shipping_mode' => $shipping_mode ?? '',
+                'shipping_rate' => !empty($shipping_mode) == 'normal_rate' ? $shippRateInfo->normal_rate : $shippRateInfo->express_rate,
+                'shipping_duration' => !empty($shipping_mode) == 'normal_rate' ? $shippingInfo->normal_duration : $shippingInfo->express_duration
+            );
+        }
+
         $product_info = [];
         if (!empty($user_details->id)) {
 
@@ -333,7 +346,6 @@ class CartController extends Controller
                         $per_device_amount[$cart['product_id']] = $price;
 
                         //$total_price += ($price * $cart['quantity']);
-
                         // $get_random_stocks = ProductStock::select('mac_id','uuid', 'major', 'minor', 'product_id')->where('is_purchased', 0)
                         //     ->where('product_id', $cart['product_id'])
                         //     ->inRandomOrder()->limit($cart['quantity'])->get();
@@ -373,7 +385,7 @@ class CartController extends Controller
                 $order->shipping_method_id = $shipping_id;
                 $order->taxes = $taxes;
                 $order->shipping_rate_id = $shipping_rate_id;
-                $order->shipping_mode = $shipping_mode;
+                $order->shipping_mode = json_encode($shipping_info);
                 //$order->mac_ids = json_encode($mac_ids_array);
                 $order->order_amount = $total_amount;
                 $order->product_info = json_encode($product_info);

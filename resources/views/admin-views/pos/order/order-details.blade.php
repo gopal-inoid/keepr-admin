@@ -568,8 +568,7 @@
                                     </div>
                                     <div class="row table-responsive datatable-custom orderResponsivemade">
                                         <div class="col-md-12 col-lg-12">
-                                            <table
-                                                class="table">
+                                            <table class="table">
                                                 <thead class="thead-light thead-50 text-capitalize">
                                                     <tr>
                                                         <th>{{ \App\CPU\translate('Other info') }}</th>
@@ -579,6 +578,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <td>
+
                                                             <label><strong>{{ \App\CPU\translate('Tax info') }}</strong>:
                                                             </label>
                                                             @php($tx_amt = $ship_amt = 0)
@@ -595,15 +595,15 @@
                                                             <label><strong>{{ \App\CPU\translate('Shipping info') }}</strong>:
                                                             </label><br />
                                                             <strong>Shipping Co.:
-                                                                {{ $shipping_info['title'] ?? '' }}</strong><br />
+                                                                {{ json_decode($order->shipping_mode,true)[0]['Shipping_name'] ?? '' }}</strong><br />
                                                             <strong>Duration:
-                                                                {{ $shipping_info['duration'] ?? '' }}</strong><br />
+                                                                {{ json_decode($order->shipping_mode,true)[0]['shipping_duration'] ?? '' }}</strong><br />
                                                             <strong>Shipping Mode:
-                                                                {{ $shipping_info['mode'] ?? '' }}</strong>
+                                                                 {{ json_decode($order->shipping_mode,true)[0]['Shipping_mode'] ?? '' }}</strong>
                                                         </td>
                                                         <td class="text-right">
                                                             <strong>US
-                                                                ${{ number_format($shipping_info['amount'] ?? 0, 2) }}</strong>
+                                                                ${{ number_format(json_decode($order->shipping_mode,true)[0]['shipping_rate'] ?? 0, 2) }}</strong>
                                                         </td>
                                                     </tr>
                                                     <tr>
