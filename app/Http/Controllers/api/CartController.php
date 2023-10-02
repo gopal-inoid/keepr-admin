@@ -331,14 +331,12 @@ class CartController extends Controller
 
         $product_info = [];
         if (!empty($user_details->id)) {
-
             $cart_info = Cart::select('id', 'customer_id', 'product_id', 'price', 'quantity')->where('quantity', '>', 0)->whereIn('id', $cart_ids)->get();
             $status = 1;
             if (!empty($cart_info[0])) {
                 foreach ($cart_info as $cart) {
                     $get_product_info = Product::select('purchase_price as price', 'name', 'thumbnail', 'status')->where('id', $cart['product_id'])->first();
                     if (!empty($get_product_info->status)) {
-
                         $price = $get_product_info->price ?? 0;
                         $product_info[$cart['product_id']]['product_name'] = $get_product_info->name ?? "";
                         $product_info[$cart['product_id']]['thumbnail'] = $get_product_info->thumbnail ?? "";
@@ -393,15 +391,6 @@ class CartController extends Controller
 
                 if (!empty($product_info)) {
                     foreach ($product_info as $product_id => $mac_values) {
-
-                        //code commented for mark as purchased
-
-                        // foreach ($mac_values as $k => $macss) {
-                        //     foreach ($macss as $m => $macs) {
-                        //         ProductStock::where('product_id', $product_id)->where(['uuid' => $mac_values['uuid'][$m], 'major' => $mac_values['major'][$m], 'minor' => $mac_values['minor'][$m]])->update(['is_purchased' => 1]);
-                        //     }
-                        // }
-
                         Cart::where('customer_id', $user_details->id)->where('product_id', $product_id)->delete();
                     }
                 }
@@ -516,8 +505,6 @@ class CartController extends Controller
         $order = Order::find($request->order_id);
         $order->order_status = $request->status;
         $order->save();
-        $data = $request->order_status;
-
         $user = User::select('fcm_token')->where('id', $order->customer_id)->first();
         $msg = "Your Order is " . $request->order_status;
         $payload['order_id'] = $request->order_id;
@@ -530,7 +517,6 @@ class CartController extends Controller
     {
         $SERVER_ID = env('FIREBASE_NOTIF_SERVER_ID');
         $FCM_URL = env('FCM_URL');
-
         $registrationIds[] = $fcm_token; //$registration_id;
         $title = 'Keepr';
         // prep the bundle
@@ -540,7 +526,6 @@ class CartController extends Controller
             'vibrate' => '1',
             'sound' => 'default',
         ];
-
         $data1 = [
             'title' => $title,
             'message' => $msg,
@@ -549,13 +534,11 @@ class CartController extends Controller
             'type' => 'order_placed',
             'order_id' => $payload['order_id']
         ];
-
         $fields = array(
             'data' => $data1,
             'notification' => $notification,
             'registration_ids' => $registrationIds,
         );
-
         $headers = array(
             'Authorization: key=' . $SERVER_ID,
             'Content-Type: application/json',
