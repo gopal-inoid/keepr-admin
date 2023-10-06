@@ -213,20 +213,49 @@ class CartController extends Controller
         $total_price = 0;
         $auth_token = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
-
+        $specs = array();
         if (!empty($user_details->id)) {
             $cart_info = Cart::select('id', 'customer_id', 'product_id', 'quantity', 'name', 'thumbnail')->where('customer_id', $user_details->id)->where('quantity', '>', 0)->get();
             if (!empty($cart_info)) {
                 foreach ($cart_info as $k => $cart) {
                     $total_order += $cart['quantity'];
-                    $price = Product::select('purchase_price as price')->where('id', $cart['product_id'])->first()->price ?? 0;
-                    $total_price += ($price * $cart['quantity']);
-                    $cart['purchase_price'] = number_format($price, 2);
+                    // $price = Product::select('purchase_price as price')->where('id', $cart['product_id'])->first()->price ?? 0;
+                    $productInfo = Product::select('*')->where('id', $cart['product_id'])->first();
+                    $total_price += ($productInfo['purchase_price'] * $cart['quantity']);
+                    $cart['purchase_price'] = number_format($productInfo['purchase_price'], 2);
                     array_push($device_ids, $cart['product_id']);
+
+                    array_push($specs, json_decode($productInfo['specification'], true));
                 }
-              
+
             }
-            CheckoutInfo::insert(['product_id' => json_encode($device_ids), 'customer_id' => $user_details->id, 'total_order' => $total_order, 'total_amount' => $total_price, 'tax_amount' => 7]);
+            $spe = [];
+            if (!empty($specs[0])) {
+                foreach ($specs[0] as $k => $val) {
+                    if ($val['key'] == 'Size') {
+                        $check = explode('mm', $val['value']);
+                        if (!empty($check)) {
+                            $spe['width'] = $check[0] ?? 0;
+                            $spe['height'] = str_replace("x", "", $check[1]);
+                            $spe['length'] = str_replace("x", "", $check[2]);
+                        }
+                    }
+
+                    if ($val['key'] == 'Weight') {
+
+                        $check = explode(' ', $val['value']);
+                        if (!empty($check)) {
+                            $spe['weight'] = $check[0] ?? 0;
+                        }
+                    }
+                }
+
+            }
+
+            // echo "<pre>"; print_r($spe);
+            // // exit;
+
+            // CheckoutInfo::insert(['product_id' => json_encode($device_ids), 'customer_id' => $user_details->id, 'total_order' => $total_order, 'total_amount' => $total_price, 'tax_amount' => 7]);
 
             if (!empty($user_details->shipping_country) && !empty($user_details->shipping_state)) {
                 $country_name = $this->getCountryName($user_details->shipping_country);
@@ -262,29 +291,30 @@ class CartController extends Controller
 
             if (!empty($user_details->shipping_zip)) {
                 $zip_code = $user_details->shipping_zip;
-            }else{
+            } else {
                 $zip_code = $user_details->zip;
             }
 
             if (!empty($user_details->shipping_phone_code)) {
                 $shipping_phone_code = $user_details->shipping_phone_code;
-            }else{
+            } else {
                 $shipping_phone_code = $user_details->billing_phone_code;
             }
 
-            if($country_name == 'Canada'){
-                $postalCode = $zip_code." Canada";
-            }elseif($country_name = 'United States'){
-                $postalCode = $zip_code." United-States";
-            }else{
-                $postalCode = $shipping_phone_code." International";
+            if ($country_name == 'Canada') {
+                $postalCode = $zip_code . " Canada";
+            } elseif ($country_name = 'United States') {
+                $postalCode = $zip_code . " United-States";
+            } else {
+                $postalCode = $shipping_phone_code . " International";
             }
 
             $originPostalCode = $zip_code;
-            $weight = (float) 0.3;
-            $length = 9;
-            $width = 5;
-            $height = 1;
+            $weight = (float) $spe['weight'];
+            $length = (int) $spe['length'];
+            $width = (int) $spe['width'];
+            $height = (int) $spe['height'];
+
             $shippingInfo = $this->getShippingRates($originPostalCode, $postalCode, $weight, $length, $width, $height);
 
             // echo "<pre>"; print_r($shippingInfo); die;
@@ -314,7 +344,7 @@ class CartController extends Controller
         $taxes = $request->tax;
         //$shipping_rate_id = 'DOM.XP';
         $shipping_rate_id = $request->shipping_rate_id;
-        
+
         ////////$shipping_mode = $request->shipping_mode;
         $total_amount = $request->total_amount ?? 0;
 

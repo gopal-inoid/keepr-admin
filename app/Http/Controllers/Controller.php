@@ -529,7 +529,7 @@ class Controller extends BaseController
                     $array['service_name'] = $child['service-name'] ?? 0;
                     // $array['mode'] = strtolower(str_replace(' ', '_', $child['service-name'] ?? ''));
                     $array['service_code'] = $child['service-code'] ?? 0;
-                    $array['shipping_rate'] = $child['price-details']['due'];
+                    $array['shipping_rate'] = (($child['price-details']['due'] * 0.74) + 1);
                     $array['expected_delivery_date'] = $child['service-standard']['expected-delivery-date'];
                     $array['is_guanranteed'] = $child['service-standard']['guaranteed-delivery'] == true ? '1' : '0';
                     // $array['tracking'] = $child['price-details']['options']['option']['option-code'] == 'DC' ? '1' : '0';
@@ -542,121 +542,121 @@ class Controller extends BaseController
     }
 
 
-    function getShippingServiceDetails($customer_number, $origin_postal_code, $postal_code, $_weight, $length, $width, $height, $service_code)
-    {
-        $username = env('CANADAPOST_USERANME');
-        $password = env('CANADAPOST_PASSWORD');
-        $token = base64_encode($username . ":" . $password);
-        $mailedBy = $customer_number;
-        $len = $length;
-        $wid_th = $width;
-        $hei_ght = $height;
-        $serviceCode = $service_code;
+    // function getShippingServiceDetails($customer_number, $origin_postal_code, $postal_code, $_weight, $length, $width, $height, $service_code)
+    // {
+    //     $username = env('CANADAPOST_USERANME');
+    //     $password = env('CANADAPOST_PASSWORD');
+    //     $token = base64_encode($username . ":" . $password);
+    //     $mailedBy = $customer_number;
+    //     $len = $length;
+    //     $wid_th = $width;
+    //     $hei_ght = $height;
+    //     $serviceCode = $service_code;
 
-        // REST URL
-        $service_url = env('CANADAPOST_URL') . '/rs/ship/price';
+    //     // REST URL
+    //     $service_url = env('CANADAPOST_URL') . '/rs/ship/price';
 
-        // Create GetRates request xml
-        $originPostalCode = $origin_postal_code;
-        $postalCode = $postal_code;
-        $pCode = explode(" ", $postal_code);
-        $weight = $_weight;
+    //     // Create GetRates request xml
+    //     $originPostalCode = $origin_postal_code;
+    //     $postalCode = $postal_code;
+    //     $pCode = explode(" ", $postal_code);
+    //     $weight = $_weight;
 
-        //echo "<pre>"; print_r($pCode); die;
+    //     //echo "<pre>"; print_r($pCode); die;
 
-        $xmlRequest = <<<XML
-        <mailing-scenario xmlns="http://www.canadapost.ca/ws/ship/rate-v4">
-            <customer-number>{$mailedBy}</customer-number>
-            <parcel-characteristics>
-                <dimensions>
-                    <length>{$len}</length>
-                    <width>{$wid_th}</width>
-                    <height>{$hei_ght}</height>
-                </dimensions>
-                <weight>{$weight}</weight>
-            </parcel-characteristics>
-            <origin-postal-code>{$originPostalCode}</origin-postal-code>
-            <destination>
-        XML;
+    //     $xmlRequest = <<<XML
+    //     <mailing-scenario xmlns="http://www.canadapost.ca/ws/ship/rate-v4">
+    //         <customer-number>{$mailedBy}</customer-number>
+    //         <parcel-characteristics>
+    //             <dimensions>
+    //                 <length>{$len}</length>
+    //                 <width>{$wid_th}</width>
+    //                 <height>{$hei_ght}</height>
+    //             </dimensions>
+    //             <weight>{$weight}</weight>
+    //         </parcel-characteristics>
+    //         <origin-postal-code>{$originPostalCode}</origin-postal-code>
+    //         <destination>
+    //     XML;
 
-        if (strpos($postalCode, 'Canada') !== false) {
-            // Postal code indicates Canada
-            $xmlRequest .= <<<XML
-                <domestic>
-                    <postal-code>{$pCode[0]}</postal-code>
-                </domestic>
-            XML;
-        } elseif (strpos($postalCode, 'United-States') !== false) {
-            // Postal code indicates United States
-            $xmlRequest .= <<<XML
-                <united-states>
-                    <zip-code>{$pCode[0]}</zip-code>
-                </united-states>
-            XML;
-        } elseif (strpos($postalCode, 'International') !== false) {
-            // Postal code indicates International
-            $xmlRequest .= <<<XML
-                <international>
-                    <country-code>{$pCode[0]}</country-code>
-                </international>
-            XML;
-        }
+    //     if (strpos($postalCode, 'Canada') !== false) {
+    //         // Postal code indicates Canada
+    //         $xmlRequest .= <<<XML
+    //             <domestic>
+    //                 <postal-code>{$pCode[0]}</postal-code>
+    //             </domestic>
+    //         XML;
+    //     } elseif (strpos($postalCode, 'United-States') !== false) {
+    //         // Postal code indicates United States
+    //         $xmlRequest .= <<<XML
+    //             <united-states>
+    //                 <zip-code>{$pCode[0]}</zip-code>
+    //             </united-states>
+    //         XML;
+    //     } elseif (strpos($postalCode, 'International') !== false) {
+    //         // Postal code indicates International
+    //         $xmlRequest .= <<<XML
+    //             <international>
+    //                 <country-code>{$pCode[0]}</country-code>
+    //             </international>
+    //         XML;
+    //     }
 
-        $xmlRequest .= <<<XML
-            </destination>
-        </mailing-scenario>
-        XML;
+    //     $xmlRequest .= <<<XML
+    //         </destination>
+    //     </mailing-scenario>
+    //     XML;
 
-        //echo "<pre>"; print_r($xmlRequest); die;
+    //     //echo "<pre>"; print_r($xmlRequest); die;
 
-        $curl = curl_init($service_url); // Create REST Request
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $xmlRequest);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt(
-            $curl,
-            CURLOPT_HTTPHEADER,
-            array(
-                'Authorization: Basic ' . $token,
-                'Content-Type: application/vnd.cpc.ship.rate-v4+xml',
-                'Accept: application/vnd.cpc.ship.rate-v4+xml'
-            )
-        );
-        $curl_response = curl_exec($curl); // Execute REST Request
-        if (curl_errno($curl)) {
-            echo 'Curl error: ' . curl_error($curl) . "\n";
-        }
-        curl_close($curl);
-        $xml = simplexml_load_string($curl_response);
-        $jsonArray = json_decode(json_encode($xml), true);
+    //     $curl = curl_init($service_url); // Create REST Request
+    //     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+    //     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+    //     curl_setopt($curl, CURLOPT_POST, true);
+    //     curl_setopt($curl, CURLOPT_POSTFIELDS, $xmlRequest);
+    //     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    //     curl_setopt(
+    //         $curl,
+    //         CURLOPT_HTTPHEADER,
+    //         array(
+    //             'Authorization: Basic ' . $token,
+    //             'Content-Type: application/vnd.cpc.ship.rate-v4+xml',
+    //             'Accept: application/vnd.cpc.ship.rate-v4+xml'
+    //         )
+    //     );
+    //     $curl_response = curl_exec($curl); // Execute REST Request
+    //     if (curl_errno($curl)) {
+    //         echo 'Curl error: ' . curl_error($curl) . "\n";
+    //     }
+    //     curl_close($curl);
+    //     $xml = simplexml_load_string($curl_response);
+    //     $jsonArray = json_decode(json_encode($xml), true);
 
-        //echo "<pre>"; print_r($jsonArray); die;
+    //     //echo "<pre>"; print_r($jsonArray); die;
 
-        $finalArray = array();
-        foreach ($jsonArray as $k => $val) {
-            if (!empty($val) && is_array($val)) {
-                foreach ($val as $j => $child) {
-                    $array = array();
-                    $array['text'] = $child['service-name'] ?? 0;
-                    $array['mode'] = strtolower(str_replace(' ', '_', $child['service-name'] ?? ''));
-                    $array['service_code'] = $child['service-code'] ?? 0;
-                    $array['shipping_rate'] = $child['price-details']['due'];
-                    $array['expected_delivery_date'] = $child['service-standard']['expected-delivery-date'];
-                    $array['is_guanranteed'] = $child['service-standard']['guaranteed-delivery'] == true ? '1' : '0';
-                    // $array['tracking'] = $child['price-details']['options']['option']['option-code'] == 'DC' ? '1' : '0';
-                    $array['delivery_days'] = $child['service-standard']['expected-transit-time'];
-                    array_push($finalArray, $array);
-                }
-            }
-        }
-        foreach ($finalArray as $k => $val) {
-            if ($val['service_code'] == $serviceCode) {
-                return $val;
-            }
-        }
-    }
+    //     $finalArray = array();
+    //     foreach ($jsonArray as $k => $val) {
+    //         if (!empty($val) && is_array($val)) {
+    //             foreach ($val as $j => $child) {
+    //                 $array = array();
+    //                 $array['text'] = $child['service-name'] ?? 0;
+    //                 $array['mode'] = strtolower(str_replace(' ', '_', $child['service-name'] ?? ''));
+    //                 $array['service_code'] = $child['service-code'] ?? 0;
+    //                 $array['shipping_rate'] = $child['price-details']['due'];
+    //                 $array['expected_delivery_date'] = $child['service-standard']['expected-delivery-date'];
+    //                 $array['is_guanranteed'] = $child['service-standard']['guaranteed-delivery'] == true ? '1' : '0';
+    //                 // $array['tracking'] = $child['price-details']['options']['option']['option-code'] == 'DC' ? '1' : '0';
+    //                 $array['delivery_days'] = $child['service-standard']['expected-transit-time'];
+    //                 array_push($finalArray, $array);
+    //             }
+    //         }
+    //     }
+    //     foreach ($finalArray as $k => $val) {
+    //         if ($val['service_code'] == $serviceCode) {
+    //             return $val;
+    //         }
+    //     }
+    // }
 
 }
 ?>
