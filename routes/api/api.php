@@ -33,6 +33,8 @@ Route::group(['namespace' => 'api'], function () {
     // Route::post('update-pending-email', 'SystemController@update_pending_email');
     Route::post('update-order-details', 'OrderController@update_order_details');
 
+    // Get Shipping Rates//
+    Route::post('get-shipping-rates', 'GeneralController@get_shipping_rates');
 
     Route::group(['middleware' => ['api_auth']], function () {
 

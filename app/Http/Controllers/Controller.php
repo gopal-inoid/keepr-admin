@@ -370,7 +370,7 @@ class Controller extends BaseController
     public function getDataforEmail($order_id)
     {
         $update_order = Order::where(['id' => $order_id])->first();
-        if(!empty($update_order->id)){
+        if (!empty($update_order->id)) {
 
             // $order_attribute = $this->getOrderProductAttr($update_order->product_info ?? "");
             // if (!empty($order_attribute['product_name']) && is_array($order_attribute['product_name'])) {
@@ -423,8 +423,113 @@ class Controller extends BaseController
             $userData['tax_info'] = json_decode($update_order->taxes, true)[0]['title'] ?? "" . " " . json_decode($update_order->taxes, true)[0]['percent'] ?? "";
             $userData['tax_amount'] = json_decode($update_order->taxes, true)[0]['amount'] ?? "";
             return $userData;
-        }else{
+        } else {
             return false;
         }
     }
+
+
+    function getShippingRates($user_name, $pass_word, $mailed_by, $origin_postal_code, $postal_code, $_weight, $length, $width, $height)
+    {
+        $username = $user_name;
+        $password = $pass_word;
+        $mailedBy = $mailed_by;
+        $len = $length;
+        $wid_th = $width;
+        $hei_ght = $height;
+
+        // REST URL
+        $service_url = 'https://ct.soa-gw.canadapost.ca/rs/ship/price';
+
+        // Create GetRates request xml
+        $originPostalCode = $origin_postal_code;
+        $postalCode = $postal_code;
+        $pCode = explode(" ", $postal_code);
+        $weight = $_weight;
+
+        $xmlRequest = <<<XML
+        <mailing-scenario xmlns="http://www.canadapost.ca/ws/ship/rate-v4">
+            <customer-number>{$mailedBy}</customer-number>
+            <parcel-characteristics>
+                <dimensions>
+                    <length>{$len}</length>
+                    <width>{$wid_th}</width>
+                    <height>{$hei_ght}</height>
+                </dimensions>
+                <weight>{$weight}</weight>
+            </parcel-characteristics>
+            <origin-postal-code>{$originPostalCode}</origin-postal-code>
+            <destination>
+        XML;
+
+        if (strpos($postalCode, 'Canada') !== false) {
+            // Postal code indicates Canada
+            $xmlRequest .= <<<XML
+                <domestic>
+                    <postal-code>{$pCode[0]}</postal-code>
+                </domestic>
+            XML;
+        } elseif (strpos($postalCode, 'United-States') !== false) {
+            // Postal code indicates United States
+            $xmlRequest .= <<<XML
+                <united-states>
+                    <zip-code>{$pCode[0]}</zip-code>
+                </united-states>
+            XML;
+        } elseif (strpos($postalCode, 'International') !== false) {
+            // Postal code indicates International
+            $xmlRequest .= <<<XML
+                <international>
+                    <country-code>{$pCode[0]}</country-code>
+                </international>
+            XML;
+        }
+
+        $xmlRequest .= <<<XML
+            </destination>
+        </mailing-scenario>
+        XML;
+
+        $curl = curl_init($service_url); // Create REST Request
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+        // curl_setopt($curl, CURLOPT_CAINFO, realpath(dirname($_SERVER['SCRIPT_FILENAME'])) . '/../../../third-party/cert/cacert.pem');
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $xmlRequest);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($curl, CURLOPT_USERPWD, $username . ':' . $password);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/vnd.cpc.ship.rate-v4+xml', 'Accept: application/vnd.cpc.ship.rate-v4+xml'));
+        $curl_response = curl_exec($curl); // Execute REST Request
+        if (curl_errno($curl)) {
+            echo 'Curl error: ' . curl_error($curl) . "\n";
+        }
+
+        echo 'HTTP Response Status: ' . curl_getinfo($curl, CURLINFO_HTTP_CODE) . "\n";
+
+        curl_close($curl);
+
+        $xml = simplexml_load_string($curl_response);
+
+        $jsonArray = json_decode(json_encode($xml), true);
+        $finalArray = array();
+        foreach ($jsonArray as $k => $val) {
+            if (!empty($val) && is_array($val)) {
+                foreach ($val as $j => $child) {
+                    $array = array();
+                    $array['text'] = $child['service-name'] ?? 0;
+                    $array['mode'] = strtolower(str_replace(' ', '_', $child['service-name'] ?? ''));
+                    $array['service_code'] = $child['service-code'] ?? 0;
+                    $array['shipping_rate'] = $child['price-details']['due'];
+                    $array['expected_delivery_date'] = $child['service-standard']['expected-delivery-date'];
+                    $array['is_guanranteed'] = $child['service-standard']['guaranteed-delivery'] == true ? '1' : '0';
+                    // $array['tracking'] = $child['price-details']['options']['option']['option-code'] == 'DC' ? '1' : '0';
+                    $array['delivery_days'] = $child['service-standard']['expected-transit-time'];
+                    array_push($finalArray, $array);
+                }
+            }
+        }
+        return $finalArray;
+    }
 }
+?>

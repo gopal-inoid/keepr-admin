@@ -555,4 +555,47 @@ class GeneralController extends Controller
             }
         }
     }
+
+    public function get_shipping_rates(Request $request)
+    {
+
+        if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+            $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
+            if (strpos($authHeader, 'Basic ') === 0) {
+                $base64Credentials = substr($authHeader, 6);
+                $credentials = base64_decode($base64Credentials);
+                list($username, $password) = explode(':', $credentials);
+            }
+        }
+
+        $xmlInput = file_get_contents('php://input');
+        if (!empty($xmlInput)) {
+            $xml = simplexml_load_string($xmlInput);
+            if ($xml !== false) {
+                // You can now access the elements of the XML like this:
+                $mailedBy = (string) $xml->{'customer-number'};
+                $weight = (float) $xml->{'parcel-characteristics'}->weight;
+                $originPostalCode = (string) $xml->{'origin-postal-code'};
+                
+                // $postalCode = (string) $xml->destination->domestic->{'postal-code'};
+                $length = (int) $xml->{'parcel-characteristics'}->dimensions->length;
+                $width = (int) $xml->{'parcel-characteristics'}->dimensions->width;
+                $height = (int) $xml->{'parcel-characteristics'}->dimensions->height;
+                if (isset($xml->destination->domestic)) {
+                    $postalCode = (string) $xml->destination->domestic->{'postal-code'} . " Canada";
+                } elseif (isset($xml->destination->{'united-states'})) {
+                    $postalCode = (string) $xml->destination->{'united-states'}->{'zip-code'} . " United-States";
+                } elseif (isset($xml->destination->international)) {
+                    $postalCode = (string) $xml->destination->international->{'country-code'} . " International";
+                }
+            }
+        }
+
+        $result = $this->getShippingRates($username, $password, $mailedBy, $originPostalCode, $postalCode, $weight, $length, $width, $height);
+        if (isset($result)) {
+            return response()->json(['status' => 200, 'message' => 'Response recieved successfully', 'data' => $result], 200);
+        } else {
+            return response()->json(['status' => 400, 'message' => 'failed'], 200);
+        }
+    }
 }

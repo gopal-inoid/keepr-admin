@@ -208,11 +208,41 @@ class CartController extends Controller
 
     public function checkout(Request $request)
     {
+        if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+            $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
+            if (strpos($authHeader, 'Basic ') === 0) {
+                $base64Credentials = substr($authHeader, 6);
+                $credentials = base64_decode($base64Credentials);
+                list($username, $password) = explode(':', $credentials);
+            }
+        }
+        $xmlInput = file_get_contents('php://input');
+        if (!empty($xmlInput)) {
+
+            $xml = simplexml_load_string($xmlInput);
+            if ($xml !== false) {
+                $mailedBy = (string) $xml->{'customer-number'};
+                $weight = (float) $xml->{'parcel-characteristics'}->weight;
+                $originPostalCode = (string) $xml->{'origin-postal-code'};
+                // $postalCode = (string) $xml->destination->domestic->{'postal-code'};
+                $length = (int) $xml->{'parcel-characteristics'}->dimensions->length;
+                $width = (int) $xml->{'parcel-characteristics'}->dimensions->width;
+                $height = (int) $xml->{'parcel-characteristics'}->dimensions->height;
+                if (isset($xml->destination->domestic)) {
+                    $postalCode = (string) $xml->destination->domestic->{'postal-code'} . " Canada";
+                } elseif (isset($xml->destination->{'united-states'})) {
+                    $postalCode = (string) $xml->destination->{'united-states'}->{'zip-code'} . " United-States";
+                } elseif (isset($xml->destination->international)) {
+                    $postalCode = (string) $xml->destination->international->{'country-code'} . " International";
+                }
+            }
+        }
         $device_ids = [];
         $total_order = 0;
         $total_price = 0;
         $auth_token = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
+
         if (!empty($user_details->id)) {
 
             $cart_info = Cart::select('id', 'customer_id', 'product_id', 'quantity', 'name', 'thumbnail')->where('customer_id', $user_details->id)->where('quantity', '>', 0)->get();
@@ -225,7 +255,6 @@ class CartController extends Controller
                     array_push($device_ids, $cart['product_id']);
                 }
             }
-
             CheckoutInfo::insert(['product_id' => json_encode($device_ids), 'customer_id' => $user_details->id, 'total_order' => $total_order, 'total_amount' => $total_price, 'tax_amount' => 7]);
 
             if (!empty($user_details->shipping_country) && !empty($user_details->shipping_state)) {
@@ -236,34 +265,36 @@ class CartController extends Controller
                 $state_name = $this->getStateName($user_details->state);
             }
 
-            $shipping_rates = ShippingMethodRates::select('normal_rate', 'express_rate', 'shipping_methods.title as shipping_company', 'shipping_methods.normal_duration', 'shipping_methods.express_duration', 'shipping_methods.id as shippingid')
-                ->join('shipping_methods', 'shipping_methods.id', 'shipping_method_rates.shipping_id')
-                ->where('shipping_methods.status', 1)->where('shipping_method_rates.status', 1)->where('country_code', $country_name)->get();
+            // $shipping_rates = ShippingMethodRates::select('normal_rate', 'express_rate', 'shipping_methods.title as shipping_company', 'shipping_methods.normal_duration', 'shipping_methods.express_duration', 'shipping_methods.id as shippingid')
+            //     ->join('shipping_methods', 'shipping_methods.id', 'shipping_method_rates.shipping_id')
+            //     ->where('shipping_methods.status', 1)->where('shipping_method_rates.status', 1)->where('country_code', $country_name)->get();
 
-            //$shipping = number_format(0,2);
-            $shipping_cost_check = [];
-            if (!empty($shipping_rates)) {
-                foreach ($shipping_rates as $k => $val) {
-                    $shipping_cost_check[$k]['id'] = $val['shippingid'];
-                    $shipping_cost_check[$k]['company'] = $val['shipping_company'];
-                    if ($val['normal_rate'] < $val['express_rate']) {
-                        $shipping_cost_check[$k]['shipping_rate'] = $val['normal_rate'];
-                        $shipping_cost_check[$k]['mode'] = "normal_rate";
-                        $shipping_cost_check[$k]['text'] = "Regular Rate";
-                        $shipping_cost_check[$k]['delivery_days'] = $val['normal_duration'];
-                    } else {
-                        $shipping_cost_check[$k]['shipping_rate'] = $val['express_rate'];
-                        $shipping_cost_check[$k]['mode'] = "express_rate";
-                        $shipping_cost_check[$k]['text'] = "Express Rate";
-                        $shipping_cost_check[$k]['delivery_days'] = $val['express_duration'];
-                    }
-                }
-            }
+            // //$shipping = number_format(0,2);
+            // $shipping_cost_check = [];
+            // if (!empty($shipping_rates)) {
+            //     foreach ($shipping_rates as $k => $val) {
+            //         $shipping_cost_check[$k]['id'] = $val['shippingid'];
+            //         $shipping_cost_check[$k]['company'] = $val['shipping_company'];
+            //         if ($val['normal_rate'] < $val['express_rate']) {
+            //             $shipping_cost_check[$k]['shipping_rate'] = $val['normal_rate'];
+            //             $shipping_cost_check[$k]['mode'] = "normal_rate";
+            //             $shipping_cost_check[$k]['text'] = "Regular Rate";
+            //             $shipping_cost_check[$k]['delivery_days'] = $val['normal_duration'];
+            //         } else {
+            //             $shipping_cost_check[$k]['shipping_rate'] = $val['express_rate'];
+            //             $shipping_cost_check[$k]['mode'] = "express_rate";
+            //             $shipping_cost_check[$k]['text'] = "Express Rate";
+            //             $shipping_cost_check[$k]['delivery_days'] = $val['express_duration'];
+            //         }
+            //     }
+            // }
+            $shippingInfo = $this->getShippingRates($username, $password, $mailedBy, $originPostalCode, $postalCode, $weight, $length, $width, $height);
+
             //TAX calculation
             $tax_arr = $this->getTaxCalculation($total_price, $country_name, $state_name);
             //END Tax calculation
             $data['cart_info'] = $cart_info;
-            $data['shipping_rates'] = $shipping_cost_check;
+            $data['shipping_rates'] = $shippingInfo;
             $data['customer_id'] = $user_details->id;
             $data['total_order'] = $total_order;
             $data['sub_total'] = number_format($total_price, 2);
@@ -275,7 +306,6 @@ class CartController extends Controller
             return response()->json(['status' => 400, 'message' => 'User not found'], 400);
         }
     }
-
     public function place_order(Request $request)
     {
         $auth_token = $request->headers->get('X-Access-Token');
