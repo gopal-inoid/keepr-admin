@@ -428,12 +428,62 @@ class Controller extends BaseController
         }
     }
 
+    function testXMlcall(){
 
-    function getShippingRates($user_name, $pass_word, $mailed_by, $origin_postal_code, $postal_code, $_weight, $length, $width, $height)
+        $username = '19e821180da4d0eb';
+        $password = 'bb418678be125e35d7536c';
+        $xmlRequest = <<<XML
+        <?xml version="1.0" encoding="UTF-8"?>
+            <mailing-scenario xmlns="http://www.canadapost.ca/ws/ship/rate-v4">
+            <customer-number>2004381</customer-number>
+            <parcel-characteristics>
+            <dimensions>
+            <length>9</length>
+            <width>5</width>
+            <height>1</height>
+            </dimensions>
+            <weight>0.3</weight>
+            </parcel-characteristics>
+            <origin-postal-code>K2B8J6</origin-postal-code>
+            <destination>
+                <domestic>
+                <postal-code>J0E1X0</postal-code>
+                </domestic>
+            </destination>
+        </mailing-scenario>
+        XML;
+
+        $service_url = 'https://ct.soa-gw.canadapost.ca/rs/ship/price';
+
+        $curl = curl_init($service_url); // Create REST Request
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+        // curl_setopt($curl, CURLOPT_CAINFO, realpath(dirname($_SERVER['SCRIPT_FILENAME'])) . '/../../../third-party/cert/cacert.pem');
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $xmlRequest);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        //curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        //curl_setopt($curl, CURLOPT_USERPWD, $username . ':' . $password);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Basic NmU5M2Q1Mzk2ODg4MTcxNDowYmZhOWZjYjk4NTNkMWY1MWVlNTdh','Content-Type: application/vnd.cpc.ship.rate-v4+xml', 'Accept: application/vnd.cpc.ship.rate-v4+xml'));
+        $curl_response = curl_exec($curl); // Execute REST Request
+        if (curl_errno($curl)) {
+            echo 'Curl error: ' . curl_error($curl) . "\n";
+        }
+        echo 'HTTP Response Status: ' . curl_getinfo($curl, CURLINFO_HTTP_CODE) . "\n";
+        curl_close($curl);
+        $xml = simplexml_load_string($curl_response);
+        $jsonArray = json_decode(json_encode($xml), true);
+
+        echo "<pre>"; print_r($jsonArray); die;
+
+    }
+
+    function getShippingRates($customer_number, $origin_postal_code, $postal_code, $_weight, $length, $width, $height)
     {
-        $username = $user_name;
-        $password = $pass_word;
-        $mailedBy = $mailed_by;
+        $username = env('CANADAPOST_USERANME');
+        $password = env('CANADAPOST_PASSWORD');
+        $token = base64_encode($username.":".$password);
+        $mailedBy = $customer_number;
         $len = $length;
         $wid_th = $width;
         $hei_ght = $height;
@@ -446,6 +496,8 @@ class Controller extends BaseController
         $postalCode = $postal_code;
         $pCode = explode(" ", $postal_code);
         $weight = $_weight;
+
+        //echo "<pre>"; print_r($pCode); die;
 
         $xmlRequest = <<<XML
         <mailing-scenario xmlns="http://www.canadapost.ca/ws/ship/rate-v4">
@@ -490,6 +542,8 @@ class Controller extends BaseController
         </mailing-scenario>
         XML;
 
+        //echo "<pre>"; print_r($xmlRequest); die;
+
         $curl = curl_init($service_url); // Create REST Request
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
@@ -497,9 +551,10 @@ class Controller extends BaseController
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $xmlRequest);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($curl, CURLOPT_USERPWD, $username . ':' . $password);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/vnd.cpc.ship.rate-v4+xml', 'Accept: application/vnd.cpc.ship.rate-v4+xml'));
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'Authorization: Basic '.$token,
+            'Content-Type: application/vnd.cpc.ship.rate-v4+xml',
+            'Accept: application/vnd.cpc.ship.rate-v4+xml'));
         $curl_response = curl_exec($curl); // Execute REST Request
         if (curl_errno($curl)) {
             echo 'Curl error: ' . curl_error($curl) . "\n";
@@ -508,6 +563,9 @@ class Controller extends BaseController
         curl_close($curl);
         $xml = simplexml_load_string($curl_response);
         $jsonArray = json_decode(json_encode($xml), true);
+
+        //echo "<pre>"; print_r($jsonArray); die;
+
         $finalArray = array();
         foreach ($jsonArray as $k => $val) {
             if (!empty($val) && is_array($val)) {

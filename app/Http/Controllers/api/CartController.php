@@ -208,35 +208,6 @@ class CartController extends Controller
 
     public function checkout(Request $request)
     {
-        if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
-            $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
-            if (strpos($authHeader, 'Basic ') === 0) {
-                $base64Credentials = substr($authHeader, 6);
-                $credentials = base64_decode($base64Credentials);
-                list($username, $password) = explode(':', $credentials);
-            }
-        }
-        $xmlInput = file_get_contents('php://input');
-        if (!empty($xmlInput)) {
-
-            $xml = simplexml_load_string($xmlInput);
-            if ($xml !== false) {
-                $mailedBy = (string) $xml->{'customer-number'};
-                $weight = (float) $xml->{'parcel-characteristics'}->weight;
-                $originPostalCode = (string) $xml->{'origin-postal-code'};
-                // $postalCode = (string) $xml->destination->domestic->{'postal-code'};
-                $length = (int) $xml->{'parcel-characteristics'}->dimensions->length;
-                $width = (int) $xml->{'parcel-characteristics'}->dimensions->width;
-                $height = (int) $xml->{'parcel-characteristics'}->dimensions->height;
-                if (isset($xml->destination->domestic)) {
-                    $postalCode = (string) $xml->destination->domestic->{'postal-code'} . " Canada";
-                } elseif (isset($xml->destination->{'united-states'})) {
-                    $postalCode = (string) $xml->destination->{'united-states'}->{'zip-code'} . " United-States";
-                } elseif (isset($xml->destination->international)) {
-                    $postalCode = (string) $xml->destination->international->{'country-code'} . " International";
-                }
-            }
-        }
         $device_ids = [];
         $total_order = 0;
         $total_price = 0;
@@ -288,7 +259,26 @@ class CartController extends Controller
             //         }
             //     }
             // }
-            $shippingInfo = $this->getShippingRates($username, $password, $mailedBy, $originPostalCode, $postalCode, $weight, $length, $width, $height);
+
+            // $countrys = 'canada';
+            // if($countrys = 'canada'){
+                $postalCode = "J0E1X0 Canada";
+            // }elseif($countrys = 'united-states'){
+            //     $postalCode = "75644 United-States";
+            // }else{
+            //     $postalCode = "91 International";
+            // }
+
+            $customer_number = '2004381';
+            $originPostalCode = 'K2B8J6';
+            $weight = (float) 0.3;
+            $length = 9;
+            $width = 5;
+            $height = 1;
+
+            $shippingInfo = $this->getShippingRates($customer_number, $originPostalCode, $postalCode, $weight, $length, $width, $height);
+
+            //echo "<pre>"; print_r($shippingInfo); die;
 
             //TAX calculation
             $tax_arr = $this->getTaxCalculation($total_price, $country_name, $state_name);
