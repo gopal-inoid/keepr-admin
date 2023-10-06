@@ -515,7 +515,6 @@ class Controller extends BaseController
         if (curl_errno($curl)) {
             echo 'Curl error: ' . curl_error($curl) . "\n";
         }
-        echo 'HTTP Response Status: ' . curl_getinfo($curl, CURLINFO_HTTP_CODE) . "\n";
         curl_close($curl);
         $xml = simplexml_load_string($curl_response);
         $jsonArray = json_decode(json_encode($xml), true);
