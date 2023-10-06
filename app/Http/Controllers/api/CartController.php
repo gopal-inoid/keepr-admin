@@ -214,7 +214,6 @@ class CartController extends Controller
         $auth_token = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
 
-
         if (!empty($user_details->id)) {
             $cart_info = Cart::select('id', 'customer_id', 'product_id', 'quantity', 'name', 'thumbnail')->where('customer_id', $user_details->id)->where('quantity', '>', 0)->get();
             if (!empty($cart_info)) {
@@ -225,7 +224,7 @@ class CartController extends Controller
                     $cart['purchase_price'] = number_format($price, 2);
                     array_push($device_ids, $cart['product_id']);
                 }
-
+              
             }
             CheckoutInfo::insert(['product_id' => json_encode($device_ids), 'customer_id' => $user_details->id, 'total_order' => $total_order, 'total_amount' => $total_price, 'tax_amount' => 7]);
 
