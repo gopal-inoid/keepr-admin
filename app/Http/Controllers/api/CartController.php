@@ -240,16 +240,13 @@ class CartController extends Controller
                             $spe['length'] = str_replace("x", "", $check[2]);
                         }
                     }
-
                     if ($val['key'] == 'Weight') {
-
                         $check = explode(' ', $val['value']);
                         if (!empty($check)) {
                             $spe['weight'] = $check[0] ?? 0;
                         }
                     }
                 }
-
             }
 
             // echo "<pre>"; print_r($spe);
