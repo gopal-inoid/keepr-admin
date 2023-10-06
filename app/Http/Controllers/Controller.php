@@ -439,7 +439,7 @@ class Controller extends BaseController
         $hei_ght = $height;
 
         // REST URL
-        $service_url = 'https://ct.soa-gw.canadapost.ca/rs/ship/price';
+        $service_url = env('CANADAPOST_URL') . '/rs/ship/price';
 
         // Create GetRates request xml
         $originPostalCode = $origin_postal_code;
