@@ -214,8 +214,8 @@ class CartController extends Controller
         $auth_token = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
 
-        if (!empty($user_details->id)) {
 
+        if (!empty($user_details->id)) {
             $cart_info = Cart::select('id', 'customer_id', 'product_id', 'quantity', 'name', 'thumbnail')->where('customer_id', $user_details->id)->where('quantity', '>', 0)->get();
             if (!empty($cart_info)) {
                 foreach ($cart_info as $k => $cart) {
@@ -225,6 +225,7 @@ class CartController extends Controller
                     $cart['purchase_price'] = number_format($price, 2);
                     array_push($device_ids, $cart['product_id']);
                 }
+
             }
             CheckoutInfo::insert(['product_id' => json_encode($device_ids), 'customer_id' => $user_details->id, 'total_order' => $total_order, 'total_amount' => $total_price, 'tax_amount' => 7]);
 
@@ -262,7 +263,7 @@ class CartController extends Controller
 
             // $countrys = 'canada';
             // if($countrys = 'canada'){
-                $postalCode = "J0E1X0 Canada";
+            $postalCode = "J0E1X0 Canada";
             // }elseif($countrys = 'united-states'){
             //     $postalCode = "75644 United-States";
             // }else{
@@ -275,10 +276,9 @@ class CartController extends Controller
             $length = 9;
             $width = 5;
             $height = 1;
-
             $shippingInfo = $this->getShippingRates($customer_number, $originPostalCode, $postalCode, $weight, $length, $width, $height);
 
-            //echo "<pre>"; print_r($shippingInfo); die;
+            // echo "<pre>"; print_r($shippingInfo); die;
 
             //TAX calculation
             $tax_arr = $this->getTaxCalculation($total_price, $country_name, $state_name);
@@ -301,12 +301,21 @@ class CartController extends Controller
         $auth_token = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
         $cart_id = $request->cart_id;
-        $shipping_id = $request->shipping_id ?? "";
+        ////////$shipping_id = $request->shipping_id ?? 
         $taxes = $request->tax;
-        $shipping_rate_id = $request->shipping_rate_id;
-        $shipping_mode = $request->shipping_mode;
+        $shipping_rate_id = 'DOM.XP';
+        ////////$shipping_mode = $request->shipping_mode;
         $total_amount = $request->total_amount ?? 0;
 
+        $postalCode = "J0E1X0 Canada";
+        $customer_number = '2004381';
+        $originPostalCode = 'K2B8J6';
+        $weight = (float) 0.3;
+        $length = 9;
+        $width = 5;
+        $height = 1;
+
+        $activeShipService = $this->getShippingServiceDetails($customer_number, $originPostalCode, $postalCode, $weight, $length, $width, $height, $shipping_rate_id);
         if ($total_amount == 0) {
             return response()->json(['status' => 400, 'message' => 'Order amount required'], 400);
         }
@@ -337,17 +346,19 @@ class CartController extends Controller
         //     }
         // }
 
-        $shipping_info = array();
-        foreach ($cart_ids as $ids) {
-            $shippRateInfo = ShippingMethodRates::where('id', $shipping_rate_id)->first();
-            $shippingInfo = ShippingMethod::where('id', $shippRateInfo->shipping_id)->first();
-            $shipping_info[] = array(
-                'Shipping_name' => $shippingInfo['title'] ?? '',
-                'Shipping_mode' => $shipping_mode ?? '',
-                'shipping_rate' => !empty($shipping_mode) == 'normal_rate' ? $shippRateInfo->normal_rate : $shippRateInfo->express_rate,
-                'shipping_duration' => !empty($shipping_mode) == 'normal_rate' ? $shippingInfo->normal_duration : $shippingInfo->express_duration
-            );
-        }
+        // Commented Below because new shipping info will be retrived from API
+        // $shipping_info = array();
+        // foreach ($cart_ids as $ids) {
+        //     $shippRateInfo = ShippingMethodRates::where('id', $shipping_rate_id)->first();
+        //     $shippingInfo = ShippingMethod::where('id', $shippRateInfo->shipping_id)->first();
+        //     $shipping_info[] = array(
+        //         'Shipping_name' => $shippingInfo['title'] ?? '',
+        //         'Shipping_mode' => $shipping_mode ?? '',
+        //         'shipping_rate' => !empty($shipping_mode) == 'normal_rate' ? $shippRateInfo->normal_rate : $shippRateInfo->express_rate,
+        //         'shipping_duration' => !empty($shipping_mode) == 'normal_rate' ? $shippingInfo->normal_duration : $shippingInfo->express_duration
+        //     );
+        // }
+        ////////////////////////////////////////////////////////////////////////
 
         $product_info = [];
         if (!empty($user_details->id)) {
@@ -400,10 +411,10 @@ class CartController extends Controller
                 $order->customer_id = $user_details->id;
                 $order->payment_method = 'Stripe';
                 $order->per_device_amount = json_encode($per_device_amount);
-                $order->shipping_method_id = $shipping_id;
+                // $order->shipping_method_id = $shipping_id;
                 $order->taxes = $taxes;
-                $order->shipping_rate_id = $shipping_rate_id;
-                $order->shipping_mode = json_encode($shipping_info);
+                // $order->shipping_rate_id = $shipping_rate_id;
+                $order->shipping_mode = json_encode(array($activeShipService));
                 //$order->mac_ids = json_encode($mac_ids_array);
                 $order->order_amount = $total_amount;
                 $order->product_info = json_encode($product_info);
