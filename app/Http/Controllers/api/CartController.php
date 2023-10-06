@@ -260,22 +260,32 @@ class CartController extends Controller
             //     }
             // }
 
-            // $countrys = 'canada';
-            // if($countrys = 'canada'){
-            $postalCode = "J0E1X0 Canada";
-            // }elseif($countrys = 'united-states'){
-            //     $postalCode = "75644 United-States";
-            // }else{
-            //     $postalCode = "91 International";
-            // }
+            if (!empty($user_details->shipping_zip)) {
+                $zip_code = $user_details->shipping_zip;
+            }else{
+                $zip_code = $user_details->zip;
+            }
 
-            $customer_number = '2004381';
-            $originPostalCode = 'K2B8J6';
+            if (!empty($user_details->shipping_phone_code)) {
+                $shipping_phone_code = $user_details->shipping_phone_code;
+            }else{
+                $shipping_phone_code = $user_details->billing_phone_code;
+            }
+
+            if($country_name == 'Canada'){
+                $postalCode = $zip_code." Canada";
+            }elseif($country_name = 'United States'){
+                $postalCode = $zip_code." United-States";
+            }else{
+                $postalCode = $shipping_phone_code." International";
+            }
+
+            $originPostalCode = $zip_code;
             $weight = (float) 0.3;
             $length = 9;
             $width = 5;
             $height = 1;
-            $shippingInfo = $this->getShippingRates($customer_number, $originPostalCode, $postalCode, $weight, $length, $width, $height);
+            $shippingInfo = $this->getShippingRates($originPostalCode, $postalCode, $weight, $length, $width, $height);
 
             // echo "<pre>"; print_r($shippingInfo); die;
 
@@ -302,22 +312,24 @@ class CartController extends Controller
         $cart_id = $request->cart_id;
         ////////$shipping_id = $request->shipping_id ?? 
         $taxes = $request->tax;
-        $shipping_rate_id = 'DOM.XP';
+        //$shipping_rate_id = 'DOM.XP';
+        $shipping_rate_id = $request->shipping_rate_id;
+        
         ////////$shipping_mode = $request->shipping_mode;
         $total_amount = $request->total_amount ?? 0;
 
-        $postalCode = "J0E1X0 Canada";
-        $customer_number = '2004381';
-        $originPostalCode = 'K2B8J6';
-        $weight = (float) 0.3;
-        $length = 9;
-        $width = 5;
-        $height = 1;
+        // $postalCode = "J0E1X0 Canada";
+        // $customer_number = '2004381';
+        // $originPostalCode = 'K2B8J6';
+        // $weight = (float) 0.3;
+        // $length = 9;
+        // $width = 5;
+        // $height = 1;
 
-        $activeShipService = $this->getShippingServiceDetails($customer_number, $originPostalCode, $postalCode, $weight, $length, $width, $height, $shipping_rate_id);
-        if ($total_amount == 0) {
-            return response()->json(['status' => 400, 'message' => 'Order amount required'], 400);
-        }
+        // $activeShipService = $this->getShippingServiceDetails($customer_number, $originPostalCode, $postalCode, $weight, $length, $width, $height, $shipping_rate_id);
+        // if ($total_amount == 0) {
+        //     return response()->json(['status' => 400, 'message' => 'Order amount required'], 400);
+        // }
 
         $left = ltrim($cart_id, "'");
         $right = rtrim($left, "'");
@@ -413,7 +425,7 @@ class CartController extends Controller
                 // $order->shipping_method_id = $shipping_id;
                 $order->taxes = $taxes;
                 // $order->shipping_rate_id = $shipping_rate_id;
-                $order->shipping_mode = json_encode(array($activeShipService));
+                $order->shipping_mode = $shipping_rate_id;
                 //$order->mac_ids = json_encode($mac_ids_array);
                 $order->order_amount = $total_amount;
                 $order->product_info = json_encode($product_info);

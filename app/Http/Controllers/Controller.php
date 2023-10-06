@@ -429,12 +429,12 @@ class Controller extends BaseController
     }
 
 
-    function getShippingRates($customer_number, $origin_postal_code, $postal_code, $_weight, $length, $width, $height)
+    function getShippingRates($origin_postal_code, $postal_code, $_weight, $length, $width, $height)
     {
         $username = env('CANADAPOST_USERANME');
         $password = env('CANADAPOST_PASSWORD');
         $token = base64_encode($username . ":" . $password);
-        $mailedBy = $customer_number;
+        $mailedBy = "";
         $len = $length;
         $wid_th = $width;
         $hei_ght = $height;
