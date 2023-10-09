@@ -307,10 +307,10 @@ class CartController extends Controller
             }
 
             $originPostalCode = $zip_code;
-            $weight = !empty($spe['weight']) ? (float) $spe['weight'] : 1;
-            $length = !empty($spe['length']) ? (int) $spe['length'] : 1;
-            $width =  !empty($spe['width']) ? (int) $spe['width'] : 1;
-            $height = !empty($spe['height']) ? (int) $spe['height'] : 1;
+            $weight = !empty($spe['weight']) ? (float) $spe['weight'] : 0;
+            $length = !empty($spe['length']) ? (int) $spe['length'] : 0;
+            $width =  !empty($spe['width']) ? (int) $spe['width'] : 0;
+            $height = !empty($spe['height']) ? (int) $spe['height'] : 0;
 
             $shippingInfo = $this->getShippingRates($originPostalCode, $postalCode, $weight, $length, $width, $height);
 
