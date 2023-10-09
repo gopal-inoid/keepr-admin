@@ -217,8 +217,8 @@
                             @foreach ($product_info as $k => $val)
                                 @php($i++)
                                 <tr>
-                                    <td>{{ $i }}</td>
-                                    <td>
+                                    <td  style="text-align:center;">{{ $i }}</td>
+                                    <td  style="text-align:center;">
                                         <div class="media align-items-center gap-10">
                                             {{-- <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$val['thumbnail']}}" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt=""> --}}
                                             <div> <a href="#" class="title-color hover-c1" style="text-decoration:none !important; color:black !important;">
@@ -228,9 +228,8 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td>--</td>
-                                    <td>{{ $val['order_qty'] ?? 0 }}</td>
-                                    <td>
+                                    <td  style="text-align:center;">--</td>
+                                    <td  style="text-align:right;">
                                         @php($total_price = 0)
                                         @if (!empty($order->per_device_amount))
                                             @php($perdevice_amount = json_decode($order->per_device_amount, true))
@@ -240,7 +239,8 @@
                                             @endif
                                         @endif
                                     </td>
-                                    <td>US ${{ number_format($total_price, 2) }}</td>
+                                    <td  style="text-align:right;">{{ $val['order_qty'] ?? 0 }}</td>
+                                    <td  style="text-align:right;">US ${{ number_format($total_price, 2) }}</td>
                                     @php($grand_total_qty += $val['order_qty'] ?? 0)
                                     @php($grand_total_amt += $total_price)
                                 </tr>
@@ -253,8 +253,8 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td style="text-align:center;"><strong>{{ $grand_total_qty }}</strong></td>
-                    <td style="text-align:center;"><strong>US ${{ number_format($grand_total_amt, 2) }}</strong></td>
+                    <td style="text-align:right;"><strong>{{ $grand_total_qty }}</strong></td>
+                    <td style="text-align:right;"><strong>US ${{ number_format($grand_total_amt, 2) }}</strong></td>
                 </tr>
             </tbody>
         </table>
@@ -278,21 +278,23 @@
                             <strong>{{ $taxes['title'] }}</strong><br />
                         @endforeach
                     </td>
-                    <td style="text-align:center;"><strong>US ${{ number_format($tx_amt, 2) }}</strong></td>
+                    <td style="text-align:right;"><strong>US ${{ number_format($tx_amt, 2) }}</strong></td>
                 </tr>
                 <tr>
                     <td>
                         <label><strong>{{ \App\CPU\translate('Shipping info') }}</strong>:
                         </label><br />
                         <strong>Shipping Co.:
-                            {{ json_decode($order->shipping_mode,true)[0]['Shipping_name'] ?? '' }}</strong><br />
+                            {{ json_decode($order->shipping_rates, true)[0]['text'] ?? '' }}</strong><br />
                         <strong>Duration:
-                            {{ json_decode($order->shipping_mode,true)[0]['shipping_duration'] ?? '' }}</strong><br />
+                            {{ json_decode($order->shipping_rates, true)[0]['delivery_days'] ?? '' }}
+                            Days</strong><br />
                         <strong>Shipping Mode:
-                             {{ json_decode($order->shipping_mode,true)[0]['Shipping_mode'] ?? '' }}</strong>
+                            {{ json_decode($order->shipping_rates, true)[0]['mode'] ?? '' }}</strong>
                     </td>
-                    <td style="text-align:center;">
-                        <strong>US ${{ number_format(json_decode($order->shipping_mode,true)[0]['shipping_rate'] ?? 0, 2) }}</strong>
+                    <td style="text-align:right;">
+                        <strong >US
+                            ${{ number_format(json_decode($order->shipping_rates, true)[0]['shipping_rate'] ?? 0, 2) }}</strong>
                     </td>
                 </tr>
                 <tr>
@@ -300,9 +302,9 @@
                         <hr />
                         <h4><strong>Grand Total</strong></h4>
                     </td>
-                    <td style="text-align:center;">
+                    <td style="text-align:right;">
                         <hr />
-                        <h4><strong>US ${{ number_format($total_order_amount, 2) }}</strong></h4>
+                        <h4 ><strong>US ${{ number_format($total_order_amount, 2) }}</strong></h4>
                     </td>
                 </tr>
             </tbody>
