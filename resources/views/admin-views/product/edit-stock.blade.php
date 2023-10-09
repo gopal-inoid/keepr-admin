@@ -96,7 +96,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <input type="hidden" name="deleted" value="" id="hiddenInput" class="form-control" placeholder="Auto Details">
+                                    <input type="hidden" name="deleted" value="" id="hiddenInput"
+                                        class="form-control" placeholder="Auto Details">
                                     <?php
                                         $product_stock_cnt = !empty($product_stock) ? count($product_stock) : 0;
                                         if(!empty($product_stock)){
@@ -329,7 +330,7 @@
                         </div>
                     </div>
                     <div class="col-md-2 form-group mac_id-add-main-btn">
-                        <i class="tio-delete-outlined text-danger remove-mac_id-btn mt-0"></i>
+                        <i class="tio-delete-outlined text-danger remove-mac_id-btn dynamic mt-0"></i>
                     </div>
                 </div>
                 `).insertAfter($("#mac_id-individual"));
@@ -381,28 +382,30 @@
             // );
             cnt++;
         });
+        $(document).on('click', '.remove-mac_id-btn', function(e) {
+            if ($(this).hasClass('dynamic')) {
+                $(this).closest('.mac_id-individual').remove();
+            }
 
-        // $(document).on('click', '.remove-mac_id-btn', function(e) {
-        //     $(this).closest('.mac_id-individual').remove();
-        //     if ($(".mac_id-individual").length == 1) {
-        //         $(".mac_id-individual").eq(0).addClass('d-none');
-        //     }
-        //     let parent = $(this).closest(".mac_id-individual");
-        //     let inputTags = parent.find("input");
-        //     let megaArray = [];
-        //     let array = [];
-        //     let index;
-        //     $(inputTags).each(function(index) {
-        //         array[index] = this.value;
-        //         index = index;
-        //     });
-        //     console.log(index);
-        //     return false;
-        //     megaArray[index] = array;
-        //     console.log(megaArray);
-        // });
+            //     if ($(".mac_id-individual").length == 1) {
+            //         $(".mac_id-individual").eq(0).addClass('d-none');
+            //     }
+            //     let parent = $(this).closest(".mac_id-individual");
+            //     let inputTags = parent.find("input");
+            //     let megaArray = [];
+            //     let array = [];
+            //     let index;
+            //     $(inputTags).each(function(index) {
+            //         array[index] = this.value;
+            //         index = index;
+            //     });
+            //     console.log(index);
+            //     return false;
+            //     megaArray[index] = array;
+            //     console.log(megaArray);
+        });
 
-        let megaArray = []; 
+        let megaArray = [];
         $(".remove-mac_id-btn").each(function(index) {
             $(this).click(function() {
                 $(this).closest('.mac_id-individual').remove();
@@ -415,7 +418,7 @@
                 $(inputTags).each(function(index) {
                     array[index] = this.value;
                 });
-                megaArray.push(array+"/"); 
+                megaArray.push(array + "/");
                 $("#hiddenInput").val(megaArray);
             });
         });

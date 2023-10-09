@@ -340,7 +340,7 @@ class CartController extends Controller
         ////////$shipping_id = $request->shipping_id ?? 
         $taxes = $request->tax;
         //$shipping_rate_id = 'DOM.XP';
-        $shipping_rate_id = $request->shipping_rate_id;
+        $shipping_rates = $request->shipping_rates;
 
         ////////$shipping_mode = $request->shipping_mode;
         $total_amount = $request->total_amount ?? 0;
@@ -452,7 +452,7 @@ class CartController extends Controller
                 // $order->shipping_method_id = $shipping_id;
                 $order->taxes = $taxes;
                 // $order->shipping_rate_id = $shipping_rate_id;
-                $order->shipping_mode = $shipping_rate_id;
+                $order->shipping_rates = $shipping_rates;
                 //$order->mac_ids = json_encode($mac_ids_array);
                 $order->order_amount = $total_amount;
                 $order->product_info = json_encode($product_info);

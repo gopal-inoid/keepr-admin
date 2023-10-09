@@ -604,15 +604,16 @@
                                                             <label><strong>{{ \App\CPU\translate('Shipping info') }}</strong>:
                                                             </label><br />
                                                             <strong>Shipping Co.:
-                                                                {{ json_decode($order->shipping_mode, true)[0]['Shipping_name'] ?? '' }}</strong><br />
+                                                                {{ json_decode($order->shipping_rates, true)[0]['text'] ?? '' }}</strong><br />
                                                             <strong>Duration:
-                                                                {{ json_decode($order->shipping_mode, true)[0]['shipping_duration'] ?? '' }}</strong><br />
+                                                                {{ json_decode($order->shipping_rates, true)[0]['delivery_days'] ?? '' }}
+                                                                Days</strong><br />
                                                             <strong>Shipping Mode:
-                                                                {{ json_decode($order->shipping_mode, true)[0]['Shipping_mode'] ?? '' }}</strong>
+                                                                {{ json_decode($order->shipping_rates, true)[0]['mode'] ?? '' }}</strong>
                                                         </td>
                                                         <td class="text-right">
                                                             <strong>US
-                                                                ${{ number_format(json_decode($order->shipping_mode, true)[0]['shipping_rate'] ?? 0, 2) }}</strong>
+                                                                ${{ number_format(json_decode($order->shipping_rates, true)[0]['shipping_rate'] ?? 0, 2) }}</strong>
                                                         </td>
                                                     </tr>
                                                     <tr>
