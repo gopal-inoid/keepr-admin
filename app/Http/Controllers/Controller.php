@@ -438,7 +438,6 @@ class Controller extends BaseController
         $len = $length;
         $wid_th = $width;
         $hei_ght = $height;
-
         // REST URL
         $service_url = env('CANADAPOST_URL') . '/rs/ship/price';
 
@@ -519,8 +518,8 @@ class Controller extends BaseController
         $xml = simplexml_load_string($curl_response);
         $jsonArray = json_decode(json_encode($xml), true);
         $finalArray = array();
-        if(!empty($jsonArray)){
-            if(!empty($jsonArray['price-quote'][0]['service-code'])){
+        if (!empty($jsonArray)) {
+            if (!empty($jsonArray['price-quote'][0]['service-code'])) {
                 foreach ($jsonArray as $k => $val) {
                     if (!empty($val) && is_array($val)) {
                         foreach ($val as $j => $child) {
@@ -528,7 +527,7 @@ class Controller extends BaseController
                             $array['service_name'] = $child['service-name'] ?? 0;
                             // $array['mode'] = strtolower(str_replace(' ', '_', $child['service-name'] ?? ''));
                             $array['service_code'] = $child['service-code'] ?? 0;
-                            $array['shipping_rate'] = (($child['price-details']['due'] * 0.74) + 1);
+                            $array['shipping_rate'] = round((($child['price-details']['due'] * 0.74) + 1), 2);
                             $array['expected_delivery_date'] = $child['service-standard']['expected-delivery-date'];
                             $array['is_guanranteed'] = $child['service-standard']['guaranteed-delivery'] == true ? '1' : '0';
                             // $array['tracking'] = $child['price-details']['options']['option']['option-code'] == 'DC' ? '1' : '0';
@@ -539,7 +538,6 @@ class Controller extends BaseController
                 }
             }
         }
-        
         return $finalArray;
     }
 
@@ -549,7 +547,7 @@ class Controller extends BaseController
         $password = env('CANADAPOST_PASSWORD');
         $token = base64_encode($username . ":" . $password);
         // REST URL
-        $service_url = env('CANADAPOST_URL') . '/vis/track/pin/'.$pin.'/summary';
+        $service_url = env('CANADAPOST_URL') . '/vis/track/pin/' . $pin . '/summary';
         $curl = curl_init($service_url); // Create REST Request
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
@@ -570,7 +568,9 @@ class Controller extends BaseController
         $xml = simplexml_load_string($curl_response);
         $jsonArray = json_decode(json_encode($xml), true);
 
-        echo "<pre>"; print_r($jsonArray); die;
+        echo "<pre>";
+        print_r($jsonArray);
+        die;
 
         $finalArray = array();
         // foreach ($jsonArray as $k => $val) {
@@ -598,7 +598,7 @@ class Controller extends BaseController
         $password = env('CANADAPOST_PASSWORD');
         $token = base64_encode($username . ":" . $password);
         // REST URL
-        $service_url = env('CANADAPOST_URL') . '/vis/track/pin/'.$pin.'/detail';
+        $service_url = env('CANADAPOST_URL') . '/vis/track/pin/' . $pin . '/detail';
         $curl = curl_init($service_url); // Create REST Request
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
@@ -619,7 +619,9 @@ class Controller extends BaseController
         $xml = simplexml_load_string($curl_response);
         $jsonArray = json_decode(json_encode($xml), true);
 
-        echo "<pre>"; print_r($jsonArray); die;
+        echo "<pre>";
+        print_r($jsonArray);
+        die;
 
         $finalArray = array();
         // foreach ($jsonArray as $k => $val) {

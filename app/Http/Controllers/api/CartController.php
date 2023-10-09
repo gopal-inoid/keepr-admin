@@ -312,7 +312,7 @@ class CartController extends Controller
             $width =  !empty($spe['width']) ? (int) $spe['width'] : 0;
             $height = !empty($spe['height']) ? (int) $spe['height'] : 0;
 
-            $shippingInfo = $this->getShippingRates($originPostalCode, $postalCode, $weight, $length, $width, $height);
+            $shippingInfo = $this->getShippingRates('K2B8J6', 'J0E1X0 Canada', $weight, $length, $width, $height);
 
             // echo "<pre>"; print_r($shippingInfo); die;
 
