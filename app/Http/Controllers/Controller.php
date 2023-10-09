@@ -518,26 +518,28 @@ class Controller extends BaseController
         curl_close($curl);
         $xml = simplexml_load_string($curl_response);
         $jsonArray = json_decode(json_encode($xml), true);
-
-        //echo "<pre>"; print_r($jsonArray); die;
-
         $finalArray = array();
-        foreach ($jsonArray as $k => $val) {
-            if (!empty($val) && is_array($val)) {
-                foreach ($val as $j => $child) {
-                    $array = array();
-                    $array['service_name'] = $child['service-name'] ?? 0;
-                    // $array['mode'] = strtolower(str_replace(' ', '_', $child['service-name'] ?? ''));
-                    $array['service_code'] = $child['service-code'] ?? 0;
-                    $array['shipping_rate'] = (($child['price-details']['due'] * 0.74) + 1);
-                    $array['expected_delivery_date'] = $child['service-standard']['expected-delivery-date'];
-                    $array['is_guanranteed'] = $child['service-standard']['guaranteed-delivery'] == true ? '1' : '0';
-                    // $array['tracking'] = $child['price-details']['options']['option']['option-code'] == 'DC' ? '1' : '0';
-                    $array['delivery_days'] = $child['service-standard']['expected-transit-time'];
-                    array_push($finalArray, $array);
+        if(!empty($jsonArray)){
+            if(!empty($jsonArray['price-quote'][0]['service-code'])){
+                foreach ($jsonArray as $k => $val) {
+                    if (!empty($val) && is_array($val)) {
+                        foreach ($val as $j => $child) {
+                            $array = array();
+                            $array['service_name'] = $child['service-name'] ?? 0;
+                            // $array['mode'] = strtolower(str_replace(' ', '_', $child['service-name'] ?? ''));
+                            $array['service_code'] = $child['service-code'] ?? 0;
+                            $array['shipping_rate'] = (($child['price-details']['due'] * 0.74) + 1);
+                            $array['expected_delivery_date'] = $child['service-standard']['expected-delivery-date'];
+                            $array['is_guanranteed'] = $child['service-standard']['guaranteed-delivery'] == true ? '1' : '0';
+                            // $array['tracking'] = $child['price-details']['options']['option']['option-code'] == 'DC' ? '1' : '0';
+                            $array['delivery_days'] = $child['service-standard']['expected-transit-time'];
+                            array_push($finalArray, $array);
+                        }
+                    }
                 }
             }
         }
+        
         return $finalArray;
     }
 
