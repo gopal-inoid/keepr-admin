@@ -68,6 +68,7 @@ Route::group(['namespace' => 'api'], function () {
         Route::post('set-address', 'GeneralController@set_address');
         Route::post('get-address', 'GeneralController@get_address');
         Route::post('order-list', 'GeneralController@order_history');
+        Route::post('order-tracking-detail', 'GeneralController@order_tracking_detail');
         //
 
         //CART

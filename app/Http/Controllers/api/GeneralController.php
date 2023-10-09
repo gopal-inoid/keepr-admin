@@ -395,6 +395,13 @@ class GeneralController extends Controller
         }
     }
 
+    public function order_tracking_detail(Request $request){ 
+        $tracking_pin = "7023210039414604"; //$request->pin;
+        $tracking_details = $this->getShippingTrackingDetais($tracking_pin);
+        Common::addLog([]);
+        return response()->json(['status' => 200, 'message' => 'Success', 'data' => $tracking_details], 200);
+    }
+
     public function order_detail(Request $request)
     {
         $order_id = $request->order_id;
@@ -420,6 +427,9 @@ class GeneralController extends Controller
                 } else {
                     $get_orders->delivery_message = "";
                 }
+
+                $tracking_pin = "7023210039414604";
+                $get_orders->tracking_summary = $this->getShippingTrackingSummary($tracking_pin);
 
                 $get_orders->shipping = [
                     'address' => $shipping_address->add_shipping_address ?? '',
