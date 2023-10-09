@@ -781,6 +781,16 @@
                                     placeholder="{{\App\CPU\translate('ios_version')}}">
                             </div>
                         </div>
+                        @php($zip_code=\App\Model\BusinessSetting::where('type','zip_code')->first())
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label
+                                    class="title-color d-flex">{{\App\CPU\translate('Zip Code')}}</label>
+                                <input class="form-control" type="text" name="zip_code"
+                                    value="{{$zip_code->value ?? ''}}"
+                                    placeholder="{{\App\CPU\translate('Enter zip code')}}">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

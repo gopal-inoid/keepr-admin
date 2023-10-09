@@ -457,10 +457,10 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <iframe id="keeprVideo" class="Youtube_Video" width="560" height="315"
-                            src="{{ asset('keepr_app_assets/assests/Keepr_Intro_Video.mp4') }}" title="Video player"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        <iframe id="keeprVideo" autoplay="false" class="Youtube_Video" width="560"
+                            height="315" src="{{ asset('keepr_app_assets/assests/Keepr_Intro_Video.mp4') }}"
+                            title="Video player" frameborder="0"
+                            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             allowfullscreen></iframe>
                     </div>
                 </div>
@@ -471,7 +471,6 @@
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
 </script>
 <script>
-
     $(document).ready(function() {
 
         $(document).on('click', '.nav-link', function(e) {

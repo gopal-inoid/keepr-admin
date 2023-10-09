@@ -75,7 +75,7 @@ class BusinessSettingsController extends Controller
                 'updated_at' => now(),
             ]);
         }
-        return response()->json(['message' => 'Business Mode is changed to ' . $mode. ' vendor']);
+        return response()->json(['message' => 'Business Mode is changed to ' . $mode . ' vendor']);
     }
     // Social Media
     public function social_media()
@@ -164,12 +164,12 @@ class BusinessSettingsController extends Controller
     {
         $terms_condition = BusinessSetting::where('type', 'terms_condition')->first();
         return view('admin-views.business-settings.terms-condition', compact('terms_condition'));
-    
+
     }
 
     public function cookie_policy()
     {
-       
+
         $cookie_policy = BusinessSetting::where('type', 'cookie_policy')->first();
         return view('admin-views.business-settings.cookie-policy', compact('cookie_policy'));
     }
@@ -200,41 +200,42 @@ class BusinessSettingsController extends Controller
     public function save_shipping_method(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name'                 => 'required',
-            'category_id'          => 'required',
-            'product_type'         => 'required',
+            'name' => 'required',
+            'category_id' => 'required',
+            'product_type' => 'required',
             'digital_product_type' => 'required_if:product_type,==,digital',
-            'digital_file_ready'   => 'required_if:digital_product_type,==,ready_product|mimes:jpg,jpeg,png,gif,zip,pdf',
-            'unit'                 => 'required_if:product_type,==,physical',
-            'images'               => 'required',
-            'image'                => 'required',
-            'tax'                  => 'required|min:0',
-            'unit_price'           => 'required|numeric|min:1',
-            'purchase_price'       => 'required|numeric|min:1',
-            'discount'             => 'required|gt:-1',
-            'shipping_cost'        => 'required_if:product_type,==,physical|gt:-1',
-            'code'                 => 'required|numeric|min:1|digits_between:6,20|unique:products',
-            'minimum_order_qty'    => 'required|numeric|min:1',
+            'digital_file_ready' => 'required_if:digital_product_type,==,ready_product|mimes:jpg,jpeg,png,gif,zip,pdf',
+            'unit' => 'required_if:product_type,==,physical',
+            'images' => 'required',
+            'image' => 'required',
+            'tax' => 'required|min:0',
+            'unit_price' => 'required|numeric|min:1',
+            'purchase_price' => 'required|numeric|min:1',
+            'discount' => 'required|gt:-1',
+            'shipping_cost' => 'required_if:product_type,==,physical|gt:-1',
+            'code' => 'required|numeric|min:1|digits_between:6,20|unique:products',
+            'minimum_order_qty' => 'required|numeric|min:1',
         ], [
-            'images.required'                  => 'Product images is required!',
-            'image.required'                   => 'Product thumbnail is required!',
-            'category_id.required'             => 'Category is required!',
-            'unit.required_if'                 => 'Unit is required!',
-            'code.min'                         => 'Code must be positive!',
-            'code.digits_between'              => 'Code must be minimum 6 digits!',
-            'minimum_order_qty.required'       => 'Minimum order quantity is required!',
-            'minimum_order_qty.min'            => 'Minimum order quantity must be positive!',
-            'digital_file_ready.required_if'   => 'Ready product upload is required!',
-            'digital_file_ready.mimes'         => 'Ready product upload must be a file of type: pdf, zip, jpg, jpeg, png, gif.',
+            'images.required' => 'Product images is required!',
+            'image.required' => 'Product thumbnail is required!',
+            'category_id.required' => 'Category is required!',
+            'unit.required_if' => 'Unit is required!',
+            'code.min' => 'Code must be positive!',
+            'code.digits_between' => 'Code must be minimum 6 digits!',
+            'minimum_order_qty.required' => 'Minimum order quantity is required!',
+            'minimum_order_qty.min' => 'Minimum order quantity must be positive!',
+            'digital_file_ready.required_if' => 'Ready product upload is required!',
+            'digital_file_ready.mimes' => 'Ready product upload must be a file of type: pdf, zip, jpg, jpeg, png, gif.',
             'digital_product_type.required_if' => 'Digital product type is required!',
-            'shipping_cost.required_if'        => 'Shipping Cost is required!',
+            'shipping_cost.required_if' => 'Shipping Cost is required!',
         ]);
 
         $brand_setting = BusinessSetting::where('type', 'product_brand')->first()->value;
         if ($brand_setting && empty($request->brand_id)) {
             $validator->after(function ($validator) {
                 $validator->errors()->add(
-                    'brand_id', 'Brand is required!'
+                    'brand_id',
+                    'Brand is required!'
                 );
             });
         }
@@ -248,7 +249,8 @@ class BusinessSettingsController extends Controller
         if ($request['unit_price'] <= $dis) {
             $validator->after(function ($validator) {
                 $validator->errors()->add(
-                    'unit_price', 'Discount can not be more or equal to the price!'
+                    'unit_price',
+                    'Discount can not be more or equal to the price!'
                 );
             });
         }
@@ -256,17 +258,18 @@ class BusinessSettingsController extends Controller
         if (is_null($request->name[array_search('en', $request->lang)])) {
             $validator->after(function ($validator) {
                 $validator->errors()->add(
-                    'name', 'Name field is required!'
+                    'name',
+                    'Name field is required!'
                 );
             });
         }
 
         $p = new Product();
-        $p->user_id  = auth('admin')->id();
+        $p->user_id = auth('admin')->id();
         $p->added_by = "admin";
-        $p->name     = $request->name[array_search('en', $request->lang)];
-        $p->code     = $request->code;
-        $p->slug     = Str::slug($request->name[array_search('en', $request->lang)], '-') . '-' . Str::random(6);
+        $p->name = $request->name[array_search('en', $request->lang)];
+        $p->code = $request->code;
+        $p->slug = Str::slug($request->name[array_search('en', $request->lang)], '-') . '-' . Str::random(6);
 
         $category = [];
 
@@ -289,12 +292,12 @@ class BusinessSettingsController extends Controller
             ]);
         }
 
-        $p->category_ids         = json_encode($category);
-        $p->brand_id             = $request->brand_id;
-        $p->unit                 = $request->product_type == 'physical' ? $request->unit : null;
+        $p->category_ids = json_encode($category);
+        $p->brand_id = $request->brand_id;
+        $p->unit = $request->product_type == 'physical' ? $request->unit : null;
         $p->digital_product_type = $request->product_type == 'digital' ? $request->digital_product_type : null;
-        $p->product_type         = $request->product_type;
-        $p->details              = $request->description[array_search('en', $request->lang)];
+        $p->product_type = $request->product_type;
+        $p->details = $request->description[array_search('en', $request->lang)];
 
         if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
             $p->colors = $request->product_type == 'physical' ? json_encode($request->colors) : json_encode([]);
@@ -356,7 +359,7 @@ class BusinessSettingsController extends Controller
                 $stock_count += $item['qty'];
             }
         } else {
-            $stock_count = (integer)$request['current_stock'];
+            $stock_count = (integer) $request['current_stock'];
         }
 
         if ($validator->errors()->count() > 0) {
@@ -364,21 +367,21 @@ class BusinessSettingsController extends Controller
         }
 
         //combinations end
-        $p->variation         = $request->product_type == 'physical' ? json_encode($variations) : json_encode([]);
-        $p->unit_price        = BackEndHelper::currency_to_usd($request->unit_price);
-        $p->purchase_price    = BackEndHelper::currency_to_usd($request->purchase_price);
-        $p->tax               = $request->tax_type == 'flat' ? BackEndHelper::currency_to_usd($request->tax) : $request->tax;
-        $p->tax_type          = $request->tax_type;
-        $p->discount          = $request->discount_type == 'flat' ? BackEndHelper::currency_to_usd($request->discount) : $request->discount;
-        $p->discount_type     = $request->discount_type;
-        $p->attributes        = $request->product_type == 'physical' ? json_encode($request->choice_attributes) : json_encode([]);
-        $p->current_stock     = $request->product_type == 'physical' ? abs($stock_count) : 0;
+        $p->variation = $request->product_type == 'physical' ? json_encode($variations) : json_encode([]);
+        $p->unit_price = BackEndHelper::currency_to_usd($request->unit_price);
+        $p->purchase_price = BackEndHelper::currency_to_usd($request->purchase_price);
+        $p->tax = $request->tax_type == 'flat' ? BackEndHelper::currency_to_usd($request->tax) : $request->tax;
+        $p->tax_type = $request->tax_type;
+        $p->discount = $request->discount_type == 'flat' ? BackEndHelper::currency_to_usd($request->discount) : $request->discount;
+        $p->discount_type = $request->discount_type;
+        $p->attributes = $request->product_type == 'physical' ? json_encode($request->choice_attributes) : json_encode([]);
+        $p->current_stock = $request->product_type == 'physical' ? abs($stock_count) : 0;
         $p->minimum_order_qty = $request->minimum_order_qty;
-        $p->video_provider    = 'youtube';
-        $p->video_url         = $request->video_link;
-        $p->request_status    = 1;
-        $p->shipping_cost     = $request->product_type == 'physical' ? BackEndHelper::currency_to_usd($request->shipping_cost): 0;
-        $p->multiply_qty      = ($request->product_type == 'physical') ? ($request->multiplyQTY=='on'?1:0) : 0;
+        $p->video_provider = 'youtube';
+        $p->video_url = $request->video_link;
+        $p->request_status = 1;
+        $p->shipping_cost = $request->product_type == 'physical' ? BackEndHelper::currency_to_usd($request->shipping_cost) : 0;
+        $p->multiply_qty = ($request->product_type == 'physical') ? ($request->multiplyQTY == 'on' ? 1 : 0) : 0;
 
         if ($request->ajax()) {
             return response()->json([], 200);
@@ -391,35 +394,41 @@ class BusinessSettingsController extends Controller
             }
             $p->thumbnail = ImageManager::upload('product/thumbnail/', 'png', $request->image);
 
-            if($request->product_type == 'digital' && $request->digital_product_type == 'ready_product') {
+            if ($request->product_type == 'digital' && $request->digital_product_type == 'ready_product') {
                 $p->digital_file_ready = ImageManager::upload('product/digital-product/', $request->digital_file_ready->getClientOriginalExtension(), $request->digital_file_ready);
             }
 
-            $p->meta_title       = $request->meta_title;
+            $p->meta_title = $request->meta_title;
             $p->meta_description = $request->meta_description;
-            $p->meta_image       = ImageManager::upload('product/meta/', 'png', $request->meta_image);
+            $p->meta_image = ImageManager::upload('product/meta/', 'png', $request->meta_image);
 
             $p->save();
 
             $data = [];
             foreach ($request->lang as $index => $key) {
                 if ($request->name[$index] && $key != 'en') {
-                    array_push($data, array(
-                        'translationable_type' => 'App\Model\Product',
-                        'translationable_id' => $p->id,
-                        'locale' => $key,
-                        'key' => 'name',
-                        'value' => $request->name[$index],
-                    ));
+                    array_push(
+                        $data,
+                        array(
+                            'translationable_type' => 'App\Model\Product',
+                            'translationable_id' => $p->id,
+                            'locale' => $key,
+                            'key' => 'name',
+                            'value' => $request->name[$index],
+                        )
+                    );
                 }
                 if ($request->description[$index] && $key != 'en') {
-                    array_push($data, array(
-                        'translationable_type' => 'App\Model\Product',
-                        'translationable_id' => $p->id,
-                        'locale' => $key,
-                        'key' => 'description',
-                        'value' => $request->description[$index],
-                    ));
+                    array_push(
+                        $data,
+                        array(
+                            'translationable_type' => 'App\Model\Product',
+                            'translationable_id' => $p->id,
+                            'locale' => $key,
+                            'key' => 'description',
+                            'value' => $request->description[$index],
+                        )
+                    );
                 }
             }
             Translation::insert($data);
@@ -444,7 +453,7 @@ class BusinessSettingsController extends Controller
         $privacy_policy = BusinessSetting::where('type', 'privacy_policy')->first();
         return view('admin-views.business-settings.privacy-policy', compact('privacy_policy'));
     }
-    
+
 
     public function privacy_policy_update(Request $data)
     {
@@ -456,7 +465,7 @@ class BusinessSettingsController extends Controller
         return redirect()->back();
     }
 
-    
+
     public function support()
     {
         $support = BusinessSetting::where('type', 'support')->first();
@@ -490,10 +499,10 @@ class BusinessSettingsController extends Controller
         $company_name = BusinessSetting::where('type', 'company_name')->first();
         $company_email = BusinessSetting::where('type', 'company_email')->first();
         $company_phone = BusinessSetting::where('type', 'company_phone')->first();
-        $digital_product = \App\Model\BusinessSetting::where('type','digital_product')->first()->value;
-        $brand = \App\Model\BusinessSetting::where('type','product_brand')->first()->value;
+        $digital_product = \App\Model\BusinessSetting::where('type', 'digital_product')->first()->value;
+        $brand = \App\Model\BusinessSetting::where('type', 'product_brand')->first()->value;
 
-        return view('admin-views.business-settings.product-settings', compact('company_name','company_email','company_phone','digital_product','brand'));
+        return view('admin-views.business-settings.product-settings', compact('company_name', 'company_email', 'company_phone', 'digital_product', 'brand'));
     }
 
     public function updateInfo(Request $request)
@@ -504,13 +513,13 @@ class BusinessSettingsController extends Controller
             $request['email_verification'] = 0;
         }
 
-        if(!empty($request->android_version)){
+        if (!empty($request->android_version)) {
             $force_update_android = $request->force_update_android;
-            DB::table('api_versions')->where(['platform' => 'android'])->update(['version'=>$request->android_version,'status'=>$force_update_android]);
+            DB::table('api_versions')->where(['platform' => 'android'])->update(['version' => $request->android_version, 'status' => $force_update_android]);
         }
-        if(!empty($request->ios_version)){
+        if (!empty($request->ios_version)) {
             $force_update_ios = $request->force_update_ios;
-            DB::table('api_versions')->where(['platform' => 'ios'])->update(['version'=>$request->ios_version,'status'=>$force_update_ios]);
+            DB::table('api_versions')->where(['platform' => 'ios'])->update(['version' => $request->ios_version, 'status' => $force_update_ios]);
         }
 
         //comapy shop banner
@@ -569,7 +578,12 @@ class BusinessSettingsController extends Controller
             'value' => $request['shop_address']
         ]);
 
-        if(!empty($request['minimum_distance_fire_alarm'])){
+        // Zip code inserted
+        DB::table('business_settings')->updateOrInsert(['type' => 'zip_code'], [
+            'value' => $request['zip_code']
+        ]);
+
+        if (!empty($request['minimum_distance_fire_alarm'])) {
             DB::table('business_settings')->updateOrInsert(['type' => 'minimum_distance_fire_alarm'], [
                 'value' => $request['minimum_distance_fire_alarm']
             ]);
@@ -625,7 +639,8 @@ class BusinessSettingsController extends Controller
                     [
                         'primary' => $request['primary'],
                         'secondary' => $request['secondary'],
-                    ]),
+                    ]
+                ),
             ]);
         } else {
             DB::table('business_settings')->insert([
@@ -634,15 +649,18 @@ class BusinessSettingsController extends Controller
                     [
                         'primary' => $request['primary'],
                         'secondary' => $request['secondary'],
-                    ]),
+                    ]
+                ),
             ]);
         }
 
         DB::table('business_settings')->updateOrInsert(['type' => 'default_location'], [
             'value' => json_encode(
-                [   'lat' => $request['latitude'],
+                [
+                    'lat' => $request['latitude'],
                     'lng' => $request['longitude'],
-                ]),
+                ]
+            ),
         ]);
 
         //pagination
@@ -659,7 +677,7 @@ class BusinessSettingsController extends Controller
 
     public function announcement()
     {
-        $announcement=\App\CPU\Helpers::get_business_settings('announcement');
+        $announcement = \App\CPU\Helpers::get_business_settings('announcement');
         return view('admin-views.business-settings.website-announcement', compact('announcement'));
     }
 
@@ -667,11 +685,13 @@ class BusinessSettingsController extends Controller
     {
         DB::table('business_settings')->updateOrInsert(['type' => 'announcement'], [
             'value' => json_encode(
-                [   'status' => $request['announcement_status'],
+                [
+                    'status' => $request['announcement_status'],
                     'color' => $request['announcement_color'],
                     'text_color' => $request['text_color'],
                     'announcement' => $request['announcement'],
-                ]),
+                ]
+            ),
         ]);
 
         Toastr::success('Announcement Updated successfully!');
@@ -863,7 +883,8 @@ class BusinessSettingsController extends Controller
                     [
                         'primary' => $request['primary'],
                         'secondary' => $request['secondary'],
-                    ]),
+                    ]
+                ),
             ]);
         } else {
             DB::table('business_settings')->insert([
@@ -872,7 +893,8 @@ class BusinessSettingsController extends Controller
                     [
                         'primary' => $request['primary'],
                         'secondary' => $request['secondary'],
-                    ]),
+                    ]
+                ),
             ]);
         }
         Toastr::success('Color  updated!');
@@ -1058,10 +1080,10 @@ class BusinessSettingsController extends Controller
     {
 
         DB::table('business_settings')->updateOrInsert(['type' => 'new_product_approval'], [
-            'value' => $request->new_product_approval == 'on'?1:0
+            'value' => $request->new_product_approval == 'on' ? 1 : 0
         ]);
         DB::table('business_settings')->updateOrInsert(['type' => 'product_wise_shipping_cost_approval'], [
-            'value' => $request->product_wise_shipping_cost_approval == 'on'?1:0
+            'value' => $request->product_wise_shipping_cost_approval == 'on' ? 1 : 0
         ]);
         Toastr::success(\App\CPU\translate('admin_approval_for_products_updated_successfully!'));
         return redirect()->back();
@@ -1177,7 +1199,8 @@ class BusinessSettingsController extends Controller
     }
 
     // stock limit
-    public function stock_limit_warning(Request $request){
+    public function stock_limit_warning(Request $request)
+    {
         DB::table('business_settings')->updateOrInsert(['type' => 'stock_limit'], [
             'value' => $request['stock_limit']
         ]);
@@ -1186,7 +1209,8 @@ class BusinessSettingsController extends Controller
         return back();
     }
 
-    public function updateDigitalProduct(Request $request){
+    public function updateDigitalProduct(Request $request)
+    {
         $digital_product = BusinessSetting::where('type', 'digital_product')->first();
         if (isset($digital_product)) {
             BusinessSetting::where(['type' => 'digital_product'])->update(['value' => $request->digital_product]);
@@ -1202,7 +1226,8 @@ class BusinessSettingsController extends Controller
         return back();
     }
 
-    public function updateProductBrand(Request $request){
+    public function updateProductBrand(Request $request)
+    {
         $product_brand = BusinessSetting::where('type', 'product_brand')->first();
         if (isset($product_brand)) {
             BusinessSetting::where(['type' => 'product_brand'])->update(['value' => $request->product_brand]);
@@ -1218,7 +1243,8 @@ class BusinessSettingsController extends Controller
         return back();
     }
 
-    public function countryRestrictionStatusChange(Request $request){
+    public function countryRestrictionStatusChange(Request $request)
+    {
 
         $delivery_country_restriction_status = BusinessSetting::where('type', 'delivery_country_restriction')->first();
 
@@ -1232,12 +1258,13 @@ class BusinessSettingsController extends Controller
             ]);
         }
         return [
-            'message' =>\App\CPU\translate('delivery_country_restriction_status_changed_successfully'),
+            'message' => \App\CPU\translate('delivery_country_restriction_status_changed_successfully'),
             'status' => true
         ];
     }
 
-    public function zipcodeRestrictionStatusChange(Request $request){
+    public function zipcodeRestrictionStatusChange(Request $request)
+    {
 
         $zip_code_area_restriction_status = BusinessSetting::where('type', 'delivery_zip_code_area_restriction')->first();
 

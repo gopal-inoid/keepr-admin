@@ -18,6 +18,7 @@ use App\Model\Order;
 use App\Model\OrderDetail;
 use App\User;
 use App\Common;
+use App\Model\BusinessSetting;
 use Illuminate\Support\Str;
 use App\Model\ShippingType;
 use App\Model\CategoryShippingCost;
@@ -255,10 +256,12 @@ class CartController extends Controller
             // CheckoutInfo::insert(['product_id' => json_encode($device_ids), 'customer_id' => $user_details->id, 'total_order' => $total_order, 'total_amount' => $total_price, 'tax_amount' => 7]);
 
             if (!empty($user_details->shipping_country) && !empty($user_details->shipping_state)) {
-                $country_name = $this->getCountryName($user_details->shipping_country);
+                // $country_name = $this->getCountryName($user_details->shipping_country);
+                $country_name = $user_details->shipping_country;
                 $state_name = $this->getStateName($user_details->shipping_state);
             } else {
-                $country_name = $this->getCountryName($user_details->country);
+                // $country_name = $this->getCountryName($user_details->country);
+                $country_name = $user_details->country;
                 $state_name = $this->getStateName($user_details->state);
             }
 
@@ -298,23 +301,23 @@ class CartController extends Controller
                 $shipping_phone_code = $user_details->billing_phone_code;
             }
 
-            if ($country_name == 'Canada') {
+            if (!empty($country_name) == 'Canada') {
                 $postalCode = $zip_code . " Canada";
-            } elseif ($country_name = 'United States') {
+            } elseif (!empty($country_name) == 'United States') {
                 $postalCode = $zip_code . " United-States";
             } else {
                 $postalCode = $shipping_phone_code . " International";
             }
 
-            $originPostalCode = $zip_code;
+            $company_details = BusinessSetting::select('value')->where('type', 'zip_code')->first();
+            if (!empty($company_details) && !empty($company_details->value)) {
+                $originPostalCode = $company_details->value;
+            }
             $weight = !empty($spe['weight']) ? (float) $spe['weight'] : 0;
             $length = !empty($spe['length']) ? (int) $spe['length'] : 0;
-            $width =  !empty($spe['width']) ? (int) $spe['width'] : 0;
+            $width = !empty($spe['width']) ? (int) $spe['width'] : 0;
             $height = !empty($spe['height']) ? (int) $spe['height'] : 0;
-
-            $shippingInfo = $this->getShippingRates('K2B8J6', 'J0E1X0 Canada', $weight, $length, $width, $height);
-
-            // echo "<pre>"; print_r($shippingInfo); die;
+            $shippingInfo = $this->getShippingRates($originPostalCode, $postalCode, $weight, $length, $width, $height);
 
             //TAX calculation
             $tax_arr = $this->getTaxCalculation($total_price, $country_name, $state_name);
@@ -341,7 +344,9 @@ class CartController extends Controller
         $taxes = $request->tax;
         //$shipping_rate_id = 'DOM.XP';
         $shipping_rates = $request->shipping_rates;
-
+        if (empty($shipping_rates)) {
+            return response()->json(['status' => 400, 'message' => 'Shipping rates are required.'], 400);
+        }
         ////////$shipping_mode = $request->shipping_mode;
         $total_amount = $request->total_amount ?? 0;
 
@@ -456,6 +461,7 @@ class CartController extends Controller
                 //$order->mac_ids = json_encode($mac_ids_array);
                 $order->order_amount = $total_amount;
                 $order->product_info = json_encode($product_info);
+                $order->expected_delivery_date = json_decode($shipping_rates, true)[0]['expected_delivery_date'];
                 $order->save();
 
                 if (!empty($product_info)) {

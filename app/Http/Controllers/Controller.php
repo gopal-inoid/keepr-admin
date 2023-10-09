@@ -493,7 +493,7 @@ class Controller extends BaseController
         </mailing-scenario>
         XML;
 
-        //echo "<pre>"; print_r($xmlRequest); die;
+        // echo "<pre>"; print_r($xmlRequest); die;
 
         $curl = curl_init($service_url); // Create REST Request
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
@@ -517,6 +517,7 @@ class Controller extends BaseController
         curl_close($curl);
         $xml = simplexml_load_string($curl_response);
         $jsonArray = json_decode(json_encode($xml), true);
+    
         $finalArray = array();
         if (!empty($jsonArray)) {
             if (!empty($jsonArray['price-quote'][0]['service-code'])) {
@@ -594,53 +595,59 @@ class Controller extends BaseController
 
     function getShippingTrackingDetais($pin)
     {
-        $username = env('CANADAPOST_USERANME');
-        $password = env('CANADAPOST_PASSWORD');
-        $token = base64_encode($username . ":" . $password);
-        // REST URL
-        $service_url = env('CANADAPOST_URL') . '/vis/track/pin/' . $pin . '/detail';
-        $curl = curl_init($service_url); // Create REST Request
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt(
-            $curl,
-            CURLOPT_HTTPHEADER,
-            array(
-                'Authorization: Basic ' . $token,
-                'Accept: application/vnd.cpc.track-v2+xml'
-            )
-        );
-        $curl_response = curl_exec($curl); // Execute REST Request
-        if (curl_errno($curl)) {
-            echo 'Curl error: ' . curl_error($curl) . "\n";
-        }
-        curl_close($curl);
-        $xml = simplexml_load_string($curl_response);
-        $jsonArray = json_decode(json_encode($xml), true);
+        $trackingUrl = 'https://www.canadapost-postescanada.ca/track-reperage/en#/search?searchFor=' . $pin;
+        return $trackingUrl;
+        exit;
 
-        echo "<pre>";
-        print_r($jsonArray);
-        die;
 
-        $finalArray = array();
-        // foreach ($jsonArray as $k => $val) {
-        //     if (!empty($val) && is_array($val)) {
-        //         foreach ($val as $j => $child) {
-        //             $array = array();
-        //             $array['service_name'] = $child['service-name'] ?? 0;
-        //             // $array['mode'] = strtolower(str_replace(' ', '_', $child['service-name'] ?? ''));
-        //             $array['service_code'] = $child['service-code'] ?? 0;
-        //             $array['shipping_rate'] = (($child['price-details']['due'] * 0.74) + 1);
-        //             $array['expected_delivery_date'] = $child['service-standard']['expected-delivery-date'];
-        //             $array['is_guanranteed'] = $child['service-standard']['guaranteed-delivery'] == true ? '1' : '0';
-        //             // $array['tracking'] = $child['price-details']['options']['option']['option-code'] == 'DC' ? '1' : '0';
-        //             $array['delivery_days'] = $child['service-standard']['expected-transit-time'];
-        //             array_push($finalArray, $array);
-        //         }
+        //     $username = env('CANADAPOST_USERANME');
+        //     $password = env('CANADAPOST_PASSWORD');
+        //     $token = base64_encode($username . ":" . $password);
+        //     // echo $token;exit;
+        //     // REST URL
+        //     $service_url = env('CANADAPOST_URL') . '/vis/track/pin/' . $pin . '/detail';
+        //     $curl = curl_init($service_url); // Create REST Request
+        //     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+        //     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+        //     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        //     curl_setopt(
+        //         $curl,
+        //         CURLOPT_HTTPHEADER,
+        //         array(
+        //             'Authorization: Basic ' . $token,
+        //             'Accept: application/vnd.cpc.track-v2+xml'
+        //         )
+        //     );
+        //     $curl_response = curl_exec($curl); // Execute REST Request
+        //     if (curl_errno($curl)) {
+        //         echo 'Curl error: ' . curl_error($curl) . "\n";
         //     }
-        // }
-        return $finalArray;
+        //     curl_close($curl);
+        //     $xml = simplexml_load_string($curl_response);
+        //     $jsonArray = json_decode(json_encode($xml), true);
+
+        //     echo "<pre>";
+        //     print_r($jsonArray);
+        //     die;
+
+        //     $finalArray = array();
+        //     // foreach ($jsonArray as $k => $val) {
+        //     //     if (!empty($val) && is_array($val)) {
+        //     //         foreach ($val as $j => $child) {
+        //     //             $array = array();
+        //     //             $array['service_name'] = $child['service-name'] ?? 0;
+        //     //             // $array['mode'] = strtolower(str_replace(' ', '_', $child['service-name'] ?? ''));
+        //     //             $array['service_code'] = $child['service-code'] ?? 0;
+        //     //             $array['shipping_rate'] = (($child['price-details']['due'] * 0.74) + 1);
+        //     //             $array['expected_delivery_date'] = $child['service-standard']['expected-delivery-date'];
+        //     //             $array['is_guanranteed'] = $child['service-standard']['guaranteed-delivery'] == true ? '1' : '0';
+        //     //             // $array['tracking'] = $child['price-details']['options']['option']['option-code'] == 'DC' ? '1' : '0';
+        //     //             $array['delivery_days'] = $child['service-standard']['expected-transit-time'];
+        //     //             array_push($finalArray, $array);
+        //     //         }
+        //     //     }
+        //     // }
+        //     return $finalArray;
     }
 
 

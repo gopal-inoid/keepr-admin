@@ -395,11 +395,12 @@ class GeneralController extends Controller
         }
     }
 
-    public function order_tracking_detail(Request $request){ 
+    public function order_tracking_detail(Request $request)
+    {
         $tracking_pin = "7023210039414604"; //$request->pin;
-        $tracking_details = $this->getShippingTrackingDetais($tracking_pin);
+        $tracking_link = $this->getShippingTrackingDetais($tracking_pin);
         Common::addLog([]);
-        return response()->json(['status' => 200, 'message' => 'Success', 'data' => $tracking_details], 200);
+        return response()->json(['status' => 200, 'message' => 'Success', 'data' => $tracking_link], 200);
     }
 
     public function order_detail(Request $request)
@@ -408,7 +409,7 @@ class GeneralController extends Controller
         $auth_token = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
         if (!empty($user_details->id)) {
-            $get_orders = Order::select('id', 'customer_id', 'mac_ids', 'payment_status', 'expected_delivery_date', 'order_status', 'order_amount', 'shipping_address', 'created_at')
+            $get_orders = Order::select('id', 'customer_id', 'mac_ids', 'payment_status', 'expected_delivery_date', 'order_status', 'order_amount', 'shipping_address', 'created_at', 'tracking_id')
                 ->where(['id' => $order_id])->first();
             $total_mac_ids = [];
             if (!empty($get_orders->id)) {
@@ -428,9 +429,9 @@ class GeneralController extends Controller
                     $get_orders->delivery_message = "";
                 }
 
-                $tracking_pin = "7023210039414604";
-                $get_orders->tracking_summary = $this->getShippingTrackingSummary($tracking_pin);
-
+                $tracking_pin = $get_orders->tracking_id;
+                // $get_orders->tracking_summary = $this->getShippingTrackingSummary($tracking_pin);
+                $get_orders->tracking_url = 'https://www.canadapost-postescanada.ca/track-reperage/en#/search?searchFor=' . $tracking_pin;
                 $get_orders->shipping = [
                     'address' => $shipping_address->add_shipping_address ?? '',
                     'name' => $shipping_address->shipping_name ?? '',
@@ -586,7 +587,7 @@ class GeneralController extends Controller
                 $mailedBy = (string) $xml->{'customer-number'};
                 $weight = (float) $xml->{'parcel-characteristics'}->weight;
                 $originPostalCode = (string) $xml->{'origin-postal-code'};
-                
+
                 // $postalCode = (string) $xml->destination->domestic->{'postal-code'};
                 $length = (int) $xml->{'parcel-characteristics'}->dimensions->length;
                 $width = (int) $xml->{'parcel-characteristics'}->dimensions->width;
