@@ -380,7 +380,7 @@ class Controller extends BaseController
             //     $product_qty = implode(',', $order_attribute['total_orders']);
             // }
 
-            $product_id = array_keys(json_decode($update_order['mac_ids'], true))[0] ?? 0;
+            $product_id = 7; //array_keys(json_decode($update_order['mac_ids'], true))[0] ?? 0;
             $product_info = json_decode($update_order->product_info, true);
             $product_qty_info = json_decode($update_order->mac_ids, true);
             $price_info = json_decode($update_order->per_device_amount, true);
