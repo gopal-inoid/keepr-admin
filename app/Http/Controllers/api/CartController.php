@@ -313,12 +313,12 @@ class CartController extends Controller
             $height = !empty($spe['height']) ? (int) $spe['height'] : 0;
 
             $shippingInfo = $this->getShippingRates($originPostalCode, $postalCode, $weight, $length, $width, $height);
-            
+
             //TAX calculation
             $tax_arr = $this->getTaxCalculation($total_price, $country_name, $state_name);
             //END Tax calculation
             $data['cart_info'] = $cart_info;
-            $data['shipping_rates'] = count($shippingInfo) == 0 ? "Empty cart OR Product quantity is 0" : $shippingInfo;
+            $data['shipping_rates'] = $shippingInfo;
             $data['customer_id'] = $user_details->id;
             $data['total_order'] = $total_order;
             $data['sub_total'] = number_format($total_price, 2);
