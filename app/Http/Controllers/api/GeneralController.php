@@ -409,7 +409,7 @@ class GeneralController extends Controller
         $auth_token = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
         if (!empty($user_details->id)) {
-            $get_orders = Order::select('id', 'customer_id', 'mac_ids', 'payment_status', 'expected_delivery_date', 'order_status', 'order_amount', 'shipping_address', 'created_at', 'tracking_id')
+            $get_orders = Order::select('id','product_info','per_device_amount','customer_id', 'mac_ids', 'payment_status', 'expected_delivery_date', 'order_status', 'order_amount', 'shipping_address', 'created_at', 'tracking_id')
                 ->where(['id' => $order_id])->first();
             $total_mac_ids = [];
             if (!empty($get_orders->id)) {
@@ -444,28 +444,50 @@ class GeneralController extends Controller
                 ];
 
                 $product_ids = [];
-                if (!empty($get_orders->mac_ids)) {
-                    $mac_ids = json_decode($get_orders->mac_ids, true);
-                    if (!empty($mac_ids)) {
-                        foreach ($mac_ids as $k => $val) {
-                            $total_mac_ids[$k] = $val;
-                            if (!in_array($k, $product_ids)) {
-                                array_push($product_ids, $k);
-                            }
-                        }
+                // if (!empty($get_orders->mac_ids)) {
+                //     $mac_ids = json_decode($get_orders->mac_ids, true);
+                //     if (!empty($mac_ids)) {
+                //         foreach ($mac_ids as $k => $val) {
+                //             $total_mac_ids[$k] = $val;
+                //             if (!in_array($k, $product_ids)) {
+                //                 array_push($product_ids, $k);
+                //             }
+                //         }
 
-                        foreach ($product_ids as $k => $products) {
-                            $product_d = Product::select('id', 'name', 'thumbnail', 'purchase_price')->where(['id' => $products])->first();
+                //         foreach ($product_ids as $k => $products) {
+                //             $product_d = Product::select('id', 'name', 'thumbnail', 'purchase_price')->where(['id' => $products])->first();
+                //             if (!empty($product_d->id)) {
+                //                 //echo "<pre>"; print_r($total_mac_ids); die;
+                //                 $product_d->price = number_format($product_d->purchase_price, 2);
+                //                 $product_d->quantity = count($total_mac_ids[$product_d->id]['uuid'] ?? []);
+                //                 $product_d->thumbnail = asset("/product/thumbnail/$product_d->thumbnail");
+                //                 unset($product_d->purchase_price);
+                //                 $product_data[] = $product_d;
+                //             }
+                //             $get_orders->order_items = $product_data ?? [];
+                //         }
+                //     }
+                // }
+
+                if (!empty($get_orders->product_info)) {
+                    $product_infos = json_decode($get_orders->product_info, true);
+                    $per_device_amount = json_decode($get_orders->per_device_amount, true);
+                    
+                    //echo "<pre>"; print_r($per_device_amount); die;
+
+                    if (!empty($product_infos)) {
+                        foreach ($product_infos as $k => $val) {
+                            $perdevicePrice = $per_device_amount[$k] ?? 0;
+                            $product_d = Product::select('id', 'name', 'thumbnail')->where(['id' => $k])->first();
                             if (!empty($product_d->id)) {
-                                //echo "<pre>"; print_r($total_mac_ids); die;
-                                $product_d->price = number_format($product_d->purchase_price, 2);
-                                $product_d->quantity = count($total_mac_ids[$product_d->id]['uuid'] ?? []);
-                                $product_d->thumbnail = asset("/product/thumbnail/$product_d->thumbnail");
-                                unset($product_d->purchase_price);
+                                $product_d->price = number_format($perdevicePrice, 2);
+                                $product_d->quantity = $val['order_qty'] ?? 0;
+                                $product_d->thumbnail = asset("/product/thumbnail/".$val['thumbnail']);
                                 $product_data[] = $product_d;
                             }
                             $get_orders->order_items = $product_data ?? [];
                         }
+                        
                     }
                 }
 
