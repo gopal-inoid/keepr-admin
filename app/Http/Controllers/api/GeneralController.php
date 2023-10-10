@@ -367,7 +367,7 @@ class GeneralController extends Controller
         if (!empty($user_details->id)) {
             $order_list = [];
             $get_orders = Order::select('id as order_id', 'order_status', 'expected_delivery_date', 'customer_id', 'mac_ids', 'order_amount', 'created_at')
-                ->where(['customer_id' => $user_details->id])->get();
+                ->where(['customer_id' => $user_details->id])->orderBy('created_at','desc')->get();
             foreach ($get_orders as $k => $order) {
                 $order_list[$k]['order_id'] = $order['order_id'];
                 $order_list[$k]['customer_id'] = $order['customer_id'];
