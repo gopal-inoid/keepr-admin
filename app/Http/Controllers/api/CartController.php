@@ -519,7 +519,7 @@ class CartController extends Controller
             $this->save_invoice($order_id);
             $invoice_file_path = public_path('public/assets/orders/order_invoice_' . $order_id . '.pdf');
             //Send Email and Notification
-            $userData = $this->getDataforEmail($order_id);
+            $userData = 0; //$this->getDataforEmail($order_id);
             if (!empty($userData)) {
                 $userData['username'] = $user_details['name'] ?? "Keepr User";
                 $userData['email'] = $user_details->email ?? "";
