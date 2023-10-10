@@ -112,7 +112,7 @@ class Controller extends BaseController
         return $products_attr->$type ?? "";
     }
 
-    public function getCountryName($id)
+    public function getCountryName(int $id)
     {
         $country_names = \DB::table('country')->select('name')->where('id', $id)->first();
         return $country_names->name ?? "";
@@ -517,7 +517,7 @@ class Controller extends BaseController
         curl_close($curl);
         $xml = simplexml_load_string($curl_response);
         $jsonArray = json_decode(json_encode($xml), true);
-    
+
         $finalArray = array();
         if (!empty($jsonArray)) {
             if (!empty($jsonArray['price-quote'][0]['service-code'])) {
@@ -526,12 +526,10 @@ class Controller extends BaseController
                         foreach ($val as $j => $child) {
                             $array = array();
                             $array['service_name'] = $child['service-name'] ?? 0;
-                            // $array['mode'] = strtolower(str_replace(' ', '_', $child['service-name'] ?? ''));
                             $array['service_code'] = $child['service-code'] ?? 0;
                             $array['shipping_rate'] = round((($child['price-details']['due'] * 0.74) + 1), 2);
                             $array['expected_delivery_date'] = $child['service-standard']['expected-delivery-date'];
                             $array['is_guanranteed'] = $child['service-standard']['guaranteed-delivery'] == true ? '1' : '0';
-                            // $array['tracking'] = $child['price-details']['options']['option']['option-code'] == 'DC' ? '1' : '0';
                             $array['delivery_days'] = $child['service-standard']['expected-transit-time'];
                             array_push($finalArray, $array);
                         }

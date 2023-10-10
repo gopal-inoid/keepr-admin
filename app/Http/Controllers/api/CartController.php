@@ -249,15 +249,13 @@ class CartController extends Controller
                     }
                 }
             }
-            // CheckoutInfo::insert(['product_id' => json_encode($device_ids), 'customer_id' => $user_details->id, 'total_order' => $total_order, 'total_amount' => $total_price, 'tax_amount' => 7]);
+            CheckoutInfo::insert(['product_id' => json_encode($device_ids), 'customer_id' => $user_details->id, 'total_order' => $total_order, 'total_amount' => $total_price, 'tax_amount' => 7]);
 
             if (!empty($user_details->shipping_country) && !empty($user_details->shipping_state)) {
-                // $country_name = $this->getCountryName($user_details->shipping_country);
-                $country_name = $user_details->shipping_country;
+                $country_name = $this->getCountryName($user_details->shipping_country);
                 $state_name = $this->getStateName($user_details->shipping_state);
             } else {
-                // $country_name = $this->getCountryName($user_details->country);
-                $country_name = $user_details->country;
+                $country_name = $this->getCountryName($user_details->country);
                 $state_name = $this->getStateName($user_details->state);
             }
 
@@ -315,6 +313,7 @@ class CartController extends Controller
             $height = !empty($spe['height']) ? (int) $spe['height'] : 0;
 
             $shippingInfo = $this->getShippingRates($originPostalCode, $postalCode, $weight, $length, $width, $height);
+            
             //TAX calculation
             $tax_arr = $this->getTaxCalculation($total_price, $country_name, $state_name);
             //END Tax calculation
@@ -355,9 +354,9 @@ class CartController extends Controller
         // $height = 1;
 
         // $activeShipService = $this->getShippingServiceDetails($customer_number, $originPostalCode, $postalCode, $weight, $length, $width, $height, $shipping_rate_id);
-        // if ($total_amount == 0) {
-        //     return response()->json(['status' => 400, 'message' => 'Order amount required'], 400);
-        // }
+        if ($total_amount == 0) {
+            return response()->json(['status' => 400, 'message' => 'Order amount required'], 400);
+        }
 
         $left = ltrim($cart_id, "'");
         $right = rtrim($left, "'");

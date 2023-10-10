@@ -604,12 +604,12 @@
                                                             <label><strong>{{ \App\CPU\translate('Shipping info') }}</strong>:
                                                             </label><br />
                                                             <strong>Shipping Co.:
-                                                                {{ json_decode($order->shipping_rates, true)[0]['text'] ?? '' }}</strong><br />
+                                                                {{ json_decode($order->shipping_rates, true)[0]['service_name'] ?? '' }}</strong><br />
                                                             <strong>Duration:
                                                                 {{ json_decode($order->shipping_rates, true)[0]['delivery_days'] ?? '' }}
                                                                 Days</strong><br />
-                                                            <strong>Shipping Mode:
-                                                                {{ json_decode($order->shipping_rates, true)[0]['mode'] ?? '' }}</strong>
+                                                            <strong>Service Code:
+                                                                {{ json_decode($order->shipping_rates, true)[0]['service_code'] ?? '' }}</strong>
                                                         </td>
                                                         <td class="text-right">
                                                             <strong>US
