@@ -249,10 +249,6 @@ class CartController extends Controller
                     }
                 }
             }
-
-            // echo "<pre>"; print_r($spe);
-            // // exit;
-
             // CheckoutInfo::insert(['product_id' => json_encode($device_ids), 'customer_id' => $user_details->id, 'total_order' => $total_order, 'total_amount' => $total_price, 'tax_amount' => 7]);
 
             if (!empty($user_details->shipping_country) && !empty($user_details->shipping_state)) {
@@ -317,13 +313,13 @@ class CartController extends Controller
             $length = !empty($spe['length']) ? (int) $spe['length'] : 0;
             $width = !empty($spe['width']) ? (int) $spe['width'] : 0;
             $height = !empty($spe['height']) ? (int) $spe['height'] : 0;
-            $shippingInfo = $this->getShippingRates($originPostalCode, $postalCode, $weight, $length, $width, $height);
 
+            $shippingInfo = $this->getShippingRates($originPostalCode, $postalCode, $weight, $length, $width, $height);
             //TAX calculation
             $tax_arr = $this->getTaxCalculation($total_price, $country_name, $state_name);
             //END Tax calculation
             $data['cart_info'] = $cart_info;
-            $data['shipping_rates'] = $shippingInfo;
+            $data['shipping_rates'] = count($shippingInfo) == 0 ? "Empty cart OR Product quantity is 0" : $shippingInfo;
             $data['customer_id'] = $user_details->id;
             $data['total_order'] = $total_order;
             $data['sub_total'] = number_format($total_price, 2);
