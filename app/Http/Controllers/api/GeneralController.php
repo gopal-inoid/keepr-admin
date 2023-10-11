@@ -269,6 +269,25 @@ class GeneralController extends Controller
         }
     }
 
+    public function valid_postal_code($value, $country = 'ca')
+    {
+        $country_regex = array(
+            'uk' => '/\\A\\b[A-Z]{1,2}[0-9][A-Z0-9]? [0-9][ABD-HJLNP-UW-Z]{2}\\b\\z/i',
+            'ca' => '/\\A\\b[ABCEGHJKLMNPRSTVXY][0-9][A-Z][ ]?[0-9][A-Z][0-9]\\b\\z/i',
+            'it' => '/^[0-9]{5}$/i',
+            'de' => '/^[0-9]{5}$/i',
+            'be' => '/^[1-9]{1}[0-9]{3}$/i',
+            'us' => '/\\A\\b[0-9]{5}(?:-[0-9]{4})?\\b\\z/i',
+            'in' => '/^[1-9]{1}[0-9]{2}\s{0,1}[0-9]{3}$/i',
+            'default' => '/\\A\\b[0-9]{5}(?:-[0-9]{4})?\\b\\z/i' // Same as US.
+        );
+
+        if (isset($country_regex[$country])) {
+            return preg_match($country_regex[$country], $value);
+        }
+
+        return preg_match($country_regex['default'], $value);
+    }
     public function set_address(Request $request)
     {
         $type = $request->type;
@@ -284,6 +303,14 @@ class GeneralController extends Controller
 
         if ($request->phone == '' || $request->phone == null) {
             return response()->json(['status' => 400, 'message' => "Phone can't be NULL"], 400);
+        }
+
+        if (empty($request->country_iso)) {
+            return response()->json(['status' => 400, 'message' => "Country iso can't be NULL"], 400);
+        }
+
+        if (!$this->valid_postal_code($request->zip_code, strtolower($request->country_iso))) {
+            return response()->json(['status' => 400, 'message' => "Postal code is not valid"], 400);
         }
 
         $auth_token = $request->headers->get('X-Access-Token');
@@ -409,7 +436,7 @@ class GeneralController extends Controller
         $auth_token = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
         if (!empty($user_details->id)) {
-            $get_orders = Order::select('id', 'product_info', 'per_device_amount', 'customer_id', 'mac_ids', 'payment_status', 'expected_delivery_date', 'order_status', 'order_amount', 'shipping_address', 'created_at', 'tracking_id')
+            $get_orders = Order::select('id', 'product_info', 'per_device_amount', 'customer_id', 'mac_ids', 'payment_status', 'expected_delivery_date', 'order_status', 'order_amount', 'shipping_address', 'created_at', 'tracking_id', 'user_shipping_details', 'user_billing_details')
                 ->where(['id' => $order_id])->first();
             $total_mac_ids = [];
             if (!empty($get_orders->id)) {
@@ -418,8 +445,8 @@ class GeneralController extends Controller
                 unset($get_orders->order_amount);
                 $get_orders->order_date = date('F j,Y, h:i A', strtotime($get_orders->created_at));
 
-                $shipping_address = User::select('add_shipping_address', 'shipping_name', 'shipping_email', 'shipping_phone', 'shipping_country', 'shipping_city', 'shipping_state', 'shipping_zip')
-                    ->where(['id' => $get_orders->customer_id])->first();
+                // $shipping_address = User::select('add_shipping_address', 'shipping_name', 'shipping_email', 'shipping_phone', 'shipping_country', 'shipping_city', 'shipping_state', 'shipping_zip')
+                //     ->where(['id' => $get_orders->customer_id])->first();
 
                 if (time() < strtotime($get_orders->expected_delivery_date) && ($get_orders->order_status == 'processing' || $get_orders->order_status == 'shipped')) {
                     $get_orders->delivery_message = 'Estimated Delivery on ' . date('F j', strtotime($get_orders->expected_delivery_date));
@@ -429,20 +456,12 @@ class GeneralController extends Controller
                     $get_orders->delivery_message = "";
                 }
 
+                $get_orders->user_shipping_details = json_decode($get_orders->user_shipping_details, true);
+
+                $get_orders->user_billing_details = json_decode($get_orders->user_billing_details, true);
                 $tracking_pin = $get_orders->tracking_id;
                 // $get_orders->tracking_summary = $this->getShippingTrackingSummary($tracking_pin);
-                $get_orders->tracking_url = 'https://www.canadapost-postescanada.ca/track-reperage/en#/search?searchFor=' . $tracking_pin;
-                $get_orders->shipping = [
-                    'address' => $shipping_address->add_shipping_address ?? '',
-                    'name' => $shipping_address->shipping_name ?? '',
-                    'email' => $shipping_address->shipping_email ?? '',
-                    'phone' => $shipping_address->shipping_phone ?? '',
-                    'country' => $shipping_address->shipping_country ?? '',
-                    'city' => $shipping_address->shipping_city ?? '',
-                    'state' => $shipping_address->shipping_state ?? '',
-                    'zip' => $shipping_address->shipping_zip ?? '',
-                ];
-
+                $get_orders->tracking_url = !empty($tracking_pin) ? 'https://www.canadapost-postescanada.ca/track-reperage/en#/search?searchFor=' . $tracking_pin : "";
                 $product_ids = [];
                 // if (!empty($get_orders->mac_ids)) {
                 //     $mac_ids = json_decode($get_orders->mac_ids, true);

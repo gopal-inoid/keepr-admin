@@ -549,7 +549,7 @@ class Controller extends BaseController
                     if (!empty($val) && is_array($val)) {
                         foreach ($val as $j => $child) {
                             $array = array();
-                            $array['service_name'] = $child['service-name'] ?? 0;
+                            $array['service_name'] = !empty($child['service-name']) ? $child['service-name'] . " - via Canada Post" : "";
                             $array['service_code'] = $child['service-code'] ?? 0;
                             $array['shipping_rate'] = round((($child['price-details']['due'] * 0.74) + 1), 2);
                             $array['expected_delivery_date'] = $child['service-standard']['expected-delivery-date'] ?? "";

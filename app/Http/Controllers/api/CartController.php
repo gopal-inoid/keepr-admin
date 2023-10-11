@@ -230,25 +230,7 @@ class CartController extends Controller
                 }
 
             }
-            $spe = [];
-            if (!empty($specs[0])) {
-                foreach ($specs[0] as $k => $val) {
-                    if ($val['key'] == 'Size') {
-                        $check = explode('mm', $val['value']);
-                        if (!empty($check)) {
-                            $spe['width'] = $check[0] ?? 0;
-                            $spe['height'] = str_replace("x", "", $check[1]);
-                            $spe['length'] = str_replace("x", "", $check[2]);
-                        }
-                    }
-                    if ($val['key'] == 'Weight') {
-                        $check = explode(' ', $val['value']);
-                        if (!empty($check)) {
-                            $spe['weight'] = $check[0] ?? 0;
-                        }
-                    }
-                }
-            }
+
             CheckoutInfo::insert(['product_id' => json_encode($device_ids), 'customer_id' => $user_details->id, 'total_order' => $total_order, 'total_amount' => $total_price, 'tax_amount' => 7]);
 
             if (!empty($user_details->shipping_country) && !empty($user_details->shipping_state)) {
@@ -258,30 +240,6 @@ class CartController extends Controller
                 $country_name = $this->getCountryName($user_details->country);
                 $state_name = $this->getStateName($user_details->state);
             }
-
-            // $shipping_rates = ShippingMethodRates::select('normal_rate', 'express_rate', 'shipping_methods.title as shipping_company', 'shipping_methods.normal_duration', 'shipping_methods.express_duration', 'shipping_methods.id as shippingid')
-            //     ->join('shipping_methods', 'shipping_methods.id', 'shipping_method_rates.shipping_id')
-            //     ->where('shipping_methods.status', 1)->where('shipping_method_rates.status', 1)->where('country_code', $country_name)->get();
-
-            // //$shipping = number_format(0,2);
-            // $shipping_cost_check = [];
-            // if (!empty($shipping_rates)) {
-            //     foreach ($shipping_rates as $k => $val) {
-            //         $shipping_cost_check[$k]['id'] = $val['shippingid'];
-            //         $shipping_cost_check[$k]['company'] = $val['shipping_company'];
-            //         if ($val['normal_rate'] < $val['express_rate']) {
-            //             $shipping_cost_check[$k]['shipping_rate'] = $val['normal_rate'];
-            //             $shipping_cost_check[$k]['mode'] = "normal_rate";
-            //             $shipping_cost_check[$k]['text'] = "Regular Rate";
-            //             $shipping_cost_check[$k]['delivery_days'] = $val['normal_duration'];
-            //         } else {
-            //             $shipping_cost_check[$k]['shipping_rate'] = $val['express_rate'];
-            //             $shipping_cost_check[$k]['mode'] = "express_rate";
-            //             $shipping_cost_check[$k]['text'] = "Express Rate";
-            //             $shipping_cost_check[$k]['delivery_days'] = $val['express_duration'];
-            //         }
-            //     }
-            // }
 
             if (!empty($user_details->shipping_zip)) {
                 $zip_code = $user_details->shipping_zip;
@@ -306,11 +264,10 @@ class CartController extends Controller
             if (!empty($company_details) && !empty($company_details->value)) {
                 $originPostalCode = $company_details->value;
             }
-            $weight = !empty($spe['weight']) ? (float) $spe['weight'] : 0;
-            $length = !empty($spe['length']) ? (int) $spe['length'] : 0;
-            $width = !empty($spe['width']) ? (int) $spe['width'] : 0;
-            $height = !empty($spe['height']) ? (int) $spe['height'] : 0;
-
+            $weight = 0.3; // !empty($spe['weight']) ? (float) $spe['weight'] : 0;
+            $length = 9; // !empty($spe['length']) ? (int) $spe['length'] : 0;
+            $width = 5; // !empty($spe['width']) ? (int) $spe['width'] : 0;
+            $height = 1 * $total_order; // !empty($spe['height']) ? (int) $spe['height'] : 0;
             $shippingInfo = $this->getShippingRates($originPostalCode, $postalCode, $weight, $length, $width, $height);
 
             //TAX calculation
@@ -334,6 +291,31 @@ class CartController extends Controller
         $auth_token = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
         $cart_id = $request->cart_id;
+
+        $userShippingInfo = array();
+        $userShippingInfo['add_shipping_address'] = $user_details['add_shipping_address'];
+        $userShippingInfo['shipping_country'] = $user_details['shipping_country'];
+        $userShippingInfo['shipping_city'] = $user_details['shipping_city'];
+        $userShippingInfo['shipping_state'] = $user_details['shipping_state'];
+        $userShippingInfo['shipping_zip'] = $user_details['shipping_zip'];
+        $userShippingInfo['shipping_name'] = $user_details['shipping_name'];
+        $userShippingInfo['shipping_email'] = $user_details['shipping_email'];
+        $userShippingInfo['shipping_phone'] = $user_details['shipping_phone'];
+        $userShippingInfo['shipping_phone_code'] = $user_details['shipping_phone_code'];
+        $userShippingInfo['shipping_country_iso'] = $user_details['shipping_country_iso'];
+
+        $userBillingInfo = array();
+        $userBillingInfo['billing_phone_code'] = $user_details['billing_phone_code'];
+        $userBillingInfo['billing_phone'] = $user_details['billing_phone'];
+        $userBillingInfo['is_billing_address_same'] = $user_details['is_billing_address_same'];
+        $userBillingInfo['billing_city'] = $user_details['city'];
+        $userBillingInfo['billing_state'] = $user_details['state'];
+        $userBillingInfo['billing_zip'] = $user_details['zip'];
+        $userBillingInfo['billing_name'] = $user_details['name'];
+        $userBillingInfo['billing_email'] = $user_details['email'];
+        $userBillingInfo['billing_phone'] = $user_details['phone'];
+        $userBillingInfo['billing_phone_code'] = $user_details['phone_code'];
+        $userBillingInfo['billing_country_iso'] = $user_details['country_iso'];
         ////////$shipping_id = $request->shipping_id ?? 
         $taxes = $request->tax;
         //$shipping_rate_id = 'DOM.XP';
@@ -460,6 +442,8 @@ class CartController extends Controller
                 $order->order_amount = $total_amount;
                 $order->product_info = json_encode($product_info);
                 $order->expected_delivery_date = json_decode($shipping_rates, true)[0]['expected_delivery_date'];
+                $order->user_shipping_details = json_encode($userShippingInfo);
+                $order->user_billing_details = json_encode($userBillingInfo);
                 $order->save();
 
                 if (!empty($product_info)) {
