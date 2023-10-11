@@ -367,7 +367,7 @@ class GeneralController extends Controller
         if (!empty($user_details->id)) {
             $order_list = [];
             $get_orders = Order::select('id as order_id', 'order_status', 'expected_delivery_date', 'customer_id', 'mac_ids', 'order_amount', 'created_at')
-                ->where(['customer_id' => $user_details->id])->orderBy('created_at','desc')->get();
+                ->where(['customer_id' => $user_details->id])->orderBy('created_at', 'desc')->get();
             foreach ($get_orders as $k => $order) {
                 $order_list[$k]['order_id'] = $order['order_id'];
                 $order_list[$k]['customer_id'] = $order['customer_id'];
@@ -409,7 +409,7 @@ class GeneralController extends Controller
         $auth_token = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
         if (!empty($user_details->id)) {
-            $get_orders = Order::select('id','product_info','per_device_amount','customer_id', 'mac_ids', 'payment_status', 'expected_delivery_date', 'order_status', 'order_amount', 'shipping_address', 'created_at', 'tracking_id')
+            $get_orders = Order::select('id', 'product_info', 'per_device_amount', 'customer_id', 'mac_ids', 'payment_status', 'expected_delivery_date', 'order_status', 'order_amount', 'shipping_address', 'created_at', 'tracking_id')
                 ->where(['id' => $order_id])->first();
             $total_mac_ids = [];
             if (!empty($get_orders->id)) {
@@ -472,7 +472,7 @@ class GeneralController extends Controller
                 if (!empty($get_orders->product_info)) {
                     $product_infos = json_decode($get_orders->product_info, true);
                     $per_device_amount = json_decode($get_orders->per_device_amount, true);
-                    
+
                     //echo "<pre>"; print_r($per_device_amount); die;
 
                     if (!empty($product_infos)) {
@@ -482,12 +482,12 @@ class GeneralController extends Controller
                             if (!empty($product_d->id)) {
                                 $product_d->price = number_format($perdevicePrice, 2);
                                 $product_d->quantity = $val['order_qty'] ?? 0;
-                                $product_d->thumbnail = asset("/product/thumbnail/".$val['thumbnail']);
+                                $product_d->thumbnail = asset("/product/thumbnail/" . $val['thumbnail']);
                                 $product_data[] = $product_d;
                             }
                             $get_orders->order_items = $product_data ?? [];
                         }
-                        
+
                     }
                 }
 

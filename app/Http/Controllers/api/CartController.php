@@ -289,18 +289,17 @@ class CartController extends Controller
                 $zip_code = $user_details->zip;
             }
 
-            if (!empty($user_details->shipping_phone_code)) {
-                $shipping_phone_code = $user_details->shipping_phone_code;
+            if (!empty($user_details->shipping_country_iso)) {
+                $country_code = $user_details->shipping_country_iso;
             } else {
-                $shipping_phone_code = $user_details->billing_phone_code;
+                $country_code = $user_details->country_iso;
             }
-
-            if (!empty($country_name) == 'Canada') {
+            if ($country_name == 'Canada') {
                 $postalCode = $zip_code . " Canada";
-            } elseif (!empty($country_name) == 'United States') {
+            } elseif ($country_name == 'United States') {
                 $postalCode = $zip_code . " United-States";
             } else {
-                $postalCode = $shipping_phone_code . " International";
+                $postalCode = $country_code . " International " . $zip_code;
             }
 
             $company_details = BusinessSetting::select('value')->where('type', 'zip_code')->first();
@@ -363,8 +362,12 @@ class CartController extends Controller
         $data = json_decode($right, true);
         $cart_ids = [];
         if (!empty($data)) {
-            foreach ($data as $k => $val) {
-                array_push($cart_ids, $val['id']);
+            if (is_array($data)) {
+                foreach ($data as $k => $val) {
+                    array_push($cart_ids, $val['id']);
+                }
+            } else {
+                return response()->json(['status' => 400, 'message' => 'Cart ID is required in array format'], 400);
             }
         }
         $existed_mac_ids = $mac_ids_array = $per_device_amount = [];
@@ -519,7 +522,7 @@ class CartController extends Controller
             $this->save_invoice($order_id);
             $invoice_file_path = public_path('public/assets/orders/order_invoice_' . $order_id . '.pdf');
             //Send Email and Notification
-            $userData = 0; //$this->getDataforEmail($order_id);
+            $userData = $this->getDataforEmail($order_id);
             if (!empty($userData)) {
                 $userData['username'] = $user_details['name'] ?? "Keepr User";
                 $userData['email'] = $user_details->email ?? "";
