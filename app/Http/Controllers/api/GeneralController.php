@@ -399,7 +399,7 @@ class GeneralController extends Controller
                 $order_list[$k]['order_id'] = $order['order_id'];
                 $order_list[$k]['customer_id'] = $order['customer_id'];
                 $order_list[$k]['order_amount'] = number_format($order['order_amount'], 2);
-                $order_list[$k]['order_date'] = date('F j,Y, h:i A', strtotime($order['created_at']));
+                $order_list[$k]['order_date'] = strtotime($order['created_at']);
 
                 if (time() < strtotime($order['expected_delivery_date']) && ($order['order_status'] == 'processing' || $order['order_status'] == 'shipped')) {
                     $order_list[$k]['delivery_message'] = 'Estimated Delivery on ' . date('F j', strtotime($order['expected_delivery_date']));
