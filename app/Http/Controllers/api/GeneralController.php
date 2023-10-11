@@ -436,14 +436,33 @@ class GeneralController extends Controller
         $auth_token = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
         if (!empty($user_details->id)) {
-            $get_orders = Order::select('id', 'product_info', 'per_device_amount', 'customer_id', 'mac_ids', 'payment_status', 'expected_delivery_date', 'order_status', 'order_amount', 'shipping_address', 'created_at', 'tracking_id', 'user_shipping_details', 'user_billing_details')
+            $get_orders = Order::select('id', 'product_info', 'per_device_amount', 'customer_id', 'mac_ids', 'payment_status', 'expected_delivery_date', 'order_status', 'order_amount', 'shipping_address', 'created_at', 'tracking_id', 'user_shipping_details', 'user_billing_details', 'taxes', 'shipping_rates')
                 ->where(['id' => $order_id])->first();
             $total_mac_ids = [];
+
+            $price_details = [];
+            $product_qty = 0;
+            $product_info = json_decode($get_orders->product_info, true);
+            foreach ($product_info as $k => $value) {
+                $product_qty = $value['order_qty'];
+            }
+            $price = 0;
+            $priceinfo = json_decode($get_orders->per_device_amount, true);
+            foreach ($priceinfo as $k => $value) {
+                $price = $value;
+            }
+            $get_orders->taxes = json_decode($get_orders->taxes, true);
+            $get_orders->shipping_rates = json_decode($get_orders->shipping_rates, true);
+            $get_orders->total_price = number_format($product_qty * $price, 2);
+
+            //$price_details['grand_total'] = number_format($get_orders->order_amount, 2);
+            //$get_orders->price_details = $price_details;
+
             if (!empty($get_orders->id)) {
                 $get_orders->invoice_path = route('generate-invoice', [$get_orders->id]);
                 $get_orders->amount = number_format($get_orders->order_amount, 2);
                 unset($get_orders->order_amount);
-                $get_orders->order_date = date('F j,Y, h:i A', strtotime($get_orders->created_at));
+                $get_orders->order_date = strtotime($get_orders->created_at);
 
                 // $shipping_address = User::select('add_shipping_address', 'shipping_name', 'shipping_email', 'shipping_phone', 'shipping_country', 'shipping_city', 'shipping_state', 'shipping_zip')
                 //     ->where(['id' => $get_orders->customer_id])->first();
@@ -456,9 +475,9 @@ class GeneralController extends Controller
                     $get_orders->delivery_message = "";
                 }
 
-                $get_orders->user_shipping_details = json_decode($get_orders->user_shipping_details, true);
+                $get_orders->shipping = json_decode($get_orders->user_shipping_details, true);
 
-                $get_orders->user_billing_details = json_decode($get_orders->user_billing_details, true);
+                $get_orders->billing = json_decode($get_orders->user_billing_details, true);
                 $tracking_pin = $get_orders->tracking_id;
                 // $get_orders->tracking_summary = $this->getShippingTrackingSummary($tracking_pin);
                 $get_orders->tracking_url = !empty($tracking_pin) ? 'https://www.canadapost-postescanada.ca/track-reperage/en#/search?searchFor=' . $tracking_pin : "";
@@ -509,6 +528,8 @@ class GeneralController extends Controller
 
                     }
                 }
+                unset($get_orders->user_shipping_details);
+                unset($get_orders->user_billing_details);
 
                 //$get_orders->total_devices = count($mac_ids);
                 Common::addLog([]);
