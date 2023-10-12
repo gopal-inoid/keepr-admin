@@ -411,9 +411,12 @@ class GeneralController extends Controller
 
                 $product_total_qty = 0;
                 $product_info = json_decode($order->product_info, true);
-                foreach ($product_info as $k => $value) {
-                    $product_total_qty = $value['order_qty'] ?? 0;
+                if (!empty($product_info)) {
+                    foreach ($product_info as $k => $value) {
+                        $product_total_qty = $value['order_qty'] ?? 0;
+                    }
                 }
+
 
                 $order_list[$k]['total_devices'] = $product_total_qty;
             }
