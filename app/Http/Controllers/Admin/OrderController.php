@@ -193,7 +193,7 @@ class OrderController extends Controller
         $shipping_details = json_decode($order->user_shipping_details, true);
         //echo "<pre>"; print_r($billing_details); die;
 
-        return view('admin-views.pos.order.order-details', compact('order', 'total_orders', 'products', 'company_name', 'company_web_logo', 'countries', 'states', 'tax_info', 'total_order_amount','billing_details','shipping_details'));
+        return view('admin-views.pos.order.order-details', compact('order', 'total_orders', 'products', 'company_name', 'company_web_logo', 'countries', 'states', 'tax_info', 'total_order_amount', 'billing_details', 'shipping_details'));
     }
 
     public function update_order_details(Request $request)
@@ -270,8 +270,8 @@ class OrderController extends Controller
             $order_data['payment_status'] = $request->payment_status;
             $order_data['tracking_id'] = $request->tracking_id;
             // $order_data['shipping_mode'] = $request->shipping_mode;
-            $order_data['user_shipping_details'] = json_encode($shipping_details,true);
-            $order_data['user_billing_details'] = json_encode($billing_details,true);
+            $order_data['user_shipping_details'] = json_encode($shipping_details, true);
+            $order_data['user_billing_details'] = json_encode($billing_details, true);
             //Send Email
             $email_data = $this->getDataforEmail($order_id);
             if (!empty($email_data)) {
@@ -608,8 +608,17 @@ class OrderController extends Controller
         $data["email"] = $order->customer != null ? $order->customer["email"] : \App\CPU\translate('email_not_found');
         $data["client_name"] = $order->customer != null ? $order->customer["f_name"] . ' ' . $order->customer["l_name"] : \App\CPU\translate('customer_not_found');
         $data["order"] = $order;
-        $shippingInfo = $order->user_shipping_details;
-        $billingInfo = $order->user_billing_details;
+        $billingInfo = json_decode($order->user_billing_details, true);
+        if (!empty($billingInfo['country']) && !empty($billingInfo['state'])) {
+            $billingInfo['country'] = $this->getCountryName($billingInfo['country']);
+            $billingInfo['state'] = $this->getStateName($billingInfo['state']);
+        }
+        $shippingInfo = json_decode($order->user_shipping_details, true);
+        if (!empty($shippingInfo['country']) && !empty($shippingInfo['state'])) {
+            $shippingInfo['country'] = $this->getCountryName($shippingInfo['country']);
+            $shippingInfo['state'] = $this->getStateName($shippingInfo['state']);
+        }
+
         $products = [];
         $tax_info = [];
         $shipping_info = [];
@@ -666,11 +675,12 @@ class OrderController extends Controller
         //         $shipping_info['amount'] = $shipping_method_rates->express_rate ?? 0;
         //     }
         // }
+
         // return view('admin-views.order.invoice', compact('order', 'shippingInfo', 'billingInfo', 'company_phone', 'total_orders', 'products', 'company_name', 'company_email', 'company_web_logo', 'total_order_amount', 'shipping_info', 'tax_info'));
         // exit;
         $mpdf_view = View::make(
             'admin-views.order.invoice',
-            compact('order', 'company_phone', 'total_orders', 'products', 'company_name', 'company_email', 'company_web_logo', 'total_order_amount', 'shipping_info', 'tax_info')
+            compact('order','shippingInfo','billingInfo', 'company_phone', 'total_orders', 'products', 'company_name', 'company_email', 'company_web_logo', 'total_order_amount', 'shipping_info', 'tax_info')
         );
 
         // echo "<pre>"; print_r($mpdf_view); die;

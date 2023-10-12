@@ -111,8 +111,7 @@ class Controller extends BaseController
         $products_attr = Product::select($type)->where('id', $product_id)->first();
         return $products_attr->$type ?? "";
     }
-
-    public function getCountryName(int $id)
+    public function getCountryName($id)
     {
         $country_names = \DB::table('country')->select('name')->where('id', $id)->first();
         return $country_names->name ?? "";
@@ -397,7 +396,7 @@ class Controller extends BaseController
             }
 
             $shippingrates = json_decode($update_order->shipping_rates, true);
-            if(!empty($shippingrates)){
+            if (!empty($shippingrates)) {
                 foreach ($shippingrates as $k => $val) {
                     $productArray['shipping_amount'] = $val['shipping_rate'];
                     $productArray['shipping_title'] = $val['service_name'];
@@ -406,7 +405,7 @@ class Controller extends BaseController
                     $productArray['shipping_info'] = $val['service_name'] . " " . $val['service_code'] . " US $" . $val['shipping_rate'] . " " . $val['delivery_days'] . " Days";
                 }
             }
-           
+
             $product_id = $productArray['product_id'] ?? ""; //array_keys(json_decode($update_order['mac_ids'], true))[0] ?? 0;
             $product_qty_info = $productArray['product_qty'] ?? ""; //json_decode($update_order->mac_ids, true);
             $price_info = $productArray['price'] ?? ""; //json_decode($update_order->per_device_amount, true);

@@ -66,25 +66,30 @@
     </div>
     <div>
         <table style="table-layout: fixed; width: 100%;">
+          
             <tbody>
                 <tr>
                     <td width="30%">
                         <div class="col-sm-6 text-sm-end order-sm-1">
-                            @if (!empty($order->customer->add_shipping_address))
+                            @if (!empty($shippingInfo))
                                 <span class="h2">{{ \App\CPU\translate('shipping_to') }} </span>
                                 <div class="h4 montserrat-normal-600">
-                                   
-                                    <p> {{ !empty(json_decode($shippingInfo, true)['name']) ? json_decode($shippingInfo, true)['name'] : 'Name not found' }}
+
+                                    <p> {{ !empty($shippingInfo['name']) ? $shippingInfo['name'] : 'Name not found' }}
                                     </p>
-                                    <p> {{ !empty(json_decode($shippingInfo, true)['email']) ? json_decode($shippingInfo, true)['email'] : 'Email not found' }}
+                                    <p> {{ !empty($shippingInfo['email']) ? $shippingInfo['email'] : 'Email not found' }}
                                     </p>
-                                    <p> {{ !empty(json_decode($shippingInfo, true)['phone_code']) ? json_decode($shippingInfo, true)['phone_code'] : 'Phonecode not found' }}
-                                        &nbsp; {{ !empty(json_decode($shippingInfo, true)['phone']) ? json_decode($shippingInfo, true)['phone'] : 'Phone not found' }}
+                                    <p> {{ !empty($shippingInfo['phone_code']) ? $shippingInfo['phone_code'] : 'Phonecode not found' }}
+                                        &nbsp;
+                                        {{ !empty($shippingInfo['phone']) ? $shippingInfo['phone'] : 'Phone not found' }}
                                     </p>
-                                    <p> {{ !empty(json_decode($shippingInfo, true)['address']) ? json_decode($shippingInfo, true)['address'] : 'Address not found' }}</p>
-                                    <p> {{ !empty(json_decode($shippingInfo, true)['city']) ? json_decode($shippingInfo, true)['city'] : 'City not found' }}
-                                        {{ !empty(json_decode($shippingInfo, true)['zip']) ? json_decode($shippingInfo, true)['zip'] : 'Zip not found' }}</p>
-                                    <p> {{ !empty(json_decode($shippingInfo, true)['country']) ? json_decode($shippingInfo, true)['country'] : 'Country not found' }}
+                                    <p> {{ !empty($shippingInfo['address']) ? $shippingInfo['address'] : 'Address not found' }}
+                                    </p>
+                                    <p> {{ !empty($shippingInfo['city']) ? $shippingInfo['city'] : 'City not found' }}
+                                    <p> {{ !empty($shippingInfo['state']) ? $shippingInfo['state'] : 'State not found' }}
+                                        {{ !empty($shippingInfo['zip']) ? $shippingInfo['zip'] : 'Zip not found' }}
+                                    </p>
+                                    <p> {{ !empty($shippingInfo['country']) ? $shippingInfo['country'] : 'Country not found' }}
                                     </p>
                                 </div>
                             @else
@@ -105,24 +110,23 @@
                         </div>
                     </td>
                     <td width="40%">
-
                     </td>
                     <td width="30%">
-
                         <div class="col-sm-6 order-sm-0">
                             @if (!empty($order->customer->street_address))
                                 <span class="h2">{{ \App\CPU\translate('billing_address') }} </span>
                                 <div class="h4 montserrat-normal-600">
-                                    <p>{{ $order->customer['name'] ? $order->customer['name'] : '' }}</p>
-                                    <p>{{ $order->customer['email'] ? $order->customer['email'] : '' }}</p>
-                                    <p>{{ $order->customer['billing_phone_code'] ? $order->customer['billing_phone_code'] : '' }}
-                                        &nbsp;{{ $order->customer['billing_phone'] ? $order->customer['billing_phone'] : '' }}
+                                    <p>{{ !empty($billingInfo['name']) ? $billingInfo['name'] : 'Name not found' }}</p>
+                                    <p>{{ !empty($billingInfo['email']) ? $billingInfo['email'] : 'Email not found' }}</p>
+                                    <p>{{ !empty($billingInfo['phone_code']) ? $billingInfo['phone_code'] : 'PhoneCode not found' }}
+                                        &nbsp;{{ !empty($billingInfo['phone']) ? $billingInfo['phone'] : 'Phone not found' }}
                                     </p>
-                                    <p>{{ $order->customer['street_address'] ? $order->customer['street_address'] : '' }}
+                                    <p>{{ !empty($billingInfo['address']) ? $billingInfo['address'] : 'Address not found' }}
                                     </p>
-                                    <p>{{ $order->customer['city'] ? $order->customer['city'] : '' }}
-                                        {{ $order->customer['zip'] ? $order->customer['zip'] : '' }}</p>
-                                    <p>{{ $order->customer['country'] ? $order->customer['country'] : '' }}</p>
+                                    <p>{{ !empty($billingInfo['city']) ? $billingInfo['city'] : 'City not found' }}
+                                    <p>{{ !empty($billingInfo['state']) ? $billingInfo['state'] : 'State not found' }}
+                                        {{ !empty($billingInfo['zip']) ? $billingInfo['zip'] : 'Zip not found' }}</p>
+                                    <p>{{ !empty($billingInfo['country']) ? $billingInfo['country'] : 'Country not found' }}</p>
                                 </div>
                             @endif
                         </div>

@@ -302,7 +302,7 @@ class CartController extends Controller
         $userShippingInfo['email'] = $user_details['shipping_email'];
         $userShippingInfo['phone'] = $user_details['shipping_phone'];
         $userShippingInfo['phone_code'] = $user_details['shipping_phone_code'];
-        $userShippingInfo['country_iso'] = $user_details['shipping_country_iso'];
+        // $userShippingInfo['country_iso'] = $user_details['shipping_country_iso'];
 
         $userBillingInfo = array();
         $userBillingInfo['address'] = $user_details['street_address'];
@@ -315,7 +315,7 @@ class CartController extends Controller
         $userBillingInfo['name'] = $user_details['name'];
         $userBillingInfo['email'] = $user_details['email'];
         $userBillingInfo['country'] = $user_details['country'];
-        $userBillingInfo['country_iso'] = $user_details['country_iso'];
+        // $userBillingInfo['country_iso'] = $user_details['country_iso'];
         ////////$shipping_id = $request->shipping_id ?? 
         $taxes = $request->tax;
         //$shipping_rate_id = 'DOM.XP';
