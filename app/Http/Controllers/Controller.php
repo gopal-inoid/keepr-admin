@@ -397,13 +397,16 @@ class Controller extends BaseController
             }
 
             $shippingrates = json_decode($update_order->shipping_rates, true);
-            foreach ($shippingrates as $k => $val) {
-                $productArray['shipping_amount'] = $val['shipping_rate'];
-                $productArray['shipping_title'] = $val['service_name'];
-                $productArray['shipping_mode'] = $val['service_code'];
-                $productArray['shipping_duration'] = $val['delivery_days'] . " Days";
-                $productArray['shipping_info'] = $val['service_name'] . " " . $val['service_code'] . " US $" . $val['shipping_rate'] . " " . $val['delivery_days'] . " Days";
+            if(!empty($shippingrates)){
+                foreach ($shippingrates as $k => $val) {
+                    $productArray['shipping_amount'] = $val['shipping_rate'];
+                    $productArray['shipping_title'] = $val['service_name'];
+                    $productArray['shipping_mode'] = $val['service_code'];
+                    $productArray['shipping_duration'] = $val['delivery_days'] . " Days";
+                    $productArray['shipping_info'] = $val['service_name'] . " " . $val['service_code'] . " US $" . $val['shipping_rate'] . " " . $val['delivery_days'] . " Days";
+                }
             }
+           
             $product_id = $productArray['product_id'] ?? ""; //array_keys(json_decode($update_order['mac_ids'], true))[0] ?? 0;
             $product_qty_info = $productArray['product_qty'] ?? ""; //json_decode($update_order->mac_ids, true);
             $price_info = $productArray['price'] ?? ""; //json_decode($update_order->per_device_amount, true);

@@ -189,41 +189,28 @@ class OrderController extends Controller
             }
         }
 
-        // if (!empty($order->shipping_method_id) && !empty($order->shipping_mode)) {
-        //     $shipping = ShippingMethod::where(['id' => $order->shipping_method_id])->first();
-        //     $shipping_method_rates = ShippingMethodRates::select('normal_rate', 'express_rate')->where('shipping_id', $order->shipping_method_id)->where('country_code', $this->getCountryName($order->customer->country))->first();
-        //     $shipping_info['title'] = $shipping->title ?? "";
-        //     if ($order->shipping_mode == 'normal_rate') {
-        //         $shipping_info['duration'] = $shipping->normal_duration ?? "";
-        //         $shipping_info['mode'] = 'Regular Rate';
-        //         $shipping_info['amount'] = $shipping_method_rates->normal_rate ?? 0;
-        //     } elseif ($order->shipping_mode == 'express_rate') {
-        //         $shipping_info['duration'] = $shipping->express_duration ?? "";
-        //         $shipping_info['mode'] = 'Express Rate';
-        //         $shipping_info['amount'] = $shipping_method_rates->express_rate ?? 0;
-        //     }
-        // }
+        $billing_details = json_decode($order->user_billing_details, true);
+        $shipping_details = json_decode($order->user_shipping_details, true);
+        //echo "<pre>"; print_r($billing_details); die;
 
-        //echo "<pre>"; print_r($shipping_info); die;
-        // echo "<pre>"; print_r($order); die;
-        return view('admin-views.pos.order.order-details', compact('order', 'total_orders', 'products', 'company_name', 'company_web_logo', 'countries', 'states', 'tax_info', 'total_order_amount'));
+        return view('admin-views.pos.order.order-details', compact('order', 'total_orders', 'products', 'company_name', 'company_web_logo', 'countries', 'states', 'tax_info', 'total_order_amount','billing_details','shipping_details'));
     }
 
     public function update_order_details(Request $request)
     {
-        $shipping_details = array();
+        //echo "<pre>"; print_r($request->all()); die;
+
         $shipping_details['name'] = $request->shipping_name;
         $shipping_details['email'] = $request->shipping_email;
         $shipping_details['address'] = $request->add_shipping_address;
         $shipping_details['city'] = $request->shipping_city;
         $shipping_details['state'] = $request->shipping_state;
-        $shipping_details['country'] = $request->shipping_zip;
-        $shipping_details['zip'] = $request->shipping_name;
+        $shipping_details['country'] = $request->shipping_country;
+        $shipping_details['zip'] = $request->shipping_zip;
         $shipping_details['phone_code'] = $request->shipping_phone_code;
         $shipping_details['phone'] = $request->shipping_phone;
-        $shipping_details['country_iso'] = $request->shipping_mode;
+        //$shipping_details['country_iso'] = $request->shipping_mode;
 
-        $billing_details = array();
         $billing_details['name'] = $request->billing_name;
         $billing_details['email'] = $request->email;
         $billing_details['address'] = $request->street_address;
@@ -233,8 +220,7 @@ class OrderController extends Controller
         $billing_details['zip'] = $request->billing_zip;
         $billing_details['phone_code'] = $request->phone_code;
         $billing_details['phone'] = $request->billing_phone;
-        $billing_details['country_iso'] = $request->country_iso;
-
+        //$billing_details['country_iso'] = $request->country_iso;
 
         $order_id = $request->order_id;
         $user_id = $request->user_id;
@@ -243,31 +229,28 @@ class OrderController extends Controller
 
                 $user_details = User::where(['id' => $user_id])->first();
 
-                $user_data['name'] = $request->billing_name;
-                $user_data['email'] = $request->email;
-                $user_data['street_address'] = $request->street_address;
-                $user_data['city'] = $request->billing_city;
-                $user_data['state'] = $request->billing_state;
-                $user_data['country'] = $request->billing_country;
-                $user_data['zip'] = $request->billing_zip;
-                // $user_data['phone'] = $request->billing_phone;
-                $user_data['billing_phone'] = $request->billing_phone;
-                $user_data['billing_phone_code'] = $request->billing_phone_code;
-                $user_data['shipping_name'] = $request->shipping_name;
-                $user_data['shipping_email'] = $request->shipping_email;
-                $user_data['add_shipping_address'] = $request->add_shipping_address;
-                $user_data['shipping_city'] = $request->shipping_city;
-                $user_data['shipping_state'] = $request->shipping_state;
-                $user_data['shipping_country'] = $request->shipping_country;
-                $user_data['shipping_zip'] = $request->shipping_zip;
-                $user_data['shipping_phone'] = $request->shipping_phone;
-                $user_data['shipping_phone_code'] = $request->shipping_phone_code;
-
-                if (!empty($request->is_billing_address_same) && $request->is_billing_address_same == 'on') {
-                    $user_data['is_billing_address_same'] = 1;
-                }
-
-                User::where('id', $user_id)->update($user_data);
+                // $user_data['name'] = $request->billing_name;
+                // $user_data['email'] = $request->email;
+                // $user_data['street_address'] = $request->street_address;
+                // $user_data['city'] = $request->billing_city;
+                // $user_data['state'] = $request->billing_state;
+                // $user_data['country'] = $request->billing_country;
+                // $user_data['zip'] = $request->billing_zip;
+                // $user_data['billing_phone'] = $request->billing_phone;
+                // $user_data['billing_phone_code'] = $request->billing_phone_code;
+                // $user_data['shipping_name'] = $request->shipping_name;
+                // $user_data['shipping_email'] = $request->shipping_email;
+                // $user_data['add_shipping_address'] = $request->add_shipping_address;
+                // $user_data['shipping_city'] = $request->shipping_city;
+                // $user_data['shipping_state'] = $request->shipping_state;
+                // $user_data['shipping_country'] = $request->shipping_country;
+                // $user_data['shipping_zip'] = $request->shipping_zip;
+                // $user_data['shipping_phone'] = $request->shipping_phone;
+                // $user_data['shipping_phone_code'] = $request->shipping_phone_code;
+                // if (!empty($request->is_billing_address_same) && $request->is_billing_address_same == 'on') {
+                //     $user_data['is_billing_address_same'] = 1;
+                // }
+                // User::where('id', $user_id)->update($user_data);
 
                 //SEND PUSH NOTIFICATION
                 $msg = "Your Order has been " . $request->change_order_status . ", Order ID #" . $order_id;
@@ -287,8 +270,8 @@ class OrderController extends Controller
             $order_data['payment_status'] = $request->payment_status;
             $order_data['tracking_id'] = $request->tracking_id;
             // $order_data['shipping_mode'] = $request->shipping_mode;
-            $order_data['user_shipping_details'] = json_encode($shipping_details);
-            $order_data['user_billing_details'] = json_encode($billing_details);
+            $order_data['user_shipping_details'] = json_encode($shipping_details,true);
+            $order_data['user_billing_details'] = json_encode($billing_details,true);
             //Send Email
             $email_data = $this->getDataforEmail($order_id);
             if (!empty($email_data)) {

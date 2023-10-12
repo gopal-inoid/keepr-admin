@@ -109,24 +109,15 @@
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label class="title-color">Name</label>
-                                                            {{-- <input type="hidden"  name="is_billing_address_same" class="form-control"
-                                                                value="{{ json_decode($order->user_billing_details, true)['is_billing_address_same'] }}"
-                                                                placeholder="{{ \App\CPU\translate('Is Billling Address Same') }}"> --}}
-
-                                                            <input type="hidden"  name="country_iso" class="form-control"
-                                                                value="{{ json_decode($order->user_billing_details, true)['country_iso'] }}"
-                                                                placeholder="{{ \App\CPU\translate('Country ISO') }}">
-
                                                             <input type="text" name="billing_name" class="form-control"
-                                                                value="{{ json_decode($order->user_billing_details, true)['name'] }}"
-                                                                placeholder="{{ \App\CPU\translate('Name') }}">
+                                                                value="{{ $billing_details['name'] ?? ''}}" placeholder="{{ \App\CPU\translate('Name') }}">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label class="title-color">Email</label>
                                                             <input type="text" name="email" class="form-control"
-                                                                value="{{ json_decode($order->user_billing_details, true)['email'] ?? '' }}"
+                                                                value="{{ $billing_details['email'] ?? ''}}"
                                                                 placeholder="{{ \App\CPU\translate('Email') }}">
                                                         </div>
                                                     </div>
@@ -134,7 +125,7 @@
                                                         <div class="form-group">
                                                             <label class="title-color">Address</label>
                                                             <input type="text" name="street_address" class="form-control"
-                                                                value="{{ json_decode($order->user_billing_details, true)['address'] }}"
+                                                                value="{{ $billing_details['address'] ?? ''}}"
                                                                 placeholder="{{ \App\CPU\translate('Address') }}">
                                                         </div>
                                                     </div>
@@ -143,7 +134,7 @@
                                                             <label class="title-color">City</label>
                                                             <input type="text" name="billing_city"
                                                                 class="form-control"
-                                                                value="{{ json_decode($order->user_billing_details, true)['city'] }}"
+                                                                value="{{ $billing_details['city'] ?? ''}}"
                                                                 placeholder="{{ \App\CPU\translate('City') }}">
                                                         </div>
                                                     </div>
@@ -154,7 +145,7 @@
                                                                 name="billing_state">
                                                                 @foreach ($states as $k => $val)
                                                                     <option
-                                                                        {{ json_decode($order->user_billing_details, true)['state'] == $val->id ? 'selected' : '' }}
+                                                                        {{ (isset($billing_details['state']) && $billing_details['state'] == $val->id) ? 'selected' : '' }}
                                                                         value="{{ $val->id }}">{{ $val->name }}
                                                                     </option>
                                                                 @endforeach
@@ -168,7 +159,7 @@
                                                                 name="billing_country">
                                                                 @foreach ($countries as $k => $val)
                                                                     <option
-                                                                        {{ json_decode($order->user_billing_details, true)['country'] == $val->id ? 'selected' : '' }}
+                                                                        {{ (isset($billing_details['country']) && $billing_details['country'] == $val->id) ? 'selected' : '' }}
                                                                         value="{{ $val->id }}">{{ $val->name }}
                                                                     </option>
                                                                 @endforeach
@@ -179,7 +170,7 @@
                                                         <div class="form-group">
                                                             <label class="title-color">zipcode</label>
                                                             <input type="text" name="billing_zip" class="form-control"
-                                                                value="{{ json_decode($order->user_billing_details, true)['zip'] }}"
+                                                                value="{{ $billing_details['zip'] ?? '' }}"
                                                                 placeholder="{{ \App\CPU\translate('Name') }}">
                                                         </div>
                                                     </div>
@@ -206,7 +197,7 @@
                                                         <label class="title-color">Phone</label>
                                                         <div class="form-group">
                                                             <input type="number" class="form-control"
-                                                                value="{{ json_decode($order->user_billing_details, true)['phone'] ?? '' }}"
+                                                                value="{{ $billing_details['phone'] ?? '' }}"
                                                                 name="billing_phone"
                                                                 placeholder="{{ \App\CPU\translate('Phone') }}" />
                                                         </div>
@@ -245,7 +236,7 @@
                                                             <label class="title-color">Name</label>
                                                             <input type="text" name="shipping_name"
                                                                 class="form-control"
-                                                                value="{{ json_decode($order->user_shipping_details, true)['name'] ?? '' }}"
+                                                                value="{{ $shipping_details['name'] ?? '' }}"
                                                                 placeholder="{{ \App\CPU\translate('Name') }}">
                                                         </div>
                                                     </div>
@@ -254,7 +245,7 @@
                                                             <label class="title-color">Email</label>
                                                             <input type="text" name="shipping_email"
                                                                 class="form-control"
-                                                                value="{{ json_decode($order->user_shipping_details, true)['email'] ?? '' }}"
+                                                                value="{{ $shipping_details['email'] ?? '' }}"
                                                                 placeholder="{{ \App\CPU\translate('Email') }}">
                                                         </div>
                                                     </div>
@@ -263,7 +254,7 @@
                                                             <label class="title-color">Address</label>
                                                             <input type="text" name="add_shipping_address"
                                                                 class="form-control"
-                                                                value="{{ json_decode($order->user_shipping_details, true)['address'] ?? '' }}"
+                                                                value="{{ $shipping_details['address'] ?? '' }}"
                                                                 placeholder="{{ \App\CPU\translate('Address') }}">
                                                         </div>
                                                     </div>
@@ -272,7 +263,7 @@
                                                             <label class="title-color">City</label>
                                                             <input type="text" name="shipping_city"
                                                                 class="form-control"
-                                                                value="{{ json_decode($order->user_shipping_details, true)['city'] ?? '' }}"
+                                                                value="{{ $shipping_details['city'] ?? '' }}"
                                                                 placeholder="{{ \App\CPU\translate('City') }}">
                                                         </div>
                                                     </div>
@@ -283,7 +274,7 @@
                                                                 name="shipping_state">
                                                                 @foreach ($states as $k => $val)
                                                                     <option
-                                                                        {{ json_decode($order->user_shipping_details, true)['state'] == $val->id ? 'selected' : '' }}
+                                                                        {{ (isset($shipping_details['state']) && $shipping_details['state'] == $val->id) ? 'selected' : '' }}
                                                                         value="{{ $val->id }}">{{ $val->name }}
                                                                     </option>
                                                                 @endforeach
@@ -297,7 +288,7 @@
                                                                 name="shipping_country">
                                                                 @foreach ($countries as $k => $val)
                                                                     <option
-                                                                        {{ json_decode($order->user_shipping_details, true)['country'] == $val->id ? 'selected' : '' }}
+                                                                        {{ (isset($shipping_details['country']) && $shipping_details['country'] == $val->id) ? 'selected' : '' }}
                                                                         value="{{ $val->id }}">{{ $val->name }}
                                                                     </option>
                                                                 @endforeach
@@ -309,7 +300,7 @@
                                                             <label class="title-color">Zip</label>
                                                             <input type="text" name="shipping_zip"
                                                                 class="form-control"
-                                                                value="{{ json_decode($order->user_shipping_details, true)['zip'] ?? '' }}"
+                                                                value="{{ $shipping_details['zip'] ?? '' }}"
                                                                 placeholder="{{ \App\CPU\translate('Zipcode') }}">
                                                         </div>
                                                     </div>
@@ -335,7 +326,7 @@
                                                         <label class="title-color">Phone</label>
                                                         <div class="form-group">
                                                             <input readonly type="number" class="form-control"
-                                                                value="{{ json_decode($order->user_shipping_details, true)['phone'] ?? '' }}"
+                                                                value="{{ $shipping_details['phone'] ?? '' }}"
                                                                 name="shipping_phone"
                                                                 placeholder="{{ \App\CPU\translate('Phone') }}" />
                                                         </div>
@@ -358,7 +349,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="row">
-                                                <div class="col-md-2">
+                                                {{-- <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label class="">Shipping type</label>
                                                         <select class="form-control" id="shipping_mode"
@@ -371,7 +362,7 @@
                                                                 value="express_rate">Express Rate</option>
                                                         </select>
                                                     </div>
-                                                </div>
+                                                </div> --}}
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label class="title-color">Tracking ID</label>
