@@ -440,6 +440,30 @@ class GeneralController extends Controller
                 ->where(['id' => $order_id])->first();
             $total_mac_ids = [];
 
+            if (!empty($get_orders->user_shipping_details)) {
+                $shipping_country_id = json_decode($get_orders->user_shipping_details, true)['country'];
+                $shipping_state_id = json_decode($get_orders->user_shipping_details, true)['state'];
+                if (!empty($shipping_country_id) && !empty($shipping_state_id)) {
+                    $country_name = $this->getCountryName($shipping_country_id);
+                    $state_name = $this->getStateName($shipping_state_id);
+                    $updated_shipping = json_decode($get_orders->user_shipping_details, true);
+                    $updated_shipping['country'] = $country_name;
+                    $updated_shipping['state'] = $state_name;
+                    $get_orders->user_shipping_details = json_encode($updated_shipping);
+                }
+            }
+            if (!empty($get_orders->user_billing_details)) {
+                $billing_country_id = json_decode($get_orders->user_billing_details, true)['country'];
+                $billing_state_id = json_decode($get_orders->user_billing_details, true)['state'];
+                if (!empty($shipping_country_id) && !empty($shipping_state_id)) {
+                    $country_name = $this->getCountryName($billing_country_id);
+                    $state_name = $this->getStateName($billing_state_id);
+                    $updated_billing = json_decode($get_orders->user_shipping_details, true);
+                    $updated_billing['country'] = $country_name;
+                    $updated_billing['state'] = $state_name;
+                    $get_orders->user_billing_details = json_encode($updated_billing);
+                }
+            }
             $price_details = [];
             $product_qty = 0;
             $product_info = json_decode($get_orders->product_info, true);
@@ -613,11 +637,13 @@ class GeneralController extends Controller
 
     public function send_test_email(Request $request)
     {
-        $userData = $this->getDataforEmail($order_id = null);
+        $order_id = $request->order_id;
+        $userData = $this->getDataforEmail($order_id);
         if (!empty($userData)) {
             $userdata = User::find($userData['customer_id']);
             $userData['username'] = $userdata['name'] ?? "Keepr User";
             $userData['email'] = $userdata->email ?? "";
+
             $test = $this->sendKeeprEmail('order-confirmed-customer', $userData);
             if (isset($test) && $test == true) {
                 return response()->json(['status' => 200, 'message' => 'Mail sent successfully'], 200);

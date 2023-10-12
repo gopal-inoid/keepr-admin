@@ -109,8 +109,16 @@
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label class="title-color">Name</label>
+                                                            {{-- <input type="hidden"  name="is_billing_address_same" class="form-control"
+                                                                value="{{ json_decode($order->user_billing_details, true)['is_billing_address_same'] }}"
+                                                                placeholder="{{ \App\CPU\translate('Is Billling Address Same') }}"> --}}
+
+                                                            <input type="hidden"  name="country_iso" class="form-control"
+                                                                value="{{ json_decode($order->user_billing_details, true)['country_iso'] }}"
+                                                                placeholder="{{ \App\CPU\translate('Country ISO') }}">
+
                                                             <input type="text" name="billing_name" class="form-control"
-                                                                value="{{ $order->customer['name'] }}"
+                                                                value="{{ json_decode($order->user_billing_details, true)['name'] }}"
                                                                 placeholder="{{ \App\CPU\translate('Name') }}">
                                                         </div>
                                                     </div>
@@ -118,7 +126,7 @@
                                                         <div class="form-group">
                                                             <label class="title-color">Email</label>
                                                             <input type="text" name="email" class="form-control"
-                                                                value="{{ $order->customer['email'] ?? '' }}"
+                                                                value="{{ json_decode($order->user_billing_details, true)['email'] ?? '' }}"
                                                                 placeholder="{{ \App\CPU\translate('Email') }}">
                                                         </div>
                                                     </div>
@@ -126,7 +134,7 @@
                                                         <div class="form-group">
                                                             <label class="title-color">Address</label>
                                                             <input type="text" name="street_address" class="form-control"
-                                                                value="{{ $order->customer['street_address'] }}"
+                                                                value="{{ json_decode($order->user_billing_details, true)['address'] }}"
                                                                 placeholder="{{ \App\CPU\translate('Address') }}">
                                                         </div>
                                                     </div>
@@ -135,7 +143,7 @@
                                                             <label class="title-color">City</label>
                                                             <input type="text" name="billing_city"
                                                                 class="form-control"
-                                                                value="{{ $order->customer['city'] }}"
+                                                                value="{{ json_decode($order->user_billing_details, true)['city'] }}"
                                                                 placeholder="{{ \App\CPU\translate('City') }}">
                                                         </div>
                                                     </div>
@@ -146,7 +154,7 @@
                                                                 name="billing_state">
                                                                 @foreach ($states as $k => $val)
                                                                     <option
-                                                                        {{ $order->customer['state'] == $val->id ? 'selected' : '' }}
+                                                                        {{ json_decode($order->user_billing_details, true)['state'] == $val->id ? 'selected' : '' }}
                                                                         value="{{ $val->id }}">{{ $val->name }}
                                                                     </option>
                                                                 @endforeach
@@ -160,7 +168,7 @@
                                                                 name="billing_country">
                                                                 @foreach ($countries as $k => $val)
                                                                     <option
-                                                                        {{ $order->customer['country'] == $val->id ? 'selected' : '' }}
+                                                                        {{ json_decode($order->user_billing_details, true)['country'] == $val->id ? 'selected' : '' }}
                                                                         value="{{ $val->id }}">{{ $val->name }}
                                                                     </option>
                                                                 @endforeach
@@ -171,7 +179,7 @@
                                                         <div class="form-group">
                                                             <label class="title-color">zipcode</label>
                                                             <input type="text" name="billing_zip" class="form-control"
-                                                                value="{{ $order->customer['zip'] }}"
+                                                                value="{{ json_decode($order->user_billing_details, true)['zip'] }}"
                                                                 placeholder="{{ \App\CPU\translate('Name') }}">
                                                         </div>
                                                     </div>
@@ -179,7 +187,7 @@
 
                                                     @if (!empty($order->customer['billing_phone_code']))
                                                         @php
-                                                            $phonecode = $order->customer['billing_phone_code'];
+                                                            $phonecode = json_decode($order->user_billing_details, true)['phone_code'];
                                                             // Check if $phonecode starts with '+', if not, add it
                                                             if (!Str::startsWith($phonecode, '+')) {
                                                                 $phonecode = '+' . $phonecode;
@@ -189,7 +197,7 @@
                                                     <div class="col-lg-2 col-md-3 col-sm-3">
                                                         <div class="form-group">
                                                             <label class="title-color d-flex">Phone Code</label>
-                                                            <input class="form-control txtPhone" name="billing_phone_code"
+                                                            <input class="form-control txtPhone" name="phone_code"
                                                                 type="tel" id="txtPhone" class="txtbox"
                                                                 value="{{ $phonecode ?? '+1' }}" />
                                                         </div>
@@ -198,7 +206,7 @@
                                                         <label class="title-color">Phone</label>
                                                         <div class="form-group">
                                                             <input type="number" class="form-control"
-                                                                value="{{ $order->customer['billing_phone'] ?? '' }}"
+                                                                value="{{ json_decode($order->user_billing_details, true)['phone'] ?? '' }}"
                                                                 name="billing_phone"
                                                                 placeholder="{{ \App\CPU\translate('Phone') }}" />
                                                         </div>
@@ -231,12 +239,13 @@
                                                             </label>
                                                         </div>
                                                     </div>
+                                                    <?php ?>
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label class="title-color">Name</label>
                                                             <input type="text" name="shipping_name"
                                                                 class="form-control"
-                                                                value="{{ $order->customer['shipping_name'] ?? '' }}"
+                                                                value="{{ json_decode($order->user_shipping_details, true)['name'] ?? '' }}"
                                                                 placeholder="{{ \App\CPU\translate('Name') }}">
                                                         </div>
                                                     </div>
@@ -245,7 +254,7 @@
                                                             <label class="title-color">Email</label>
                                                             <input type="text" name="shipping_email"
                                                                 class="form-control"
-                                                                value="{{ $order->customer['shipping_email'] ?? '' }}"
+                                                                value="{{ json_decode($order->user_shipping_details, true)['email'] ?? '' }}"
                                                                 placeholder="{{ \App\CPU\translate('Email') }}">
                                                         </div>
                                                     </div>
@@ -254,7 +263,7 @@
                                                             <label class="title-color">Address</label>
                                                             <input type="text" name="add_shipping_address"
                                                                 class="form-control"
-                                                                value="{{ $order->customer['add_shipping_address'] ?? '' }}"
+                                                                value="{{ json_decode($order->user_shipping_details, true)['address'] ?? '' }}"
                                                                 placeholder="{{ \App\CPU\translate('Address') }}">
                                                         </div>
                                                     </div>
@@ -263,7 +272,7 @@
                                                             <label class="title-color">City</label>
                                                             <input type="text" name="shipping_city"
                                                                 class="form-control"
-                                                                value="{{ $order->customer['shipping_city'] ?? '' }}"
+                                                                value="{{ json_decode($order->user_shipping_details, true)['city'] ?? '' }}"
                                                                 placeholder="{{ \App\CPU\translate('City') }}">
                                                         </div>
                                                     </div>
@@ -274,7 +283,7 @@
                                                                 name="shipping_state">
                                                                 @foreach ($states as $k => $val)
                                                                     <option
-                                                                        {{ $order->customer['state'] == $val->id ? 'selected' : '' }}
+                                                                        {{ json_decode($order->user_shipping_details, true)['state'] == $val->id ? 'selected' : '' }}
                                                                         value="{{ $val->id }}">{{ $val->name }}
                                                                     </option>
                                                                 @endforeach
@@ -288,7 +297,7 @@
                                                                 name="shipping_country">
                                                                 @foreach ($countries as $k => $val)
                                                                     <option
-                                                                        {{ $order->customer['country'] == $val->id ? 'selected' : '' }}
+                                                                        {{ json_decode($order->user_shipping_details, true)['country'] == $val->id ? 'selected' : '' }}
                                                                         value="{{ $val->id }}">{{ $val->name }}
                                                                     </option>
                                                                 @endforeach
@@ -300,14 +309,14 @@
                                                             <label class="title-color">Zip</label>
                                                             <input type="text" name="shipping_zip"
                                                                 class="form-control"
-                                                                value="{{ $order->customer['shipping_zip'] ?? '' }}"
+                                                                value="{{ json_decode($order->user_shipping_details, true)['zip'] ?? '' }}"
                                                                 placeholder="{{ \App\CPU\translate('Zipcode') }}">
                                                         </div>
                                                     </div>
 
-                                                    @if (!empty($order->customer['shipping_phone_code']))
+                                                    @if (!empty($order->user_shipping_details['shipping_phone_code']))
                                                         @php
-                                                            $shippingcode = $order->customer['shipping_phone_code'];
+                                                            $shippingcode = json_decode($order->user_shipping_details, true)['phone_code'];
                                                             // Check if $shippingcode starts with '+', if not, add it
                                                             if (!Str::startsWith($shippingcode, '+')) {
                                                                 $shippingcode = '+' . $shippingcode;
@@ -326,7 +335,7 @@
                                                         <label class="title-color">Phone</label>
                                                         <div class="form-group">
                                                             <input readonly type="number" class="form-control"
-                                                                value="{{ $order->customer['shipping_phone'] ?? '' }}"
+                                                                value="{{ json_decode($order->user_shipping_details, true)['phone'] ?? '' }}"
                                                                 name="shipping_phone"
                                                                 placeholder="{{ \App\CPU\translate('Phone') }}" />
                                                         </div>
@@ -338,7 +347,6 @@
                                 </div>
                             </div>
                         </div>
-
                     @endif
                     <div class="row">
                         <div class="col-lg-12 col-xl-12 mb-3">

@@ -73,17 +73,18 @@
                             @if (!empty($order->customer->add_shipping_address))
                                 <span class="h2">{{ \App\CPU\translate('shipping_to') }} </span>
                                 <div class="h4 montserrat-normal-600">
-                                    <p>{{ $order->customer != null ? $order->customer['shipping_name'] : \App\CPU\translate('name_not_found') }}
+                                   
+                                    <p> {{ !empty(json_decode($shippingInfo, true)['name']) ? json_decode($shippingInfo, true)['name'] : 'Name not found' }}
                                     </p>
-                                    <p>{{ $order->customer != null ? $order->customer['shipping_email'] : \App\CPU\translate('email_not_found') }}
+                                    <p> {{ !empty(json_decode($shippingInfo, true)['email']) ? json_decode($shippingInfo, true)['email'] : 'Email not found' }}
                                     </p>
-                                    <p>{{ $order->customer['shipping_phone_code'] ? $order->customer['shipping_phone_code'] : '' }}
-                                        &nbsp;{{ $order->customer != null ? $order->customer['shipping_phone'] : \App\CPU\translate('phone_not_found') }}
+                                    <p> {{ !empty(json_decode($shippingInfo, true)['phone_code']) ? json_decode($shippingInfo, true)['phone_code'] : 'Phonecode not found' }}
+                                        &nbsp; {{ !empty(json_decode($shippingInfo, true)['phone']) ? json_decode($shippingInfo, true)['phone'] : 'Phone not found' }}
                                     </p>
-                                    <p>{{ $order->customer ? $order->customer['add_shipping_address'] : '' }}</p>
-                                    <p>{{ $order->customer ? $order->customer['shipping_city'] : '' }}
-                                        {{ $order->customer ? $order->customer['shipping_zip'] : '' }}</p>
-                                    <p>{{ $order->customer != null ? $order->customer['country'] : \App\CPU\translate('country_not_found') }}
+                                    <p> {{ !empty(json_decode($shippingInfo, true)['address']) ? json_decode($shippingInfo, true)['address'] : 'Address not found' }}</p>
+                                    <p> {{ !empty(json_decode($shippingInfo, true)['city']) ? json_decode($shippingInfo, true)['city'] : 'City not found' }}
+                                        {{ !empty(json_decode($shippingInfo, true)['zip']) ? json_decode($shippingInfo, true)['zip'] : 'Zip not found' }}</p>
+                                    <p> {{ !empty(json_decode($shippingInfo, true)['country']) ? json_decode($shippingInfo, true)['country'] : 'Country not found' }}
                                     </p>
                                 </div>
                             @else

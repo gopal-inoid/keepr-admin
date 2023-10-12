@@ -257,6 +257,7 @@ class Controller extends BaseController
                     $data['email'] = $user_data['email'] ?? "";
                     $data['subject'] = $email_temp->subject ?? "";
                     $data["body"] = $email_temp->body ?? "";
+
                     if (!empty($data['email'])) {
                         Mail::send('email-templates.mail-tester', $data, function ($message) use ($data, $files) {
                             $message->to($data["email"])
@@ -403,13 +404,13 @@ class Controller extends BaseController
                 $productArray['shipping_duration'] = $val['delivery_days'] . " Days";
                 $productArray['shipping_info'] = $val['service_name'] . " " . $val['service_code'] . " US $" . $val['shipping_rate'] . " " . $val['delivery_days'] . " Days";
             }
-            $product_id = $productArray['product_id']; //array_keys(json_decode($update_order['mac_ids'], true))[0] ?? 0;
-            $product_qty_info = $productArray['product_qty']; //json_decode($update_order->mac_ids, true);
-            $price_info = $productArray['price']; //json_decode($update_order->per_device_amount, true);
-            $product_name = $productArray['product_name']; //$product_info[$product_id]['product_name'] ?? "";
+            $product_id = $productArray['product_id'] ?? ""; //array_keys(json_decode($update_order['mac_ids'], true))[0] ?? 0;
+            $product_qty_info = $productArray['product_qty'] ?? ""; //json_decode($update_order->mac_ids, true);
+            $price_info = $productArray['price'] ?? ""; //json_decode($update_order->per_device_amount, true);
+            $product_name = $productArray['product_name'] ?? ""; //$product_info[$product_id]['product_name'] ?? "";
             $product_qty = $productArray['product_qty']; //!empty($product_qty_info[$product_id]['uuid']) ? count($product_qty_info[$product_id]['uuid']) : 0;
-            $price = $productArray['price']; // $price_info[$product_id] ?? 0;
-            $total_price = $productArray['total_price']; //$price * $product_qty;
+            $price = $productArray['price'] ?? ""; // $price_info[$product_id] ?? 0;
+            $total_price = $productArray['total_price'] ?? ""; //$price * $product_qty;
 
             // $shipping_info = $productArray['shipping_rates'];
             // if (!empty($update_order->shipping_method_id) && !empty($update_order->shipping_mode)) {
