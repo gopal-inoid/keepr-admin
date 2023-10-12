@@ -395,6 +395,7 @@ class GeneralController extends Controller
             $order_list = [];
             $get_orders = Order::select('id as order_id', 'product_info', 'order_status', 'expected_delivery_date', 'customer_id', 'mac_ids', 'order_amount', 'created_at')
                 ->where(['customer_id' => $user_details->id])->orderBy('created_at', 'desc')->get();
+
             foreach ($get_orders as $k => $order) {
                 $order_list[$k]['order_id'] = $order['order_id'];
                 $order_list[$k]['customer_id'] = $order['customer_id'];
@@ -412,7 +413,7 @@ class GeneralController extends Controller
                 $product_total_qty = 0;
                 $product_info = json_decode($order->product_info, true);
                 if (!empty($product_info)) {
-                    foreach ($product_info as $k => $value) {
+                    foreach ($product_info as $value) {
                         $product_total_qty = $value['order_qty'] ?? 0;
                     }
                 }
