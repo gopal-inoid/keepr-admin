@@ -393,7 +393,7 @@ class GeneralController extends Controller
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
         if (!empty($user_details->id)) {
             $order_list = [];
-            $get_orders = Order::select('id as order_id','product_info','order_status', 'expected_delivery_date', 'customer_id', 'mac_ids', 'order_amount', 'created_at')
+            $get_orders = Order::select('id as order_id', 'product_info', 'order_status', 'expected_delivery_date', 'customer_id', 'mac_ids', 'order_amount', 'created_at')
                 ->where(['customer_id' => $user_details->id])->orderBy('created_at', 'desc')->get();
             foreach ($get_orders as $k => $order) {
                 $order_list[$k]['order_id'] = $order['order_id'];
@@ -412,11 +412,12 @@ class GeneralController extends Controller
                 $product_total_qty = 0;
                 $product_info = json_decode($order->product_info, true);
                 foreach ($product_info as $k => $value) {
-                    $product_total_qty = $value['order_qty'];
+                    $product_total_qty = $value['order_qty'] ?? 0;
                 }
-                
+
                 $order_list[$k]['total_devices'] = $product_total_qty;
             }
+
             Common::addLog([]);
             return response()->json(['status' => 200, 'message' => 'Success', 'data' => $order_list], 200);
         } else {
