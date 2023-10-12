@@ -263,6 +263,8 @@ class CartController extends Controller
             $company_details = BusinessSetting::select('value')->where('type', 'zip_code')->first();
             if (!empty($company_details) && !empty($company_details->value)) {
                 $originPostalCode = $company_details->value;
+            }else{
+                $originPostalCode = "K2B8J6";
             }
             $weight = 0.3; // !empty($spe['weight']) ? (float) $spe['weight'] : 0;
             $length = 9; // !empty($spe['length']) ? (int) $spe['length'] : 0;
