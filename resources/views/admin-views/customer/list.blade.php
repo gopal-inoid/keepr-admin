@@ -11,7 +11,7 @@
 
         <!-- Page Title -->
         <div class="mb-4">
-            <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
+            <h2 class="h1 mb-0 text-capitalize d-flex align-items-center mr-2">
                 <img width="20" src="{{asset('/assets/back-end/img/Active_Users_Solid.svg')}}" alt="">
                 {{\App\CPU\translate('Customer_list')}}
                 <span class="badge badge-soft-dark radius-50">{{\App\User::count()}}</span>
@@ -93,9 +93,9 @@
                                 </label>
                             </td>
                             <td>
-                                <div class="d-flex justify-content-center gap-2">
+                                <div class="d-flex justify-content-center">
                                     <a title="{{\App\CPU\translate('View')}}"
-                                       class="btn btn-outline-info btn-sm square-btn"
+                                       class="btn btn-outline-info btn-sm square-btn mr-2"
                                        href="{{route('admin.customer.view',[$customer['id']])}}">
                                         <i class="tio-invisible"></i>
                                     </a>

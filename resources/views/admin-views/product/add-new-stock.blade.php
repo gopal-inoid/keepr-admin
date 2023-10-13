@@ -68,32 +68,32 @@
                             <div class="row">
                                 <div class="col-md-12" id="mac_id_device_field">
                                     <div class="row">
-                                        <div class="col-md-3">
+                                        <div class="col-md-3 pr-0">
                                             <div class="form-group">
                                                 <label class="title-color">{{ \App\CPU\translate('Device ID') }}<span class="text-danger">*</span></label>
                                                 <input type="text" name="device_id[]" maxlength="17" class="form-control" value="{{ old('device_id') }}" placeholder="{{ \App\CPU\translate('Device MAC ID') }}" required>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-2 pr-0">
                                             <div class="form-group">
                                                 <label class="title-color">{{ \App\CPU\translate('UUID') }}<span class="text-danger">*</span></label>
                                                 <input type="text" name="uuid[]" class="form-control uuid" style="text-transform: uppercase;" maxlength="36" id="uuid" value="{{ old('uuid') }}" placeholder="{{ \App\CPU\translate('UUID') }}" required>
                                                 <span class="uuid_notice v_notice text-danger" id="uuid_notice"></span>
                                             </div>
                                         </div>
-                                        <div class="col-md-1">
+                                        <div class="col-md-2 pr-0">
                                             <div class="form-group">
                                                 <label class="title-color">{{ \App\CPU\translate('major') }}<span class="text-danger">*</span></label>
                                                 <input type="number" name="major[]" class="form-control " value="{{ old('major') }}" placeholder="{{ \App\CPU\translate('major') }}" required>
                                             </div>
                                         </div>
-                                        <div class="col-md-1">
+                                        <div class="col-md-2 pr-0">
                                             <div class="form-group">
                                                 <label class="title-color">{{ \App\CPU\translate('minor') }}<span class="text-danger">*</span></label>
                                                 <input type="number" name="minor[]" class="form-control " value="{{ old('minor') }}" placeholder="{{ \App\CPU\translate('minor') }}" required>
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-1 pr-0">
                                             <?php //echo "<pre>"; print_r($productcolors); die; ?>
                                             <div class="form-group">
                                                 <label class="title-color">{{ \App\CPU\translate('Color') }}<span class="text-danger">*</span></label>
@@ -109,6 +109,9 @@
                                                     @endif
                                                 </select>
                                             </div>
+                                        </div>
+                                        <div class="col-md-1 form-group mac_id-add-main-btn">
+                                            <i class="tio-delete-outlined text-danger remove-mac_id-btn mt-3"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -234,28 +237,28 @@
 
                 $('#mac_id_device_field').append(
                     `<div class="row mac_id-individual">
-                        <div class="col-md-3">
+                        <div class="col-md-3 pr-0">
                             <div class="form-group">
                                 <input type="text" name="device_id[]" class="form-control" value="" placeholder="{{ \App\CPU\translate('Device ID') }}">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2 pr-0">
                             <div class="form-group">
                                 <input type="text" name="uuid[]" class="form-control uuid" style="text-transform: uppercase;" maxlength="36" id="uuid" value="{{ old('uuid') }}" placeholder="{{ \App\CPU\translate('UUID') }}" required>
                                 <span class="uuid_notice v_notice text-danger" id="uuid_notice"></span>
                                 </div>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-2 pr-0">
                             <div class="form-group">
                                 <input type="number" name="major[]" class="form-control " value="{{ old('major') }}" placeholder="{{ \App\CPU\translate('major') }}" required>
                             </div>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-2 pr-0">
                             <div class="form-group">
                                 <input type="number" name="minor[]" class="form-control " value="{{ old('minor') }}" placeholder="{{ \App\CPU\translate('minor') }}" required>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-1 pr-0">
                             <div class="form-group">
                                 <select name="colors[]" class="form-control prodcolors">
                                     `+color_options+`

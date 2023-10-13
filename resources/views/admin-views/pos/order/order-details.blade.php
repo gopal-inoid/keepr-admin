@@ -382,7 +382,7 @@
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label class="">Shipment Note for Admin</label>
-                                                        <textarea name="shipment_info" class="form-control">{{ $order['shipment_info'] ?? '' }}</textarea>
+                                                        <textarea name="shipment_info" rows="1" class="form-control">{{ $order['shipment_info'] ?? '' }}</textarea>
                                                     </div>
                                                 </div>
                                             </div>

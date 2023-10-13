@@ -197,7 +197,7 @@
                                 <div class="col-md-12 form-group" id="parent-colors-div">
                                     <div class="row colors-individual">
                                         <div class="col-md-6 form-group">
-                                            <select name="colors[]" class="form-control color-select" multiple>
+                                            <select required name="colors[]" class="form-control color-select" multiple>
                                                 @if(!empty($colors))
                                                     @foreach($colors as $col)
                                                         <option value="{{$col['id']}}" <?= in_array($col['id'], $productColors) ? "selected='selected'" : "" ?>>{{$col['name']}}</option>

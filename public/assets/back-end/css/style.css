@@ -656,8 +656,10 @@ label {
 }
 .business-analytics__img {
   position: absolute;
-  inset-block-start: 16px;
-  inset-inline-end: 16px;
+  /* inset-block-start: 16px; */
+  /* inset-inline-end: 16px; */
+  top:16px;
+  right:16px;
 }
 
 /* Order Stats */

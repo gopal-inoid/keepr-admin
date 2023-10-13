@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Banner;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class BannerController extends Controller
 {
@@ -33,15 +34,21 @@ class BannerController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+
+        $validator = Validator::make($request->all(), [
             'url' => 'required',
-            'image' => 'required',
+            'image' => 'required|mimes:jpg,png,jpeg,svg,bmp,tif,tiff',
         ], [
-            'url.required' => 'url is required!',
+            'url.required' => 'URL is required!',
             'image.required' => 'Image is required!',
-
+            'image.mimes' => 'Invalid file type. Only jpg, png, jpeg, svg, bmp, tif, tiff files are allowed.',
         ]);
-
+        
+        if ($validator->fails()) {
+            Toastr::error($validator->errors()->first());
+            return back();
+        }
+        
         $banner = new Banner;
         $banner->banner_type = $request->banner_type;
         $banner->url = $request->url;
@@ -49,6 +56,7 @@ class BannerController extends Controller
         $banner->save();
         Toastr::success('Banner added successfully!');
         return back();
+        
     }
 
     public function status(Request $request)

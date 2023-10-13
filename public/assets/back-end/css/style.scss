@@ -1102,8 +1102,11 @@ input.qty {
     inline-size: -moz-min-content;
     inline-size: min-content;
     block-size: auto;
-    inset-inline-start: 0.5rem;
-    inset-block-start: 0.25rem;
+    // inset-inline-start: 0.5rem;
+    left: 0.5rem;
+    top: 0.5rem;
+    // inset-block-start: 0.25rem;
+
     line-height: 1;
 }
 .form-floating>.form-control-plaintext~label, .form-floating>.form-control:focus~label, .form-floating>.form-control:not(:placeholder-shown)~label, .form-floating>.form-select~label {

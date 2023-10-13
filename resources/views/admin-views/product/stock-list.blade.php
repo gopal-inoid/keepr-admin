@@ -11,8 +11,8 @@
 <div class="content container-fluid">
     <!-- Page Title -->
     <div class="mb-3">
-        <h2 class="h1 mb-0 text-capitalize d-flex gap-2">
-            <img src="{{asset('/assets/back-end/img/Stock_Management_Solid.svg')}}" alt="">
+        <h2 class="h1 mb-0 text-capitalize d-flex">
+            <img src="{{asset('/assets/back-end/img/Stock_Management_Solid.svg')}}" alt="" class="mr-2">
              Product Stock List
         </h2>
     </div>
@@ -40,17 +40,17 @@
                             </form> --}}
                             <!-- End Search -->
                         </div>
-                        <div class="col-lg-8 mt-3 mt-lg-0 d-flex flex-wrap gap-3 justify-content-lg-end">
-                            <a href="javascript:void(0);" class="btn btn-outline--primary" data-toggle="modal" data-target="#importModal">
+                        <div class="col-lg-8 mt-3 mt-lg-0 d-flex flex-wrap justify-content-lg-end">
+                            <a href="javascript:void(0);" class="btn btn-outline--primary mr-3" data-toggle="modal" data-target="#importModal">
                                 <i class="tio-update"></i>
                                 <span class="text">{{\App\CPU\translate('Import')}}</span>
                             </a>
-                            <div>
-                                <a  href="{{route('admin.product.stocks.export-excel')}}" type="button" class="btn btn-outline--primary">
+                            {{-- <div> --}}
+                                <a  href="{{route('admin.product.stocks.export-excel')}}" type="button" class="btn btn-outline--primary mr-3">
                                          <i class="tio-download-to"></i>Export
                                 </a>
-                            </div>
-                            <a href="{{route('admin.product.stocks.add-new')}}" class="btn btn--primary">
+                            {{-- </div> --}}
+                            <a href="{{route('admin.product.stocks.add-new')}}" class="btn btn--primary mr-3">
                                 <i class="tio-add"></i>
                                 <span class="text">{{\App\CPU\translate('Add Stock')}}</span>
                             </a>
@@ -97,9 +97,9 @@
                                     {{$total_purchased_stocks}}
                                 </td>
                                 <td>
-                                    <div class="d-flex justify-content-center gap-2">
+                                    <div class="d-flex justify-content-center">
                                        
-                                        <a class="btn btn-outline--primary btn-sm square-btn {{(!empty($status->status)) ? '' : 'disabled'  }}"
+                                        <a class="btn btn-outline--primary btn-sm square-btn mr-2 {{(!empty($status->status)) ? '' : 'disabled'  }}"
                                             title="{{\App\CPU\translate('Edit')}}"
                                             href="{{route('admin.product.stocks.edit',[$p['product_id']])}}">
                                             <i class="tio-edit"></i>

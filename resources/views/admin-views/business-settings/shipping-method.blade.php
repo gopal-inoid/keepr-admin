@@ -148,7 +148,7 @@
                                     </label>
                                 </td>
                                 <td>
-                                    <div class="d-flex justify-content-center gap-2">
+                                    <div class="d-flex justify-content-center">
                                         <a class="btn btn-outline-info btn-sm square-btn" title="{{ \App\CPU\translate('barcode') }}"
                                             href="{{ route('admin.product.barcode', [$p['id']]) }}">
                                             <i class="tio-barcode"></i>
