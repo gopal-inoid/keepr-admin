@@ -544,6 +544,7 @@ class Controller extends BaseController
         curl_close($curl);
         $xml = simplexml_load_string($curl_response);
         $jsonArray = json_decode(json_encode($xml), true);
+        $isTrackingArray = array("DOM.RP", "DOM.EP", "DOM.XP", "DOM.XP.CERT", "DOM.PC", "USA.EP", "USA.TP", "USA.TP.LVM", "USA.XP", "INT.XP", "INT.TP");
 
         $finalArray = array();
         if (!empty($jsonArray)) {
@@ -554,6 +555,7 @@ class Controller extends BaseController
                             $array = array();
                             $array['service_name'] = !empty($child['service-name']) ? $child['service-name'] . " - via Canada Post" : "";
                             $array['service_code'] = $child['service-code'] ?? 0;
+                            $array['is_tracking'] = in_array($child['service-code'], $isTrackingArray) ? "1" : "0";
                             $array['shipping_rate'] = round((($child['price-details']['due'] * 0.74) + 1), 2);
                             $array['expected_delivery_date'] = $child['service-standard']['expected-delivery-date'] ?? "";
                             $array['is_guanranteed'] = $child['service-standard']['guaranteed-delivery'] == "true" ? '1' : '0';
