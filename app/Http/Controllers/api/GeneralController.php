@@ -665,13 +665,13 @@ class GeneralController extends Controller
 
     public function get_shipping_rates(Request $request)
     {
-        // If your shipping_country in user table is according to the postal code response is completely yours.
-        $origin_postal_code="K2B8J6";
-        $postal_code="J0E1X0";
-        $_weight=.3;
-        $length=9;
-        $width=5;
-        $height=1;
+        // If your shipping_country in user table is according to the postal code... Response is completely yours.
+        $origin_postal_code = "K2B8J6";
+        $postal_code = "J0E1X0";
+        $_weight = .3;
+        $length = 9;
+        $width = 5;
+        $height = 1;
         $result = $this->getShippingRates($origin_postal_code, $postal_code, $_weight, $length, $width, $height);
         if (isset($result)) {
             return response()->json(['status' => 200, 'message' => 'Response recieved successfully', 'data' => $result], 200);

@@ -52,7 +52,7 @@
         <!-- Page Header -->
         <div>
             <!-- Page Title -->
-            <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+            <div class="d-flex flex-wrap align-items-center mb-3">
                 <h2 class="h1 mb-0">
                     <img src="{{ asset('/assets/back-end/img/Orders__Solid.svg') }}" class="mb-1 mr-1" alt="">
                     <span class="page-header-title">
@@ -239,14 +239,14 @@
                                         </div>
                                     </td> --}}
                                         <td>
-                                            <div class="d-flex gap-2">
-                                                <a class="btn btn-outline--primary square-btn btn-sm mr-1"
+                                            <div class="d-flex">
+                                                <a class="btn btn-outline--primary square-btn btn-sm mr-2"
                                                     title="{{ \App\CPU\translate('view') }}"
                                                     href="{{ route('admin.orders.details', ['id' => $order['id']]) }}">
                                                     <img src="{{ asset('/public/assets/back-end/img/eye.svg') }}"
                                                         class="svg" alt="">
                                                 </a>
-                                                <a class="btn btn-outline-success square-btn btn-sm mr-1" target="_blank"
+                                                <a class="btn btn-outline-success square-btn btn-sm" target="_blank"
                                                     title="{{ \App\CPU\translate('invoice') }}"
                                                     href="{{ route('admin.orders.generate-invoice', [$order['id']]) }}">
                                                     <i class="tio-download-to"></i>

@@ -20,8 +20,8 @@
     <div class="content container-fluid">
         <!-- Page Title -->
         <div class="mb-3">
-            <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
-                <img src="{{ asset('/assets/back-end/img/Tax_Solid.svg') }}" alt="">
+            <h2 class="h1 mb-0 text-capitalize d-flex align-items-center">
+                <img class="mr-2" src="{{ asset('/assets/back-end/img/Tax_Solid.svg') }}" alt="">
                 {{ \App\CPU\translate('edit_tax_calculations') }}
             </h2>
         </div>
@@ -122,9 +122,9 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="d-flex gap-10 flex-wrap justify-content-end">
-                                <a href="{{ route('admin.business-settings.shipping-method.tax-calculation') }}"
-                                    class="btn btn--primary px-4">Back</a>
+                            <div class="d-flex flex-wrap justify-content-end">
+                                <a  href="{{ route('admin.business-settings.shipping-method.tax-calculation') }}"
+                                    class="btn btn--primary px-4 mr-2">Back</a>
                                 <button type="submit"
                                     class="btn btn--primary px-4">{{ \App\CPU\translate('Update') }}</button>
                             </div>

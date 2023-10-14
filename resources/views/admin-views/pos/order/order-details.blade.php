@@ -10,9 +10,9 @@
 @section('content')
 
     <div class="content container-fluid">
-        <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+        <div class="d-flex flex-wrap align-items-center mb-3">
             <h2 class="h1 mb-0">
-                <img src="{{ asset('/public/assets/back-end/img/all-orders.png') }}" alt="">
+                <img class="mr-1" src="{{ asset('/public/assets/back-end/img/all-orders.png') }}" alt="">
                 {{ \App\CPU\translate('Order_Details') }} For {{ \App\CPU\translate('Order_ID') }} #{{ $order['id'] }}
             </h2>
         </div>
@@ -470,10 +470,10 @@
                                                             <tr>
                                                                 <td>{{ $i }}</td>
                                                                 <td>
-                                                                    <div class="media align-items-center gap-10">
+                                                                    <div class="media align-items-center">
                                                                         <img src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $detail['thumbnail'] }}"
                                                                             onerror="this.src='{{ asset('public/assets/back-end/img/160x160/img2.jpg') }}'"
-                                                                            class="avatar avatar-60 rounded"
+                                                                            class="avatar avatar-60 rounded mr-2"
                                                                             alt="">
                                                                         <div>
                                                                             <a href="#"

@@ -10,10 +10,10 @@
 <div class="content container-fluid">
     <!-- Page Title -->
     <div class="mb-3">
-        <h2 class="h1 mb-0 text-capitalize d-flex gap-2">
-            <img src="{{asset('/assets/back-end/img/Product_Solid.svg')}}" alt="">
+        <h2 class="h1 mb-0 text-capitalize d-flex">
+            <img class="mr-2" src="{{asset('/assets/back-end/img/Product_Solid.svg')}}" alt="">
              Product List
-            <span class="badge badge-soft-dark radius-50 fz-14 ml-1">{{ $pro->total() }}</span>
+            <span class="ml-2 badge badge-soft-dark radius-50 fz-14 ml-1">{{ $pro->total() }}</span>
         </h2>
     </div>
     <!-- End Page Title -->
@@ -81,8 +81,8 @@
                             <tr>
                                 <th scope="row">{{$pro->firstItem()+$k}}</th>
                                 <td>
-                                    <a href="javascript:void(0);" class="media align-items-center gap-2">
-                                        <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$p['thumbnail']}}"
+                                    <a href="javascript:void(0);" class="media align-items-center">
+                                        <img class="mr-2" src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$p['thumbnail']}}"
                                              onerror="this.src='{{asset('/public/assets/back-end/img/brand-logo.png')}}'"class="avatar border" alt="">
                                         <span class="media-body title-color hover-c1">
                                             {{\Illuminate\Support\Str::limit($p['name'],20)}}
@@ -97,7 +97,7 @@
                                     </label>
                                 </td>
                                 <td>
-                                    <div class="d-flex justify-content-center gap-2">
+                                    <div class="d-flex justify-content-center">
                                         {{-- <a class="btn btn-outline-info btn-sm square-btn" title="{{ \App\CPU\translate('barcode') }}"
                                             href="{{ route('admin.product.barcode', [$p['id']]) }}">
                                             <i class="tio-barcode"></i>
@@ -105,7 +105,7 @@
                                         <a class="btn btn-outline-info btn-sm square-btn" title="View" href="{{route('admin.product.view',[$p['id']])}}">
                                             <i class="tio-invisible"></i>
                                         </a> --}}
-                                        <a class="btn btn-outline--primary btn-sm square-btn"
+                                        <a class="btn btn-outline--primary btn-sm square-btn mr-2"
                                             title="{{\App\CPU\translate('Edit')}}"
                                             href="{{route('admin.product.edit',[$p['id']])}}">
                                             <i class="tio-edit"></i>

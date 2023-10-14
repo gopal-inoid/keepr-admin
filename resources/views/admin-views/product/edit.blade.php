@@ -25,9 +25,9 @@
     <!-- Page Heading -->
     <div class="content container-fluid">
         <!-- Page Title -->
-        <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
-            <h2 class="h1 mb-0 d-flex gap-2">
-                <img src="{{asset('/assets/back-end/img/Product_Solid.svg')}}" alt="">
+        <div class="d-flex flex-wrap align-items-center mb-3">
+            <h2 class="h1 mb-0 d-flex">
+                <img class="mr-2" src="{{asset('/assets/back-end/img/Product_Solid.svg')}}" alt="">
                 {{\App\CPU\translate('Product')}} {{\App\CPU\translate('Edit')}}
             </h2>
         </div>

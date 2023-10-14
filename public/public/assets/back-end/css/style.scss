@@ -1098,12 +1098,14 @@ input.qty {
 .form-floating > label {
     background-color: #fff;
     padding: 0.5rem 0.75rem;
-    inline-size: -webkit-min-content;
-    inline-size: -moz-min-content;
-    inline-size: min-content;
+    inline-size: -webkit-fit-content;
+    inline-size: -moz-fit-content;
+    inline-size: fit-content;
     block-size: auto;
-    inset-inline-start: 0.5rem;
-    inset-block-start: 0.25rem;
+    // inset-inline-start: 0.5rem;
+    // inset-block-start: 0.25rem;
+    top:0.25rem;
+    left:0.5rem;
     line-height: 1;
 }
 .form-floating>.form-control-plaintext~label, .form-floating>.form-control:focus~label, .form-floating>.form-control:not(:placeholder-shown)~label, .form-floating>.form-select~label {
@@ -1522,8 +1524,8 @@ img {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    column-gap: 30px;
-    row-gap: 10px;
+    // column-gap: 30px;
+    // row-gap: 10px;
     li {
         a {
             font-weight: 700;
