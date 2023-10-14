@@ -989,7 +989,7 @@ ul li {
     cursor: pointer;
 }
 
-.active,
+.active-item,
 .desc-1:hover {
     background-color: #31A4B7;
     color: white;
