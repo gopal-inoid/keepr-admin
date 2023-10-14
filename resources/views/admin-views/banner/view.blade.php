@@ -74,11 +74,11 @@
                                     </center>
                                 </div>
                             </div>
-                            <div class="mt-3 d-flex justify-content-end flex-wrap gap-10">
-                                <button class="btn btn-secondary cancel px-4"
+                            <div class="mt-3 d-flex justify-content-end flex-wrap">
+                                <button class="btn btn-secondary cancel px-4 mr-2"
                                     type="reset">{{ \App\CPU\translate('Back') }}</button>
                                 <button id="add" type="submit"
-                                    class="btn btn--primary px-4">{{ \App\CPU\translate('save') }}</button>
+                                    class="btn btn--primary px-4 mr-2">{{ \App\CPU\translate('save') }}</button>
                                 <button id="update"
                                     class="btn btn--primary d--none text-white">{{ \App\CPU\translate('update') }}</button>
                             </div>

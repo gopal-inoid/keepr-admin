@@ -31,8 +31,8 @@
 
 <body>
     <!-- <div> -->
-    <div class="Navbar-Section">
-        <nav class="navbar container navbar-expand-lg navbar-dark p-3 p-lg-0">
+    <div class="Navbar-Section" id="navbar-section">
+        <nav class="navbar container navbar-expand-lg navbar-dark p-3 p-lg-0" id="navbarScrollSpy">
             <div class="container-fluid">
                 <a class="navbar-brand" href="{{ url()->current() }}">
                     <img src="{{ asset('keepr_app_assets/assests/Keepe_logo.png') }}" alt="">
@@ -345,7 +345,7 @@
                         </div>
                         <!-- <div class="col-md-1"></div> -->
                         <div class="col-xl-4 col-md-5 HeadPhone_image pt-4">
-                            <img src="{{ asset('keepr_app_assets/assests/Overlapping_img.svg') }}" alt="">
+                            <img src="{{ asset('keepr_app_assets/assests/Overlapping_img.png') }}" alt="">
 
                         </div>
                     </div>
@@ -424,17 +424,23 @@
                             <div class="Copyright_Section pt-4 pb-4">
                                 <div class="CopyRight_Section">
                                     <p class="text-light">&#9400; Copyright 2023 Keepr, All Rights Reserved.</p>
+                                    <p class="text-muted d-flex justify-content-start align-items-end"
+                                        style="font-size:15px; text-align:middle;">&nbsp; Design & Developed by&nbsp;<a
+                                            href="https://inoidsolutions.com/" class="text-light"
+                                            target="_blank">iNoid Solutions</a></p>
                                 </div>
                                 <div class="CopyRight_Section">
 
-                                    <img class="mx-1"
-                                        src="{{ asset('keepr_app_assets/assests/FaceBook_Icon.svg') }}"
-                                        alt="">
-                                    <img class="mx-1" src="{{ asset('keepr_app_assets/assests/TwitterIcon.svg') }}"
-                                        alt="">
-                                    <img class="mx-1"
-                                        src="{{ asset('keepr_app_assets/assests/InstgramIcon.svg') }}"
-                                        alt="">
+                                    <a href="https://www.facebook.com/profile.php?id=61551488266788"
+                                        target="_blank"><img class="mx-1"
+                                            src="{{ asset('keepr_app_assets/assests/FaceBook_Icon.svg') }}"
+                                            alt=""></a>
+                                    {{-- <img class="mx-1" src="{{ asset('keepr_app_assets/assests/TwitterIcon.svg') }}"
+                                        alt=""> --}}
+                                    <a href="https://www.instagram.com/thekeeprapp/" target="_blank"><img
+                                            class="mx-1"
+                                            src="{{ asset('keepr_app_assets/assests/InstgramIcon.svg') }}"
+                                            alt=""></a>
                                 </div>
                             </div>
                         </div>
@@ -450,22 +456,24 @@
             aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header py-0">
                         <h5 class="modal-title" id="exampleModalLongTitle"></h5>
                         <button type="button" class="close border-0" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
-                        <iframe id="keeprVideo" autoplay="false" class="Youtube_Video" width="560"
-                            height="315" src="{{ asset('keepr_app_assets/assests/Keepr_Intro_Video.mp4') }}"
-                            title="Video player" frameborder="0"
-                            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    <div class="modal-body p-0">
+                        <iframe id="keeprVideo" width="100%" height="500" autoplay="true"
+                            src="https://www.youtube.com/embed/92OG1DxMJyw?si=saWna070vqcwAPgH?autoplay=1&amp;controls=0&amp;rel=0                                                                                      "
+                            title="YouTube video player" frameborder="0" allow="autoplay; encrypted-media;"
                             allowfullscreen></iframe>
+
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+
 </body>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
@@ -515,9 +523,24 @@
             $("#keeprVideo").attr('src', url);
         });
 
+        $('#exampleModalCenter').on('shown.bs.modal', function() {
+            $('#keeprVideo')[0].src += "&autoplay=1";
+        });
+
+        $('#exampleModalCenter').on('hidden.bs.modal', function() {
+            $('#keeprVideo')[0].src = $('#keeprVideo')[0].src.replace("&autoplay=1", "");
+        });
+
         $("#overlay-img").click(function() {
             $('#exampleModalCenter').modal("show");
         })
+
+
+        // $(window).on("load", function() {
+        //     let src=$("#keeprIntro").attr("src");
+        //     alert(src);
+        // });
+
     })
 </script>
 
