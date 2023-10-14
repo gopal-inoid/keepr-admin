@@ -309,9 +309,9 @@ class GeneralController extends Controller
             return response()->json(['status' => 400, 'message' => "Country iso can't be NULL"], 400);
         }
 
-        if (!$this->valid_postal_code($request->zip_code, strtolower($request->country_iso))) {
-            return response()->json(['status' => 400, 'message' => "Postal code is not valid"], 400);
-        }
+        // if (!$this->valid_postal_code($request->zip_code, strtolower($request->country_iso))) {
+        //     return response()->json(['status' => 400, 'message' => "Postal code is not valid"], 400);
+        // }
 
         $auth_token = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
