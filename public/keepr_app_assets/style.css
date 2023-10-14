@@ -441,8 +441,10 @@ body {
     justify-content: center;
 }
 
-.footer-img {
-    height: 70px;
+.img {
+    /* height: 70px; */
+    object-fit: contain;
+    width: 100%;
 }
 
 .footer_menu {
@@ -511,7 +513,7 @@ ul li {
 
 .app_download_btn img {
     height: 50px;
-    width: 200px;
+    /* width: 200px; */
     cursor: pointer;
 }
 
@@ -741,7 +743,7 @@ ul li {
 
     .app_download_btn img {
         height: 39px;
-        margin-left: 5px;
+        /* margin-left: 5px; */
     }
 
     .overlaping_div_content p {
@@ -897,10 +899,6 @@ ul li {
 
     .overlaping_div_content h1 {
         font-size: 32px;
-    }
-
-    .app_download_btn img {
-        margin-left: -30px;
     }
 
     .overlaping_div {
@@ -1123,5 +1121,11 @@ dl {
     }
     .main_heading {
         font-size: 36px;
+    }
+}
+
+@media (max-width: 315px) {
+    .navbar-brand {
+        width: 160px;
     }
 }
