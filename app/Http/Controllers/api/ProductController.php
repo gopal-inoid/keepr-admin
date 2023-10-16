@@ -549,7 +549,7 @@ class ProductController extends Controller
         $data = $request->data ?? "";
         $left = ltrim($data, '"');
         $right = rtrim($left, '"');
-        Common::addLog($data);
+        Common::addLog(['data'=>$data]);
         $data = json_decode($right,true);
         Common::addLog($data);
         $success = $already_added =  $not_found =  0;
