@@ -11,8 +11,8 @@ class Common extends Model
 	public static function addLog($appResponse)
 	{
 		$post_body  = file_get_contents('php://input');
-		$reqData[0] = json_decode($post_body, true);
-		$appRequestData = addslashes(json_encode($reqData[0]));
+		$reqData = json_decode($post_body, true);
+		$appRequestData = addslashes(json_encode($reqData));
 		$header = getallheaders();
 		$headerData['x-platform']         = !empty($header['x-platform']) ? $header['x-platform'] : '';
 		$headerData['x-app-version']             = !empty($header['x-app-version']) ? $header['x-app-version'] : '';

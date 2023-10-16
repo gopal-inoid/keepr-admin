@@ -610,11 +610,12 @@ class ProductController extends Controller
                 $message = $not_found . ' Device not found, ';
             }
 
-            Common::addLog([]);
+            Common::addLog($data);
             if(isset($response['status'])){
                 return response()->json(['status'=>200,'message'=> $message . ' in Tracking' ?? "Success"],200);
             }else{
-                return response()->json(['status'=>400,'message'=>'Device not found'],400);
+                Common::addLog([]);
+                return response()->json(['status'=>400,'message'=>'Request Data not correct'],400);
             }
 
         }else{
