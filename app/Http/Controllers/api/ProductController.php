@@ -550,8 +550,8 @@ class ProductController extends Controller
         $left = ltrim($data, '"');
         $right = rtrim($left, '"');
         Common::addLog($data);
-        Common::addLog($right);
         $data = json_decode($right,true);
+        Common::addLog($data);
         $success = $already_added =  $not_found =  0;
         $response = []; $message = '';
         $auth_token   = $request->headers->get('X-Access-Token');
