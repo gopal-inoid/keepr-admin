@@ -549,9 +549,7 @@ class ProductController extends Controller
         $data = $request->data ?? "";
         $left = ltrim($data, '"');
         $right = rtrim($left, '"');
-        Common::addLog(['data'=>$data]);
         $data = json_decode($right,true);
-        Common::addLog($data);
         $success = $already_added =  $not_found =  0;
         $response = []; $message = '';
         $auth_token   = $request->headers->get('X-Access-Token');
@@ -612,12 +610,12 @@ class ProductController extends Controller
                 $message = $not_found . ' Device not found, ';
             }
 
-            //Common::addLog($data);
+            Common::addLog($data);
             if(isset($response['status'])){
                 return response()->json(['status'=>200,'message'=> $message . ' in Tracking' ?? "Success"],200);
             }else{
                 Common::addLog([]);
-                return response()->json(['status'=>400,'message'=>'Device not found'],400);
+                return response()->json(['status'=>400,'message'=>'Request Data not correct'],400);
             }
 
         }else{
