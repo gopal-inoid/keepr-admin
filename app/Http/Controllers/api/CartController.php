@@ -271,8 +271,8 @@ class CartController extends Controller
             $finalArray = array();
             if ($country_code == 'SA') {
                 $saudiRates = array(
-                    'SAUDI.REG' => ["service_name" => 'regular', 'service_code' => 'SAUDI.REG', 'is_tracking' => '0', 'shipping_rate' => 14.00, "delivery_date" => "", "is_guanranted" => "0", "delivery_days" => "5-10"],
-                    'SAUDI.EXP' => ["service_name" => 'express', 'service_code' => 'SAUDI.EXP', 'is_tracking' => '0', 'shipping_rate' => 20.00, "delivery_date" => "", "is_guanranted" => "0", "delivery_days" => "3-5"]	
+                    'SAUDI.REG' => ["service_name" => 'regular', 'service_code' => 'SAUDI.REG', 'is_tracking' => '0', 'shipping_rate' => 14.01, "delivery_date" => "", "is_guanranted" => "0", "delivery_days" => "5-10"],
+                    'SAUDI.EXP' => ["service_name" => 'express', 'service_code' => 'SAUDI.EXP', 'is_tracking' => '0', 'shipping_rate' => 20.01, "delivery_date" => "", "is_guanranted" => "0", "delivery_days" => "3-5"]	
                 );
 
                 foreach ($saudiRates as $k => $value) {
