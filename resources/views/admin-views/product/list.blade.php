@@ -82,8 +82,8 @@
                                 <th scope="row">{{$pro->firstItem()+$k}}</th>
                                 <td>
                                     <a href="javascript:void(0);" class="media align-items-center">
-                                        <img class="mr-2" src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$p['thumbnail']}}"
-                                             onerror="this.src='{{asset('/public/assets/back-end/img/brand-logo.png')}}'"class="avatar border" alt="">
+                                        <img class="mr-2 rounded" src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$p['thumbnail']}}"
+                                            style="width:51px;height:50px;" onerror="this.src='{{asset('/public/assets/back-end/img/brand-logo.png')}}'"class="avatar border" alt="">
                                         <span class="media-body title-color hover-c1">
                                             {{\Illuminate\Support\Str::limit($p['name'],20)}}
                                         </span>

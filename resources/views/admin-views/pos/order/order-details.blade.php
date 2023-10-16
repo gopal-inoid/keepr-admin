@@ -363,7 +363,7 @@
                                                         </select>
                                                     </div>
                                                 </div> --}}
-                                                <div class="col-md-2">
+                                                <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label class="title-color">Tracking ID</label>
                                                         <input type="text" name="tracking_id" class="form-control"
@@ -402,14 +402,14 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="row">
-                                                <div class="col-md-3">
+                                                <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label class="title-color">Payment Transaction ID</label>
                                                         <input type="text" name="transaction_ref" class="form-control"
                                                             value="{{ $order['transaction_ref'] ?? '' }}" required>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3">
+                                                <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label class="">Payment Method</label>
                                                         <select class="form-control" id="payment_method"
@@ -420,7 +420,7 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3">
+                                                <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label class="title-color">Payment Status</label>
                                                         <select class="form-control js-select2-custom" id="payment_status"

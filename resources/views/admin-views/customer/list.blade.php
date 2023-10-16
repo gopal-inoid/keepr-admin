@@ -24,9 +24,9 @@
             <!-- Header -->
             <div class="px-3 py-4">
                 <div class="row gy-2 align-items-center">
-                    <div class="col-sm-8 col-md-6 col-lg-4">
+                    <div class="col-12">
                         <!-- Search -->
-                        <form action="{{ url()->current() }}" method="GET">
+                        <form action="{{ url()->current() }}" method="GET" class="">
                             <div class="input-group input-group-merge input-group-custom">
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">

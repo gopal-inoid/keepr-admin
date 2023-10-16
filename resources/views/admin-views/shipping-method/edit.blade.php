@@ -56,8 +56,8 @@
                                 <input type="text" name="express_duration" value="{{$method['express_duration'] ?? ''}}" class="form-control" placeholder="Ex (2-5 days)">
                             </div>
                         </div>
-                        <div class="col-lg-3 d-flex gap-2">
-                            <a href="{{route('admin.business-settings.shipping-method.setting')}}" class="btn btn--primary px-4">Back</a>
+                        <div class="col-lg-3 d-flex">
+                            <a href="{{route('admin.business-settings.shipping-method.setting')}}" class="btn btn--primary px-4 mr-2">Back</a>
                             <button type="submit" class="btn btn--primary px-4">{{\App\CPU\translate('Update')}}</button>
                         </div>        
                     

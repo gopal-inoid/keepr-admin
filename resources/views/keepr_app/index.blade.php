@@ -29,7 +29,7 @@
         <nav class="navbar container navbar-expand-lg navbar-dark p-3 p-lg-0" id="navbarScrollSpy">
             <div class="container-fluid">
                 <a class="navbar-brand" href="{{ url()->current() }}">
-                    <img src="{{ asset('keepr_app_assets/assests/Keepe_logo.png') }}" alt="">
+                    <img src="{{ asset('keepr_app_assets/assests/Keepe_logo.png') }}" class="img" alt="">
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -343,7 +343,7 @@
                         <div class="row" style="position: relative;">
                             <div class="col-md-12 footer-body">
 
-                                <img src="{{ asset('keepr_app_assets/assests/Footer_Log.png') }}" class="footer-img" alt="">
+                                <img src="{{ asset('keepr_app_assets/assests/Footer_Log.png') }}" class="img" alt="">
 
                             </div>
                             <div class="footer-body2">
