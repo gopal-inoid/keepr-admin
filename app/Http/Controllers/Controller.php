@@ -456,7 +456,7 @@ class Controller extends BaseController
     }
 
 
-    function getShippingRates($origin_postal_code, $postal_code, $_weight, $length, $width, $height)
+    function getShippingRates($origin_postal_code, $postal_code, $country_code, $_weight, $length, $width, $height)
     {
         $username = env('CANADAPOST_USERANME');
         $password = env('CANADAPOST_PASSWORD');
@@ -470,8 +470,8 @@ class Controller extends BaseController
 
         // Create GetRates request xml
         $originPostalCode = $origin_postal_code;
-        $postalCode = $postal_code;
-        $pCode = explode(" ", $postal_code);
+        // $postalCode = $postal_code;
+        // $pCode = explode(" ", $postal_code);
         $weight = $_weight;
 
         //echo "<pre>"; print_r($pCode); die;
@@ -492,25 +492,26 @@ class Controller extends BaseController
             <destination>
         XML;
 
-        if (strpos($postalCode, 'Canada') !== false) {
+        if (strpos($country_code, 'CA') !== false) {
             // Postal code indicates Canada
             $xmlRequest .= <<<XML
                 <domestic>
-                    <postal-code>{$pCode[0]}</postal-code>
+                    <postal-code>{$postal_code}</postal-code>
                 </domestic>
             XML;
-        } elseif (strpos($postalCode, 'United-States') !== false) {
+        } elseif (strpos($country_code, 'US') !== false) {
             // Postal code indicates United States
             $xmlRequest .= <<<XML
                 <united-states>
-                    <zip-code>{$pCode[0]}</zip-code>
+                    <zip-code>{$postal_code}</zip-code>
                 </united-states>
             XML;
-        } elseif (strpos($postalCode, 'International') !== false) {
+        } else {
             // Postal code indicates International
             $xmlRequest .= <<<XML
                 <international>
-                    <country-code>{$pCode[0]}</country-code>
+                    <country-code>{$country_code}</country-code>
+                    <postal-code>{$postal_code}</postal-code>
                 </international>
             XML;
         }

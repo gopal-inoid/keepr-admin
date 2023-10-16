@@ -252,15 +252,15 @@ class CartController extends Controller
             } else {
                 $country_code = $user_details->country_iso;
             }
-            if ($country_name == 'Canada') {
-                $postalCode = $zip_code . " Canada";
-            } elseif ($country_name == 'United States') {
-                $postalCode = $zip_code . " United-States";
-            } elseif ($country_name == 'Saudi Arabia') {
-                $postalCode = false;
-            } else {
-                $postalCode = $country_code . " International " . $zip_code;
-            }
+						$postalCode = $zip_code;
+            // if ($country_name == 'Canada') {
+            // } elseif ($country_name == 'United States') {
+            //     $postalCode = $zip_code . " United-States";
+            // } elseif ($country_name == 'Saudi Arabia') {
+            //     $postalCode = false;
+            // } else {
+            //     $postalCode = $country_code . " International " . $zip_code;
+            // }
 
             $company_details = BusinessSetting::select('value')->where('type', 'zip_code')->first();
             if (!empty($company_details) && !empty($company_details->value)) {
@@ -269,7 +269,7 @@ class CartController extends Controller
                 $originPostalCode = "M4W3Y2";
             }
             $finalArray = array();
-            if ($postalCode == false) {
+            if ($country_code == 'SA') {
                 $saudiRates = array(
                     'SAUDI.REG' => ["service_name" => 'regular', 'service_code' => 'SAUDI.REG', 'is_tracking' => '0', 'shipping_rate' => 14.00, "delivery_date" => "", "is_guanranted" => "0", "delivery_days" => "5-10"],
                     'SAUDI.EXP' => ["service_name" => 'express', 'service_code' => 'SAUDI.EXP', 'is_tracking' => '0', 'shipping_rate' => 20.00, "delivery_date" => "", "is_guanranted" => "0", "delivery_days" => "3-5"]	
@@ -292,7 +292,7 @@ class CartController extends Controller
                 $length = 9; // !empty($spe['length']) ? (int) $spe['length'] : 0;
                 $width = 5; // !empty($spe['width']) ? (int) $spe['width'] : 0;
                 $height = 1 * $total_order; // !empty($spe['height']) ? (int) $spe['height'] : 0;
-                $finalArray = $this->getShippingRates($originPostalCode, $postalCode, $weight, $length, $width, $height);
+                $finalArray = $this->getShippingRates($originPostalCode, strtoupper($postalCode), $country_code, $weight, $length, $width, $height);
             }
             //TAX calculation
             $tax_arr = $this->getTaxCalculation($total_price, $country_name, $state_name);
