@@ -564,7 +564,7 @@ class Controller extends BaseController
                             $deliveryDays = array_key_exists($child['service-code'], $deliveryDaysForNoneTracking) ? $deliveryDaysForNoneTracking[$child['service-code']] : "";
                             $array = array();
                             $array['service_name'] = !empty($child['service-name']) ? $child['service-name'] . " - via Canada Post" : "";
-                            $array['service_code'] = $child['service-code'] ?? 0;
+                            $array['service_code'] = $child['service-code'] ?? "";
                             $array['is_tracking'] = in_array($child['service-code'], $isTrackingArray) ? "1" : "0";
                             $array['shipping_rate'] = round((($child['price-details']['due'] * 0.74) + 1), 2);
                             $array['expected_delivery_date'] = $child['service-standard']['expected-delivery-date'] ?? "";
