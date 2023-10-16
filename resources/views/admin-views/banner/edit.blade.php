@@ -10,8 +10,8 @@
     <div class="content container-fluid">
         <!-- Page Title -->
         <div class="mb-3">
-            <h2 class="h1 mb-1 text-capitalize d-flex align-items-center gap-2">
-                <img width="20" src="{{asset('/assets/back-end/img/Banner_solid.svg')}}" alt="">
+            <h2 class="h1 mb-1 text-capitalize d-flex align-items-center ">
+                <img class="mr-2" width="20" src="{{asset('/assets/back-end/img/Banner_solid.svg')}}" alt="">
                 {{\App\CPU\translate('banner_update_form')}}
             </h2>
         </div>
@@ -140,8 +140,8 @@
                                     </center> --}}
                                 </div>
 
-                                <div class="col-md-12 mt-3 d-flex justify-content-end gap-3">
-                                    <button type="reset" class="btn btn-secondary px-4">{{ \App\CPU\translate('reset')}}</button>
+                                <div class="col-md-12 mt-3 d-flex justify-content-end">
+                                    <button type="reset" class="btn btn-secondary px-4 mr-3">{{ \App\CPU\translate('reset')}}</button>
                                     <button type="submit" class="btn btn--primary px-4">{{ \App\CPU\translate('update')}}</button>
                                 </div>
                             </div>

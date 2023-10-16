@@ -10,9 +10,9 @@
 @section('content')
 
     <div class="content container-fluid">
-        <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+        <div class="d-flex flex-wrap align-items-center mb-3">
             <h2 class="h1 mb-0">
-                <img src="{{ asset('/public/assets/back-end/img/all-orders.png') }}" alt="">
+                <img class="mr-1" src="{{ asset('/public/assets/back-end/img/all-orders.png') }}" alt="">
                 {{ \App\CPU\translate('Order_Details') }} For {{ \App\CPU\translate('Order_ID') }} #{{ $order['id'] }}
             </h2>
         </div>
@@ -363,7 +363,7 @@
                                                         </select>
                                                     </div>
                                                 </div> --}}
-                                                <div class="col-md-2">
+                                                <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label class="title-color">Tracking ID</label>
                                                         <input type="text" name="tracking_id" class="form-control"
@@ -402,14 +402,14 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="row">
-                                                <div class="col-md-3">
+                                                <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label class="title-color">Payment Transaction ID</label>
                                                         <input type="text" name="transaction_ref" class="form-control"
                                                             value="{{ $order['transaction_ref'] ?? '' }}" required>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3">
+                                                <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label class="">Payment Method</label>
                                                         <select class="form-control" id="payment_method"
@@ -420,7 +420,7 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3">
+                                                <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label class="title-color">Payment Status</label>
                                                         <select class="form-control js-select2-custom" id="payment_status"
@@ -470,10 +470,10 @@
                                                             <tr>
                                                                 <td>{{ $i }}</td>
                                                                 <td>
-                                                                    <div class="media align-items-center gap-10">
+                                                                    <div class="media align-items-center">
                                                                         <img src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $detail['thumbnail'] }}"
                                                                             onerror="this.src='{{ asset('public/assets/back-end/img/160x160/img2.jpg') }}'"
-                                                                            class="avatar avatar-60 rounded"
+                                                                            class="avatar avatar-60 rounded mr-2"
                                                                             alt="">
                                                                         <div>
                                                                             <a href="#"

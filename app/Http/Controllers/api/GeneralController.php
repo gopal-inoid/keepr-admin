@@ -309,9 +309,9 @@ class GeneralController extends Controller
             return response()->json(['status' => 400, 'message' => "Country iso can't be NULL"], 400);
         }
 
-        if (!$this->valid_postal_code($request->zip_code, strtolower($request->country_iso))) {
-            return response()->json(['status' => 400, 'message' => "Postal code is not valid"], 400);
-        }
+        // if (!$this->valid_postal_code($request->zip_code, strtolower($request->country_iso))) {
+        //     return response()->json(['status' => 400, 'message' => "Postal code is not valid"], 400);
+        // }
 
         $auth_token = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
@@ -665,13 +665,13 @@ class GeneralController extends Controller
 
     public function get_shipping_rates(Request $request)
     {
-        // If your shipping_country in user table is according to the postal code response is completely yours.
-        $origin_postal_code="K2B8J6";
-        $postal_code="J0E1X0";
-        $_weight=.3;
-        $length=9;
-        $width=5;
-        $height=1;
+        // If your shipping_country in user table is according to the postal code... Response is completely yours.
+        $origin_postal_code = "K2B8J6";
+        $postal_code = "J0E1X0";
+        $_weight = .3;
+        $length = 9;
+        $width = 5;
+        $height = 1;
         $result = $this->getShippingRates($origin_postal_code, $postal_code, $_weight, $length, $width, $height);
         if (isset($result)) {
             return response()->json(['status' => 200, 'message' => 'Response recieved successfully', 'data' => $result], 200);

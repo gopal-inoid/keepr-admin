@@ -26,8 +26,8 @@
     <div class="content container-fluid">
         <!-- Page Title -->
         <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
-            <h2 class="h1 mb-0 d-flex gap-2">
-                <img src="{{asset('/assets/back-end/img/Stock_Management_Solid.svg')}}" alt="">
+            <h2 class="h1 mb-0 d-flex">
+                <img src="{{asset('/assets/back-end/img/Stock_Management_Solid.svg')}}" class="mr-2" alt="">
                 {{\App\CPU\translate('Add')}} {{\App\CPU\translate('New')}} {{\App\CPU\translate('Stock')}}
             </h2>
         </div>
@@ -118,8 +118,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row justify-content-end gap-3 mt-3">
-                        <button type="reset" class="btn btn-secondary">{{ \App\CPU\translate('reset') }}</button>
+                    <div class="row justify-content-end mt-3">
+                        <button type="reset" class="btn mr-3 btn-secondary">{{ \App\CPU\translate('reset') }}</button>
                         <button type="submit" class="btn btn--primary submit-btn">{{ \App\CPU\translate('Submit') }}</button>
                     </div>
                 </form>

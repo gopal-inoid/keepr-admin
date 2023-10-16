@@ -4,8 +4,8 @@
 <div class="content container-fluid">
     <!-- Page Title -->
     <div class="mb-4 pb-2">
-        <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
-            <img src="{{asset('/assets/back-end/img/Tax_Solid.svg')}}" alt="">
+        <h2 class="h1 mb-0 text-capitalize d-flex align-items-center">
+            <img class="mr-2" src="{{asset('/assets/back-end/img/Tax_Solid.svg')}}" alt="">
             {{\App\CPU\translate('Tax Calculations')}}   <span class="badge badge-soft-dark radius-50 fz-12">{{-- $shipping_methods->count() --}} 2</span>
         </h2>
     </div>

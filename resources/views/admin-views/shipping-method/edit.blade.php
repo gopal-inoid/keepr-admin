@@ -16,8 +16,8 @@
 
     <!-- Page Title -->
     <div class="mb-3">
-        <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
-            <img src="{{asset('assets/back-end/img/Shipping_solid.svg')}}" alt="">
+        <h2 class="h1 mb-0 text-capitalize d-flex align-items-center">
+            <img class="mr-2" src="{{asset('assets/back-end/img/Shipping_solid.svg')}}" alt="">
             {{\App\CPU\translate('Shipping_Method_Update')}} 
             ( {{ $method['title'] ?? '' }} )
         </h2>
@@ -56,8 +56,8 @@
                                 <input type="text" name="express_duration" value="{{$method['express_duration'] ?? ''}}" class="form-control" placeholder="Ex (2-5 days)">
                             </div>
                         </div>
-                        <div class="col-lg-3 d-flex gap-2">
-                            <a href="{{route('admin.business-settings.shipping-method.setting')}}" class="btn btn--primary px-4">Back</a>
+                        <div class="col-lg-3 d-flex">
+                            <a href="{{route('admin.business-settings.shipping-method.setting')}}" class="btn btn--primary px-4 mr-2">Back</a>
                             <button type="submit" class="btn btn--primary px-4">{{\App\CPU\translate('Update')}}</button>
                         </div>        
                     
@@ -96,8 +96,8 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class=" flex-wrap d-flex flex-row gap-10 justify-content-end">
-                            <a href="{{route('admin.business-settings.shipping-method.setting')}}" class="btn btn--primary px-4">Back</a>
+                        <div class=" flex-wrap d-flex flex-row justify-content-end">
+                            <a href="{{route('admin.business-settings.shipping-method.setting')}}" class="btn btn--primary px-4 mr-2">Back</a>
                             <button type="submit" class="btn btn--primary px-4">{{\App\CPU\translate('Update')}}</button>
                         </div>
                     </div>

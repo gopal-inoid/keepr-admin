@@ -1517,9 +1517,9 @@ img {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  -moz-column-gap: 30px;
+  /* -moz-column-gap: 30px;
        column-gap: 30px;
-  row-gap: 10px;
+  row-gap: 10px; */
 }
 .inline-page-menu ul li a {
   font-weight: 700;

@@ -46,7 +46,7 @@
                                 <span class="text">{{\App\CPU\translate('Import')}}</span>
                             </a>
                             {{-- <div> --}}
-                                <a  href="{{route('admin.product.stocks.export-excel')}}" type="button" class="btn btn-outline--primary mr-3">
+                                <a  href="{{route('admin.product.stocks.export-excel')}}" class="btn btn-outline--primary mr-3">
                                          <i class="tio-download-to"></i>Export
                                 </a>
                             {{-- </div> --}}

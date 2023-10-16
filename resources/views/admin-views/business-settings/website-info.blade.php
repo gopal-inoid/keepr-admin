@@ -12,8 +12,8 @@
     <div class="content container-fluid">
         <!-- Page Title -->
         <div class="pb-2">
-            <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
-                <img src="{{asset('/assets/back-end/img/Business_Setup_Solid.svg')}}" alt="">
+            <h2 class="h1 mb-0 text-capitalize d-flex align-items-center">
+                <img class="mr-2" src="{{asset('/assets/back-end/img/Business_Setup_Solid.svg')}}" alt="">
                 {{\App\CPU\translate('Business_Setup')}}
             </h2>
         </div>
@@ -745,7 +745,7 @@
                         </div>
                         @php($android_version = DB::table('api_versions')->where(['platform' => 'android'])->first())
                         @php($ios_version = DB::table('api_versions')->where(['platform' => 'ios'])->first())
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label class="title-color d-flex">{{\App\CPU\translate('android_force_update_status')}}</label>
                                 <select id="force_update_android" name="force_update_android" class="form-control  js-select2-custom">
@@ -754,7 +754,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label
                                     class="title-color d-flex">{{\App\CPU\translate('android_version')}}</label>
@@ -763,7 +763,7 @@
                                     placeholder="{{\App\CPU\translate('android_version')}}">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label class="title-color d-flex">{{\App\CPU\translate('ios_force_update_status')}}</label>
                                 <select id="force_update_ios" name="force_update_ios" class="form-control  js-select2-custom">
@@ -772,7 +772,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label
                                     class="title-color d-flex">{{\App\CPU\translate('ios_version')}}</label>
@@ -782,7 +782,7 @@
                             </div>
                         </div>
                         @php($zip_code=\App\Model\BusinessSetting::where('type','zip_code')->first())
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label
                                     class="title-color d-flex">{{\App\CPU\translate('Zip Code')}}</label>

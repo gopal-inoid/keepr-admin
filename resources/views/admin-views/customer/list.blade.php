@@ -12,9 +12,9 @@
         <!-- Page Title -->
         <div class="mb-4">
             <h2 class="h1 mb-0 text-capitalize d-flex align-items-center mr-2">
-                <img width="20" src="{{asset('/assets/back-end/img/Active_Users_Solid.svg')}}" alt="">
+                <img width="20" class="mr-2" src="{{asset('/assets/back-end/img/Active_Users_Solid.svg')}}" alt="">
                 {{\App\CPU\translate('Customer_list')}}
-                <span class="badge badge-soft-dark radius-50">{{\App\User::count()}}</span>
+                <span class="badge ml-2 badge-soft-dark radius-50">{{\App\User::count()}}</span>
             </h2>
         </div>
         <!-- End Page Title -->
@@ -24,9 +24,9 @@
             <!-- Header -->
             <div class="px-3 py-4">
                 <div class="row gy-2 align-items-center">
-                    <div class="col-sm-8 col-md-6 col-lg-4">
+                    <div class="col-12">
                         <!-- Search -->
-                        <form action="{{ url()->current() }}" method="GET">
+                        <form action="{{ url()->current() }}" method="GET" class="">
                             <div class="input-group input-group-merge input-group-custom">
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">

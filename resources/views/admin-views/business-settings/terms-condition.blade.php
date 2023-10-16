@@ -10,8 +10,8 @@
     <div class="content container-fluid">
         <!-- Page Title -->
         <div class="mb-3">
-            <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
-                <img width="20" src="{{asset('/assets/back-end/img/Page_solid.svg')}}" alt="">
+            <h2 class="h1 mb-0 text-capitalize d-flex align-items-center">
+                <img class="mr-2" width="20" src="{{asset('/assets/back-end/img/Page_solid.svg')}}" alt="">
                 {{\App\CPU\translate('pages')}}
             </h2>
         </div>

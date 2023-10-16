@@ -10,10 +10,10 @@
     <div class="content container-fluid">
         <!-- Page Title -->
         <div class="mb-3">
-            <h2 class="h1 mb-1 text-capitalize d-flex align-items-center gap-2">
-                <img width="20" src="{{ asset('/assets/back-end/img/Banner_solid.svg') }}" alt="">
+            <h2 class="h1 mb-1 text-capitalize d-flex align-items-center">
+                <img class="mr-2" width="20" src="{{ asset('/assets/back-end/img/Banner_solid.svg') }}" alt="">
                 {{ \App\CPU\translate('banner') }}
-                <span class="badge badge-soft-dark radius-50 fz-12">{{ $banners->total() }}</span>
+                <span class="badge badge-soft-dark radius-50 fz-12 ml-2">{{ $banners->total() }}</span>
             </h2>
         </div>
         <!-- End Page Title -->
@@ -74,11 +74,11 @@
                                     </center>
                                 </div>
                             </div>
-                            <div class="mt-3 d-flex justify-content-end flex-wrap gap-10">
-                                <button class="btn btn-secondary cancel px-4"
+                            <div class="mt-3 d-flex justify-content-end flex-wrap">
+                                <button class="btn btn-secondary cancel px-4 mr-2"
                                     type="reset">{{ \App\CPU\translate('Back') }}</button>
                                 <button id="add" type="submit"
-                                    class="btn btn--primary px-4">{{ \App\CPU\translate('save') }}</button>
+                                    class="btn btn--primary px-4 mr-2">{{ \App\CPU\translate('save') }}</button>
                                 <button id="update"
                                     class="btn btn--primary d--none text-white">{{ \App\CPU\translate('update') }}</button>
                             </div>
@@ -164,8 +164,8 @@
                                             </label>
                                         </td>
                                         <td>
-                                            <div class="d-flex gap-10 justify-content-center">
-                                                <a class="btn btn-outline--primary btn-sm cursor-pointer edit"
+                                            <div class="d-flex justify-content-center">
+                                                <a class="mr-2 btn btn-outline--primary btn-sm cursor-pointer edit"
                                                     title="{{ \App\CPU\translate('Edit') }}"
                                                     href="{{ route('admin.banner.edit', [$banner['id']]) }}">
                                                     <i class="tio-edit"></i>

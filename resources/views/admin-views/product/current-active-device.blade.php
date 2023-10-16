@@ -10,8 +10,8 @@
 <div class="content container-fluid">
     <!-- Page Title -->
     <div class="mb-3">
-        <h2 class="h1 mb-0 text-capitalize d-flex gap-2">
-            <img src="{{asset('/assets/back-end/img/Connected_Devices_Solid.svg')}}" alt="">
+        <h2 class="h1 mb-0 text-capitalize d-flex">
+            <img class="mr-2" src="{{asset('/assets/back-end/img/Connected_Devices_Solid.svg')}}" alt="">
             Connected Devices
             <span class="badge badge-soft-dark radius-50 fz-14 ml-1">{{ $pro->total() }}</span>
         </h2>
