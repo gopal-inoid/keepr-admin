@@ -343,7 +343,7 @@
                         <div class="row" style="position: relative;">
                             <div class="col-md-12 footer-body">
 
-                                <img src="{{ asset('keepr_app_assets/assests/Footer_Log.png') }}" class="img" alt="">
+                                <img src="{{ asset('keepr_app_assets/assests/Footer_Log.png') }}" class="img" alt="" style="height: 70px;">
 
                             </div>
                             <div class="footer-body2">

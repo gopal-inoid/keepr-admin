@@ -545,13 +545,23 @@ class Controller extends BaseController
         $xml = simplexml_load_string($curl_response);
         $jsonArray = json_decode(json_encode($xml), true);
         $isTrackingArray = array("DOM.RP", "DOM.EP", "DOM.XP", "DOM.XP.CERT", "DOM.PC", "USA.EP", "USA.TP", "USA.TP.LVM", "USA.XP", "INT.XP", "INT.TP");
-
+        $deliveryDaysForNoneTracking = array(
+            'USA.SP.AIR' => '5-10',
+            'INT.IP.AIR' => '6-12',
+            'INT.IP.SURF' => '4-12 weeks',
+            'INT.SP.AIR' => '6-12',
+            'INT.SP.SURF' => '4-12 weeks',
+            'SAUDI.REG' => '5-10',
+            'SAUDI.EXP' => '3-5',
+        );
+       
         $finalArray = array();
         if (!empty($jsonArray)) {
             if (!empty($jsonArray['price-quote'][0]['service-code'])) {
                 foreach ($jsonArray as $k => $val) {
                     if (!empty($val) && is_array($val)) {
                         foreach ($val as $j => $child) {
+                            $deliveryDays = array_key_exists($child['service-code'], $deliveryDaysForNoneTracking) ? $deliveryDaysForNoneTracking[$child['service-code']] : "";
                             $array = array();
                             $array['service_name'] = !empty($child['service-name']) ? $child['service-name'] . " - via Canada Post" : "";
                             $array['service_code'] = $child['service-code'] ?? 0;
@@ -559,7 +569,7 @@ class Controller extends BaseController
                             $array['shipping_rate'] = round((($child['price-details']['due'] * 0.74) + 1), 2);
                             $array['expected_delivery_date'] = $child['service-standard']['expected-delivery-date'] ?? "";
                             $array['is_guanranteed'] = $child['service-standard']['guaranteed-delivery'] == "true" ? '1' : '0';
-                            $array['delivery_days'] = $child['service-standard']['expected-transit-time'] ?? "";
+                            $array['delivery_days'] = in_array($child['service-code'], $isTrackingArray) ? $child['service-standard']['expected-transit-time'] ?? "" : $deliveryDays;
                             array_push($finalArray, $array);
                         }
                     }
