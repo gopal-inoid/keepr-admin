@@ -572,9 +572,17 @@ class Controller extends BaseController
                             $array['is_guanranteed'] = $child['service-standard']['guaranteed-delivery'] == "true" ? '1' : '0';
                             $array['delivery_days'] = $del_Days;
                             if ($child['service-code'] == 'INT.IP.SURF' || $child['service-code'] == 'INT.SP.SURF') {
-                                $array['delivery_txt'] = $del_Days . " Business weeks";
+                                if($array['is_guanranteed'] == '1'){
+                                    $array['delivery_txt'] = 'Guanranteed delivery on ' . $array['expected_delivery_date'];
+                                }else{
+                                    $array['delivery_txt'] = 'Estimated delivery date: ' . $del_Days . " Business weeks";
+                                }
                             } else {
-                                $array['delivery_txt'] = $del_Days . " Business days";
+                                if($array['is_guanranteed'] == '1'){
+                                    $array['delivery_txt'] = 'Guanranteed delivery on ' . $array['expected_delivery_date'];
+                                }else{
+                                    $array['delivery_txt'] = 'Estimated delivery on ' . $del_Days . " Business weeks";
+                                }
                             }
                             array_push($finalArray, $array);
                         }
