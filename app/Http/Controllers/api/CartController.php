@@ -225,10 +225,8 @@ class CartController extends Controller
                     $total_price += ($productInfo['purchase_price'] * $cart['quantity']);
                     $cart['purchase_price'] = number_format($productInfo['purchase_price'], 2);
                     array_push($device_ids, $cart['product_id']);
-
                     array_push($specs, json_decode($productInfo['specification'], true));
                 }
-
             }
 
             CheckoutInfo::insert(['product_id' => json_encode($device_ids), 'customer_id' => $user_details->id, 'total_order' => $total_order, 'total_amount' => $total_price, 'tax_amount' => 7]);
@@ -253,15 +251,6 @@ class CartController extends Controller
                 $country_code = $user_details->country_iso;
             }
             $postalCode = $zip_code;
-            // if ($country_name == 'Canada') {
-            // } elseif ($country_name == 'United States') {
-            //     $postalCode = $zip_code . " United-States";
-            // } elseif ($country_name == 'Saudi Arabia') {
-            //     $postalCode = false;
-            // } else {
-            //     $postalCode = $country_code . " International " . $zip_code;
-            // }
-
             $company_details = BusinessSetting::select('value')->where('type', 'zip_code')->first();
             if (!empty($company_details) && !empty($company_details->value)) {
                 $originPostalCode = $company_details->value;
