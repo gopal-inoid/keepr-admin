@@ -271,8 +271,8 @@ class CartController extends Controller
             $finalArray = array();
             if ($country_code == 'SA') {
                 $saudiRates = array(
-                    'SAUDI.REG' => ["service_name" => 'regular', 'service_code' => 'SAUDI.REG', 'is_tracking' => '1', 'shipping_rate' => floatval(14.01), "expected_delivery_date" => "", "is_guanranteed" => "0", "delivery_days" => "5-10"],
-                    'SAUDI.EXP' => ["service_name" => 'express', 'service_code' => 'SAUDI.EXP', 'is_tracking' => '1', 'shipping_rate' => floatval(20.01), "expected_delivery_date" => "", "is_guanranteed" => "0", "delivery_days" => "3-5"]
+                    ["service_name" => 'regular', 'service_code' => 'SAUDI.REG', 'is_tracking' => '1', 'shipping_rate' => floatval(14.01), "expected_delivery_date" => "", "is_guanranteed" => "0", "delivery_days" => "5-10"],
+                    ["service_name" => 'express', 'service_code' => 'SAUDI.EXP', 'is_tracking' => '1', 'shipping_rate' => floatval(20.01), "expected_delivery_date" => "", "is_guanranteed" => "0", "delivery_days" => "3-5"]
                 );
                 $finalArray = $saudiRates;
             } else {
