@@ -555,40 +555,42 @@ class ProductController extends Controller
             if(!empty($data)){
                 Common::addLog($data);
                 foreach($data as $k => $val){
-                    //DB::table('device_tracking_log')->insert(['mac_id'=>$val['mac_id'] ?? NULL,'lat'=>$val['lat'],'lan'=>$val['lan'],'minor'=>$val['minor'],'major'=>$val['major'],'uuid'=>$val['uuid']]);
-                    $check_connected = DeviceTracking::select('id')->where(['user_id'=>$user_details->id,'uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']])->first();
-                    if(empty($check_connected->id)){
-                        $device_info = ProductStock::where(['uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']])->first();
-                        if(!empty($device_info->uuid)){
-                            $check = DeviceTracking::insert(['mac_id'=>$val['mac_id'] ?? NULL,'user_id'=>$user_details->id,'lat'=>$val['lat'],'lan'=>$val['lan'],'uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']]);
-                            if($check){
-                                $check_lost_device = DeviceRequest::select('user_id')->where(['uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']])->where('status',0)->where('user_id',"<>",$user_details->id)->first();
-                                if(!empty($check_lost_device->user_id)){
-                                    $tracking_user = User::where(['id'=>$check_lost_device->user_id])->first();
-                                    if(!empty($tracking_user->id)){
-                                        $msg = "Your device found";
-                                        $payload = ['lat'=>$val['lat'],'lan'=>$val['lan']];
-                                        $this->sendNotification($tracking_user->fcm_token,$msg,$payload);
+                    if(!empty($val)){
+                        //DB::table('device_tracking_log')->insert(['mac_id'=>$val['mac_id'] ?? NULL,'lat'=>$val['lat'],'lan'=>$val['lan'],'minor'=>$val['minor'],'major'=>$val['major'],'uuid'=>$val['uuid']]);
+                        $check_connected = DeviceTracking::select('id')->where(['user_id'=>$user_details->id,'uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']])->first();
+                        if(empty($check_connected->id)){
+                            $device_info = ProductStock::where(['uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']])->first();
+                            if(!empty($device_info->uuid)){
+                                $check = DeviceTracking::insert(['mac_id'=>$val['mac_id'] ?? NULL,'user_id'=>$user_details->id,'lat'=>$val['lat'],'lan'=>$val['lan'],'uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']]);
+                                if($check){
+                                    $check_lost_device = DeviceRequest::select('user_id')->where(['uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']])->where('status',0)->where('user_id',"<>",$user_details->id)->first();
+                                    if(!empty($check_lost_device->user_id)){
+                                        $tracking_user = User::where(['id'=>$check_lost_device->user_id])->first();
+                                        if(!empty($tracking_user->id)){
+                                            $msg = "Your device found";
+                                            $payload = ['lat'=>$val['lat'],'lan'=>$val['lan']];
+                                            $this->sendNotification($tracking_user->fcm_token,$msg,$payload);
+                                        }
                                     }
+                                    $success++;
                                 }
-                                $success++;
+                            }else{
+                                $not_found++;
                             }
                         }else{
-                            $not_found++;
-                        }
-                    }else{
 
-                        $check_lost_device = DeviceRequest::select('user_id')->where(['uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']])->where('status',0)->where('user_id',"<>",$user_details->id)->first();
-                        if(!empty($check_lost_device->user_id)){
-                            $tracking_user = User::where(['id'=>$check_lost_device->user_id])->first();
-                            if(!empty($tracking_user->id)){
-                                $msg = "Your device found";
-                                $payload = ['lat'=>$val['lat'],'lan'=>$val['lan']];
-                                //$this->sendNotification($tracking_user->fcm_token,$msg,$payload);
+                            $check_lost_device = DeviceRequest::select('user_id')->where(['uuid'=>$val['uuid'],'major'=>$val['major'],'minor'=>$val['minor']])->where('status',0)->where('user_id',"<>",$user_details->id)->first();
+                            if(!empty($check_lost_device->user_id)){
+                                $tracking_user = User::where(['id'=>$check_lost_device->user_id])->first();
+                                if(!empty($tracking_user->id)){
+                                    $msg = "Your device found";
+                                    $payload = ['lat'=>$val['lat'],'lan'=>$val['lan']];
+                                    //$this->sendNotification($tracking_user->fcm_token,$msg,$payload);
+                                }
                             }
-                        }
 
-                        $already_added++;
+                            $already_added++;
+                        }
                     }
                 }
             }
