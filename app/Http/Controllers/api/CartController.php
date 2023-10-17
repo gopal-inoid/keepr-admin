@@ -268,7 +268,7 @@ class CartController extends Controller
                 $weight = 0.3; // !empty($spe['weight']) ? (float) $spe['weight'] : 0;
                 $length = 9; // !empty($spe['length']) ? (int) $spe['length'] : 0;
                 $width = 5; // !empty($spe['width']) ? (int) $spe['width'] : 0;
-                $height = 1 * $total_order; // !empty($spe['height']) ? (int) $spe['height'] : 0;
+                $height = 1 * 1; // !empty($spe['height']) ? (int) $spe['height'] : 0;
                 $finalArray = $this->getShippingRates($originPostalCode, strtoupper($postalCode), $country_code, $weight, $length, $width, $height);
             }
             //TAX calculation
