@@ -465,6 +465,7 @@ class Controller extends BaseController
         $len = $length;
         $wid_th = $width;
         $hei_ght = $height;
+        $mailedBy="9941977";
         // REST URL
         $service_url = env('CANADAPOST_URL') . '/rs/ship/price';
 
@@ -478,8 +479,8 @@ class Controller extends BaseController
 
         $xmlRequest = <<<XML
         <mailing-scenario xmlns="http://www.canadapost.ca/ws/ship/rate-v4">
-            <!-- <customer-number>{$mailedBy}</customer-number> -->
-            <quote-type>counter</quote-type>
+           <customer-number>{$mailedBy}</customer-number> 
+              <!--<quote-type>counter</quote-type>-->
             <parcel-characteristics>
                 <dimensions>
                     <length>{$len}</length>

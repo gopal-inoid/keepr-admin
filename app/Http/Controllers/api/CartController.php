@@ -252,7 +252,7 @@ class CartController extends Controller
             } else {
                 $country_code = $user_details->country_iso;
             }
-						$postalCode = $zip_code;
+            $postalCode = $zip_code;
             // if ($country_name == 'Canada') {
             // } elseif ($country_name == 'United States') {
             //     $postalCode = $zip_code . " United-States";
@@ -271,22 +271,10 @@ class CartController extends Controller
             $finalArray = array();
             if ($country_code == 'SA') {
                 $saudiRates = array(
-                    'SAUDI.REG' => ["service_name" => 'regular', 'service_code' => 'SAUDI.REG', 'is_tracking' => '0', 'shipping_rate' => floatval(14.01), "delivery_date" => "", "is_guanranted" => "0", "delivery_days" => "5-10"],
-                    'SAUDI.EXP' => ["service_name" => 'express', 'service_code' => 'SAUDI.EXP', 'is_tracking' => '0', 'shipping_rate' => floatval(20.01), "delivery_date" => "", "is_guanranted" => "0", "delivery_days" => "3-5"]	
+                    'SAUDI.REG' => ["service_name" => 'regular', 'service_code' => 'SAUDI.REG', 'is_tracking' => '1', 'shipping_rate' => floatval(14.01), "expected_delivery_date" => "", "is_guanranteed" => "0", "delivery_days" => "5-10"],
+                    'SAUDI.EXP' => ["service_name" => 'express', 'service_code' => 'SAUDI.EXP', 'is_tracking' => '1', 'shipping_rate' => floatval(20.01), "expected_delivery_date" => "", "is_guanranteed" => "0", "delivery_days" => "3-5"]
                 );
-
-                foreach ($saudiRates as $k => $value) {
-                    $miniarray = array();
-                    $miniarray['service_name'] = $value['service_name'] ?? "";
-                    $miniarray['service_code'] = $value['service_code'] ?? "";
-                    $miniarray['is_tracking'] = $value['is_tracking'] ?? "";
-                    $miniarray['shipping_rate'] = $value['shipping_rate'] ?? "";
-                    $miniarray['expected_delivery_date'] = $value['delivery_date'] ?? "";
-                    $miniarray['is_guanranteed'] = $value['is_guanranted'] ?? "";
-                    $miniarray['delivery_days'] = $value['delivery_days'] ?? "";
-                    array_push($finalArray, $miniarray);
-                }
-
+                $finalArray = $saudiRates;
             } else {
                 $weight = 0.3; // !empty($spe['weight']) ? (float) $spe['weight'] : 0;
                 $length = 9; // !empty($spe['length']) ? (int) $spe['length'] : 0;
