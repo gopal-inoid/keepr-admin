@@ -465,7 +465,7 @@ class Controller extends BaseController
         $len = $length;
         $wid_th = $width;
         $hei_ght = $height;
-        $mailedBy="9941977";
+        $mailedBy = "9941977";
         // REST URL
         $service_url = env('CANADAPOST_URL') . '/rs/ship/price';
 
@@ -550,13 +550,12 @@ class Controller extends BaseController
         $deliveryDaysForNoneTracking = array(
             'USA.SP.AIR' => '5-10',
             'INT.IP.AIR' => '6-12',
-            'INT.IP.SURF' => '4-12 weeks',
+            'INT.IP.SURF' => '4-12',
             'INT.SP.AIR' => '6-12',
-            'INT.SP.SURF' => '4-12 weeks',
+            'INT.SP.SURF' => '4-12',
             'SAUDI.REG' => '5-10',
             'SAUDI.EXP' => '3-5',
         );
-       
         $finalArray = array();
         if (!empty($jsonArray)) {
             if (!empty($jsonArray['price-quote'][0]['service-code'])) {
@@ -572,6 +571,14 @@ class Controller extends BaseController
                             $array['expected_delivery_date'] = $child['service-standard']['expected-delivery-date'] ?? "";
                             $array['is_guanranteed'] = $child['service-standard']['guaranteed-delivery'] == "true" ? '1' : '0';
                             $array['delivery_days'] = in_array($child['service-code'], $isTrackingArray) ? $child['service-standard']['expected-transit-time'] ?? "" : $deliveryDays;
+                            if (array_key_exists($child['service-code'], $deliveryDaysForNoneTracking)) {
+                                if ($child['service-code'] == 'INT.IP.SURF' || $child['service-code'] == 'INT.SP.SURF') {
+                                    $deliveryDays = $deliveryDaysForNoneTracking[$child['service-code']] . " Business weeks";
+                                } else {
+                                    $deliveryDays = $deliveryDaysForNoneTracking[$child['service-code']] . " Business days";
+                                }
+                            }
+                            $array['delivery_txt'] = $deliveryDays ?? "";
                             array_push($finalArray, $array);
                         }
                     }
