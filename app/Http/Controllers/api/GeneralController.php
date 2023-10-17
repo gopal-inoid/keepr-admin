@@ -21,6 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Kreait\Laravel\Firebase\Facades\Firebase;
 use Kreait\Firebase\Exception\Auth\FailedToVerifyToken;
+use Symfony\Component\CssSelector\Node\FunctionNode;
 
 class GeneralController extends Controller
 {
@@ -679,5 +680,10 @@ class GeneralController extends Controller
         } else {
             return response()->json(['status' => 400, 'message' => 'failed'], 200);
         }
+    }
+    function create_shipment()
+    {
+        $shipment = $this->shipment();
+        return response()->json(['status' => 200, 'message' => 'Response recieved successfully', 'data' => $shipment], 200);
     }
 }
