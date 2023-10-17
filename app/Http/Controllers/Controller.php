@@ -461,7 +461,6 @@ class Controller extends BaseController
         $username = env('CANADAPOST_USERANME');
         $password = env('CANADAPOST_PASSWORD');
         $token = base64_encode($username . ":" . $password);
-        $mailedBy = "";
         $len = $length;
         $wid_th = $width;
         $hei_ght = $height;
@@ -563,28 +562,32 @@ class Controller extends BaseController
                     if (!empty($val) && is_array($val)) {
                         foreach ($val as $j => $child) {
                             $deliveryDays = array_key_exists($child['service-code'], $deliveryDaysForNoneTracking) ? $deliveryDaysForNoneTracking[$child['service-code']] : "";
+                            $del_Days = in_array($child['service-code'], $isTrackingArray) ? $child['service-standard']['expected-transit-time'] ?? "" : $deliveryDays;
                             $array = array();
                             $array['service_name'] = !empty($child['service-name']) ? $child['service-name'] . " - via Canada Post" : "";
                             $array['service_code'] = $child['service-code'] ?? "";
                             $array['is_tracking'] = in_array($child['service-code'], $isTrackingArray) ? "1" : "0";
-                            $array['shipping_rate'] = round((($child['price-details']['due'] * 0.74) + 1), 2);
+                            $array['shipping_rate'] = round((($child['price-details']['base'] * 0.74) + 1), 2);
                             $array['expected_delivery_date'] = $child['service-standard']['expected-delivery-date'] ?? "";
                             $array['is_guanranteed'] = $child['service-standard']['guaranteed-delivery'] == "true" ? '1' : '0';
-                            $array['delivery_days'] = in_array($child['service-code'], $isTrackingArray) ? $child['service-standard']['expected-transit-time'] ?? "" : $deliveryDays;
-                            if (array_key_exists($child['service-code'], $deliveryDaysForNoneTracking)) {
-                                if ($child['service-code'] == 'INT.IP.SURF' || $child['service-code'] == 'INT.SP.SURF') {
-                                    $deliveryDays = $deliveryDaysForNoneTracking[$child['service-code']] . " Business weeks";
-                                } else {
-                                    $deliveryDays = $deliveryDaysForNoneTracking[$child['service-code']] . " Business days";
-                                }
+                            $array['delivery_days'] = $del_Days;
+                            if ($child['service-code'] == 'INT.IP.SURF' || $child['service-code'] == 'INT.SP.SURF') {
+                                $array['delivery_txt'] = $del_Days .  " Business weeks";
+                            } else {
+                                $array['delivery_txt'] = $del_Days .  " Business days";
                             }
-                            $array['delivery_txt'] = $deliveryDays ?? "";
                             array_push($finalArray, $array);
                         }
                     }
                 }
             }
         }
+
+        usort($finalArray, function($a, $b){
+            if ($a == $b) return 0;
+            return ($a['shipping_rate'] < $b['shipping_rate']) ? -1 : 1;
+        });
+
         return $finalArray;
     }
 
