@@ -32,7 +32,8 @@ Route::group(['namespace' => 'api'], function () {
     // Route::post('send-test-email', 'GeneralController@send_test_email');
     // Route::post('update-pending-email', 'SystemController@update_pending_email');
     Route::post('update-order-details', 'OrderController@update_order_details');
-    Route::post('create-shipment', 'GeneralController@create_shipment');
+    Route::post('create-cshipment', 'GeneralController@create_contractshipment');
+    Route::post('create-ncshipment', 'GeneralController@create_noncontractshipment');
 
     // Get Shipping Rates//
     Route::post('get-shipping-rates', 'GeneralController@get_shipping_rates');

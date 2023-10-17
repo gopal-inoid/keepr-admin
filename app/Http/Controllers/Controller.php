@@ -572,9 +572,9 @@ class Controller extends BaseController
                             $array['is_guanranteed'] = $child['service-standard']['guaranteed-delivery'] == "true" ? '1' : '0';
                             $array['delivery_days'] = $del_Days;
                             if ($child['service-code'] == 'INT.IP.SURF' || $child['service-code'] == 'INT.SP.SURF') {
-                                $array['delivery_txt'] = $del_Days .  " Business weeks";
+                                $array['delivery_txt'] = $del_Days . " Business weeks";
                             } else {
-                                $array['delivery_txt'] = $del_Days .  " Business days";
+                                $array['delivery_txt'] = $del_Days . " Business days";
                             }
                             array_push($finalArray, $array);
                         }
@@ -582,9 +582,9 @@ class Controller extends BaseController
                 }
             }
         }
-
-        usort($finalArray, function($a, $b){
-            if ($a == $b) return 0;
+        usort($finalArray, function ($a, $b) {
+            if ($a == $b)
+                return 0;
             return ($a['shipping_rate'] < $b['shipping_rate']) ? -1 : 1;
         });
 
@@ -815,22 +815,22 @@ class Controller extends BaseController
     //         }
     //     }
     // }
-    function shipment()
+    function contractshipment()
     {
         $username = env('CANADAPOST_USERANME');
         $password = env('CANADAPOST_PASSWORD');
         $mailedBy = 2004381;
         $mobo = 2004381;
-        
+
         // REST URL
         $service_url = 'https://ct.soa-gw.canadapost.ca/rs/' . $mailedBy . '/' . $mobo . '/shipment';
-        
+
         // Create CreateShipment request xml
         $groupId = '4326432';
         $requestedShippingPoint = 'H2B1A0';
         $mailingDate = '2023-11-24';
         $contractId = '0042708517';
-        
+
         $xmlRequest = <<<XML
         <?xml version="1.0" encoding="UTF-8"?>
         <shipment xmlns="http://www.canadapost.ca/ws/shipment-v8">
@@ -906,7 +906,7 @@ class Controller extends BaseController
             </delivery-spec>
         </shipment>
         XML;
-        
+
         $curl = curl_init($service_url); // Create REST Request
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
@@ -917,7 +917,7 @@ class Controller extends BaseController
         curl_setopt($curl, CURLOPT_USERPWD, $username . ':' . $password);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/vnd.cpc.shipment-v8+xml', 'Accept: application/vnd.cpc.shipment-v8+xml'));
         $curl_response = curl_exec($curl); // Execute REST Request
-        if(curl_errno($curl)){
+        if (curl_errno($curl)) {
             echo 'Curl error: ' . curl_error($curl) . "\n";
         }
         curl_close($curl);
@@ -925,7 +925,89 @@ class Controller extends BaseController
         $jsonArray = json_decode(json_encode($xml), true);
         return $jsonArray;
     }
+    function noncontractshipment()
+    {
+        $username = env('CANADAPOST_USERANME');
+        $password = env('CANADAPOST_PASSWORD');
+        $mailedBy = 2004381;
+        // REST URL
+        $service_url = 'https://ct.soa-gw.canadapost.ca/rs/' . $mailedBy . '/ncshipment';
 
+        // Create CreateShipment request xml
+        // $requestedShippingPoint = 'H2B1A0';
 
+        $xmlRequest = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<non-contract-shipment xmlns="http://www.canadapost.ca/ws/ncshipment-v4">
+	<requested-shipping-point>H2B1A0</requested-shipping-point>
+	<delivery-spec>
+		<service-code>DOM.EP</service-code>
+		<sender>
+			<company>Capsule Corp.</company>
+			<contact-phone>1 (613) 450-5345</contact-phone>
+			<address-details>
+				<address-line-1>502 MAIN ST N</address-line-1>
+				<city>MONTREAL</city>
+				<prov-state>QC</prov-state>
+				<postal-zip-code>H2B1A0</postal-zip-code>
+			</address-details>
+		</sender>
+		<destination>
+			<name>John Doe</name>
+			<company>ACME Corp</company>
+			<address-details>
+				<address-line-1>123 Postal Drive</address-line-1>
+				<city>Ottawa</city>
+				<prov-state>ON</prov-state>
+				<country-code>CA</country-code>
+				<postal-zip-code>K1P5Z9</postal-zip-code>
+			</address-details>
+		</destination>
+		<options>
+			<option>
+				<option-code>DC</option-code>
+			</option>
+		</options>
+		<parcel-characteristics>
+			<weight>15</weight>
+			<dimensions>
+				<length>1</length>
+				<width>1</width>
+				<height>1</height>
+			</dimensions>
+		</parcel-characteristics>
+		<preferences>
+			<show-packing-instructions>true</show-packing-instructions>
+		</preferences>
+		<references>
+			<cost-centre>ccent</cost-centre>
+			<customer-ref-1>custref1</customer-ref-1>
+			<customer-ref-2>custref2</customer-ref-2>
+	    </references>
+	</delivery-spec>
+</non-contract-shipment>
+XML;
+
+        $curl = curl_init($service_url); // Create REST Request
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $xmlRequest);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($curl, CURLOPT_USERPWD, $username . ':' . $password);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/vnd.cpc.ncshipment-v4+xml', 'Accept: application/vnd.cpc.ncshipment-v4+xml'));
+        $curl_response = curl_exec($curl); // Execute REST Request
+        if (curl_errno($curl)) {
+            echo 'Curl error: ' . curl_error($curl) . "\n";
+        }
+
+        echo 'HTTP Response Status: ' . curl_getinfo($curl, CURLINFO_HTTP_CODE) . "\n";
+
+        curl_close($curl);
+        $xml = simplexml_load_string($curl_response);
+        $jsonArray = json_decode(json_encode($xml), true);
+        return $jsonArray;
+    }
 }
 ?>
