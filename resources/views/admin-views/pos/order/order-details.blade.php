@@ -36,7 +36,7 @@
 
                                         <a class="btn btn--primary px-4" id="labelView" target="_blank"
                                             href="{{ $order->shipping_label }}" order_no="{{ $order->id }}">
-                                            <i class="tio-print"></i> {{ \App\CPU\translate('View Label') }}
+                                            <i class="tio-print"></i> {{ \App\CPU\translate('Print Shipping Label') }}
                                         </a>
 
                                         <?php else: ?>
@@ -44,7 +44,7 @@
                                         <a class="btn btn--primary px-4" id="createShipment" href="#"
                                             url="{{ route('admin.orders.create-ncshipment') }}"
                                             order_no="{{ $order->id }}">
-                                            <i class="tio-print"></i> {{ \App\CPU\translate('Create Shipment') }}
+                                            <i class="tio-print"></i> {{ \App\CPU\translate('Generate Shipment') }}
                                         </a>
 
                                         <?php endif; ?>
@@ -912,7 +912,7 @@
                         labelBtn.setAttribute('id', 'labelView');
                         labelBtn.setAttribute('target', '_blank');
                         labelBtn.setAttribute('href', data.data.label_url);
-                        labelBtn.innerHTML = '<i class="tio-print"></i> Label View';
+                        labelBtn.innerHTML = '<i class="tio-print"></i> Print Shipping Label';
                         createShipmentBtn.insertAdjacentElement('afterend', labelBtn);
                         $(createShipmentBtn).remove();
                     }
