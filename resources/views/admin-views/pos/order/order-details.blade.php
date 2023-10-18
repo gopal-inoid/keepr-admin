@@ -330,13 +330,16 @@
                                                                 placeholder="{{ \App\CPU\translate('Zipcode') }}">
                                                         </div>
                                                     </div>
-
                                                     @if (!empty($order->user_shipping_details['shipping_phone_code']))
                                                         @php
-                                                            $shippingcode = json_decode($order->user_shipping_details, true)['phone_code'];
-                                                            // Check if $shippingcode starts with '+', if not, add it
-                                                            if (!Str::startsWith($shippingcode, '+')) {
-                                                                $shippingcode = '+' . $shippingcode;
+                                                            $shippingcode = '+1';
+                                                            $shippingcodes = json_decode($order->user_shipping_details, true);
+                                                            if(!empty($shippingcodes['phone_code'])){
+                                                                if (!Str::startsWith($shippingcodes['phone_code'], '+')) {
+                                                                    $shippingcode = '+' . $shippingcodes['phone_code'];
+                                                                }else{
+                                                                    $shippingcode = $shippingcodes['phone_code'];
+                                                                }
                                                             }
                                                         @endphp
                                                     @endif
