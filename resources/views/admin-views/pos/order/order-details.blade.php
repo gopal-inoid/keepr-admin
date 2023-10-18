@@ -200,10 +200,14 @@
 
                                                     @if (!empty($order->customer['billing_phone_code']))
                                                         @php
-                                                            $phonecode = json_decode($order->user_billing_details, true)['phone_code'];
-                                                            // Check if $phonecode starts with '+', if not, add it
-                                                            if (!Str::startsWith($phonecode, '+')) {
-                                                                $phonecode = '+' . $phonecode;
+                                                            $phonecode = '+1';
+                                                            $phonecodes = json_decode($order->user_billing_details, true);
+                                                            if(!empty($phonecodes['phone_code'])){
+                                                                if (!Str::startsWith($phonecodes['phone_code'], '+')) {
+                                                                    $phonecode = '+' . $phonecodes['phone_code'];
+                                                                }else{
+                                                                    $phonecode = $phonecodes['phone_code'];
+                                                                }
                                                             }
                                                         @endphp
                                                     @endif
