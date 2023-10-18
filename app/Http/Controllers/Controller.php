@@ -828,7 +828,7 @@ class Controller extends BaseController
     {
         $username = env('CANADAPOST_DEV_USERANME');
         $password = env('CANADAPOST_DEV_PASSWORD');
-        $mailedBy = 9941977;
+        $mailedBy = env('CANADAPOST_CUSTOMER_NUMBER');
         // REST URL
         $service_url = 'https://ct.soa-gw.canadapost.ca/rs/' . $mailedBy . '/ncshipment';
 
