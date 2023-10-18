@@ -223,7 +223,7 @@ class GeneralController extends Controller
 
     public function get_countries(Request $request)
     {
-        $countries_list = \DB::table('country')->select(['id', 'name'])->get();
+        $countries_list = \DB::table('country')->select(['id','iso2','phone_code','name'])->get();
         $countries = [];
         $auth_token = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
