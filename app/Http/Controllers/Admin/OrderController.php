@@ -870,7 +870,9 @@ class OrderController extends Controller
                         'shipment_id' => $shipmentId,
                         'tracking_pin' => $trackingPin,
                         'shipping_label' => $labelHref,
-                        'order_status' => 'shipped'
+                        'order_status' => 'shipped',
+                        'tracking_id' => $trackingPin
+
                     ]);
                 if ($updation) {
                     $array = array("shipment_id" => $shipmentId, "tracking_pin" => $trackingPin, "label_url" => $labelHref);

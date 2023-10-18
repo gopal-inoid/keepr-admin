@@ -40,13 +40,13 @@
                                         </a>
 
                                         <?php else: ?>
-
-                                        <a class="btn btn--primary px-4" id="createShipment" href="#"
-                                            url="{{ route('admin.orders.create-ncshipment') }}"
-                                            order_no="{{ $order->id }}">
-                                            <i class="tio-print"></i> {{ \App\CPU\translate('Create Shipment') }}
-                                        </a>
-
+                                        @if ($order->order_status == 'shipped')
+                                            <a class="btn btn--primary px-4" id="createShipment" href="#"
+                                                url="{{ route('admin.orders.create-ncshipment') }}"
+                                                order_no="{{ $order->id }}">
+                                                <i class="tio-print"></i> {{ \App\CPU\translate('Create Shipment') }}
+                                            </a>
+                                        @endif
                                         <?php endif; ?>
 
 
@@ -202,10 +202,10 @@
                                                         @php
                                                             $phonecode = '+1';
                                                             $phonecodes = json_decode($order->user_billing_details, true);
-                                                            if(!empty($phonecodes['phone_code'])){
+                                                            if (!empty($phonecodes['phone_code'])) {
                                                                 if (!Str::startsWith($phonecodes['phone_code'], '+')) {
                                                                     $phonecode = '+' . $phonecodes['phone_code'];
-                                                                }else{
+                                                                } else {
                                                                     $phonecode = $phonecodes['phone_code'];
                                                                 }
                                                             }
@@ -389,13 +389,15 @@
                                                         </select>
                                                     </div>
                                                 </div> --}}
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label class="title-color">Tracking ID</label>
-                                                        <input type="text" name="tracking_id" class="form-control"
-                                                            value="{{ $order['tracking_id'] }}" required>
+                                                @if ($order->customer['shipping_country_iso'] != 'SA')
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label class="title-color">Tracking ID</label>
+                                                            <input type="text" name="tracking_id" class="form-control"
+                                                                value="{{ $order['tracking_id'] }}" required>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                @endif
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label class="title-color">Estimated Delivery Date</label>
