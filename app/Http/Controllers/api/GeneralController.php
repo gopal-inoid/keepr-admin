@@ -681,14 +681,10 @@ class GeneralController extends Controller
             return response()->json(['status' => 400, 'message' => 'failed'], 200);
         }
     }
-    function create_contractshipment()
-    {
-        $shipment = $this->contractshipment();
-        return response()->json(['status' => 200, 'message' => 'Response from Contract shipment', 'data' => $shipment], 200);
-    }
     function create_noncontractshipment()
     {
-        $shipment = $this->contractshipment();
-        return response()->json(['status' => 200, 'message' => 'Response from Non-Contract shipment', 'data' => $shipment], 200);
+        $shipment = $this->noncontractshipment();
+
+        return response()->json(['status' => 200, 'message' => 'Response recieved successfully', 'data' => $shipment], 200);
     }
 }

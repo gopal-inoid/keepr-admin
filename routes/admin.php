@@ -562,6 +562,8 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
             Route::get('export-order-data/{status}', 'OrderController@bulk_export_data')->name('order-bulk-export');
             Route::get('change-order-status', 'OrderController@change_order_status')->name('change-order-status');
             Route::post('update-order-details', 'OrderController@update_order_details')->name('update-order-details');
+
+            Route::post('create-ncshipment', 'OrderController@create_noncontractshipment')->name("create-ncshipment");
         });
 
         //pos management

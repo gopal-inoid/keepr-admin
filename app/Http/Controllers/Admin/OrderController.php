@@ -680,7 +680,7 @@ class OrderController extends Controller
         // exit;
         $mpdf_view = View::make(
             'admin-views.order.invoice',
-            compact('order','shippingInfo','billingInfo', 'company_phone', 'total_orders', 'products', 'company_name', 'company_email', 'company_web_logo', 'total_order_amount', 'shipping_info', 'tax_info')
+            compact('order', 'shippingInfo', 'billingInfo', 'company_phone', 'total_orders', 'products', 'company_name', 'company_email', 'company_web_logo', 'total_order_amount', 'shipping_info', 'tax_info')
         );
 
         // echo "<pre>"; print_r($mpdf_view); die;
@@ -853,5 +853,31 @@ class OrderController extends Controller
         }
 
         return (new FastExcel($storage))->download('Order_All_details.xlsx');
+    }
+
+    function create_noncontractshipment(Request $request)
+    {
+        $order_id = $request->input('order_no');
+        $shipment = $this->noncontractshipment();
+        $shipmentId = $shipment['shipment-id'];
+        $trackingPin = $shipment['tracking-pin'];
+        $labelHref = $shipment['links']['link'][4]['@attributes']['href'];
+        $array = array("shipping_id" => $shipmentId, "tracking_pin" => $trackingPin, "label_url" => $labelHref);
+        if (!empty($shipment)) {
+            if (!empty($shipmentId) && !empty($trackingPin) && !empty($labelHref)) {
+                $updation = Order::where('id', $order_id)
+                    ->update([
+                        'shipment_id' => $shipmentId,
+                        'tracking_pin' => $trackingPin,
+                        'shipping_label' => $labelHref,
+                        'order_status' => 'shipped'
+                    ]);
+                if ($updation) {
+                    $array = array("shipment_id" => $shipmentId, "tracking_pin" => $trackingPin, "label_url" => $labelHref);
+                    return response()->json(['status' => 200, 'message' => 'Response recieved successfully', 'data' => $array], 200);
+                }
+            }
+        }
+
     }
 }

@@ -31,6 +31,26 @@
                                 <div class="card-header">
                                     <h3 class="h4 mb-0">{{ \App\CPU\translate('Order_info') }}</h3>
                                     <div class="d-flex flex-wrap gap-10 justify-content-sm-end">
+
+                                        <?php if (!empty($order->shipping_label)): ?>
+
+                                        <a class="btn btn--primary px-4" id="labelView" target="_blank"
+                                            href="{{ $order->shipping_label }}" order_no="{{ $order->id }}">
+                                            <i class="tio-print"></i> {{ \App\CPU\translate('View Label') }}
+                                        </a>
+
+                                        <?php else: ?>
+
+                                        <a class="btn btn--primary px-4" id="createShipment" href="#"
+                                            url="{{ route('admin.orders.create-ncshipment') }}"
+                                            order_no="{{ $order->id }}">
+                                            <i class="tio-print"></i> {{ \App\CPU\translate('Create Shipment') }}
+                                        </a>
+
+                                        <?php endif; ?>
+
+
+
                                         <a class="btn btn--primary px-4" target="_blank"
                                             href="{{ route('admin.orders.generate-invoice', [$order['id']]) }}">
                                             <i class="tio-print mr-1"></i> {{ \App\CPU\translate('Print') }}
@@ -110,22 +130,24 @@
                                                         <div class="form-group">
                                                             <label class="title-color">Name</label>
                                                             <input type="text" name="billing_name" class="form-control"
-                                                                value="{{ $billing_details['name'] ?? ''}}" placeholder="{{ \App\CPU\translate('Name') }}">
+                                                                value="{{ $billing_details['name'] ?? '' }}"
+                                                                placeholder="{{ \App\CPU\translate('Name') }}">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label class="title-color">Email</label>
                                                             <input type="text" name="email" class="form-control"
-                                                                value="{{ $billing_details['email'] ?? ''}}"
+                                                                value="{{ $billing_details['email'] ?? '' }}"
                                                                 placeholder="{{ \App\CPU\translate('Email') }}">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label class="title-color">Address</label>
-                                                            <input type="text" name="street_address" class="form-control"
-                                                                value="{{ $billing_details['address'] ?? ''}}"
+                                                            <input type="text" name="street_address"
+                                                                class="form-control"
+                                                                value="{{ $billing_details['address'] ?? '' }}"
                                                                 placeholder="{{ \App\CPU\translate('Address') }}">
                                                         </div>
                                                     </div>
@@ -134,7 +156,7 @@
                                                             <label class="title-color">City</label>
                                                             <input type="text" name="billing_city"
                                                                 class="form-control"
-                                                                value="{{ $billing_details['city'] ?? ''}}"
+                                                                value="{{ $billing_details['city'] ?? '' }}"
                                                                 placeholder="{{ \App\CPU\translate('City') }}">
                                                         </div>
                                                     </div>
@@ -145,7 +167,7 @@
                                                                 name="billing_state">
                                                                 @foreach ($states as $k => $val)
                                                                     <option
-                                                                        {{ (isset($billing_details['state']) && $billing_details['state'] == $val->id) ? 'selected' : '' }}
+                                                                        {{ isset($billing_details['state']) && $billing_details['state'] == $val->id ? 'selected' : '' }}
                                                                         value="{{ $val->id }}">{{ $val->name }}
                                                                     </option>
                                                                 @endforeach
@@ -159,7 +181,7 @@
                                                                 name="billing_country">
                                                                 @foreach ($countries as $k => $val)
                                                                     <option
-                                                                        {{ (isset($billing_details['country']) && $billing_details['country'] == $val->id) ? 'selected' : '' }}
+                                                                        {{ isset($billing_details['country']) && $billing_details['country'] == $val->id ? 'selected' : '' }}
                                                                         value="{{ $val->id }}">{{ $val->name }}
                                                                     </option>
                                                                 @endforeach
@@ -274,7 +296,7 @@
                                                                 name="shipping_state">
                                                                 @foreach ($states as $k => $val)
                                                                     <option
-                                                                        {{ (isset($shipping_details['state']) && $shipping_details['state'] == $val->id) ? 'selected' : '' }}
+                                                                        {{ isset($shipping_details['state']) && $shipping_details['state'] == $val->id ? 'selected' : '' }}
                                                                         value="{{ $val->id }}">{{ $val->name }}
                                                                     </option>
                                                                 @endforeach
@@ -288,7 +310,7 @@
                                                                 name="shipping_country">
                                                                 @foreach ($countries as $k => $val)
                                                                     <option
-                                                                        {{ (isset($shipping_details['country']) && $shipping_details['country'] == $val->id) ? 'selected' : '' }}
+                                                                        {{ isset($shipping_details['country']) && $shipping_details['country'] == $val->id ? 'selected' : '' }}
                                                                         value="{{ $val->id }}">{{ $val->name }}
                                                                     </option>
                                                                 @endforeach
@@ -856,5 +878,44 @@
                 $(".delivered").attr("disabled", "disabled");
             }
         });
+
+        const createShipmentBtn = document.querySelector("#createShipment");
+        createShipmentBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            let url = this.getAttribute("url");
+            createShipment(url, createShipmentBtn);
+        });
+        const createShipment = (url, createShipmentBtn) => {
+            let order_no = createShipmentBtn.getAttribute("order_no");
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {
+                    order_no: order_no
+                },
+                success: function(data, textStatus, jqXHR) {
+                    if (data) {
+                        let labelBtn = document.createElement('a');
+                        labelBtn.setAttribute('class', 'btn btn--primary px-4');
+                        labelBtn.setAttribute('id', 'labelView');
+                        labelBtn.setAttribute('target', '_blank');
+                        labelBtn.setAttribute('href', data.data.label_url);
+                        labelBtn.innerHTML = '<i class="tio-print"></i> Label View';
+                        createShipmentBtn.insertAdjacentElement('afterend', labelBtn);
+                        $(createShipmentBtn).remove();
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                }
+            });
+        }
     </script>
+
+    <script></script>
 @endpush
