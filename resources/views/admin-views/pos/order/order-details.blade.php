@@ -36,11 +36,11 @@
 
                                         <a class="btn btn--primary px-4" id="labelView" target="_blank"
                                             href="{{ $order->shipping_label }}" order_no="{{ $order->id }}">
-                                            <i class="tio-print"></i> {{ \App\CPU\translate('View Label') }}
+                                            <i class="tio-print"></i> {{ \App\CPU\translate('Print Shipping Label') }}
                                         </a>
 
                                         <?php else: ?>
-                                        @if ($order->order_status == 'shipped')
+                                        @if ($order->order_status == 'processing')
                                             <a class="btn btn--primary px-4" id="createShipment" href="#"
                                                 url="{{ route('admin.orders.create-ncshipment') }}"
                                                 order_no="{{ $order->id }}">
@@ -330,13 +330,16 @@
                                                                 placeholder="{{ \App\CPU\translate('Zipcode') }}">
                                                         </div>
                                                     </div>
-
                                                     @if (!empty($order->user_shipping_details['shipping_phone_code']))
                                                         @php
-                                                            $shippingcode = json_decode($order->user_shipping_details, true)['phone_code'];
-                                                            // Check if $shippingcode starts with '+', if not, add it
-                                                            if (!Str::startsWith($shippingcode, '+')) {
-                                                                $shippingcode = '+' . $shippingcode;
+                                                            $shippingcode = '+1';
+                                                            $shippingcodes = json_decode($order->user_shipping_details, true);
+                                                            if(!empty($shippingcodes['phone_code'])){
+                                                                if (!Str::startsWith($shippingcodes['phone_code'], '+')) {
+                                                                    $shippingcode = '+' . $shippingcodes['phone_code'];
+                                                                }else{
+                                                                    $shippingcode = $shippingcodes['phone_code'];
+                                                                }
                                                             }
                                                         @endphp
                                                     @endif
@@ -911,7 +914,7 @@
                         labelBtn.setAttribute('id', 'labelView');
                         labelBtn.setAttribute('target', '_blank');
                         labelBtn.setAttribute('href', data.data.label_url);
-                        labelBtn.innerHTML = '<i class="tio-print"></i> Label View';
+                        labelBtn.innerHTML = '<i class="tio-print"></i> Print Shipping Label';
                         createShipmentBtn.insertAdjacentElement('afterend', labelBtn);
                         $(createShipmentBtn).remove();
                     }
