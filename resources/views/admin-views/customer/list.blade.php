@@ -24,7 +24,7 @@
             <!-- Header -->
             <div class="px-3 py-4">
                 <div class="row gy-2 align-items-center">
-                    <div class="col-12">
+                    <div class="col-lg-4">
                         <!-- Search -->
                         <form action="{{ url()->current() }}" method="GET" class="">
                             <div class="input-group input-group-merge input-group-custom">
