@@ -581,7 +581,7 @@ class Controller extends BaseController
                                 if($array['is_guanranteed'] == '1'){
                                     $array['delivery_txt'] = 'Guanranteed delivery on ' . $array['expected_delivery_date'];
                                 }else{
-                                    $array['delivery_txt'] = 'Estimated delivery on ' . $del_Days . " Business weeks";
+                                    $array['delivery_txt'] = 'Estimated delivery on ' . $del_Days . " Business days";
                                 }
                             }
                             array_push($finalArray, $array);
