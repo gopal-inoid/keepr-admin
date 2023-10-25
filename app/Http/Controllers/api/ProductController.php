@@ -464,10 +464,10 @@ class ProductController extends Controller
                     $devices->thumbnail = asset('public/assets/front-end/img/image-place-holder.png');
                 }
             }
-            Common::addLog([]);
+            Common::addLog(['status' => 200, 'message' => 'Success', 'data' => $devices_list]);
             return response()->json(['status' => 200, 'message' => 'Success', 'data' => $devices_list], 200);
         } else {
-            Common::addLog([]);
+            Common::addLog(['status' => 400, 'message' => 'Devices not found']);
             return response()->json(['status' => 400, 'message' => 'Devices not found'], 400);
         }
     }
