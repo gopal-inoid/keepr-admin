@@ -661,7 +661,7 @@ class ProductController extends Controller
                 unset($deviceTracking['created_at']);
             }
             Common::addLog([]);
-            return response()->json(['status' => 200, 'message' => $deviceTracking], 200);
+            return response()->json(['status' => 200, 'message'=>'success', 'data' => $deviceTracking], 200);
         } else {
             Common::addLog([]);
             return response()->json(['status' => 400, 'message' => 'User not found'], 400);
