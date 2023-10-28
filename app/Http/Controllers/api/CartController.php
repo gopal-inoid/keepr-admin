@@ -98,7 +98,7 @@ class CartController extends Controller
                 $cart[$key]['purchase_price'] = number_format($price, 2);
                 $total_cart_price += ($value['quantity'] * $price);
             }
-            Common::addLog([]);
+            Common::addLog(['status' => 200, 'message' => 'Success', 'total_price' => number_format($total_cart_price, 2), 'data' => $cart]);
             return response()->json(['status' => 200, 'message' => 'Success', 'total_price' => number_format($total_cart_price, 2), 'data' => $cart], 200);
         } else {
             return response()->json(['status' => 200, 'message' => 'Cart is Empty.', 'total_price' => '0', 'data' => []], 200);
@@ -161,7 +161,10 @@ class CartController extends Controller
         $cart['thumbnail'] = asset("/product/thumbnail/$product->thumbnail");
         $cart->save();
         //$cart = CartManager::add_to_cart($request);
-        Common::addLog([]);
+        Common::addLog([
+            'status' => 1,
+            'message' => translate('successfully_added!')
+        ]);
         return response()->json([
             'status' => 1,
             'message' => translate('successfully_added!')
@@ -184,10 +187,10 @@ class CartController extends Controller
         if (isset($cart['quantity']) && $cart['quantity'] > 0) {
             $cart->quantity = ($cart['quantity'] - 1);
             $cart->save();
-            Common::addLog([]);
+            Common::addLog(['status' => 1, 'message' => translate('successfully_removed')]);
             return response()->json(['status' => 1, 'message' => translate('successfully_removed')], 200);
         } else {
-            Common::addLog([]);
+            Common::addLog(['status' => 0, 'message' => 'Item should not be empty']);
             return response()->json(['status' => 0, 'message' => 'Item should not be empty'], 200);
         }
     }
@@ -203,7 +206,7 @@ class CartController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
         Cart::find($request->id)->delete();
-        Common::addLog([]);
+        Common::addLog(['status' => 200, 'message' => translate('successfully_removed')]);
         return response()->json(['status' => 200, 'message' => translate('successfully_removed')], 200);
     }
 
@@ -567,7 +570,7 @@ class CartController extends Controller
         $msg = "Your Order is " . $request->order_status;
         $payload['order_id'] = $request->order_id;
         $this->sendNotification1($user->fcm_token ?? "", $msg, $payload);
-        Common::addLog([]);
+        Common::addLog(['status' => 200, 'message' => 'Success']);
         return response()->json(['status' => 200, 'message' => 'Success']);
     }
 

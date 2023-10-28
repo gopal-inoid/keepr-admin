@@ -213,10 +213,10 @@ class GeneralController extends Controller
             if (!empty($get_orders)) {
                 $all_data['order_list'] = $get_orders;
             }
-            Common::addLog([]);
+            Common::addLog(['status' => 200, 'message' => 'Success', 'data' => $all_data]);
             return response()->json(['status' => 200, 'message' => 'Success', 'data' => $all_data], 200);
         } else {
-            Common::addLog([]);
+            Common::addLog(['status' => 400, 'message' => 'User not found']);
             return response()->json(['status' => 400, 'message' => 'User not found'], 400);
         }
     }
@@ -423,10 +423,10 @@ class GeneralController extends Controller
                 $order_list[$k]['total_devices'] = $product_total_qty;
             }
 
-            Common::addLog([]);
+            Common::addLog(['status' => 200, 'message' => 'Success', 'data' => $order_list]);
             return response()->json(['status' => 200, 'message' => 'Success', 'data' => $order_list], 200);
         } else {
-            Common::addLog([]);
+            Common::addLog(['status' => 400, 'message' => 'User not found']);
             return response()->json(['status' => 400, 'message' => 'User not found'], 400);
         }
     }
@@ -435,7 +435,7 @@ class GeneralController extends Controller
     {
         $tracking_pin = "7023210039414604"; //$request->pin;
         $tracking_link = $this->getShippingTrackingDetais($tracking_pin);
-        Common::addLog([]);
+        Common::addLog(['status' => 200, 'message' => 'Success', 'data' => $tracking_link]);
         return response()->json(['status' => 200, 'message' => 'Success', 'data' => $tracking_link], 200);
     }
 
@@ -565,14 +565,14 @@ class GeneralController extends Controller
                 unset($get_orders->user_billing_details);
 
                 //$get_orders->total_devices = count($mac_ids);
-                Common::addLog([]);
+                Common::addLog(['status' => 200, 'message' => 'Success', 'data' => $get_orders]);
                 return response()->json(['status' => 200, 'message' => 'Success', 'data' => $get_orders], 200);
             } else {
-                Common::addLog([]);
+                Common::addLog(['status' => 400, 'message' => 'Order not found']);
                 return response()->json(['status' => 400, 'message' => 'Order not found'], 400);
             }
         } else {
-            Common::addLog([]);
+            Common::addLog(['status' => 400, 'message' => 'User not found']);
             return response()->json(['status' => 400, 'message' => 'User not found'], 400);
         }
     }
