@@ -231,7 +231,6 @@ class CartController extends Controller
                     array_push($specs, json_decode($productInfo['specification'], true));
                 }
             }
-
             CheckoutInfo::insert(['product_id' => json_encode($device_ids), 'customer_id' => $user_details->id, 'total_order' => $total_order, 'total_amount' => $total_price, 'tax_amount' => 7]);
 
             if (!empty($user_details->shipping_country) && !empty($user_details->shipping_state)) {
@@ -263,15 +262,15 @@ class CartController extends Controller
             $finalArray = array();
             if ($country_code == 'SA') {
                 $saudiRates = array(
-                    ["service_name" => 'regular', 'service_code' => 'SAUDI.REG', 'is_tracking' => '1', 'shipping_rate' => floatval(14.01), "expected_delivery_date" => "", "is_guanranteed" => "0", "delivery_days" => "5-10", "delivery_txt"=>"5-10 Business days"],
-                    ["service_name" => 'express', 'service_code' => 'SAUDI.EXP', 'is_tracking' => '1', 'shipping_rate' => floatval(20.01), "expected_delivery_date" => "", "is_guanranteed" => "0", "delivery_days" => "3-5", "delivery_txt"=>"3-5 Business days"]
+                    ["service_name" => 'regular', 'service_code' => 'SAUDI.REG', 'is_tracking' => '1', 'shipping_rate' => floatval(14.01), "expected_delivery_date" => "", "is_guanranteed" => "0", "delivery_days" => "5-10", "delivery_txt" => "5-10 Business days"],
+                    ["service_name" => 'express', 'service_code' => 'SAUDI.EXP', 'is_tracking' => '1', 'shipping_rate' => floatval(20.01), "expected_delivery_date" => "", "is_guanranteed" => "0", "delivery_days" => "3-5", "delivery_txt" => "3-5 Business days"]
                 );
                 $finalArray = $saudiRates;
             } else {
                 $weight = 0.3; // !empty($spe['weight']) ? (float) $spe['weight'] : 0;
                 $length = 9; // !empty($spe['length']) ? (int) $spe['length'] : 0;
                 $width = 5; // !empty($spe['width']) ? (int) $spe['width'] : 0;
-                $height = 1 * 1; // !empty($spe['height']) ? (int) $spe['height'] : 0;
+                $height = (int) $total_order; // !empty($spe['height']) ? (int) $spe['height'] : 0;
                 $finalArray = $this->getShippingRates($originPostalCode, strtoupper($postalCode), $country_code, $weight, $length, $width, $height);
             }
             //TAX calculation
