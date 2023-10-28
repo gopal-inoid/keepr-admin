@@ -645,6 +645,12 @@ class ProductController extends Controller
         $uuid = $request->uuid;
         $major = $request->major;
         $minor = $request->minor;
+
+        if(empty($uuid) || empty($major) || empty($minor)){
+            Common::addLog(['status' => 400, 'message' => 'fields required']);
+            return response()->json(['status' => 400, 'message' => 'fields required'], 400);
+        }
+
         $validator = Validator::make($request->all(), [
             'uuid' => 'required',
             'major' => 'required',
@@ -658,13 +664,13 @@ class ProductController extends Controller
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
         if (!empty($user_details->id)) {
             $deviceTracking = DeviceTracking::select("lat", "lan", "updated_at")->where(['uuid' => $uuid, 'major' => $major, 'minor' => $minor])
-                ->orderBy('created_at', 'desc')
+                ->orderBy('updated_at', 'desc')
                 ->first();
             if (!empty($deviceTracking->updated_at)) {
                 $deviceTracking['date'] = strtotime($deviceTracking->updated_at);
                 unset($deviceTracking['updated_at']);
             }
-            Common::addLog(['status' => 200, 'message' => 'success', 'data' => $deviceTracking]);
+            Common::addLog(['status' => 200, 'message' => 'success', 'data' => (!empty($deviceTracking) ? $deviceTracking : '')]);
             return response()->json(['status' => 200, 'message' => 'success', 'data' => $deviceTracking], 200);
         } else {
             Common::addLog(['status' => 400, 'message' => 'User not found']);
