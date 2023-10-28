@@ -591,7 +591,7 @@ class ProductController extends Controller
                             }
                         } else {
 
-                            $update = DeviceTracking::where(['uuid' => $val['uuid'], 'major' => $val['major'], 'minor' => $val['minor']])->update(['updated_at' => date('Y-m-d h:i:s')]);
+                            $update = DeviceTracking::where(['uuid' => $val['uuid'], 'major' => $val['major'], 'minor' => $val['minor']])->update(['lat' => $val['lat'] ?? 0, 'lan' => $val['lan'] ?? 0,'updated_at' => date('Y-m-d h:i:s')]);
                             if($update){
                                 $updated++;
                             }
