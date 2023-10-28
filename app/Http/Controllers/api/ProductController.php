@@ -568,7 +568,6 @@ class ProductController extends Controller
                 Common::addLog($data);
                 foreach ($data as $k => $val) {
                     if (!empty($val)) {
-                        //DB::table('device_tracking_log')->insert(['mac_id'=>$val['mac_id'] ?? NULL,'lat'=>$val['lat'],'lan'=>$val['lan'],'minor'=>$val['minor'],'major'=>$val['major'],'uuid'=>$val['uuid']]);
                         $check_connected = DeviceTracking::select('id')->where(['user_id' => $user_details->id, 'uuid' => $val['uuid'], 'major' => $val['major'], 'minor' => $val['minor']])->first();
                         if (empty($check_connected->id)) {
                             $device_info = ProductStock::where(['uuid' => $val['uuid'], 'major' => $val['major'], 'minor' => $val['minor']])->first();
@@ -624,14 +623,15 @@ class ProductController extends Controller
 
             Common::addLog($request->all());
             if (isset($response['status'])) {
+                Common::addLog(['status' => 200, 'message' => $message . ' in Tracking' ?? "Success"]);
                 return response()->json(['status' => 200, 'message' => $message . ' in Tracking' ?? "Success"], 200);
             } else {
-                Common::addLog([]);
+                Common::addLog(['status' => 400, 'message' => 'Request Data not correct']);
                 return response()->json(['status' => 400, 'message' => 'Request Data not correct'], 400);
             }
 
         } else {
-            Common::addLog([]);
+            Common::addLog(['status' => 400, 'message' => 'User not found']);
             return response()->json(['status' => 400, 'message' => 'User not found'], 400);
         }
     }
