@@ -559,7 +559,7 @@ class ProductController extends Controller
     public function device_tracking(Request $request)
     {
         $data = $request->all();
-        $success = $already_added = $not_found = 0;
+        $success = $updated = $not_found = 0;
         $response = [];
         $message = '';
         $auth_token = $request->headers->get('X-Access-Token');
@@ -569,13 +569,13 @@ class ProductController extends Controller
                 Common::addLog($data);
                 foreach ($data as $k => $val) {
                     if (!empty($val)) {
-                        $check_connected = DeviceTracking::select('id')->where(['user_id' => $user_details->id, 'uuid' => $val['uuid'], 'major' => $val['major'], 'minor' => $val['minor']])->first();
+                        $check_connected = DeviceTracking::select('id')->where(['uuid' => $val['uuid'], 'major' => $val['major'], 'minor' => $val['minor']])->first();
                         if (empty($check_connected->id)) {
                             $device_info = ProductStock::where(['uuid' => $val['uuid'], 'major' => $val['major'], 'minor' => $val['minor']])->first();
                             if (!empty($device_info->uuid)) {
                                 $check = DeviceTracking::insert(['mac_id' => $val['mac_id'] ?? NULL, 'user_id' => $user_details->id, 'lat' => $val['lat'], 'lan' => $val['lan'], 'uuid' => $val['uuid'], 'major' => $val['major'], 'minor' => $val['minor']]);
                                 if ($check) {
-                                    $check_lost_device = DeviceRequest::select('user_id')->where(['uuid' => $val['uuid'], 'major' => $val['major'], 'minor' => $val['minor']])->where('status', 0)->where('user_id', "<>", $user_details->id)->first();
+                                    $check_lost_device = DeviceRequest::select('user_id')->where(['uuid' => $val['uuid'], 'major' => $val['major'], 'minor' => $val['minor']])->where('status', 0)->first();
                                     if (!empty($check_lost_device->user_id)) {
                                         $tracking_user = User::where(['id' => $check_lost_device->user_id])->first();
                                         if (!empty($tracking_user->id)) {
@@ -591,30 +591,34 @@ class ProductController extends Controller
                             }
                         } else {
 
-                            $check_lost_device = DeviceRequest::select('user_id')->where(['uuid' => $val['uuid'], 'major' => $val['major'], 'minor' => $val['minor']])->where('status', 0)->where('user_id', "<>", $user_details->id)->first();
-                            if (!empty($check_lost_device->user_id)) {
-                                $tracking_user = User::where(['id' => $check_lost_device->user_id])->first();
-                                if (!empty($tracking_user->id)) {
-                                    $msg = "Your device found";
-                                    $payload = ['lat' => $val['lat'], 'lan' => $val['lan']];
-                                    //$this->sendNotification($tracking_user->fcm_token,$msg,$payload);
-                                }
+                            $update = DeviceTracking::where(['uuid' => $val['uuid'], 'major' => $val['major'], 'minor' => $val['minor']])->update(['updated_at' => date('Y-m-d h:i:s')]);
+                            if($update){
+                                $updated++;
                             }
 
-                            $already_added++;
+                            // $check_lost_device = DeviceRequest::select('user_id')->where(['uuid' => $val['uuid'], 'major' => $val['major'], 'minor' => $val['minor']])->where('status', 0)->where('user_id', "<>", $user_details->id)->first();
+                            // if (!empty($check_lost_device->user_id)) {
+                            //     $tracking_user = User::where(['id' => $check_lost_device->user_id])->first();
+                            //     if (!empty($tracking_user->id)) {
+                            //         $msg = "Your device found";
+                            //         $payload = ['lat' => $val['lat'], 'lan' => $val['lan']];
+                            //         //$this->sendNotification($tracking_user->fcm_token,$msg,$payload);
+                            //     }
+                            // }
+                            
                         }
                     }
                 }
             }
 
-            if ($already_added > 0) {
-                $response['status'] = true;
-                $message = $already_added . ' Device already added, ';
-            }
-
             if ($success > 0) {
                 $response['status'] = true;
                 $message = $success . ' Device successfully added, ';
+            }
+
+            if ($updated > 0) {
+                $response['status'] = true;
+                $message = $updated . ' Device successfully updated, ';
             }
 
             if ($not_found > 0) {
@@ -653,12 +657,12 @@ class ProductController extends Controller
         $auth_token = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
         if (!empty($user_details->id)) {
-            $deviceTracking = DeviceTracking::select("lat", "lan", "created_at")->where(['uuid' => $uuid, 'major' => $major, 'minor' => $minor])
+            $deviceTracking = DeviceTracking::select("lat", "lan", "updated_at")->where(['uuid' => $uuid, 'major' => $major, 'minor' => $minor])
                 ->orderBy('created_at', 'desc')
                 ->first();
-            if (!empty($deviceTracking->created_at)) {
-                $deviceTracking['date'] = strtotime($deviceTracking->created_at);
-                unset($deviceTracking['created_at']);
+            if (!empty($deviceTracking->updated_at)) {
+                $deviceTracking['date'] = strtotime($deviceTracking->updated_at);
+                unset($deviceTracking['updated_at']);
             }
             Common::addLog(['status' => 200, 'message' => 'success', 'data' => $deviceTracking]);
             return response()->json(['status' => 200, 'message' => 'success', 'data' => $deviceTracking], 200);
