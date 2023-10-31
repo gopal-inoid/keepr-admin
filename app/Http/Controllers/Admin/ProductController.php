@@ -42,15 +42,18 @@ class ProductController extends BaseController
 
     public function add_new_stock()
     {
-        $products = Product::select('id', 'name', 'colors')->where('status', 1)->orderBy('id', 'desc')->get();
+        $products = Product::select('id', 'name', 'colors','uuid')->where('status', 1)->orderBy('id', 'desc')->get();
         //$colors = Color::get();
         $product_options = [];
+        $uuids = [];
         if (!empty($products)) {
             $i = 0;
+            $j = 0;
             foreach ($products as $k => $pro) {
                 $stockcount = ProductStock::where('product_id', $pro->id)->count();
                 if ($stockcount == 0) {
                     $product_options[$pro->id]['product'] = '<option value="' . $pro->id . '">' . $pro->name . '</option>';
+                    $uuids[$j] =  $pro->uuid ?? '';
                     if (!empty($pro->colors) && $i == 0) {
                         $productcolors = explode(",", $pro->colors);
                         $pro_color = Color::select('id', 'name')->whereIn('id', $productcolors)->get();
@@ -61,18 +64,22 @@ class ProductController extends BaseController
                         }
                         $i++;
                     }
+                    $j++;
                 }
             }
         }
-        //echo "<pre>"; print_r($product_options); die;
-        return view('admin-views.product.add-new-stock', compact('products', 'product_options'));
+        //ksort($uuids);
+        //echo "<pre>"; print_r($uuids); die;
+        return view('admin-views.product.add-new-stock', compact('products', 'product_options','uuids'));
     }
 
     public function get_product_colors(Request $request)
     {
         $products = Product::find($request->product_id);
         $product_options['colors'] = '';
+        $product_options['uuid'] = '';
         if (!empty($products)) {
+            $product_options['uuid'] =  $products->uuid ?? '';
             if (!empty($products->colors)) {
                 $productcolors = explode(",", $products->colors);
                 $pro_color = Color::select('id', 'name')->whereIn('id', $productcolors)->get();

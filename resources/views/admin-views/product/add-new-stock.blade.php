@@ -77,7 +77,7 @@
                                         <div class="col-md-2 pr-0">
                                             <div class="form-group">
                                                 <label class="title-color">{{ \App\CPU\translate('UUID') }}<span class="text-danger">*</span></label>
-                                                <input type="text" name="uuid[]" class="form-control uuid" style="text-transform: uppercase;" maxlength="36" id="uuid" value="{{ old('uuid') }}" placeholder="{{ \App\CPU\translate('UUID') }}" required>
+                                                <input type="text" name="uuid[]" class="form-control uuid" style="text-transform: uppercase;" maxlength="36" id="uuid" value="{{ current($uuids) }}" placeholder="{{ \App\CPU\translate('UUID') }}" required>
                                                 <span class="uuid_notice v_notice text-danger" id="uuid_notice"></span>
                                             </div>
                                         </div>
@@ -286,6 +286,9 @@
                     success: function(data) {
                         if(data.colors != undefined){
                             $('.prodcolors').html(data.colors);
+                        }
+                        if(data.uuid != undefined){
+                            $('.uuid').val(data.uuid);
                         }
                     },
                 });
@@ -541,8 +544,6 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
-
-                alert('a');
 
                 $.post({
                     url: '{{ route('admin.product.store') }}',
