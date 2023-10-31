@@ -252,20 +252,33 @@ class ProductController extends BaseController
         $uuid = $request->uuid;
         $major = $request->major;
         $minor = $request->minor;
-
+        $error = 0;
+        $success = 0;
         if (!empty($request->device_id)) {
             foreach ($request->device_id as $k => $mac_id) {
                 $product = Product::where('uuid', $uuid[$k])->first();
                 if (!empty($product)) {
                     $check = ProductStock::where(['uuid' => $uuid[$k], 'major' => $major[$k], 'minor' => $minor[$k]])->count();
                     if ($check == 0) {
+                        $success++;
                         ProductStock::insert(['product_id' => $product->id, 'mac_id' => $mac_id, 'color' => $colors[$k] ?? NULL, 'uuid' => $uuid[$k], 'major' => $major[$k], 'minor' => $minor[$k]]);
+                    }else{
+                        $error++;
                     }
+                }else{
+                    $error++;
                 }
             }
         }
 
-        Toastr::success(translate('Product Stocks added successfully!'));
+        if($error > 0){
+            Toastr::error(translate(" $error Stocks not added, Please check your product uuid is same!"));
+        }
+
+        if($success > 0){
+            Toastr::success(translate(" $success Product Stocks added successfully!"));
+        }
+
         return redirect()->route('admin.product.stocks.list');
     }
 
@@ -273,19 +286,22 @@ class ProductController extends BaseController
     {
         $deletedData = $request['deleted'];
         $stringArray = explode('/', $deletedData);
-        foreach ($stringArray as $string) {
-            $array = explode(',', $string);
-            if (!empty($array)) {
-                $final_array = [];
-                foreach ($array as $k => $arr) {
-                    if (!empty($arr)) {
-                        $final_array[$k] = $arr;
+        //echo "<pre>"; print_r($stringArray); die;
+        foreach ($stringArray as $del_k => $string) {
+            if(!empty($string)){
+                $array = explode(',', $string);
+                if (!empty($array)) {
+                    $final_array = [];
+                    foreach ($array as $k => $arr) {
+                        if (!empty($arr)) {
+                            $final_array[$k] = $arr;
+                        }
                     }
-                }
-                if (!empty($final_array)) {
-                    $arrayone = array(0 => 0,1 => 1,2 => 2,3 => 3);
-                    $dltData = array_combine($arrayone, $final_array);
-                    ProductStock::where(['mac_id' => $dltData[0], 'uuid' => $dltData[1] , 'major' => $dltData[2] , 'minor' => $dltData[3]])->delete();
+                    if (!empty($final_array)) {
+                        $arrayone = array(0 => 0,1 => 1,2 => 2,3 => 3);
+                        $dltData = array_combine($arrayone, $final_array);
+                        ProductStock::where(['uuid' => $dltData[1] , 'major' => $dltData[2] , 'minor' => $dltData[3]])->delete();
+                    }
                 }
             }
         }
@@ -306,25 +322,42 @@ class ProductController extends BaseController
             });
         }
         $product_stock = $request->device_id;
-
-        // ProductStock::where(['is_purchased' => 0, 'product_id' => $id])->delete();
         $colors = $request->colors;
         $uuid = $request->uuid;
         $major = $request->major;
         $minor = $request->minor;
-
+        $error = 0;
+        $success = 0;
+        $updated = 0;
         if (!empty($product_stock)) {
             foreach ($product_stock as $k => $mac_id) {
                 $product = Product::where('uuid', $uuid[$k])->first();
                 if (!empty($product)) {
-                    $check = ProductStock::where(['mac_id' => $mac_id, 'uuid' => $uuid[$k], 'major' => $major[$k], 'minor' => $minor[$k]])->count();
+                    $check = ProductStock::where(['uuid' => $uuid[$k], 'major' => $major[$k], 'minor' => $minor[$k]])->count();
                     if ($check == 0) {
+                        $success++;
                         ProductStock::insert(['product_id' => $product->id, 'mac_id' => $mac_id, 'color' => $colors[$k][0] ?? NULL, 'uuid' => $uuid[$k], 'major' => $major[$k], 'minor' => $minor[$k]]);
+                    }else{
+                        $updated++;
                     }
+                }else{
+                    $error++;
                 }
             }
         }
-        Toastr::success(translate('Product Stocks added successfully!'));
+
+        if($error > 0){
+            Toastr::error(translate(" $error Stocks not added, Please check your product uuid or major, minor is same!"));
+        }
+
+        if($updated > 0){
+            Toastr::success(translate(" $updated Product Stocks updated successfully!"));
+        }
+
+        if($success > 0){
+            Toastr::success(translate(" $success Product Stocks added successfully!"));
+        }
+        
         return redirect()->route('admin.product.stocks.list');
     }
 
