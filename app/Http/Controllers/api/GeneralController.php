@@ -162,7 +162,13 @@ class GeneralController extends Controller
             $token = $id . $token . $id;
         }
 
-        $user = User::where('id', $id)->update(['auth_access_token' => $token, 'fcm_token' => $fcm_token]);
+        if(!empty($fcm_token)){
+            $updated_data = ['auth_access_token' => $token, 'fcm_token' => $fcm_token];
+        }else{
+            $updated_data = ['auth_access_token' => $token];
+        }
+
+        $user = User::where('id', $id)->update($updated_data);
 
         if ($user) {
             return $token;
