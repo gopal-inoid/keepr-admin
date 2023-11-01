@@ -139,7 +139,7 @@ class GeneralController extends Controller
             }
 
             if ($auth_token != '') {
-                Common::addLog(['status' => 200, 'phone' => $mobile_number, 'phone_code' => $phone_code, 'auth_token' => $auth_token, 'message' => 'Success']);
+                Common::addLog(['status' => 200, 'phone' => $mobile_number, 'phone_code' => $phone_code, 'fcm_token'=> $fcm_token ?? '', 'auth_token' => $auth_token, 'message' => 'Success']);
                 return response()->json(['status' => 200, 'phone' => $mobile_number, 'phone_code' => $phone_code, 'auth_token' => $auth_token, 'message' => 'Success'], 200);
             } else {
                 Common::addLog(['status' => 401, 'message' => 'Token not Authorized']);
