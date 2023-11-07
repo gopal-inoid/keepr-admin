@@ -31,12 +31,13 @@
                                     <div class="form-group">
                                         <input type="hidden" id="id" name="id">
                                         <label for="name" class="title-color text-capitalize">{{ \App\CPU\translate('banner_URL')}}</label><span class="text-danger">*</span>
-                                        <input type="text" name="url" class="form-control" value="{{$banner['url']}}" required pattern="https?://.+" 
+                                        <input type="text" name="url" class="form-control" value="{{$banner['url']}}" required
+                                        pattern="https?://.+\.(com|in|org)$"
                                         title="Please enter a valid URL (start with http:// or https://)">
                                     </div>
                                     <div class="form-group">
                                     <label for="name"
-                                            class="title-color text-capitalize">{{ \App\CPU\translate('banner_type') }}</label><span class="text-danger">*</span>
+                                            class="title-color text-capitalize">{{ \App\CPU\translate('banner_type') }}</label>
                                             <input type="text" name="banner_type" readonly class="form-control" id="banner_type" value="Main Banner" required>
                                         </div>
 {{-- 
@@ -109,11 +110,11 @@
                                     <div class="custom-file text-left">
                                         <input required type="file" name="image" id="mbimageFileUploader"
                                                 class="custom-file-input"
-                                                accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                                accept=".jpg, .png, .jpeg, .svg, .bmp, .tif, .tiff|image/*">
                                         <label class="custom-file-label"
                                                 for="mbimageFileUploader">{{\App\CPU\translate('choose')}} {{\App\CPU\translate('file')}}</label>
                                     </div>
-                                    <span class="text-secodary">Allowed file formats: .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff</span>
+                                    <span class="text-secodary">Allowed file formats: .jpg, .png, .jpeg, .svg, .bmp, .tif, .tiff</span>
                                 </div>
                                 <div class="col-md-6">
                                     <center class="mb-30 max-w-500 mx-auto">
@@ -123,6 +124,7 @@
                                          alt="banner image"
                                          onerror="this.src='{{asset('public/assets/front-end/img/placeholder.png')}}'"
                                          >
+                                         <h6 class="text-success mt-2">Image Preview</h6>
                                          
                                     </center>
                                     {{-- <center>
@@ -197,7 +199,21 @@
         }
 
         $("#mbimageFileUploader").change(function () {
-            mbimagereadURL(this);
+            let imgArray=['image/jpg', 'image/png', 'image/jpeg', 'image/svg', 'image/bmp', 'image/tif', 'image/tiff'];
+                let imgType=this.files[0].type;
+                if(imgArray.includes(imgType)){
+                    $(".custom-file-label").html(this.files[0].name);
+                     mbimagereadURL(this);
+                }else{
+                    this.value="";
+                    $(".custom-file-label").html("Invalid file format");
+                    $(".custom-file-label").addClass("text-danger  border border-1 border-danger"); 
+                    setTimeout(() => {
+                     $(".custom-file-label").html("Choose file"); 
+                     $(".custom-file-label").removeClass("text-danger  border border-1 border-danger");
+                    }, 1000);
+                   
+                }
         });
     </script>
 @endpush

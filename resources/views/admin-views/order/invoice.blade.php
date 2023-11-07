@@ -66,7 +66,7 @@
     </div>
     <div>
         <table style="table-layout: fixed; width: 100%;">
-          
+
             <tbody>
                 <tr>
                     <td width="30%">
@@ -117,7 +117,8 @@
                                 <span class="h2">{{ \App\CPU\translate('billing_address') }} </span>
                                 <div class="h4 montserrat-normal-600">
                                     <p>{{ !empty($billingInfo['name']) ? $billingInfo['name'] : 'Name not found' }}</p>
-                                    <p>{{ !empty($billingInfo['email']) ? $billingInfo['email'] : 'Email not found' }}</p>
+                                    <p>{{ !empty($billingInfo['email']) ? $billingInfo['email'] : 'Email not found' }}
+                                    </p>
                                     <p>{{ !empty($billingInfo['phone_code']) ? $billingInfo['phone_code'] : 'PhoneCode not found' }}
                                         &nbsp;{{ !empty($billingInfo['phone']) ? $billingInfo['phone'] : 'Phone not found' }}
                                     </p>
@@ -126,7 +127,8 @@
                                     <p>{{ !empty($billingInfo['city']) ? $billingInfo['city'] : 'City not found' }}
                                     <p>{{ !empty($billingInfo['state']) ? $billingInfo['state'] : 'State not found' }}
                                         {{ !empty($billingInfo['zip']) ? $billingInfo['zip'] : 'Zip not found' }}</p>
-                                    <p>{{ !empty($billingInfo['country']) ? $billingInfo['country'] : 'Country not found' }}</p>
+                                    <p>{{ !empty($billingInfo['country']) ? $billingInfo['country'] : 'Country not found' }}
+                                    </p>
                                 </div>
                             @endif
                         </div>
@@ -228,8 +230,8 @@
                                             {{-- <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$val['thumbnail']}}" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt=""> --}}
                                             <div> <a href="#" class="title-color hover-c1"
                                                     style="text-decoration:none !important; color:black !important;">
-                                                    <h1>{{ substr($val['product_name'], 0, 30) }}{{ strlen($val['product_name']) > 10 ? '...' : '' }}
-                                                    </h1>
+                                                    <h3>{{ substr($val['product_name'], 0, 30) }}{{ strlen($val['product_name']) > 10 ? '...' : '' }}
+                                                    </h3>
                                                 </a>
                                             </div>
                                         </div>
@@ -315,7 +317,11 @@
                 </tr>
             </tbody>
         </table>
-        <div style="border-top: 1px solid #eee;">Order Note:- {{ $order->order_note ? $order->order_note : '' }}</div>
+        <div style="border-top: 1px solid #eee;">
+            @if ($order->order_note)
+                Order Note: {{ $order->order_note }}
+            @endif
+        </div>
     </div>
 
 

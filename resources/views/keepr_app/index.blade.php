@@ -8,7 +8,7 @@
     <title>Keepr App</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('keepr_app_assets/style.css') }}">
-    <link rel="icon" type="image/x-icon" href="{{ asset('public/company/Keepr-logo-black.png') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('public/company/Keepr-favicon.png') }}">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-KSPYGQDXX1"></script>
     <script>
@@ -244,9 +244,9 @@
                     @endforeach
                     @endif
                 </div>
-                <div class="container mt-lg-5 pt-lg-5 mt-md-5 pt-md-5 Frequently_Questions" id="faq" style="padding-top: 6rem !important;">
+                <div class="container mt-lg-5 Frequently_Questions" id="faq">
                     <h1 class="text-center" style="font-weight: 600">Frequently Asked Questions</h1>
-                    <div class="row justify-content-center mt-5 pb-5">
+                    <div class="row justify-content-center pb-5">
                         @if (!empty($faqs))
                         @foreach ($faqs as $k => $val)
                         <div class="col-md-6 Frequently_Asked_Questions" id="Frequently_Asked_Questions2">

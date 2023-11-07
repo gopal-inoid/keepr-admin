@@ -430,6 +430,7 @@ class Controller extends BaseController
             //     }
             // }
             $taxData = json_decode($update_order->taxes, true);
+
             $userData['order_id'] = $update_order->id;
             $userData['customer_id'] = $update_order->customer_id;
             $userData['order_status'] = $update_order->order_status;

@@ -19,7 +19,7 @@
         <!-- End Page Title -->
 
         <!-- Content Row -->
-        <div class="row pb-4 d--none" id="main-banner">
+        <div class="row pb-4 d--none animated fadeIn" id="main-banner">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
@@ -35,12 +35,13 @@
                                         <input type="hidden" id="id" name="id">
                                         <label for="name"
                                             class="title-color text-capitalize">{{ \App\CPU\translate('banner_URL') }}</label><span class="text-danger">*</span>
-                                        <input type="text" name="url" class="form-control" id="url" required pattern="https?://.+" 
+                                        <input type="text" name="url" class="form-control" id="url" required 
+                                        pattern="https?://.+\.(com|in|org)$"
                                         title="Please enter a valid URL (start with http:// or https://)">
                                     </div>
                                     <div class="form-group">
                                         <label for="name"
-                                            class="title-color text-capitalize">{{ \App\CPU\translate('banner_type') }}</label><span class="text-danger">*</span>
+                                            class="title-color text-capitalize">{{ \App\CPU\translate('banner_type') }}</label>
                                             <input type="text" name="banner_type" readonly class="form-control" id="banner_type" value="Main Banner" required>
                                         {{-- <select class="js-example-responsive form-control w-100" name="banner_type"
                                             required>
@@ -71,6 +72,7 @@
                                         <img class="ratio-4:1" id="mbImageviewer"
                                             src="{{ asset('public/assets/front-end/img/placeholder.png') }}"
                                             alt="banner image" />
+                                            <h6 class="text-success mt-2">Image Preview</h6>
                                     </center>
                                 </div>
                             </div>
@@ -240,13 +242,29 @@
                 reader.onload = function(e) {
                     $('#mbImageviewer').attr('src', e.target.result);
                 }
-
                 reader.readAsDataURL(input.files[0]);
             }
         }
 
         $("#mbimageFileUploader").change(function() {
-            mbimagereadURL(this);
+            if (this.files && this.files[0]) {
+                let imgArray=['image/jpg', 'image/png', 'image/jpeg', 'image/svg', 'image/bmp', 'image/tif', 'image/tiff'];
+                let imgType=this.files[0].type;
+                if(imgArray.includes(imgType)){
+                    $(".custom-file-label").html(this.files[0].name);
+                     mbimagereadURL(this);
+                }else{
+                    this.value="";
+                    $(".custom-file-label").html("Invalid file format");
+                    $(".custom-file-label").addClass("text-danger  border border-1 border-danger"); 
+                    setTimeout(() => {
+                     $(".custom-file-label").html("Choose file"); 
+                     $(".custom-file-label").removeClass("text-danger  border border-1 border-danger");
+                    }, 1000);
+                   
+                }
+            }
+           
         });
 
         function fbimagereadURL(input) {
@@ -284,13 +302,13 @@
     <script>
         $('#main-banner-add').on('click', function() {
             $('#main-banner').show();
-            $("#banner-table").addClass("d-none");
+            // $("#banner-table").addClass("d-none");
         });
 
         $('.cancel').on('click', function() {
             $('.banner_form').attr('action', "{{ route('admin.banner.store') }}");
             $('#main-banner').hide();
-            $("#banner-table").removeClass("d-none");
+            // $("#banner-table").removeClass("d-none");
         });
 
         $(document).on('change', '.status', function() {

@@ -198,7 +198,7 @@ class OrderController extends Controller
 
     public function update_order_details(Request $request)
     {
-        //echo "<pre>"; print_r($request->all()); die;
+        // echo "<pre>"; print_r($request->all()); die;
 
         $shipping_details['name'] = $request->shipping_name;
         $shipping_details['email'] = $request->shipping_email;
