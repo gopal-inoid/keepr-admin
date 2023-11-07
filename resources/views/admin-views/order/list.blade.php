@@ -94,12 +94,15 @@
                                         <label>End Date</label>
                                     </div>
                                 </div>
-                                <div class="col-sm-6 col-md-3 mt-2 mt-sm-0  ">
-                                    <button type="submit" class="btn btn--primary btn-block" onclick="formUrlChange(this)"
+
+                                <div class="col-sm-6 d-flex col-md-3 mt-2 mt-sm-0 "> 
+                                    <button type="submit" class="btn btn--primary btn-block mr-1" onclick="formUrlChange(this)"
                                         data-action="{{ url()->current() }}">
                                         {{ \App\CPU\translate('show') }} {{ \App\CPU\translate('data') }}
                                     </button>
+                                    <a href="{{ route('admin.orders.list', ['all']) }}" class="btn btn--primary">Clear</a>
                                 </div>
+
                             </div>
                         </form>
                     </div>
@@ -118,7 +121,7 @@
                                                 <i class="tio-search"></i>
                                             </div>
                                         </div>
-                                        <input id="datatableSearch_" type="search" name="search" class="form-control" 
+                                        <input id="datatableSearch_" type="search" name="search" class="form-control"
                                             placeholder="{{ \App\CPU\translate('Search by Order ID') }}"
                                             aria-label="Search by Order ID" value="{{ $search }}">
                                         <button type="submit"
@@ -147,6 +150,7 @@
                                     <th>{{ \App\CPU\translate('Order Status') }}</th>
                                     <th>{{ \App\CPU\translate('Action') }}</th>
                                 </tr>
+
                             </thead>
                             <tbody>
                                 @foreach ($orders as $key => $order)
@@ -255,8 +259,12 @@
                                         </td>
                                     </tr>
                                 @endforeach
+
                             </tbody>
                         </table>
+                        @if (count($orders) == 0)
+                            <h1 class=" p-2 pl-3">No record found</h1>
+                        @endif
                     </div>
                     <!-- End Table -->
 

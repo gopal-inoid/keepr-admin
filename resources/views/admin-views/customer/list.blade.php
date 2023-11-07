@@ -66,7 +66,7 @@
                     class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
                     <thead class="thead-light thead-50 text-capitalize">
                     <tr>
-                        <th>{{\App\CPU\translate('SL')}}</th>
+                        <th>{{\App\CPU\translate('Sl')}}</th>
                         <th>{{\App\CPU\translate('contact_info')}}</th>
                         <th>{{\App\CPU\translate('Total')}} {{\App\CPU\translate('Order')}} </th>
                         <th class="text-center">{{\App\CPU\translate('Action')}}</th>

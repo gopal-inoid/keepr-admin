@@ -89,7 +89,7 @@ class OrderController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(Helpers::pagination_limit())
             ->appends(['search' => $request['search'], 'filter' => $request['filter'], 'from' => $request['from'], 'to' => $request['to'], 'delivery_man_id' => $request['delivery_man_id']]);
-        return view('admin-views.order.list', compact('orders', 'search', 'from', 'to', 'status', 'filter'));
+             return view('admin-views.order.list', compact('orders', 'search', 'from', 'to', 'status', 'filter'));
     }
 
     public function common_query_status_count($query, $status, $request)
@@ -276,7 +276,7 @@ class OrderController extends Controller
             $email_data = $this->getDataforEmail($order_id);
             if (!empty($email_data)) {
                 $email_data['email'] = $user_details->email ?? "";
-                $email_data['username'] = $user_data['name'] ?? "Keepr User";
+                $email_data['username'] = $user_details->name ?? "Keepr User";
                 $email_data['order_id'] = $order_id;
                 if ($email_data['order_status'] == 'shipped') {
                     $email_data['email'] = $user_details->shipping_email ?? "";
@@ -296,8 +296,10 @@ class OrderController extends Controller
             }
 
             Order::where('id', $order_id)->update($order_data);
+            Toastr::success(\App\CPU\translate('updated_successfully!'));
             return redirect()->back()->with('success', 'Order Details Updated Successfully');
         } else {
+            Toastr::error(\App\CPU\translate('updating_failed!'));
             return redirect()->back()->with('error', 'Order not found');
         }
     }

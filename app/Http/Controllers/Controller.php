@@ -430,6 +430,7 @@ class Controller extends BaseController
             //     }
             // }
             $taxData = json_decode($update_order->taxes, true);
+            $taxData = !empty($taxData) ? $taxData : [];
 
             $userData['order_id'] = $update_order->id;
             $userData['customer_id'] = $update_order->customer_id;
@@ -573,15 +574,15 @@ class Controller extends BaseController
                             $array['is_guanranteed'] = $child['service-standard']['guaranteed-delivery'] == "true" ? '1' : '0';
                             $array['delivery_days'] = $del_Days;
                             if ($child['service-code'] == 'INT.IP.SURF' || $child['service-code'] == 'INT.SP.SURF') {
-                                if($array['is_guanranteed'] == '1'){
+                                if ($array['is_guanranteed'] == '1') {
                                     $array['delivery_txt'] = 'Guanranteed delivery on ' . $array['expected_delivery_date'];
-                                }else{
+                                } else {
                                     $array['delivery_txt'] = 'Estimated delivery date: ' . $del_Days . " Business weeks";
                                 }
                             } else {
-                                if($array['is_guanranteed'] == '1'){
+                                if ($array['is_guanranteed'] == '1') {
                                     $array['delivery_txt'] = 'Guanranteed delivery on ' . $array['expected_delivery_date'];
-                                }else{
+                                } else {
                                     $array['delivery_txt'] = 'Estimated delivery on ' . $del_Days . " Business days";
                                 }
                             }
