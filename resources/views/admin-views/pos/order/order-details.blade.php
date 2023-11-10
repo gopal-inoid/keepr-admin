@@ -70,26 +70,26 @@
                                                             name="change_order_status">
                                                             <option
                                                                 {{ $order['order_status'] == 'pending' ? 'selected' : '' }}
-                                                                value="pending">Pending</option>
+                                                                value="pending" <?php echo $order['order_status']=='shipped'?'disabled':''; ?>>Pending</option>
                                                             <option
                                                                 {{ $order['order_status'] == 'processing' ? 'selected' : '' }}
-                                                                value="processing">Processing</option>
+                                                                value="processing" <?php echo $order['order_status']=='shipped'?'disabled':''; ?>>Processing</option>
                                                             <option
                                                                 {{ $order['order_status'] == 'shipped' ? 'selected' : '' }}
                                                                 value="shipped">Shipped</option>
                                                             <option
                                                                 {{ $order['order_status'] == 'delivered' ? 'selected' : '' }}
-                                                                value="delivered" disabled class="delivered">Delivered
+                                                                value="delivered"  <?php echo $order['order_status']=='shipped'?'':'disabled'; ?> class="delivered">Delivered
                                                             </option>
                                                             <option
                                                                 {{ $order['order_status'] == 'cancelled' ? 'selected' : '' }}
-                                                                value="cancelled">Cancelled</option>
+                                                                value="cancelled" <?php echo $order['order_status']=='shipped'?'disabled':''; ?>>Cancelled</option>
                                                             <option
                                                                 {{ $order['order_status'] == 'refunded' ? 'selected' : '' }}
-                                                                value="refunded">Refunded</option>
+                                                                value="refunded" <?php echo $order['order_status']=='shipped'?'disabled':''; ?>>Refunded</option>
                                                             <option
                                                                 {{ $order['order_status'] == 'failed' ? 'selected' : '' }}
-                                                                value="failed">Failed</option>
+                                                                value="failed" <?php echo $order['order_status']=='shipped'?'disabled':''; ?>>Failed</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -879,14 +879,14 @@
             $('.txtPhone').val(code).intlTelInput();
         });
 
-        $("#change_order_status").on("change", function() {
-            if (this.value == "shipped" || this.value == "delivered") {
-                $("#change_order_status option").attr("disabled", 'disabled');
-                $(".delivered").removeAttr("disabled");
-            } else {
-                $(".delivered").attr("disabled", "disabled");
-            }
-        });
+        // $("#change_order_status").on("change", function() {
+        //     if (this.value == "shipped" || this.value == "delivered") {
+        //         $("#change_order_status option").attr("readyonly", 'readyonly');
+        //         $(".delivered").removeAttr("disabled");
+        //     } else {
+        //         $(".delivered").attr("disabled", "disabled");
+        //     }
+        // });
 
         const createShipmentBtn = document.querySelector("#createShipment");
         createShipmentBtn.addEventListener("click", function(e) {

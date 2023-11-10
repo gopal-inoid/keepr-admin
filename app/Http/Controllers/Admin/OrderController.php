@@ -273,6 +273,7 @@ class OrderController extends Controller
             $order_data['user_shipping_details'] = json_encode($shipping_details, true);
             $order_data['user_billing_details'] = json_encode($billing_details, true);
             //Send Email
+
             $email_data = $this->getDataforEmail($order_id);
             if (!empty($email_data)) {
                 $email_data['email'] = $user_details->email ?? "";
@@ -295,6 +296,7 @@ class OrderController extends Controller
                 $this->sendKeeprEmail('order-status-changed-admin', $email_data);
             }
 
+            
             Order::where('id', $order_id)->update($order_data);
             Toastr::success(\App\CPU\translate('updated_successfully!'));
             return redirect()->back()->with('success', 'Order Details Updated Successfully');
