@@ -36,7 +36,7 @@
                                         <label for="name"
                                             class="title-color text-capitalize">{{ \App\CPU\translate('banner_URL') }}</label><span class="text-danger">*</span>
                                         <input type="text" name="url" class="form-control" id="url" required 
-                                        pattern="https?://.+\.(com|in|org)$"
+                                        pattern="https?://.+\.(com|in|org|net|edu|gov|mil|us|uk|ca|au|de|jp|app|blog|guru|io|tech|design)$"
                                         title="Please enter a valid URL (start with http:// or https://)">
                                     </div>
                                     <div class="form-group">
@@ -59,12 +59,12 @@
                                         <div class="custom-file text-left">
                                             <input required type="file" name="image" id="mbimageFileUploader"
                                                 class="custom-file-input"
-                                                accept=".jpg, .png, .jpeg, .svg, .bmp, .tif, .tiff">
+                                                accept=".jpg, .png, .jpeg, .svg, .bmp">
                                             <label class="custom-file-label title-color"
                                                 for="mbimageFileUploader">{{ \App\CPU\translate('choose') }}
                                                 {{ \App\CPU\translate('file') }}</label>
                                         </div>
-                                        <span class="text-secodary">Allowed file formats: .jpg, .png, .jpeg, .svg, .bmp, .tif, .tiff</span>
+                                        <span class="text-secodary">Allowed file formats: .jpg, .png, .jpeg, .svg, .bmp</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6 d-flex justify-content-center align-items-center">
@@ -125,7 +125,7 @@
                                     <div id="banner-btn">
                                         <button id="main-banner-add" class="btn btn--primary text-nowrap">
                                             <i class="tio-add"></i>
-                                            {{ \App\CPU\translate('add_banner') }}
+                                            {{ \App\CPU\translate('add_Banner') }}
                                         </button>
                                     </div>
                                 </div>
@@ -248,7 +248,7 @@
 
         $("#mbimageFileUploader").change(function() {
             if (this.files && this.files[0]) {
-                let imgArray=['image/jpg', 'image/png', 'image/jpeg', 'image/svg', 'image/bmp', 'image/tif', 'image/tiff'];
+                let imgArray=['image/jpg', 'image/png', 'image/jpeg', 'image/svg+xml', 'image/bmp'];
                 let imgType=this.files[0].type;
                 if(imgArray.includes(imgType)){
                     $(".custom-file-label").html(this.files[0].name);

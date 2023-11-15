@@ -32,7 +32,7 @@
                                         <input type="hidden" id="id" name="id">
                                         <label for="name" class="title-color text-capitalize">{{ \App\CPU\translate('banner_URL')}}</label><span class="text-danger">*</span>
                                         <input type="text" name="url" class="form-control" value="{{$banner['url']}}" required
-                                        pattern="https?://.+\.(com|in|org)$"
+                                        pattern="https?://.+\.(com|in|org|net|edu|gov|mil|us|uk|ca|au|de|jp|app|blog|guru|io|tech|design)$"
                                         title="Please enter a valid URL (start with http:// or https://)">
                                     </div>
                                     <div class="form-group">
@@ -108,13 +108,13 @@
                                         class="ml-1 text-info">( {{\App\CPU\translate('ratio')}} 4:1 )</span>
                                     <br>
                                     <div class="custom-file text-left">
-                                        <input required type="file" name="image" id="mbimageFileUploader"
+                                        <input type="file" name="image" id="mbimageFileUploader"
                                                 class="custom-file-input"
-                                                accept=".jpg, .png, .jpeg, .svg, .bmp, .tif, .tiff|image/*">
+                                                accept=".jpg, .png, .jpeg, .svg, .bmp|image/*">
                                         <label class="custom-file-label"
                                                 for="mbimageFileUploader">{{\App\CPU\translate('choose')}} {{\App\CPU\translate('file')}}</label>
                                     </div>
-                                    <span class="text-secodary">Allowed file formats: .jpg, .png, .jpeg, .svg, .bmp, .tif, .tiff</span>
+                                    <span class="text-secodary">Allowed file formats: .jpg, .png, .jpeg, .svg, .bmp</span>
                                 </div>
                                 <div class="col-md-6">
                                     <center class="mb-30 max-w-500 mx-auto">
@@ -199,7 +199,7 @@
         }
 
         $("#mbimageFileUploader").change(function () {
-            let imgArray=['image/jpg', 'image/png', 'image/jpeg', 'image/svg', 'image/bmp', 'image/tif', 'image/tiff'];
+            let imgArray=['image/jpg', 'image/png', 'image/jpeg', 'image/svg+xml', 'image/bmp'];
                 let imgType=this.files[0].type;
                 if(imgArray.includes(imgType)){
                     $(".custom-file-label").html(this.files[0].name);
