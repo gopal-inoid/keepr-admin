@@ -6,7 +6,7 @@
     <div class="mb-4 pb-2">
         <h2 class="h1 mb-0 text-capitalize d-flex align-items-center">
             <img class="mr-2" src="{{asset('assets/back-end/img/Shipping_solid.svg')}}" alt="">
-            {{\App\CPU\translate('Shipping Method')}}
+            {{\App\CPU\translate('Shipping Methods')}}
             <span class="badge badge-soft-dark radius-50 fz-12">{{-- $shipping_methods->count() --}} 2</span>
         </h2>
     </div>

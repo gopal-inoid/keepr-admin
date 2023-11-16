@@ -162,7 +162,7 @@
                                href="{{route('admin.business-settings.shipping-method.tax-calculation')}}" title="Shipping Methods" style="padding-left:1rem !important;">
                                 <!-- <i class="tio-shopping nav-icon"></i> -->
                                 <img src="{{asset('/assets/back-end/img/Tax Lined.svg')}}" style="min-width:16px !important;height:16px !important;"  alt="">&nbsp;&nbsp;
-                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Tax Calculation</span>
+                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Tax Calculations</span>
                             </a>
                         </li>
                         {{-- <li class="navbar-vertical-aside-has-menu {{Request::is('admin/coupon*')?'active':''}}">

@@ -12,7 +12,7 @@
         <div class="mb-3">
             <h2 class="h1 mb-0 text-capitalize d-flex">
                 <img class="mr-2 "src="{{ asset('/assets/back-end/img/Email_Solid.svg') }}" alt="">
-                Email Templates List
+                Email Templates
             </h2>
         </div>
         <!-- End Page Title -->

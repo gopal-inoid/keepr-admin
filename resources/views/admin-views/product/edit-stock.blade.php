@@ -28,7 +28,8 @@
         <div class="d-flex flex-wrap align-items-center mb-3">
             <h2 class="h1 mb-0 d-flex">
                 <img class="mr-2" src="{{ asset('/assets/back-end/img/Stock_Management_Solid.svg') }}" alt="">
-                {{ \App\CPU\translate('Product') }} {{ \App\CPU\translate('Stocks') }} {{ \App\CPU\translate('Edit') }}
+                {{-- {{ \App\CPU\translate('Product') }} --}}
+                 {{ \App\CPU\translate('Stock') }} {{ \App\CPU\translate('Edit') }}
             </h2>
         </div>
         <!-- End Page Title -->

@@ -25,7 +25,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="mb-0">{{\App\CPU\translate('privacy_policy')}}</h5>
+                        <h5 class="mb-0 ">{{\App\CPU\translate('privacy_policy')}}</h5>
                     </div>
 
                     <form action="{{route('admin.business-settings.privacy-policy')}}" method="post">

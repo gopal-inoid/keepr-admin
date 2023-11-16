@@ -26,7 +26,8 @@
         <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
             <h2 class="h1 mb-0 d-flex">
                 <img class="mr-2" src="{{asset('/assets/back-end/img/Product_Solid.svg')}}" alt="">
-                {{\App\CPU\translate('Add')}} {{\App\CPU\translate('New')}} {{\App\CPU\translate('Product')}}
+                {{-- {{\App\CPU\translate('New')}}  --}}
+                {{\App\CPU\translate('Product')}} {{\App\CPU\translate('Add')}}
             </h2>
         </div>
         <!-- End Page Title -->

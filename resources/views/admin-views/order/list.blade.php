@@ -61,7 +61,7 @@
                         @elseif($status == 'failed')
                             {{ ucwords(str_replace('_', ' ', 'Failed to Deliver')) }}
                         @else
-                            {{ ucwords(str_replace('_', ' ', $status)) }}
+                            {{-- {{ ucwords(str_replace('_', ' ', $status)) }} --}}
                         @endif
                     </span>
                     {{ \App\CPU\translate('Orders') }}

@@ -12,7 +12,7 @@
     <div class="mb-3">
         <h2 class="h1 mb-0 text-capitalize d-flex">
             <img class="mr-2" src="{{asset('/assets/back-end/img/Product_Solid.svg')}}" alt="">
-             Product List
+             Products
             <span class="ml-2 badge badge-soft-dark radius-50 fz-14 ml-1">{{ $pro->total() }}</span>
         </h2>
     </div>

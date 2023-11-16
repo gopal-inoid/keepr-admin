@@ -22,7 +22,7 @@
         <div class="mb-3">
             <h2 class="h1 mb-0 text-capitalize d-flex align-items-center">
                 <img class="mr-2" src="{{ asset('/assets/back-end/img/Tax_Solid.svg') }}" alt="">
-                {{ \App\CPU\translate('edit_tax_calculations') }}
+                {{ \App\CPU\translate('tax_calculations_edit') }}
             </h2>
         </div>
         <!-- End Page Title -->

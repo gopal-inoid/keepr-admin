@@ -13,7 +13,7 @@
         <div class="mb-4">
             <h2 class="h1 mb-0 text-capitalize d-flex align-items-center mr-2">
                 <img width="20" class="mr-2" src="{{asset('/assets/back-end/img/Active_Users_Solid.svg')}}" alt="">
-                {{\App\CPU\translate('Customer_list')}}
+                {{\App\CPU\translate('Active_Users')}}
                 <span class="badge ml-2 badge-soft-dark radius-50">{{\App\User::count()}}</span>
             </h2>
         </div>

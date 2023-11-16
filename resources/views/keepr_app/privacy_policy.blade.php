@@ -163,9 +163,13 @@
                                 </div>
                                 <div class="CopyRight_Section">
 
-                                    <img class="mx-1" src="{{ asset('keepr_app_assets/assests/FaceBook_Icon.svg') }}" alt="">
+                                    {{-- <img class="mx-1" src="{{ asset('keepr_app_assets/assests/FaceBook_Icon.svg') }}" alt="">
                                     <img class="mx-1" src="{{ asset('keepr_app_assets/assests/TwitterIcon.svg') }}" alt="">
-                                    <img class="mx-1" src="{{ asset('keepr_app_assets/assests/InstgramIcon.svg') }}" alt="">
+                                    <img class="mx-1" src="{{ asset('keepr_app_assets/assests/InstgramIcon.svg') }}" alt=""> --}}
+                                    <a href="https://www.facebook.com/profile.php?id=61551488266788" target="_blank"><img class="mx-1" src="{{ asset('keepr_app_assets/assests/FaceBook_Icon.svg') }}" alt=""></a>
+
+                                    <a href="https://www.instagram.com/thekeeprapp/" target="_blank"><img class="mx-1" src="{{ asset('keepr_app_assets/assests/InstgramIcon.svg') }}" alt=""></a>
+
                                 </div>
                             </div>
                         </div>

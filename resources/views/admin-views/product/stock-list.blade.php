@@ -13,7 +13,7 @@
     <div class="mb-3">
         <h2 class="h1 mb-0 text-capitalize d-flex">
             <img src="{{asset('/assets/back-end/img/Stock_Management_Solid.svg')}}" alt="" class="mr-2">
-             Product Stock List
+            Stock Management
         </h2>
     </div>
     <!-- End Page Title -->

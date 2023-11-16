@@ -17,7 +17,7 @@
                     <div class="mb-3">
                         <h2 class="h1 mb-0 text-capitalize d-flex">
                             <img width="20" src="{{asset('/assets/back-end/img/Active_Users_Solid.svg')}}" alt="" class="mr-2">
-                            {{\App\CPU\translate('customer_details')}}
+                            {{\App\CPU\translate('user_details')}}
                         </h2>
                     </div>
                     <!-- End Page Title -->
@@ -65,7 +65,7 @@
                                class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
                             <thead class="thead-light thead-50 text-capitalize">
                             <tr>
-                                <th>{{\App\CPU\translate('sl')}}</th>
+                                <th>{{\App\CPU\translate('sL')}}</th>
                                 <th>{{\App\CPU\translate('Order ID')}}</th>
                                 <th>{{\App\CPU\translate('Total')}}</th>
                                 <th class="text-center">{{\App\CPU\translate('Action')}}</th>
