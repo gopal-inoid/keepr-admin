@@ -195,6 +195,30 @@ class OrderController extends Controller
 
         return view('admin-views.pos.order.order-details', compact('order', 'total_orders', 'products', 'company_name', 'company_web_logo', 'countries', 'states', 'tax_info', 'total_order_amount', 'billing_details', 'shipping_details'));
     }
+
+//     public function insertdata()
+// {
+//     $details = DB::table("zzzzz")->select('*')->get();
+
+//     foreach ($details as $k => $v) {
+//         if ($v->phonelength !== null) {
+//             // Decode the JSON phone data
+//             $phoneData = json_decode($v->phone, true);
+
+//             // Check if $phoneData is an array and get the maximum value
+//             $value = is_array($phoneData) ? max($phoneData) : $phoneData;
+
+//             // Fetch details from the "country" table based on phone code
+//             $getdetails = DB::table("country")->select('*')->where('phone_code', $value)->get();
+
+//             foreach ($getdetails as $j => $val) {
+//                 // Print the details if phone codes match
+//                 echo $val->phone_code . "=" . $value->phonelength . "<br>";
+//             }
+//         }
+//     }
+// }
+
     public function update_order_details(Request $request)
     {
         // echo "<pre>"; print_r($request->all()); die;

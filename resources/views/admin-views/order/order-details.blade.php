@@ -149,7 +149,7 @@
                                             <div class="col-lg-2 col-md-3 col-sm-6">
                                                 <label class="title-color">Phone</label>
                                                 <div class="form-group">
-                                                    <input type="number" class="form-control" value="{{$order->customer['billing_phone'] ?? ''}}" name="billing_phone" placeholder="{{ \App\CPU\translate('Phone') }}" />
+                                                    <input type="number" maxlength="15" class="form-control" value="{{$order->customer['billing_phone'] ?? ''}}" name="billing_phone" placeholder="{{ \App\CPU\translate('Phone') }}" />
                                                 </div>
                                             </div>
                                         </div>
@@ -245,7 +245,7 @@
                                             <div class="col-lg-2 col-md-3 col-sm-6">
                                                 <label class="title-color">Phone</label>
                                                 <div class="form-group">
-                                                <input type="number" class="form-control" value="{{$order->customer['shipping_phone'] ?? ''}}" name="shipping_phone" placeholder="{{ \App\CPU\translate('Phone') }}" />
+                                                <input type="number"  maxlength="15" class="form-control" value="{{$order->customer['shipping_phone'] ?? ''}}" name="shipping_phone" placeholder="{{ \App\CPU\translate('Phone') }}" />
                                                 </div>
                                             </div>
                                         </div>

@@ -565,7 +565,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
 
             Route::post('create-ncshipment', 'OrderController@create_noncontractshipment')->name("create-ncshipment");
 
-            Route::get('insertdata', 'OrderController@insertdata')->name("insertdata");
+            // Route::get('insertdata', 'OrderController@insertdata')->name("insertdata");
         });
 
         //pos management

@@ -91,7 +91,7 @@ class BannerController extends Controller
         ]);
 
         $file = $request->file('image');
-        $extension = ($file!==null)?$file->getClientOriginalExtension():"";
+        $extension = !empty($file) ? $file->getClientOriginalExtension() : "";
 
         $banner = Banner::find($id);
         $banner->banner_type = $request->banner_type;
