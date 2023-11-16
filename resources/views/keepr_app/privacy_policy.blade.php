@@ -13,7 +13,7 @@
 <body>
     <div>
         <div class="Navbar-Section">
-            <nav class="navbar container navbar-expand-lg navbar-light pb-3 pt-0">
+            <nav class="navbar container navbar-expand-lg navbar-dark p-3">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="#">
                         <img src="{{ asset('keepr_app_assets/assests/Keepe_logo.png')}}" alt="">
@@ -51,7 +51,7 @@
     <div class="container-fluid" style="padding-top: 80px;">
         <div class="container-fluid" id="Terms_And_Condition">
             <div class="container" id="Terms_And_Condition_main">
-                <h2 class="Heading_terms" style="text-align: center;">Privacy and Policy</h2>
+                <h2 class="Heading_terms" style="text-align: center;">PRIVACY AND POLICY</h2>
                 {!! $data ?? "" !!}
                 <!-- <ol>
                     <li><strong>Introduction</strong></li>

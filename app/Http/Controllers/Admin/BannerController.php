@@ -89,8 +89,10 @@ class BannerController extends Controller
         ], [
             'url.required' => 'url is required!',
         ]);
+
         $file = $request->file('image');
-        $extension = $file->getClientOriginalExtension();
+        $extension = ($file!==null)?$file->getClientOriginalExtension():"";
+
         $banner = Banner::find($id);
         $banner->banner_type = $request->banner_type;
         $banner->resource_type = $request->resource_type;

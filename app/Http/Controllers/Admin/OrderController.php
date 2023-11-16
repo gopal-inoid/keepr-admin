@@ -89,7 +89,7 @@ class OrderController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(Helpers::pagination_limit())
             ->appends(['search' => $request['search'], 'filter' => $request['filter'], 'from' => $request['from'], 'to' => $request['to'], 'delivery_man_id' => $request['delivery_man_id']]);
-             return view('admin-views.order.list', compact('orders', 'search', 'from', 'to', 'status', 'filter'));
+        return view('admin-views.order.list', compact('orders', 'search', 'from', 'to', 'status', 'filter'));
     }
 
     public function common_query_status_count($query, $status, $request)
@@ -195,7 +195,6 @@ class OrderController extends Controller
 
         return view('admin-views.pos.order.order-details', compact('order', 'total_orders', 'products', 'company_name', 'company_web_logo', 'countries', 'states', 'tax_info', 'total_order_amount', 'billing_details', 'shipping_details'));
     }
-
     public function update_order_details(Request $request)
     {
         // echo "<pre>"; print_r($request->all()); die;
@@ -296,7 +295,7 @@ class OrderController extends Controller
                 $this->sendKeeprEmail('order-status-changed-admin', $email_data);
             }
 
-            
+
             Order::where('id', $order_id)->update($order_data);
             Toastr::success(\App\CPU\translate('updated_successfully!'));
             return redirect()->back()->with('success', 'Order Details Updated Successfully');

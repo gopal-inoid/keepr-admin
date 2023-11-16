@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Keepr App</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('keepr_app_assets/style.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('public/company/keepr-favicon.png') }}">
     <!-- Google tag (gtag.js) -->
@@ -31,11 +32,14 @@
                 <a class="navbar-brand" href="{{ url()->current() }}">
                     <img src="{{ asset('keepr_app_assets/assests/Keepe_logo.png') }}" class="img" alt="">
                 </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto m-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                    <ul class="navbar-nav me-auto m-auto my-2 my-lg-0 navbar-nav-scroll"
+                        style="--bs-scroll-height: 100px;">
                         <li class="nav-item">
                             <a class="nav-link home" aria-current="page" href="#home">Home</a>
                         </li>
@@ -200,7 +204,8 @@
                         </div>
                     </div>
                     <div class="col-xl-4 col-md-5 pt-4 mobile-icon d-flex align-items-center">
-                        <img id="AboutImage" src="{{ asset('keepr_app_assets/assests/Keepr-Features.png') }}" alt="">
+                        <img id="AboutImage" src="{{ asset('keepr_app_assets/assests/Keepr-Features.png') }}"
+                            alt="">
                     </div>
                 </div>
 
@@ -211,7 +216,8 @@
         <div class="container-fluid pt-5">
             <div class="overlay">
                 <div class="overlay-image">
-                    <img src="{{ asset('keepr_app_assets/assests/PlayButtonIcon.png') }}" id="overlay-img" class="video_Play_Button" alt="video_Play_Button">
+                    <img src="{{ asset('keepr_app_assets/assests/PlayButtonIcon.png') }}" id="overlay-img"
+                        class="video_Play_Button" alt="video_Play_Button">
 
                 </div>
             </div>
@@ -223,38 +229,41 @@
                 <h1 class="text-center" style="font-weight: 600;">Our Products</h1>
                 <div class="row justify-content-evenly mt-5">
                     @if (!empty($Products))
-                    @foreach ($Products as $k => $val)
-                    <div class="col-md-8 col-lg-5 col-xl-5 Product-1 mx-1 my2">
-                        <img src="{{ asset('/product/thumbnail/' . $val['thumbnail']) }}" alt="">
-                        <div>
-                            <h4 class="ibeacon-headline">{{ $val['name'] }}</h4>
-                            <div><span class="Price_Count">${{ $val['purchase_price'] }}</span>
-                                <br><small>Does not
-                                    include
-                                    shipping/taxes</small>
-                            </div>
-                            <!-- <p class="ibeacon_peragraph">The Keepr duo is smaller fob and has a 1 year battery life. the
+                        @foreach ($Products as $k => $val)
+                            <div class="col-md-8 col-lg-5 col-xl-5 Product-1 mx-1 my2">
+                                <img src="{{ asset('/product/thumbnail/' . $val['thumbnail']) }}" alt="">
+                                <div>
+                                    <h4 class="ibeacon-headline">{{ $val['name'] }}</h4>
+                                    <div><span class="Price_Count">${{ $val['purchase_price'] }}</span>
+                                        <br><small>Does not
+                                            include
+                                            shipping/taxes</small>
+                                    </div>
+                                    <!-- <p class="ibeacon_peragraph">The Keepr duo is smaller fob and has a 1 year battery life. the
                                     application will alert you when the battery needs replacing. it also comes with adhesive
                                     to
                                     stick it on objects as well</p> -->
-                            {!! $val['details'] !!}
-                            <a href="" class="btn buy_now_btn">Buy Now</a>
-                        </div>
-                    </div>
-                    @endforeach
+                                    {!! $val['details'] !!}
+                                    <a href="" class="btn buy_now_btn">Buy Now</a>
+                                </div>
+                            </div>
+                        @endforeach
                     @endif
                 </div>
-                <div class="container mt-lg-5 Frequently_Questions" id="faq">
-                    <h1 class="text-center" style="font-weight: 600">Frequently Asked Questions</h1>
-                    <div class="row justify-content-center pb-5">
-                        @if (!empty($faqs))
+            </div>
+        </div>
+        <div class="container-fluid Fifth_Section" id="faq">
+            <div class="container mt-lg-5 Frequently_Questions">
+                <h1 class="text-center" style="font-weight: 600">Frequently Asked Questions</h1>
+                <div class="row justify-content-center pb-5">
+                    @if (!empty($faqs))
                         @foreach ($faqs as $k => $val)
-                        <div class="col-md-6 Frequently_Asked_Questions" id="Frequently_Asked_Questions2">
-                            <div class="pt-3">
-                                <h5>{{ $val['question'] }}</h5>
-                                <p>{{ $val['answer'] }}</p>
-                            </div>
-                            <!-- <div class="pt-3">
+                            <div class="col-md-6 Frequently_Asked_Questions" id="Frequently_Asked_Questions2">
+                                <div class="pt-3">
+                                    <h5>{{ $val['question'] }}</h5>
+                                    <p>{{ $val['answer'] }}</p>
+                                </div>
+                                <!-- <div class="pt-3">
                                 <h5>How can I edit my personal information?</h5>
                                 <p>Once you register and login, you can find and edit your user details at the bottom of
                                     the application under the profiles tab.</p>
@@ -271,10 +280,10 @@
                                 <p>Some countries may require you to pay a required shipping fee when
                                     purchasing/ordering a product from another country.</p>
                             </div> -->
-                        </div>
+                            </div>
                         @endforeach
-                        @endif
-                        <!-- <div class="col-md-6 Frequently_Asked_Questions mt-lg-0 mt-md-3"
+                    @endif
+                    <!-- <div class="col-md-6 Frequently_Asked_Questions mt-lg-0 mt-md-3"
                             id="Frequently_Asked_Questions1">
                             <div>
                                 <h5>How long does shipping take?</h5>
@@ -298,150 +307,172 @@
                                     American Express).</p>
                             </div>
                         </div> -->
-                    </div>
-                    <h4 class="text-center mt-5 mb-5">
-                        <b>Haven't find suitable answer? </b><b class="tellUs"><a href="mailto:support@thekeeprapp.com">Tell us what you need</a></b>
-                    </h4>
                 </div>
+                <h4 class="text-center mt-5 mb-5">
+                    <b>Haven't find suitable answer? </b><b class="tellUs"><a
+                            href="mailto:support@thekeeprapp.com">Tell us what you need</a></b>
+                </h4>
             </div>
+        </div>
+       
 
-            <div class="container-fluid Seven_Section">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-1"></div>
-                        <div class="col-xl-6 col-md-6 rightSection">
-                            <div style="width: 100%;">
-                                <h3 class="More_Questions">Have more questions? Don’t hesitate to reach out to us.</h3>
-                                <div class="Seven_Section_Social">
-                                    <div class="mail_section">
-                                        <img src="{{ asset('keepr_app_assets/assests/E-mail_icon.svg') }}" alt="">
-                                        <a href="mailto:support@thekeeprapp.com">
-                                            &nbsp; support@thekeeprapp.com</a>
-                                    </div>
-                                    <div class="mail_section" id="mail_section">
-                                        <img src="{{ asset('keepr_app_assets/assests/Mobile_Number_Icon.svg') }}" alt="">
-                                        <a href="tel:2125551212"> &nbsp; +1
-                                            647-614-1496</a>
-
-                                    </div>
+        <div class="container-fluid Seven_Section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-xl-6 col-md-6 rightSection">
+                        <div style="width: 100%;">
+                            <h3 class="More_Questions">Have more questions? Don’t hesitate to reach out to us.</h3>
+                            <div class="Seven_Section_Social">
+                                <div class="mail_section">
+                                    <img src="{{ asset('keepr_app_assets/assests/E-mail_icon.svg') }}"
+                                        alt="">
+                                    <a href="mailto:support@thekeeprapp.com">
+                                        &nbsp; support@thekeeprapp.com</a>
                                 </div>
+                                <div class="mail_section" id="mail_section">
+                                    <img src="{{ asset('keepr_app_assets/assests/Mobile_Number_Icon.svg') }}"
+                                        alt="">
+                                    <a href="tel:2125551212"> &nbsp; +1
+                                        647-614-1496</a>
 
+                                </div>
                             </div>
-                        </div>
-                        <!-- <div class="col-md-1"></div> -->
-                        <div class="col-xl-4 col-md-5 HeadPhone_image pt-4">
-                            <img src="{{ asset('keepr_app_assets/assests/Overlapping_img.png') }}" alt="">
 
                         </div>
                     </div>
-                </div>
-            </div>
+                    <!-- <div class="col-md-1"></div> -->
+                    <div class="col-xl-4 col-md-5 HeadPhone_image pt-4">
+                        <img src="{{ asset('keepr_app_assets/assests/Overlapping_img.png') }}" alt="">
 
-            <div class="container-fluid footer">
-                <div class="footer_content">
-                    <div class="container">
-                        <div class="row" style="position: relative;">
-                            <div class="col-md-12 footer-body">
-
-                                <img src="{{ asset('keepr_app_assets/assests/Footer_Log.png') }}" class="img" alt="" style="height: 70px;">
-
-                            </div>
-                            <div class="footer-body2">
-                                <div class="text-center">
-                                    <ul class="footer_menu justify-content-center">
-                                        <li class="nav-item mx-3">
-                                            <a class="nav-link" data="home" aria-current="page" href="#home">Home</a>
-                                        </li>
-                                        <li class="nav-item mx-3">
-                                            <a class="nav-link" data="about" href="#about">About</a>
-                                        </li>
-                                        <li class="nav-item mx-3">
-                                            <a class="nav-link" data="features" href="#features">Features</a>
-                                        </li>
-                                        <li class="nav-item mx-3">
-                                            <a class="nav-link" data="products" href="#products">Products</a>
-                                        </li>
-                                        <li class="nav-item mx-3">
-                                            <a class="nav-link" data="faq" href="#faq">FAQ</a>
-                                        </li>
-                                        <li class="nav-item mx-3">
-                                            <a class="nav-link" href="{{ route('terms-condition') }}">Terms of
-                                                Service</a>
-                                        </li>
-                                        <li class="nav-item mx-3">
-                                            <a class="nav-link" href="{{ route('privacy-policy') }}">Privacy and
-                                                Policy</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="container overlaping_div pt-5" id="downloads">
-                                <div class="row" id="Overlap-content">
-                                    <div class="col-lg-5 col-md-5 col-sm-12 overlaping_div_content">
-                                        <h1 class="abs_div_content">
-                                            Download the Keepr Mobile App For free
-                                        </h1>
-                                        <p class="mt-4">Leave us a rating and review!</p>
-                                        <div class="app_download_btn">
-                                            <a href="https://play.google.com/store/apps/details?id=com.keepr.android" target="_blank" class="m-md-1">
-                                                <img src="{{ asset('keepr_app_assets/assests/PlayStore_Icon.svg') }}" alt="">
-                                            </a>
-                                            <a href="https://apps.apple.com/us/app/keepr-app/id6449671498" target="_blank" class="m-md-1">
-                                                <img src="{{ asset('keepr_app_assets/assests/AppStore_Icon.svg') }}" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-7 col-md-7 col-sm-12 text-end">
-                                        <img src="{{ asset('keepr_app_assets/assests/TriMobile.png') }}" alt="">
-
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="Copyright_Section pt-4 pb-4">
-                                <div class="CopyRight_Section">
-                                    <p class="text-light">&#9400; Copyright 2023 Keepr, All Rights Reserved.</p>
-                                    <p class="text-muted d-flex justify-content-start align-items-end" style="font-size:15px; text-align:middle;">&nbsp; Design & Developed by&nbsp;<a href="https://inoidsolutions.com/" class="text-light" target="_blank">iNoid
-                                            Solutions</a></p>
-                                </div>
-                                <div class="CopyRight_Section">
-
-                                    <a href="https://www.facebook.com/profile.php?id=61551488266788" target="_blank"><img class="mx-1" src="{{ asset('keepr_app_assets/assests/FaceBook_Icon.svg') }}" alt=""></a>
-                                    {{-- <img class="mx-1" src="{{ asset('keepr_app_assets/assests/TwitterIcon.svg') }}"
-                                    alt=""> --}}
-                                    <a href="https://www.instagram.com/thekeeprapp/" target="_blank"><img class="mx-1" src="{{ asset('keepr_app_assets/assests/InstgramIcon.svg') }}" alt=""></a>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <div class="container-fluid footer">
+            <div class="footer_content">
+                <div class="container">
+                    <div class="row" style="position: relative;">
+                        <div class="col-md-12 footer-body">
 
+                            <img src="{{ asset('keepr_app_assets/assests/Footer_Log.png') }}" class="img"
+                                alt="" style="height: 70px;">
 
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModalCenter" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header py-0">
-                        <h5 class="modal-title" id="exampleModalLongTitle"></h5>
-                        <button type="button" class="close border-0" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body p-0">
-                        <iframe id="keeprVideo" width="100%" height="500" autoplay="true" src="https://www.youtube.com/embed/92OG1DxMJyw?si=saWna070vqcwAPgH?autoplay=1&amp;controls=0&amp;rel=0                                                                                      " title="YouTube video player" frameborder="0" allow="autoplay; encrypted-media;" allowfullscreen></iframe>
+                        </div>
+                        <div class="footer-body2">
+                            <div class="text-center">
+                                <ul class="footer_menu justify-content-center">
+                                    <li class="nav-item mx-3">
+                                        <a class="nav-link" data="home" aria-current="page"
+                                            href="#home">Home</a>
+                                    </li>
+                                    <li class="nav-item mx-3">
+                                        <a class="nav-link" data="about" href="#about">About</a>
+                                    </li>
+                                    <li class="nav-item mx-3">
+                                        <a class="nav-link" data="features" href="#features">Features</a>
+                                    </li>
+                                    <li class="nav-item mx-3">
+                                        <a class="nav-link" data="products" href="#products">Products</a>
+                                    </li>
+                                    <li class="nav-item mx-3">
+                                        <a class="nav-link" data="faq" href="#faq">FAQ</a>
+                                    </li>
+                                    <li class="nav-item mx-3">
+                                        <a class="nav-link" href="{{ route('terms-condition') }}">Terms of
+                                            Service</a>
+                                    </li>
+                                    <li class="nav-item mx-3">
+                                        <a class="nav-link" href="{{ route('privacy-policy') }}">Privacy and
+                                            Policy</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
 
+                        <div class="container overlaping_div pt-5" id="downloads">
+                            <div class="row" id="Overlap-content">
+                                <div class="col-lg-5 col-md-5 col-sm-12 overlaping_div_content">
+                                    <h1 class="abs_div_content">
+                                        Download the Keepr Mobile App For free
+                                    </h1>
+                                    <p class="mt-4">Leave us a rating and review!</p>
+                                    <div class="app_download_btn">
+                                        <a href="https://play.google.com/store/apps/details?id=com.keepr.android"
+                                            target="_blank" class="m-md-1">
+                                            <img src="{{ asset('keepr_app_assets/assests/PlayStore_Icon.svg') }}"
+                                                alt="">
+                                        </a>
+                                        <a href="https://apps.apple.com/us/app/keepr-app/id6449671498" target="_blank"
+                                            class="m-md-1">
+                                            <img src="{{ asset('keepr_app_assets/assests/AppStore_Icon.svg') }}"
+                                                alt="">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-7 col-md-7 col-sm-12 text-end">
+                                    <img src="{{ asset('keepr_app_assets/assests/TriMobile.png') }}" alt="">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="Copyright_Section pt-4 pb-4">
+                            <div class="CopyRight_Section">
+                                <p class="text-light">&#9400; Copyright 2023 Keepr, All Rights Reserved.</p>
+                                <p class="text-muted d-flex justify-content-start align-items-end"
+                                    style="font-size:15px; text-align:middle;">&nbsp; Design & Developed by&nbsp;<a
+                                        href="https://inoidsolutions.com/" class="text-light" target="_blank">iNoid
+                                        Solutions</a></p>
+                            </div>
+                            <div class="CopyRight_Section">
+
+                                <a href="https://www.facebook.com/profile.php?id=61551488266788" target="_blank"><img
+                                        class="mx-1"
+                                        src="{{ asset('keepr_app_assets/assests/FaceBook_Icon.svg') }}"
+                                        alt=""></a>
+                                {{-- <img class="mx-1" src="{{ asset('keepr_app_assets/assests/TwitterIcon.svg') }}"
+                                    alt=""> --}}
+                                <a href="https://www.instagram.com/thekeeprapp/" target="_blank"><img class="mx-1"
+                                        src="{{ asset('keepr_app_assets/assests/InstgramIcon.svg') }}"
+                                        alt=""></a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header py-0">
+                    <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                    <button type="button" class="close border-0" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body p-0">
+                    <iframe id="keeprVideo" width="100%" height="500" autoplay="true"
+                        src="https://www.youtube.com/embed/92OG1DxMJyw?si=saWna070vqcwAPgH?autoplay=1&amp;controls=0&amp;rel=0                                                                                      "
+                        title="YouTube video player" frameborder="0" allow="autoplay; encrypted-media;"
+                        allowfullscreen></iframe>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
 </body>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
 </script>
 <script>
     $(document).ready(function() {
@@ -460,7 +491,6 @@
         //     });
         //     $("." + menu).addClass('active');
         // });
-
         $(".desc-1").hover(function() {
             $(this).addClass("active-item");
             $(".desc-2").removeClass("active-item");
@@ -509,9 +539,11 @@
     })
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
 </script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
 </script>
 <!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"
     integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script> -->
