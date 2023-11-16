@@ -35,7 +35,7 @@
                             <table class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" cellspacing="0">
                                 <thead class="thead-light thead-50 text-capitalize">
                                     <tr>
-                                        <th>{{\App\CPU\translate('sl')}}</th>
+                                        <th>{{\App\CPU\translate('sL')}}</th>
                                         <th>{{\App\CPU\translate('title')}}</th>
                                         <th>Regular duration</th>
                                         <th>{{\App\CPU\translate('express duration')}}</th>

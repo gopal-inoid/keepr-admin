@@ -96,11 +96,11 @@
                                 </div>
 
                                 <div class="col-sm-6 d-flex col-md-3 mt-2 mt-sm-0 "> 
-                                    <button type="submit" class="btn btn--primary btn-block mr-1" onclick="formUrlChange(this)"
+                                    <button type="submit" class="btn btn--primary btn-block mr-1" style="width:fit-content;" onclick="formUrlChange(this)"
                                         data-action="{{ url()->current() }}">
-                                        {{ \App\CPU\translate('show') }} {{ \App\CPU\translate('data') }}
+                                        {{ \App\CPU\translate('Apply') }}
                                     </button>
-                                    <a href="{{ route('admin.orders.list', ['all']) }}" class="btn btn--primary">Clear</a>
+                                    <a type="button" href="{{ route('admin.orders.list', ['all']) }}" style="width:fit-content;" class="btn btn--primary">Clear</a>
                                 </div>
 
                             </div>
@@ -262,9 +262,12 @@
 
                             </tbody>
                         </table>
-                        @if (count($orders) == 0)
-                            <h1 class=" p-2 pl-3">No record found</h1>
-                        @endif
+                        <center>
+                             @if (count($orders) == 0)
+                            <h1 class="m-5 p-5 pl-3 text-secondary">No record found</h1>
+                        @endif 
+                        </center>
+                      
                     </div>
                     <!-- End Table -->
 

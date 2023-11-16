@@ -41,22 +41,28 @@ class BannerController extends Controller
         ], [
             'url.required' => 'URL is required!',
             'image.required' => 'Image is required!',
-            'image.mimes' => 'Invalid file type. Only jpg, png, jpeg, svg, bmp, tif, tiff files are allowed.',
+            'image.mimes' => 'Invalid file type. Only jpg, png, jpeg, svg, bmp files are allowed.',
         ]);
-        
+
         if ($validator->fails()) {
             Toastr::error($validator->errors()->first());
             return back();
         }
-        
+        $file = $request->file('image');
+        $extension = $file->getClientOriginalExtension();
+
         $banner = new Banner;
         $banner->banner_type = $request->banner_type;
         $banner->url = $request->url;
-        $banner->photo = ImageManager::upload('banner/', 'png', $request->file('image'));
+        if ($extension === 'svg') {
+            $banner->photo = ImageManager::upload('banner/', 'svg', $request->file('image'));
+        } else {
+            $banner->photo = ImageManager::upload('banner/', 'png', $request->file('image'));
+        }
         $banner->save();
         Toastr::success('Banner added successfully!');
         return back();
-        
+
     }
 
     public function status(Request $request)
@@ -83,14 +89,19 @@ class BannerController extends Controller
         ], [
             'url.required' => 'url is required!',
         ]);
-
+        $file = $request->file('image');
+        $extension = $file->getClientOriginalExtension();
         $banner = Banner::find($id);
         $banner->banner_type = $request->banner_type;
         $banner->resource_type = $request->resource_type;
         $banner->resource_id = $request[$request->resource_type . '_id'];
         $banner->url = $request->url;
         if ($request->file('image')) {
-            $banner->photo = ImageManager::update('banner/', $banner['photo'], 'png', $request->file('image'));
+            if ($extension === 'svg') {
+                $banner->photo = ImageManager::upload('banner/', 'svg', $request->file('image'));
+            } else {
+                $banner->photo = ImageManager::upload('banner/', 'png', $request->file('image'));
+            }
         }
         $banner->save();
 
