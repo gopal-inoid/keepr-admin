@@ -222,7 +222,7 @@
                                                     <div class="col-lg-2 col-md-3 col-sm-6">
                                                         <label class="title-color">Phone</label>
                                                         <div class="form-group">
-                                                            <input type="number" class="form-control"
+                                                            <input   type="text" maxlength="15" class="form-control"
                                                                 value="{{ $billing_details['phone'] ?? '' }}"
                                                                 name="billing_phone"
                                                                 placeholder="{{ \App\CPU\translate('Phone') }}" />
@@ -247,11 +247,11 @@
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <div class="form-group">
-                                                            <label class="">same billing adress</label>
+                                                            <label class="">same billing address</label>
                                                             <label class="switcher">
                                                                 <input type="checkbox" name="is_billing_address_same"
                                                                     class="switcher_input"
-                                                                    {{ isset($order->customer['is_billing_address_same']) && $order->customer['is_billing_address_same'] == 1 ? 'checked' : '' }}>
+                                                                    {{ isset($order['is_billing_address_same']) && $order['is_billing_address_same'] == 1 ? 'checked' : '' }}>
                                                                 <span class="switcher_control"></span>
                                                             </label>
                                                         </div>
@@ -354,7 +354,7 @@
                                                     <div class="col-lg-2 col-md-3 col-sm-6">
                                                         <label class="title-color">Phone</label>
                                                         <div class="form-group">
-                                                            <input readonly type="number" class="form-control"
+                                                            <input  type="text" maxlength="15" class="form-control"
                                                                 value="{{ $shipping_details['phone'] ?? '' }}"
                                                                 name="shipping_phone"
                                                                 placeholder="{{ \App\CPU\translate('Phone') }}" />

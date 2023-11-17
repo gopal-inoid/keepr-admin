@@ -169,7 +169,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label class="">same billing adress</label>
+                                                    <label class="">same billing address</label>
                                                     <label class="switcher">
                                                         <input type="checkbox" name="is_billing_address_same" class="switcher_input" {{ isset($order->customer['is_billing_address_same']) && $order->customer['is_billing_address_same']  == 1 ? 'checked' : '' }}>
                                                         <span class="switcher_control"></span>

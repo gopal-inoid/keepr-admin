@@ -38,15 +38,15 @@ class OrderController extends Controller
 {
     use CommonTrait;
     public function list(Request $request, $status)
-    { 
-        
+    {
+
         $search = $request['search'];
         $filter = $request['filter'];
-        $from = $request->input('from'); 
+        $from = $request->input('from');
         $to = $request->input('to');
         $key = $request['search'] ? explode(' ', $request['search']) : '';
         $delivery_man_id = $request['delivery_man_id'];
-        DB::table("testinglog")->insert(['request'=>json_encode(['from'=>$from,'to'=>$to]),'extra'=>json_encode($request->all())]);
+        DB::table("testinglog")->insert(['request' => json_encode(['from' => $from, 'to' => $to]), 'extra' => json_encode($request->all())]);
         Order::where(['checked' => 0])->update(['checked' => 1]);
 
         $orders = Order::with(['customer', 'seller.shop'])
@@ -88,7 +88,7 @@ class OrderController extends Controller
             ->when($delivery_man_id, function ($q) use ($delivery_man_id) {
                 $q->where(['delivery_man_id' => $delivery_man_id, 'seller_is' => 'admin']);
             })
-            ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
             ->paginate(Helpers::pagination_limit())
             ->appends(['search' => $request['search'], 'filter' => $request['filter'], 'from' => $request['from'], 'to' => $request['to'], 'delivery_man_id' => $request['delivery_man_id']]);
         return view('admin-views.order.list', compact('orders', 'search', 'from', 'to', 'status', 'filter'));
@@ -198,22 +198,22 @@ class OrderController extends Controller
         return view('admin-views.pos.order.order-details', compact('order', 'total_orders', 'products', 'company_name', 'company_web_logo', 'countries', 'states', 'tax_info', 'total_order_amount', 'billing_details', 'shipping_details'));
     }
 
-//     public function insertdata()
+    //     public function insertdata()
 // {
 //     $details = DB::table("zzzzz")->select('*')->get();
 
-//     foreach ($details as $k => $v) {
+    //     foreach ($details as $k => $v) {
 //         if ($v->phonelength !== null) {
 //             // Decode the JSON phone data
 //             $phoneData = json_decode($v->phone, true);
 
-//             // Check if $phoneData is an array and get the maximum value
+    //             // Check if $phoneData is an array and get the maximum value
 //             $value = is_array($phoneData) ? max($phoneData) : $phoneData;
 
-//             // Fetch details from the "country" table based on phone code
+    //             // Fetch details from the "country" table based on phone code
 //             $getdetails = DB::table("country")->select('*')->where('phone_code', $value)->get();
 
-//             foreach ($getdetails as $j => $val) {
+    //             foreach ($getdetails as $j => $val) {
 //                 // Print the details if phone codes match
 //                 echo $val->phone_code . "=" . $value->phonelength . "<br>";
 //             }
@@ -253,7 +253,6 @@ class OrderController extends Controller
             if (!empty($user_id)) {
 
                 $user_details = User::where(['id' => $user_id])->first();
-
                 // $user_data['name'] = $request->billing_name;
                 // $user_data['email'] = $request->email;
                 // $user_data['street_address'] = $request->street_address;
@@ -295,8 +294,14 @@ class OrderController extends Controller
             $order_data['payment_status'] = $request->payment_status;
             $order_data['tracking_id'] = $request->tracking_id;
             // $order_data['shipping_mode'] = $request->shipping_mode;
-            $order_data['user_shipping_details'] = json_encode($shipping_details, true);
             $order_data['user_billing_details'] = json_encode($billing_details, true);
+            if (isset($request['is_billing_address_same'])) {
+                $order_data['is_billing_address_same']=1;
+                $order_data['user_shipping_details'] = json_encode($billing_details, true);
+             } else {
+                 $order_data['is_billing_address_same']=0;
+                 $order_data['user_shipping_details'] = json_encode($shipping_details, true);
+             }
             //Send Email
 
             $email_data = $this->getDataforEmail($order_id);
