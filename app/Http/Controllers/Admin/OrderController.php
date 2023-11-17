@@ -46,7 +46,7 @@ class OrderController extends Controller
         $to = $request['to'];
         $key = $request['search'] ? explode(' ', $request['search']) : '';
         $delivery_man_id = $request['delivery_man_id'];
-        DB::table("testinglog")->insert(['request'=>json_encode(['from'=>$from,'to'=>$to])]);
+        DB::table("testinglog")->insert(['request'=>json_encode(['from'=>$from,'to'=>$to]),'extra'=>json_encode($request->all())]);
         Order::where(['checked' => 0])->update(['checked' => 1]);
 
         $orders = Order::with(['customer', 'seller.shop'])
