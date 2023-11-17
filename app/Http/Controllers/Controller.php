@@ -449,10 +449,10 @@ class Controller extends BaseController
             $userData['shipping_mode'] = $productArray['shipping_mode'] ?? ""; //$shipping_info['mode'] ?? "";
             if (is_array($taxData) && !empty($taxData)) {
                 $userData['tax_info'] =$taxData[0]['title'] ?? "" . " " . $taxData[0]['percent'] ?? "";
-                $userData['tax_amount'] = $taxData[0]['amount'] ?? 0;
+                $userData['tax_amount'] = $taxData[0]['amount'] ?? "0.00";
             } else {
                 $userData['tax_info'] = '--';
-                $userData['tax_amount'] = 0;
+                $userData['tax_amount'] = "0.00";
             }
            
             return $userData;
