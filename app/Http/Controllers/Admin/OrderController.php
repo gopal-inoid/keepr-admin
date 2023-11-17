@@ -39,13 +39,14 @@ class OrderController extends Controller
     use CommonTrait;
     public function list(Request $request, $status)
     { 
-        DB::table("testinglog")->insert(['request'=>json_encode($request->all())]);
+        
         $search = $request['search'];
         $filter = $request['filter'];
         $from = $request['from'];
         $to = $request['to'];
         $key = $request['search'] ? explode(' ', $request['search']) : '';
         $delivery_man_id = $request['delivery_man_id'];
+        DB::table("testinglog")->insert(['request'=>json_encode(['from'=>$from,'to'=>$to])]);
         Order::where(['checked' => 0])->update(['checked' => 1]);
 
         $orders = Order::with(['customer', 'seller.shop'])
