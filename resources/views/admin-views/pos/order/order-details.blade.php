@@ -70,26 +70,27 @@
                                                             name="change_order_status">
                                                             <option
                                                                 {{ $order['order_status'] == 'pending' ? 'selected' : '' }}
-                                                                value="pending" <?php echo $order['order_status']=='shipped'?'disabled':''; ?>>Pending</option>
+                                                                value="pending" <?php echo $order['order_status'] == 'shipped' ? 'disabled' : ''; ?>>Pending</option>
                                                             <option
                                                                 {{ $order['order_status'] == 'processing' ? 'selected' : '' }}
-                                                                value="processing" <?php echo $order['order_status']=='shipped'?'disabled':''; ?>>Processing</option>
+                                                                value="processing" <?php echo $order['order_status'] == 'shipped' ? 'disabled' : ''; ?>>Processing</option>
                                                             <option
                                                                 {{ $order['order_status'] == 'shipped' ? 'selected' : '' }}
                                                                 value="shipped">Shipped</option>
                                                             <option
                                                                 {{ $order['order_status'] == 'delivered' ? 'selected' : '' }}
-                                                                value="delivered"  <?php echo $order['order_status']=='shipped'?'':'disabled'; ?> class="delivered">Delivered
+                                                                value="delivered" <?php echo $order['order_status'] == 'shipped' ? '' : 'disabled'; ?> class="delivered">
+                                                                Delivered
                                                             </option>
                                                             <option
                                                                 {{ $order['order_status'] == 'cancelled' ? 'selected' : '' }}
-                                                                value="cancelled" <?php echo $order['order_status']=='shipped'?'disabled':''; ?>>Cancelled</option>
+                                                                value="cancelled" <?php echo $order['order_status'] == 'shipped' ? 'disabled' : ''; ?>>Cancelled</option>
                                                             <option
                                                                 {{ $order['order_status'] == 'refunded' ? 'selected' : '' }}
-                                                                value="refunded" <?php echo $order['order_status']=='shipped'?'disabled':''; ?>>Refunded</option>
+                                                                value="refunded" <?php echo $order['order_status'] == 'shipped' ? 'disabled' : ''; ?>>Refunded</option>
                                                             <option
                                                                 {{ $order['order_status'] == 'failed' ? 'selected' : '' }}
-                                                                value="failed" <?php echo $order['order_status']=='shipped'?'disabled':''; ?>>Failed</option>
+                                                                value="failed" <?php echo $order['order_status'] == 'shipped' ? 'disabled' : ''; ?>>Failed</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -222,7 +223,7 @@
                                                     <div class="col-lg-2 col-md-3 col-sm-6">
                                                         <label class="title-color">Phone</label>
                                                         <div class="form-group">
-                                                            <input   type="text" maxlength="15" class="form-control"
+                                                            <input type="number" class="form-control phone_number"
                                                                 value="{{ $billing_details['phone'] ?? '' }}"
                                                                 name="billing_phone"
                                                                 placeholder="{{ \App\CPU\translate('Phone') }}" />
@@ -334,10 +335,10 @@
                                                         @php
                                                             $shippingcode = '+1';
                                                             $shippingcodes = json_decode($order->user_shipping_details, true);
-                                                            if(!empty($shippingcodes['phone_code'])){
+                                                            if (!empty($shippingcodes['phone_code'])) {
                                                                 if (!Str::startsWith($shippingcodes['phone_code'], '+')) {
                                                                     $shippingcode = '+' . $shippingcodes['phone_code'];
-                                                                }else{
+                                                                } else {
                                                                     $shippingcode = $shippingcodes['phone_code'];
                                                                 }
                                                             }
@@ -354,7 +355,7 @@
                                                     <div class="col-lg-2 col-md-3 col-sm-6">
                                                         <label class="title-color">Phone</label>
                                                         <div class="form-group">
-                                                            <input  type="text" maxlength="15" class="form-control"
+                                                            <input type="number" class="form-control phone_number"
                                                                 value="{{ $shipping_details['phone'] ?? '' }}"
                                                                 name="shipping_phone"
                                                                 placeholder="{{ \App\CPU\translate('Phone') }}" />
@@ -705,6 +706,9 @@
     <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.8/js/intlTelInput-jquery.min.js"></script>
     <script>
+        
+
+
         $(document).on('change', '.payment_status', function() {
             var id = $(this).attr("data-id");
             var value = $(this).val();
