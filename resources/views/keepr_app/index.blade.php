@@ -40,19 +40,24 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto m-auto my-2 my-lg-0 navbar-nav-scroll"
                         style="--bs-scroll-height: 100px;">
-                        <li class="nav-item">
+                        <li class="nav-item "data-toggle="collapse"
+                    data-target="#navbarSupportedContent">
                             <a class="nav-link home" aria-current="page" href="#home">Home</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item "data-toggle="collapse"
+                    data-target="#navbarSupportedContent">
                             <a class="nav-link about" href="#about">About</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item "data-toggle="collapse"
+                    data-target="#navbarSupportedContent">
                             <a class="nav-link features" href="#features">Features</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item "data-toggle="collapse"
+                    data-target="#navbarSupportedContent">
                             <a class="nav-link products" href="#products">Products</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item "data-toggle="collapse"
+                    data-target="#navbarSupportedContent">
                             <a class="nav-link faq" href="#faq">FAQ</a>
                         </li>
                     </ul>
@@ -314,7 +319,7 @@
                 </h4>
             </div>
         </div>
-       
+
 
         <div class="container-fluid Seven_Section">
             <div class="container">
@@ -475,8 +480,6 @@
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
 </script>
 <script>
-    $(document).ready(function() {
-
         // $(document).on('click', '.nav-link', function(e) {
         //     $('.nav-link').each(function(e) {
         //         $(this).removeClass("active");

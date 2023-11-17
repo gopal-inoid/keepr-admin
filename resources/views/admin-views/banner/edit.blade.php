@@ -32,7 +32,7 @@
                                         <input type="hidden" id="id" name="id">
                                         <label for="name" class="title-color text-capitalize">{{ \App\CPU\translate('banner_URL')}}</label><span class="text-danger">*</span>
                                         <input type="text" name="url" class="form-control" value="{{$banner['url']}}" required
-                                        pattern="https?://.+\.(com|in|org|net|edu|gov|mil|us|uk|ca|au|de|jp|app|blog|guru|io|tech|design)$"
+                                        pattern="https?://.+\.(com|in|org|net|edu|gov|mil|us|usa|uk|ca|au|de|jp|app|blog|guru|io|tech|design)$"
                                         title="Please enter a valid URL (start with http:// or https://)">
                                     </div>
                                     <div class="form-group">
