@@ -38,7 +38,8 @@ class OrderController extends Controller
 {
     use CommonTrait;
     public function list(Request $request, $status)
-    {
+    { 
+        DB::table("testinglog")->insert(['request'=>json_encode($request->all())]);
         $search = $request['search'];
         $filter = $request['filter'];
         $from = $request['from'];
