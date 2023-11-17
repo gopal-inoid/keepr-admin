@@ -208,5 +208,13 @@
             });
         }
 
+        $('#datatableSearch_').on("input", function() {
+            if (this.value.length == 0) {
+                let url = location.href;
+                let splited = url.split('?');
+                window.location = splited[0];
+            }
+        });
+
     </script>
 @endpush

@@ -197,9 +197,7 @@
                                                                 placeholder="{{ \App\CPU\translate('Name') }}">
                                                         </div>
                                                     </div>
-
-
-                                                    @if (!empty($order->customer['billing_phone_code']))
+                                                    @if (!empty($order->user_billing_details))
                                                         @php
                                                             $phonecode = '+1';
                                                             $phonecodes = json_decode($order->user_billing_details, true);
@@ -331,7 +329,7 @@
                                                                 placeholder="{{ \App\CPU\translate('Zipcode') }}">
                                                         </div>
                                                     </div>
-                                                    @if (!empty($order->user_shipping_details['shipping_phone_code']))
+                                                    @if (!empty($order->user_shipping_details))
                                                         @php
                                                             $shippingcode = '+1';
                                                             $shippingcodes = json_decode($order->user_shipping_details, true);
@@ -706,9 +704,6 @@
     <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.8/js/intlTelInput-jquery.min.js"></script>
     <script>
-        
-
-
         $(document).on('change', '.payment_status', function() {
             var id = $(this).attr("data-id");
             var value = $(this).val();
@@ -877,11 +872,17 @@
             $("#country").change(function() {
                 let countryCode = $(this).find('option:selected').data('country-code');
                 let value = "+" + $(this).val();
-                $('.txtPhone').val(value).intlTelInput("setCountry", countryCode);
+
+                $(this).closest('.form-group').find('.txtPhone').val(value).intlTelInput("setCountry",
+                    countryCode);
             });
-            var code = $('.txtPhone').val();
-            $('.txtPhone').val(code).intlTelInput();
+
+            $('.form-group input.txtPhone').each(function() {
+                var code = $(this).val();
+                $(this).intlTelInput();
+            });
         });
+
 
         // $("#change_order_status").on("change", function() {
         //     if (this.value == "shipped" || this.value == "delivered") {
@@ -928,6 +929,17 @@
                 }
             });
         }
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('.phone_number').on('input', function() {
+                var phoneNumber = $(this).val();
+                if (/^\d+$/.test(phoneNumber)) {
+                    phoneNumber = phoneNumber.slice(0, 15);
+                    $(this).val(phoneNumber);
+                }
+            });
+        });
     </script>
 
     <script></script>

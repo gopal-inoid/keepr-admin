@@ -245,7 +245,6 @@ class OrderController extends Controller
         $billing_details['phone_code'] = $request->phone_code;
         $billing_details['phone'] = $request->billing_phone;
         //$billing_details['country_iso'] = $request->country_iso;
-
         $order_id = $request->order_id;
         $user_id = $request->user_id;
         if (!empty($order_id)) {
@@ -295,12 +294,12 @@ class OrderController extends Controller
             // $order_data['shipping_mode'] = $request->shipping_mode;
             $order_data['user_billing_details'] = json_encode($billing_details, true);
             if (isset($request['is_billing_address_same'])) {
-                $order_data['is_billing_address_same']=1;
+                $order_data['is_billing_address_same'] = 1;
                 $order_data['user_shipping_details'] = json_encode($billing_details, true);
-             } else {
-                 $order_data['is_billing_address_same']=0;
-                 $order_data['user_shipping_details'] = json_encode($shipping_details, true);
-             }
+            } else {
+                $order_data['is_billing_address_same'] = 0;
+                $order_data['user_shipping_details'] = json_encode($shipping_details, true);
+            }
             //Send Email
             $email_data = $this->getDataforEmail($order_id);
             if (!empty($email_data)) {
