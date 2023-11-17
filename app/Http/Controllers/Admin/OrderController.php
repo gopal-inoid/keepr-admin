@@ -42,8 +42,8 @@ class OrderController extends Controller
         
         $search = $request['search'];
         $filter = $request['filter'];
-        $from = $request['from'];
-        $to = $request['to'];
+        $from = $request->input('from'); 
+        $to = $request->input('to');
         $key = $request['search'] ? explode(' ', $request['search']) : '';
         $delivery_man_id = $request['delivery_man_id'];
         DB::table("testinglog")->insert(['request'=>json_encode(['from'=>$from,'to'=>$to]),'extra'=>json_encode($request->all())]);
