@@ -280,7 +280,7 @@ class OrderController extends Controller
                 $msg = "Your Order has been " . $request->change_order_status . ", Order ID #" . $order_id;
                 $payload['order_id'] = $order_id;
                 $this->sendNotification($user_details->fcm_token, $msg, $payload);
-                //
+
 
             }
 

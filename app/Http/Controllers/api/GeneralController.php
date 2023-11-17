@@ -134,6 +134,7 @@ class GeneralController extends Controller
                 ]);
                 $auth_token = $this->auth_token($get_user->id, "");
             } else {
+                Common::addLog(['status' => 200, 'phone' => $mobile_number, 'phone_code' => $phone_code, 'fcm_token'=> $fcm_token ?? '']);
                 //echo "<pre>"; print_r(); die;
                 $auth_token = $this->auth_token($user_check->id, $user_check->auth_access_token, $fcm_token);
             }
