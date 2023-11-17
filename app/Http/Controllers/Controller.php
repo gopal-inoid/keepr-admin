@@ -429,9 +429,7 @@ class Controller extends BaseController
             //         $shipping_info['amount'] = $shipping_method_rates->express_rate ?? 0;
             //     }
             // }
-            $taxData = json_decode($update_order->taxes, true);
-            $taxData = !empty($taxData) ? $taxData : [];
-
+            $taxData = !empty($update_order->taxes) ? json_decode($update_order->taxes, true) : [];
             $userData['order_id'] = $update_order->id;
             $userData['customer_id'] = $update_order->customer_id;
             $userData['order_status'] = $update_order->order_status;
@@ -449,8 +447,14 @@ class Controller extends BaseController
             $userData['shipping_title'] = $productArray['shipping_title'] ?? ""; //$shipping_info['title'] ?? "";
             $userData['shipping_duration'] = $productArray['shipping_duration'] ?? ""; //$shipping_info['duration'] ?? "";
             $userData['shipping_mode'] = $productArray['shipping_mode'] ?? ""; //$shipping_info['mode'] ?? "";
-            $userData['tax_info'] = count($taxData) == 0 ? "" : $taxData[0]['title'] ?? "" . " " . $taxData[0]['percent'] ?? "";
-            $userData['tax_amount'] = count($taxData) == 0 ? "" : $taxData[0]['amount'] ?? "";
+            if (is_array($taxData) && !empty($taxData)) {
+                $userData['tax_info'] =$taxData[0]['title'] ?? "" . " " . $taxData[0]['percent'] ?? "";
+                $userData['tax_amount'] = $taxData[0]['amount'] ?? 0;
+            } else {
+                $userData['tax_info'] = '--';
+                $userData['tax_amount'] = 0;
+            }
+           
             return $userData;
         } else {
             return false;

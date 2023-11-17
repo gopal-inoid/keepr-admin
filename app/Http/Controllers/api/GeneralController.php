@@ -451,7 +451,7 @@ class GeneralController extends Controller
         $auth_token = $request->headers->get('X-Access-Token');
         $user_details = User::where(['auth_access_token' => $auth_token])->first();
         if (!empty($user_details->id)) {
-            $get_orders = Order::select('id', 'product_info', 'per_device_amount', 'customer_id', 'mac_ids', 'payment_status', 'expected_delivery_date', 'order_status', 'order_amount', 'shipping_address', 'created_at', 'tracking_id', 'user_shipping_details', 'user_billing_details', 'taxes', 'shipping_rates')
+            $get_orders = Order::select('id', 'product_info', 'per_device_amount', 'customer_id', 'mac_ids', 'payment_status', 'expected_delivery_date', 'order_status', 'order_amount', 'shipping_address', 'created_at', 'tracking_id', 'user_shipping_details', 'user_billing_details', 'taxes', 'shipping_rates','is_billing_address_same')
                 ->where(['id' => $order_id])->first();
             $total_mac_ids = [];
 

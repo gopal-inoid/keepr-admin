@@ -303,7 +303,6 @@ class OrderController extends Controller
                  $order_data['user_shipping_details'] = json_encode($shipping_details, true);
              }
             //Send Email
-
             $email_data = $this->getDataforEmail($order_id);
             if (!empty($email_data)) {
                 $email_data['email'] = $user_details->email ?? "";
