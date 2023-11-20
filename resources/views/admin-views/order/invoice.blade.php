@@ -72,7 +72,7 @@
                     <td width="30%">
                         <div class="col-sm-6 text-sm-end order-sm-1">
                             @if (!empty($shippingInfo))
-                                <span class="h2">{{ \App\CPU\translate('shipping_to') }} </span>
+                                <span class="h3" style="font-size:16px; font-weight:bold;">{{ \App\CPU\translate('shipping_to') }} </span>
                                 <div class="h4 montserrat-normal-600">
 
                                     <p> {{ !empty($shippingInfo['name']) ? $shippingInfo['name'] : 'Name not found' }}
@@ -93,7 +93,7 @@
                                     </p>
                                 </div>
                             @else
-                                <span class="h4">{{ \App\CPU\translate('customer_info') }} </span>
+                                <span class="h3" style="font-size:16px; font-weight:bold;">{{ \App\CPU\translate('customer_info') }} </span>
                                 <div class="h4 montserrat-normal-600">
                                     <p>{{ $order->customer != null ? $order->customer['name'] : \App\CPU\translate('name_not_found') }}
                                     </p>
@@ -114,7 +114,7 @@
                     <td width="30%">
                         <div class="col-sm-6 order-sm-0">
                             @if (!empty($order->customer->street_address))
-                                <span class="h2">{{ \App\CPU\translate('billing_address') }} </span>
+                                <span class="h3" style="font-size:16px; font-weight:bold;">{{ \App\CPU\translate('billing_address') }} </span>
                                 <div class="h4 montserrat-normal-600">
                                     <p>{{ !empty($billingInfo['name']) ? $billingInfo['name'] : 'Name not found' }}</p>
                                     <p>{{ !empty($billingInfo['email']) ? $billingInfo['email'] : 'Email not found' }}
