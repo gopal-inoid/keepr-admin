@@ -132,7 +132,7 @@
                                     <span class="title-color">
                                         <strong>{{\App\Model\Order::where('customer_id',$customer['id'])->count()}} </strong>{{\App\CPU\translate('orders')}}
                                     </span>
-                                    <span class="title-color"><strong>{{$customer['phone']}}</strong></span>
+                                    <span class="title-color"><strong>{{$customer['phone_code']}} {{$customer['phone']}}</strong></span>
                                     <span class="title-color">{{$customer['email']}}</span>
                                 </div>
                                 <div class="media-body text-right">

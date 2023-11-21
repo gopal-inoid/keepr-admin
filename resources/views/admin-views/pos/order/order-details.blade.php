@@ -221,8 +221,8 @@
                                                     <div class="col-lg-2 col-md-3 col-sm-6">
                                                         <label class="title-color">Phone</label>
                                                         <div class="form-group">
-                                                            <input type="number" class="form-control phone_number"
-                                                                value="{{ $billing_details['phone'] ?? '' }}"
+                                                                <input type="number" class="form-control phone_number"
+                                                                value='{{$billing_details["phone"] }}'
                                                                 name="billing_phone"
                                                                 placeholder="{{ \App\CPU\translate('Phone') }}" />
                                                         </div>

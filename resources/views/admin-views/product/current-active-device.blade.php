@@ -60,12 +60,13 @@
                             </tr>
                         </thead>
                         <tbody>
+                          
                         @foreach($pro as $k=>$p)
                         @if(!empty($p->user))
                             <tr>
                                 <th scope="row">{{$pro->firstItem()+$k}}</th>
                                 <td>
-                                {{ $p->user->phone }}
+                               {{$p->user->phone_code??""}} {{ $p->user->phone }}
                                 </td>
                                 <td>
                                     <a href="javascript:void(0);" class="media align-items-center gap-2">

@@ -173,7 +173,7 @@
                                                         <strong class="title-name">{{ $order->customer['name'] }}</strong>
                                                     </a>
                                                     <a class="d-block title-color"
-                                                        href="tel:{{ $order->customer['phone'] }}">{{ $order->customer['phone'] }}</a>
+                                                        href="tel:{{ $order->customer['phone'] }}">{{ $order->customer['phone_code'] }}&nbsp;{{ $order->customer['phone'] }}</a>
                                                 @else
                                                     <label
                                                         class="badge badge-danger fz-12">{{ \App\CPU\translate('invalid_customer_data') }}</label>

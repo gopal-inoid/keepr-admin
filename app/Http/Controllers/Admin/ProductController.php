@@ -42,7 +42,7 @@ class ProductController extends BaseController
 
     public function add_new_stock()
     {
-        $products = Product::select('id', 'name', 'colors','uuid')->where('status', 1)->orderBy('id', 'desc')->get();
+        $products = Product::select('id', 'name', 'colors', 'uuid')->where('status', 1)->orderBy('id', 'desc')->get();
         //$colors = Color::get();
         $product_options = [];
         $uuids = [];
@@ -53,7 +53,7 @@ class ProductController extends BaseController
                 $stockcount = ProductStock::where('product_id', $pro->id)->count();
                 if ($stockcount == 0) {
                     $product_options[$pro->id]['product'] = '<option value="' . $pro->id . '">' . $pro->name . '</option>';
-                    $uuids[$j] =  $pro->uuid ?? '';
+                    $uuids[$j] = $pro->uuid ?? '';
                     if (!empty($pro->colors) && $i == 0) {
                         $productcolors = explode(",", $pro->colors);
                         $pro_color = Color::select('id', 'name')->whereIn('id', $productcolors)->get();
@@ -70,7 +70,7 @@ class ProductController extends BaseController
         }
         //ksort($uuids);
         //echo "<pre>"; print_r($uuids); die;
-        return view('admin-views.product.add-new-stock', compact('products', 'product_options','uuids'));
+        return view('admin-views.product.add-new-stock', compact('products', 'product_options', 'uuids'));
     }
 
     public function get_product_colors(Request $request)
@@ -79,7 +79,7 @@ class ProductController extends BaseController
         $product_options['colors'] = '';
         $product_options['uuid'] = '';
         if (!empty($products)) {
-            $product_options['uuid'] =  $products->uuid ?? '';
+            $product_options['uuid'] = $products->uuid ?? '';
             if (!empty($products->colors)) {
                 $productcolors = explode(",", $products->colors);
                 $pro_color = Color::select('id', 'name')->whereIn('id', $productcolors)->get();
@@ -269,20 +269,20 @@ class ProductController extends BaseController
                     if ($check == 0) {
                         $success++;
                         ProductStock::insert(['product_id' => $product->id, 'mac_id' => $mac_id, 'color' => $colors[$k] ?? NULL, 'uuid' => $uuid[$k], 'major' => $major[$k], 'minor' => $minor[$k]]);
-                    }else{
+                    } else {
                         $error++;
                     }
-                }else{
+                } else {
                     $error++;
                 }
             }
         }
 
-        if($error > 0){
+        if ($error > 0) {
             Toastr::error(translate(" $error Stocks not added, Please check your product uuid is same!"));
         }
 
-        if($success > 0){
+        if ($success > 0) {
             Toastr::success(translate(" $success Product Stocks added successfully!"));
         }
 
@@ -295,7 +295,7 @@ class ProductController extends BaseController
         $stringArray = explode('/', $deletedData);
         //echo "<pre>"; print_r($stringArray); die;
         foreach ($stringArray as $del_k => $string) {
-            if(!empty($string)){
+            if (!empty($string)) {
                 $array = explode(',', $string);
                 if (!empty($array)) {
                     $final_array = [];
@@ -305,9 +305,9 @@ class ProductController extends BaseController
                         }
                     }
                     if (!empty($final_array)) {
-                        $arrayone = array(0 => 0,1 => 1,2 => 2,3 => 3);
+                        $arrayone = array(0 => 0, 1 => 1, 2 => 2, 3 => 3);
                         $dltData = array_combine($arrayone, $final_array);
-                        ProductStock::where(['uuid' => $dltData[1] , 'major' => $dltData[2] , 'minor' => $dltData[3]])->delete();
+                        ProductStock::where(['uuid' => $dltData[1], 'major' => $dltData[2], 'minor' => $dltData[3]])->delete();
                     }
                 }
             }
@@ -344,27 +344,27 @@ class ProductController extends BaseController
                     if ($check == 0) {
                         $success++;
                         ProductStock::insert(['product_id' => $product->id, 'mac_id' => $mac_id, 'color' => $colors[$k][0] ?? NULL, 'uuid' => $uuid[$k], 'major' => $major[$k], 'minor' => $minor[$k]]);
-                    }else{
+                    } else {
                         $updated++;
                     }
-                }else{
+                } else {
                     $error++;
                 }
             }
         }
 
-        if($error > 0){
+        if ($error > 0) {
             Toastr::error(translate(" $error Stocks not added, Please check your product uuid or major, minor is same!"));
         }
 
-        if($updated > 0){
+        if ($updated > 0) {
             Toastr::success(translate(" $updated Product Stocks updated successfully!"));
         }
 
-        if($success > 0){
+        if ($success > 0) {
             Toastr::success(translate(" $success Product Stocks added successfully!"));
         }
-        
+
         return redirect()->route('admin.product.stocks.list');
     }
 
@@ -410,9 +410,18 @@ class ProductController extends BaseController
                 foreach ($key as $value) {
                     $q->orWhere('mac_id', 'like', "%{$value}%")
                         ->orWhere('device_name', 'like', "%{$value}%")
-                        ->orWhere('device_uuid', 'like', "%{$value}%");
+                        ->orWhere('user_id', 'like', "%{$value}%")
+                        ->orWhere('status', 'like', "%{$value}%")
+                        ->orWhere('device_uuid', 'like', "%{$value}%")
+                        ->orWhere('distance', 'like', "%{$value}%")
+                        ->orWhere('major', 'like', "%{$value}%")
+                        ->orWhere('minor', 'like', "%{$value}%")
+                        ->orWhere('device_uuid', 'like', "%{$value}%")
+                        ->orWhereHas('user', function ($userQuery) use ($value) {
+                            $userQuery->where('phone', 'like', "%{$value}%");
+                        });
                 }
-            });
+            }); 
             $query_param = ['search' => $request['search']];
         }
         $request_status = $request['status'];
@@ -421,7 +430,7 @@ class ProductController extends BaseController
     }
 
     /**
-     * Export product list by excel
+     * Export product list by excel 
      * @param Request $request
      * @param $type
      */
