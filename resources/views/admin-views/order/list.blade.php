@@ -250,11 +250,13 @@
                                                     <img src="{{ asset('/public/assets/back-end/img/eye.svg') }}"
                                                         class="svg" alt="">
                                                 </a>
-                                                <a class="btn btn-outline-success square-btn btn-sm" target="_blank"
+                                                @if($order->payment_status=='paid')
+                                                  <a class="btn btn-outline-success square-btn btn-sm" target="_blank"
                                                     title="{{ \App\CPU\translate('invoice') }}"
                                                     href="{{ route('admin.orders.generate-invoice', [$order['id']]) }}">
                                                     <i class="tio-download-to"></i>
-                                                </a>
+                                                </a>   
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>
