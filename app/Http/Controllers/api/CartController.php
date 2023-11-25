@@ -317,6 +317,7 @@ class CartController extends Controller
         $userBillingInfo['zip'] = $user_details['zip'];
         $userBillingInfo['name'] = $user_details['name'];
         $userBillingInfo['email'] = $user_details['email'];
+        $userBillingInfo['is_billing_address_same'] = $request['is_billing_address_same'] == 'on' ? 1 : 0;
         $userBillingInfo['country'] = $user_details['country'];
         // $userBillingInfo['country_iso'] = $user_details['country_iso'];
         ////////$shipping_id = $request->shipping_id ?? 
@@ -447,6 +448,7 @@ class CartController extends Controller
                 $order->expected_delivery_date = json_decode($shipping_rates, true)[0]['expected_delivery_date'];
                 $order->user_shipping_details = json_encode($userShippingInfo);
                 $order->user_billing_details = json_encode($userBillingInfo);
+                $order->is_billing_address_same= $request['is_billing_address_same'] == 'on' ? 1 : 0;
                 $order->save();
 
                 if (!empty($product_info)) {
