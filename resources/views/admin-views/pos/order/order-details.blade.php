@@ -222,7 +222,7 @@
                                                         <label class="title-color">Phone</label>
                                                         <div class="form-group">
                                                                 <input type="number" class="form-control phone_number"
-                                                                value='{{$billing_details["phone"] }}'
+                                                                value='{{$billing_details["phone"] ?? "" }}'
                                                                 name="billing_phone"
                                                                 placeholder="{{ \App\CPU\translate('Phone') }}" />
                                                         </div>
